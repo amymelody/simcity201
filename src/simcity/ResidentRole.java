@@ -86,6 +86,8 @@ public class ResidentRole extends Role
 	}
 
 //Scheduler
+    public boolean pickAndExecuteAnAction()
+    {
 //	  + If state == ResidentState.atHome, then
 //	    {
 //	      + If (there exists) Command c in commands (such that) c == Command.rentDue,
@@ -114,6 +116,8 @@ public class ResidentRole extends Role
 //	      + If (there exists) Command c in commands (such that) c == Command.rentDue,
 //		    then sendRentDue();
 //		}
+    	return false;
+    }
 
 //Actions
 	private void sendRentDue(Command c)
@@ -218,6 +222,13 @@ public class ResidentRole extends Role
 	private void goToLocation(Point p)
 	{
 		//gui.doGoToLocation(p);
-		atLocation.acquire();
+		try
+		{
+			atLocation.acquire();
+		}
+		catch (InterruptedException e)
+		{
+			e.printStackTrace();
+		}
 	}
 }
