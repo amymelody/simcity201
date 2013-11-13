@@ -40,6 +40,11 @@ public class LandlordRole extends Role
 //	ResidentGui gui;
 
 //Messages
+	public void msgStartShift() //from Person
+	{
+		commands.add(Command.callRenters);
+		stateChanged();
+	}
 	public void msgDingDong(ResidentRole r) //from Resident
 	{
 		commands.add(Command.collectRent);
@@ -63,10 +68,6 @@ public class LandlordRole extends Role
 			}
 		}
 		stateChanged();
-	}
-	public void msgCollectRent() //from GUI
-	{
-		commands.add(Command.callRenters);
 	}
 
 	public void msgAtLocation()
@@ -129,6 +130,13 @@ public class LandlordRole extends Role
 	public void goToLocation(Point p)
 	{
 //		gui.doGoToLocation(p);
-		atLocation.acquire();
+		try
+		{
+			atLocation.acquire();
+		}
+		catch (InterruptedException e)
+		{
+			e.printStackTrace();
+		}
 	}
 }
