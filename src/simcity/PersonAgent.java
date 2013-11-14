@@ -20,6 +20,7 @@ public class PersonAgent extends Agent
 	private boolean rentDue;
 	private Car car;
 
+	public List<BusStopAgent> busStops;
 	public List<ItemOrder> foodNeeded = Collections.synchronizedList(new ArrayList<ItemOrder>());
 	public List<ItemOrder> groceries = Collections.synchronizedList(new ArrayList<ItemOrder>());
 
@@ -63,7 +64,7 @@ public class PersonAgent extends Agent
 	}
 
 	public class Job {
-		JobRole r;
+		String role;
 		Point location;
 		Map<Day, Time> startShifts;
 		Map<Day, Time> endShifts;
@@ -71,7 +72,7 @@ public class PersonAgent extends Agent
 	}
 
 	public class Housing {
-		ResidentRole r;
+		String residentRole;
 		Point location;
 	}
 
@@ -79,17 +80,17 @@ public class PersonAgent extends Agent
 		Point location;
 		Menu m;
 		String type;
-		RestCustomerRole c;
+		String customerRole;
 	}
 
 	public class Market {
-		MarketCustomerRole c;
+		String customerRole;
 		Point location;
 	}
 
 
 	public class Bank {
-		DepositorRole d;
+		String depositorRole;
 		Point location;
 	}
 
@@ -279,21 +280,22 @@ public class PersonAgent extends Agent
 	private void goHome() {
 		Housing h = houses.get(0); //person's house
 		goToDestination(h.location);
-		if (!findResidentRole(h.r)) {
-			addRole(h.r);
+		ResidentRole r = RoleFactory(h.residentRole);
+		if (!findResidentRole(r)) {
+			addRole(r);
 		}
 		synchronized(roles) {
 			for (MyRole mr : roles) {
-				if (mr.r == h.r) {
+				if (mr.r == r) {
 					mr.active = true;
 					state.ls = LocationState.home;
-					h.r.msgImHome();
+					r.msgImHome();
 					if (!groceries.isEmpty()) {
-						h.r.msgGroceries(groceries);
+						r.msgGroceries(groceries);
 						groceries.clear();
 					} 
 					if (state.ns == NourishmentState.gotHungry) {
-						h.r.msgEat();
+						r.msgEat();
 						state.ns = NourishmentState.hungry;
 					} 
 					return;
@@ -304,11 +306,12 @@ public class PersonAgent extends Agent
 	
 	private void goEat() {
 		Housing h = houses.get(0); //person's house
+		ResidentRole r = RoleFactory(h.residentRole);
 		synchronized(roles) {
 			for (MyRole mr : roles) {
-				if (mr.r == h.r) {
+				if (mr.r == r) {
 					mr.active = true;
-	                h.r.msgEat();
+	                r.msgEat();
 	                state.ns = NourishmentState.hungry;
 					return;
 				}
@@ -318,10 +321,11 @@ public class PersonAgent extends Agent
 
 	private void leaveHouse() {
 		Housing h = houses.get(0); //person's house
+		ResidentRole r = RoleFactory(h.residentRole);
 		synchronized(roles) {
 			for (MyRole mr : roles) {
-				if (mr.r == h.r) {
-					h.r.msgLeave();
+				if (mr.r == r) {
+					r.msgLeave();
 					state.ls = LocationState.leavingHouse;
 					return;
 				}
@@ -332,15 +336,16 @@ public class PersonAgent extends Agent
 	private void goToOwnerHouse() {
 		Housing h = houses.get(0); //owner's house
 		goToDestination(h.location);
-		if (!findResidentRole(h.r)) {
-			addRole(h.r);
+		ResidentRole r = RoleFactory(h.residentRole);
+		if (!findResidentRole(r)) {
+			addRole(r);
 		} 
 		synchronized(roles) {
 			for (MyRole mr : roles) {
-				if (mr.r == h.r) {
+				if (mr.r == r) {
 					mr.active = true;
 					state.ls = LocationState.ownerHouse;
-					h.r.msgAtLandlord();
+					r.msgAtLandlord();
 					return;
 				}
 			}
@@ -350,15 +355,16 @@ public class PersonAgent extends Agent
 	private void goToRestaurant() {
 		Restaurant r = restaurants.chooseOne();
 		goToDestination(r.location);
-		if (!findRestCustomerRole()) {
-			addRole(r.c);
+		RestCustomerRole c = RoleFactory(r.customerRole);
+		if (!findRestCustomerRole(c)) {
+			addRole(c);
 		} 
 		synchronized(roles) {
 			for (MyRole mr : roles) {
-				if (mr.r == r.c) {
+				if (mr.r == c) {
 					mr.active = true;
 					state.ls = LocationState.restaurant;
-					r.c.msgGotHungry();
+					c.msgGotHungry();
 					state.ns = NourishmentState.hungry;
 					return;
 				}
@@ -369,15 +375,16 @@ public class PersonAgent extends Agent
 	private void goToMarket() {
 		Market m = markets.chooseOne();
 		goToDestination(m.location);
-		if (!findMarketCustomerRole()) {
-			addRole(m.c);
+		MarketCustomerRole c = RoleFactory(m.customerRole);
+		if (!findMarketCustomerRole(c)) {
+			addRole(c);
 		} 
 		synchronized(roles) {
 			for (MyRole mr : roles) {
-				if (mr.r == r.c) {
+				if (mr.r == c) {
 					mr.active = true;
 					state.ls = LocationState.market;
-					m.c.msgOrderItems(foodNeeded);
+					c.msgOrderItems(foodNeeded);
 					foodNeeded.clear();
 					return;
 				}
@@ -388,19 +395,20 @@ public class PersonAgent extends Agent
 	private void goToBank() {
 		Bank b = banks.chooseOne();
 		goToDestination(b.location);
-		if (!findDepositorRole) {
-			addRole(b.d);
+		DepositorRole d = RoleFactory(b.depositorRole);
+		if (!findDepositorRole(d)) {
+			addRole(d);
 		} 
 		synchronized(roles) {
 			for (MyRole mr : roles) {
-				if (mr.r == b.d) {
+				if (mr.r == d) {
 					mr.active = true;
 					state.ls = LocationState.bank;
 					if (money >= maxBalance) {
-						b.d.msgMakeDeposit();
+						d.msgMakeDeposit();
 					}
 					if (money <= minBalance) {
-						b.d.msgMakeWithdrawal();
+						d.msgMakeWithdrawal();
 					}
 					return;
 				}
@@ -410,11 +418,12 @@ public class PersonAgent extends Agent
 
 	private void goToWork() {
 		goToDestination(job.location);
+		JobRole r = RoleFactory(job.role);
 		synchronized(roles) {
 			for (MyRole mr : roles) {
-				if (mr.r == job.r) {
+				if (mr.r == r) {
 					mr.active = true;
-					job.r.msgStartShift();
+					r.msgStartShift();
 					state.ws = WorkingState.working;
 					return;
 				}
@@ -429,8 +438,9 @@ public class PersonAgent extends Agent
 			DoGoToDestination(p); //after car has reached destination
 		} else {
 			if (!nearDestination(p)) {
-				DoGoToBusStop();
-				bus.loadPassenger(this, p); //pass the destination to the passenger so it knows where to get off
+				BusStop b = closestBusStop();
+				DoGoToBusStop(b);
+				b.msgWaitingForBus(this);
 				DoGoToDestination(p); //after getting off the bus
 			} else {
 				DoGoToDestination(p); //just walk there
