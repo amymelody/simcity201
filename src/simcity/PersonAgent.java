@@ -7,6 +7,8 @@ import java.awt.Point;
 import agent.Agent;
 import role.Role;
 import role.JobRole;
+import simcity.joshrestaurant.JoshCustomerRole;
+import interfaces.RestCustomer;
 
 import java.util.*;
 
@@ -54,62 +56,56 @@ public class PersonAgent extends Agent
 		state.ls = LocationState.outside;
 		state.ws = WorkingState.notWorking;
 		state.ts = TransportationState.walking;
+		
+		houses.add(new Housing("home", "residentRole"));
+		houses.add(new Housing("ownerHouse", "residentRole"));
+		
+		restaurants.add(new Restaurant("joshRestaurant", "italian", "joshCustomerRole"));
+		
+		markets.add(new Market("market1", "market1CustomerRole"));
+		markets.add(new Market("market2", "market2CustomerRole"));
+		markets.add(new Market("market3", "market3CustomerRole"));
+		
+		banks.add(new Bank("bank1", "bank1DepositorRole"));
 	}
-
-	//utilities
-	public class MyRole {
-		MyRole(Role role, String n) {
-			r = role;
-			name = n;
-			active = false;
+	
+	
+	private void addRole(Role r, String n) {
+		r.setPerson(this);
+		roles.add(new MyRole(r, n));
+	}
+	
+	private RestCustomer RestCustomerFactory(String roleName) {
+		switch(roleName) {
+		case "joshCustomerRole":
+			return new JoshCustomerRole(name);
 		}
-		Role r;
-		String name;
-		boolean active;
+		return null;
 	}
-
-	public class Time {
-		int hour;
-		int minute;
+	
+	private Restaurant chooseRestaurant() {
+		return restaurants.get(0);
 	}
-
-	public class PersonState {
-		NourishmentState ns;
-		LocationState ls;
-		WorkingState ws;
-		TransportationState ts;
+	
+	private Market chooseMarket() {
+		return markets.get(0);
 	}
-
-	public class Job {
-		String role;
-		LocationState jobLocation;
-		String location;
-		Map<Day, Time> startShifts;
-		Map<Day, Time> endShifts;
-		int paycheck;
+	
+	private Bank chooseBank() {
+		return banks.get(0);
 	}
-
-	public class Housing {
-		String residentRole;
-		String location;
+	
+	private boolean findRole(String roleName) {
+		synchronized(roles) {
+			for (MyRole mr : roles) {
+				if (mr.name.equals(roleName)) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
-
-	public class Restaurant {
-		String location;
-		String type;
-		String customerRole;
-	}
-
-	public class Market {
-		String customerRole;
-		String location;
-	}
-
-
-	public class Bank {
-		String depositorRole;
-		String location;
-	}
+	
 
 	//Messages
 
@@ -304,11 +300,6 @@ public class PersonAgent extends Agent
 
 	//Actions
 
-	private void addRole(Role r, String n) {
-		r.setPerson(this);
-		roles.add(new MyRole(r, n));
-	}
-
 	private void endShift() {
 		money += job.paycheck;
 		state.ws = WorkingState.notWorking;
@@ -325,7 +316,7 @@ public class PersonAgent extends Agent
 		if (state.ls != LocationState.atDestination) {
 			goToDestination(h.location);
 		} else {
-			if (!findResidentRole(h.residentRole)) {
+			if (!findRole(h.residentRole)) {
 				ResidentRole r = (ResidentRole)RoleFactory(h.residentRole);
 				addRole(r, h.residentRole);
 			}
@@ -387,11 +378,11 @@ public class PersonAgent extends Agent
 	}
 
 	private void goToOwnerHouse() {
-		Housing h = houses.get(0); //owner's house
+		Housing h = houses.get(1); //owner's house
 		if (state.ls != LocationState.atDestination) {
 			goToDestination(h.location);
 		} else {
-			if (!findResidentRole(h.residentRole)) {
+			if (!findRole(h.residentRole)) {
 				ResidentRole r = (ResidentRole)RoleFactory(h.residentRole);
 				addRole(r, h.residentRole);
 			} 
@@ -412,12 +403,12 @@ public class PersonAgent extends Agent
 	}
 
 	private void goToRestaurant() {
-		Restaurant r = restaurants.chooseOne();
+		Restaurant r = chooseRestaurant();
 		if (state.ls != LocationState.atDestination) {
 			goToDestination(r.location);
 		} else {
-			if (!findRestCustomerRole(r.customerRole)) {
-				RestCustomerRole c = (RestCustomerRole)RoleFactory(r.customerRole);
+			if (!findRole(r.customerRole)) {
+				RestCustomerRole c = (RestCustomerRole)RestCustomerFactory(r.customerRole);
 				addRole(c, r.customerRole);
 			} 
 			synchronized(roles) {
@@ -427,7 +418,7 @@ public class PersonAgent extends Agent
 							RestCustomerRole c = (RestCustomerRole)(mr.r);
 							mr.active = true;
 							state.ls = LocationState.restaurant;
-							c.msgGotHungry();
+							c.gotHungry();
 							state.ns = NourishmentState.hungry;
 						}
 						return;
@@ -438,11 +429,11 @@ public class PersonAgent extends Agent
 	}
 
 	private void goToMarket() {
-		Market m = markets.chooseOne();
+		Market m = chooseMarket();
 		if (state.ls != LocationState.atDestination) {
 			goToDestination(m.location);
 		} else {
-			if (!findMarketCustomerRole(m.customerRole)) {
+			if (!findRole(m.customerRole)) {
 				MarketCustomerRole c = (MarketCustomerRole)RoleFactory(m.customerRole);
 				addRole(c, m.customerRole);
 			} 
@@ -464,11 +455,11 @@ public class PersonAgent extends Agent
 	}
 
 	private void goToBank() {
-		Bank b = banks.chooseOne();
+		Bank b = chooseBank();
 		if (state.ls != LocationState.atDestination) {
 			goToDestination(b.location);
 		} else {
-			if (!findDepositorRole(b.depositorRole)) {
+			if (!findRole(b.depositorRole)) {
 				DepositorRole d = (DepositorRole)RoleFactory(b.depositorRole);
 				addRole(d, b.depositorRole);
 			} 
@@ -532,5 +523,83 @@ public class PersonAgent extends Agent
 				state.ls = LocationState.atDestination;
 			}
 		}
+	}
+	
+	//inner classes
+	public class MyRole {
+		MyRole(Role role, String n) {
+			r = role;
+			name = n;
+			active = false;
+		}
+		Role r;
+		String name;
+		boolean active;
+	}
+
+	public class Time {
+		int hour;
+		int minute;
+	}
+
+	public class PersonState {
+		NourishmentState ns;
+		LocationState ls;
+		WorkingState ws;
+		TransportationState ts;
+	}
+
+	public class Job {
+		Job(String l, String r, LocationState jL, int p) {
+			location = l;
+			role = r;
+			jobLocation = jL;
+			paycheck = p;
+		}
+		String role;
+		LocationState jobLocation;
+		String location;
+		Map<Day, Time> startShifts;
+		Map<Day, Time> endShifts;
+		int paycheck;
+	}
+
+	public class Housing {
+		Housing(String l, String r) {
+			location = l;
+			residentRole = r;
+		}
+		String residentRole;
+		String location;
+	}
+
+	public class Restaurant {
+		Restaurant(String l, String t, String r) {
+			location = l;
+			type = t;
+			customerRole = r;
+		}
+		String location;
+		String type;
+		String customerRole;
+	}
+
+	public class Market {
+		Market(String l, String r) {
+			location = l;
+			customerRole = r;
+		}
+		String customerRole;
+		String location;
+	}
+
+
+	public class Bank {
+		Bank(String l, String r) {
+			location = l;
+			depositorRole = r;
+		}
+		String depositorRole;
+		String location;
 	}
 }
