@@ -18,9 +18,11 @@ public class PersonAgent extends Agent
 	private String name;
 	private boolean haveBankAccount;
 	private boolean rentDue;
-	private Car car;
-
-	public List<BusStopAgent> busStops;
+	private CarAgent car;
+	private BusAgent bus;
+	private String destination;
+	
+	public List<BusStopAgent> busStops = Collections.synchronizedList(new ArrayList<BusStopAgent>());
 	public List<ItemOrder> foodNeeded = Collections.synchronizedList(new ArrayList<ItemOrder>());
 	public List<ItemOrder> groceries = Collections.synchronizedList(new ArrayList<ItemOrder>());
 
@@ -30,25 +32,39 @@ public class PersonAgent extends Agent
 	public List<Bank> banks = Collections.synchronizedList(new ArrayList<Bank>());
 	public List<Housing> houses = Collections.synchronizedList(new ArrayList<Housing>());
 	public Map<String, List> places;
+	public Map<String, Point> locations;
 
 	private Job job;
 	private Day day;
 	private Time time;
 
 	public enum NourishmentState {unknown, normal, gotHungry, hungry, full};
-	public enum LocationState {unknown, outside, leavingHouse, home, ownerHouse, restaurant, market, bank};
+	public enum LocationState {unknown, outside, leavingHouse, home, ownerHouse, restaurant, market, bank, atDestination};
 	public enum WorkingState {unknown, notWorking, working};
+	public enum TransportationState {unknown, waitingForBus, ridingBus, inCar, walking};
 	public enum Day {Sun, Mon, Wed, Tue, Thu, Fri, Sat};
 
 	PersonState state;
+	
+	public PersonAgent(String name) {
+		super();
+		this.name = name;
+		
+		state.ns = NourishmentState.normal;
+		state.ls = LocationState.outside;
+		state.ws = WorkingState.notWorking;
+		state.ts = TransportationState.walking;
+	}
 
 	//utilities
 	public class MyRole {
-		MyRole(Role role) {
+		MyRole(Role role, String n) {
 			r = role;
+			name = n;
 			active = false;
 		}
 		Role r;
+		String name;
 		boolean active;
 	}
 
@@ -61,11 +77,13 @@ public class PersonAgent extends Agent
 		NourishmentState ns;
 		LocationState ls;
 		WorkingState ws;
+		TransportationState ts;
 	}
 
 	public class Job {
 		String role;
-		Point location;
+		LocationState jobLocation;
+		String location;
 		Map<Day, Time> startShifts;
 		Map<Day, Time> endShifts;
 		int paycheck;
@@ -73,25 +91,24 @@ public class PersonAgent extends Agent
 
 	public class Housing {
 		String residentRole;
-		Point location;
+		String location;
 	}
 
 	public class Restaurant {
-		Point location;
-		Menu m;
+		String location;
 		String type;
 		String customerRole;
 	}
 
 	public class Market {
 		String customerRole;
-		Point location;
+		String location;
 	}
 
 
 	public class Bank {
 		String depositorRole;
-		Point location;
+		String location;
 	}
 
 	//Messages
@@ -139,7 +156,7 @@ public class PersonAgent extends Agent
 		stateChanged();
 	}
 
-	public void msgBoughtCar(Car c) {
+	public void msgBoughtCar(CarAgent c) {
 		car = c;
 		stateChanged();
 	}
@@ -169,85 +186,103 @@ public class PersonAgent extends Agent
 		stateChanged();
 	}
 	
+	public void msgBusIsHere(BusAgent b) {
+        bus = b;
+        stateChanged();
+	}
+	
+	public void msgGetOffBus(String d) {
+		state.ts = TransportationState.walking;
+		destination = d;
+		stateChanged();
+	}
+	
 	//Scheduler
 	
 	public boolean pickAndExecuteAnAction() {
-		if (job != null & state.ws == WorkingState.notWorking & time+30 >= job.startShifts.get(day)) { //if half an hour before your shift starts
-			if (state.ls == LocationState.home) {
-				leaveHouse();
-				return true;
-			} else if (state.ls == LocationState.outside) {
-				goToWork();
-				return true;
+		if (state.ts == TransportationState.walking) { 
+			if (job != null && state.ws == WorkingState.notWorking && time+30 >= job.startShifts.get(day)) { //if half an hour before your shift starts
+				if (state.ls == LocationState.home) {
+					leaveHouse();
+					return true;
+				} else if (state.ls == LocationState.outside || state.ls == LocationState.atDestination) {
+					goToWork();
+					return true;
+				}
 			}
-		}
-		if (state.ws == WorkingState.working & time >= job.endShifts.get(day)) { //if your shift ends
-			endShift();
-			return true;
-		} 
-		if (state.ws == WorkingState.notWorking) {
-			if (rentDue) {
-				if (state.ls == LocationState.home) {
-					leaveHouse();
-					return true;
-				} else if (state.ls == LocationState.outside) {
-					goToOwnerHouse();
-					return true;
-				} 
+			if (state.ws == WorkingState.working && time >= job.endShifts.get(day) && !job.role.equals("landlord")) { //if your shift ends
+				endShift();
+				return true;
 			} 
-			if (money <= minBalance & haveBankAccount) {
-				if (state.ls == LocationState.home) {
-					leaveHouse();
-					return true;
-				} else if (state.ls == LocationState.outside) {
-					goToBank();
-					return true;
-				} 
-			} 
-			if (state.ns == NourishmentState.gotHungry) {
-				if (haventEatenOutInAWhile()) {
+			if (state.ws == WorkingState.notWorking) {
+				if (rentDue) {
 					if (state.ls == LocationState.home) {
 						leaveHouse();
 						return true;
-					} else if (state.ls == LocationState.outside) {
-						goToRestaurant();
+					} else if (state.ls == LocationState.outside || state.ls == LocationState.atDestination) {
+						goToOwnerHouse();
 						return true;
 					} 
-				} else {
+				} 
+				if (money <= minBalance && haveBankAccount) {
 					if (state.ls == LocationState.home) {
-						goEat();
+						leaveHouse();
 						return true;
-					} else if (state.ls == LocationState.outside) {
+					} else if (state.ls == LocationState.outside || state.ls == LocationState.atDestination) {
+						goToBank();
+						return true;
+					} 
+				} 
+				if (state.ns == NourishmentState.gotHungry) {
+					if (haventEatenOutInAWhile()) {
+						if (state.ls == LocationState.home) {
+							leaveHouse();
+							return true;
+						} else if (state.ls == LocationState.outside || state.ls == LocationState.atDestination) {
+							goToRestaurant();
+							return true;
+						} 
+					} else {
+						if (state.ls == LocationState.home) {
+							goEat();
+							return true;
+						} else if (state.ls == LocationState.outside || state.ls == LocationState.atDestination) {
+							goHome();
+							return true;
+						} 
+					} 
+				} 
+				if (!foodNeeded.isEmpty()) {
+					if (state.ls == LocationState.home) {
+						leaveHouse();
+						return true;
+					} else if (state.ls == LocationState.outside || state.ls == LocationState.atDestination) {
+						goToMarket();
+						return true;
+					} 
+				} 
+				if (!groceries.isEmpty()) {
+					if (state.ls == LocationState.outside || state.ls == LocationState.atDestination) {
 						goHome();
 						return true;
 					} 
 				} 
-			} 
-			if (!foodNeeded.isEmpty()) {
-				if (state.ls == LocationState.home) {
-					leaveHouse();
-					return true;
-				} else if (state.ls == LocationState.outside) {
-					goToMarket();
-					return true;
+				if (money >= maxBalance) {
+					if (state.ls == LocationState.home) {
+						leaveHouse();
+						return true;
+					} else if (state.ls == LocationState.outside || state.ls == LocationState.atDestination) {
+			        	goToBank();
+						return true;
+					} 
 				} 
 			} 
-			if (!groceries.isEmpty()) {
-				if (state.ls == LocationState.outside) {
-					goHome();
-					return true;
-				} 
-			} 
-			if (money >= maxBalance) {
-				if (state.ls == LocationState.home) {
-					leaveHouse();
-					return true;
-				} else if (state.ls == LocationState.outside) {
-		        	goToBank();
-					return true;
-				} 
-			} 
-		} 
+		}
+		
+		if (state.ts == TransportationState.waitingForBus && bus != null) {
+			boardBus();
+			return true;
+		}
 		
 		boolean anytrue = false;
 		synchronized(roles) {
@@ -259,46 +294,60 @@ public class PersonAgent extends Agent
 			}
 		}
 		
-		if (state.ls != LocationState.home) {
+		if (state.ts == TransportationState.walking && state.ls != LocationState.home && state.ls != LocationState.leavingHouse) {
 			goHome(); //if nothing left to do, go home and do whatever
 			return true;
 		}
+		
+		return false;
 	}
 
 	//Actions
 
-	private void addRole(Role r) {
+	private void addRole(Role r, String n) {
 		r.setPerson(this);
-		roles.add(new MyRole(r));
+		roles.add(new MyRole(r, n));
 	}
 
 	private void endShift() {
 		money += job.paycheck;
 		state.ws = WorkingState.notWorking;
 	}
+	
+	private void boardBus() {
+		bus.msgComingAboard(this, destination);
+		bus = null;
+		state.ts = TransportationState.ridingBus;
+	}
 
 	private void goHome() {
 		Housing h = houses.get(0); //person's house
-		goToDestination(h.location);
-		ResidentRole r = RoleFactory(h.residentRole);
-		if (!findResidentRole(r)) {
-			addRole(r);
-		}
-		synchronized(roles) {
-			for (MyRole mr : roles) {
-				if (mr.r == r) {
-					mr.active = true;
-					state.ls = LocationState.home;
-					r.msgImHome();
-					if (!groceries.isEmpty()) {
-						r.msgGroceries(groceries);
-						groceries.clear();
-					} 
-					if (state.ns == NourishmentState.gotHungry) {
-						r.msgEat();
-						state.ns = NourishmentState.hungry;
-					} 
-					return;
+		if (state.ls != LocationState.atDestination) {
+			goToDestination(h.location);
+		} else {
+			if (!findResidentRole(h.residentRole)) {
+				ResidentRole r = (ResidentRole)RoleFactory(h.residentRole);
+				addRole(r, h.residentRole);
+			}
+			synchronized(roles) {
+				for (MyRole mr : roles) {
+					if (mr.name == h.residentRole) {
+						mr.active = true;
+						state.ls = LocationState.home;
+						if (mr.r instanceof ResidentRole) {
+							ResidentRole r = (ResidentRole)(mr.r);
+							r.msgImHome();
+							if (!groceries.isEmpty()) {
+								r.msgGroceries(groceries);
+								groceries.clear();
+							} 
+							if (state.ns == NourishmentState.gotHungry) {
+								r.msgEat();
+								state.ns = NourishmentState.hungry;
+							} 
+						}
+						return;
+					}
 				}
 			}
 		}
@@ -306,13 +355,15 @@ public class PersonAgent extends Agent
 	
 	private void goEat() {
 		Housing h = houses.get(0); //person's house
-		ResidentRole r = RoleFactory(h.residentRole);
 		synchronized(roles) {
 			for (MyRole mr : roles) {
-				if (mr.r == r) {
-					mr.active = true;
-	                r.msgEat();
-	                state.ns = NourishmentState.hungry;
+				if (mr.name == h.residentRole) {
+					if (mr.r instanceof ResidentRole) {
+						ResidentRole r = (ResidentRole)(mr.r);
+						mr.active = true;
+		                r.msgEat();
+		                state.ns = NourishmentState.hungry;
+					}
 					return;
 				}
 			}
@@ -321,12 +372,14 @@ public class PersonAgent extends Agent
 
 	private void leaveHouse() {
 		Housing h = houses.get(0); //person's house
-		ResidentRole r = RoleFactory(h.residentRole);
 		synchronized(roles) {
 			for (MyRole mr : roles) {
-				if (mr.r == r) {
-					r.msgLeave();
-					state.ls = LocationState.leavingHouse;
+				if (mr.name == h.residentRole) {
+					if (mr.r instanceof ResidentRole) {
+						ResidentRole r = (ResidentRole)(mr.r);
+						r.msgLeave();
+						state.ls = LocationState.leavingHouse;
+					}
 					return;
 				}
 			}
@@ -335,58 +388,76 @@ public class PersonAgent extends Agent
 
 	private void goToOwnerHouse() {
 		Housing h = houses.get(0); //owner's house
-		goToDestination(h.location);
-		ResidentRole r = RoleFactory(h.residentRole);
-		if (!findResidentRole(r)) {
-			addRole(r);
-		} 
-		synchronized(roles) {
-			for (MyRole mr : roles) {
-				if (mr.r == r) {
-					mr.active = true;
-					state.ls = LocationState.ownerHouse;
-					r.msgAtLandlord();
-					return;
+		if (state.ls != LocationState.atDestination) {
+			goToDestination(h.location);
+		} else {
+			if (!findResidentRole(h.residentRole)) {
+				ResidentRole r = (ResidentRole)RoleFactory(h.residentRole);
+				addRole(r, h.residentRole);
+			} 
+			synchronized(roles) {
+				for (MyRole mr : roles) {
+					if (mr.name == h.residentRole) {
+						if (mr.r instanceof ResidentRole) {
+							ResidentRole r = (ResidentRole)(mr.r);
+							mr.active = true;
+							state.ls = LocationState.ownerHouse;
+							r.msgAtLandlord();
+						}
+						return;
+					}
 				}
-			}
-		} 
+			} 
+		}
 	}
 
 	private void goToRestaurant() {
 		Restaurant r = restaurants.chooseOne();
-		goToDestination(r.location);
-		RestCustomerRole c = RoleFactory(r.customerRole);
-		if (!findRestCustomerRole(c)) {
-			addRole(c);
-		} 
-		synchronized(roles) {
-			for (MyRole mr : roles) {
-				if (mr.r == c) {
-					mr.active = true;
-					state.ls = LocationState.restaurant;
-					c.msgGotHungry();
-					state.ns = NourishmentState.hungry;
-					return;
+		if (state.ls != LocationState.atDestination) {
+			goToDestination(r.location);
+		} else {
+			if (!findRestCustomerRole(r.customerRole)) {
+				RestCustomerRole c = (RestCustomerRole)RoleFactory(r.customerRole);
+				addRole(c, r.customerRole);
+			} 
+			synchronized(roles) {
+				for (MyRole mr : roles) {
+					if (mr.name == r.customerRole) {
+						if (mr.r instanceof RestCustomerRole) {
+							RestCustomerRole c = (RestCustomerRole)(mr.r);
+							mr.active = true;
+							state.ls = LocationState.restaurant;
+							c.msgGotHungry();
+							state.ns = NourishmentState.hungry;
+						}
+						return;
+					}
 				}
-			}
-		}	
+			}	
+		}
 	}
 
 	private void goToMarket() {
 		Market m = markets.chooseOne();
-		goToDestination(m.location);
-		MarketCustomerRole c = RoleFactory(m.customerRole);
-		if (!findMarketCustomerRole(c)) {
-			addRole(c);
-		} 
-		synchronized(roles) {
-			for (MyRole mr : roles) {
-				if (mr.r == c) {
-					mr.active = true;
-					state.ls = LocationState.market;
-					c.msgOrderItems(foodNeeded);
-					foodNeeded.clear();
-					return;
+		if (state.ls != LocationState.atDestination) {
+			goToDestination(m.location);
+		} else {
+			if (!findMarketCustomerRole(m.customerRole)) {
+				MarketCustomerRole c = (MarketCustomerRole)RoleFactory(m.customerRole);
+				addRole(c, m.customerRole);
+			} 
+			synchronized(roles) {
+				for (MyRole mr : roles) {
+					if (mr.name == m.customerRole) {
+						if (mr.r instanceof MarketCustomerRole) {
+							MarketCustomerRole c = (MarketCustomerRole)(mr.r);
+							mr.active = true;
+							state.ls = LocationState.market;
+							c.msgOrderItems(foodNeeded);
+							foodNeeded.clear();
+						}
+						return;
+					}
 				}
 			}
 		}
@@ -394,56 +465,71 @@ public class PersonAgent extends Agent
 
 	private void goToBank() {
 		Bank b = banks.chooseOne();
-		goToDestination(b.location);
-		DepositorRole d = RoleFactory(b.depositorRole);
-		if (!findDepositorRole(d)) {
-			addRole(d);
-		} 
-		synchronized(roles) {
-			for (MyRole mr : roles) {
-				if (mr.r == d) {
-					mr.active = true;
-					state.ls = LocationState.bank;
-					if (money >= maxBalance) {
-						d.msgMakeDeposit();
+		if (state.ls != LocationState.atDestination) {
+			goToDestination(b.location);
+		} else {
+			if (!findDepositorRole(b.depositorRole)) {
+				DepositorRole d = (DepositorRole)RoleFactory(b.depositorRole);
+				addRole(d, b.depositorRole);
+			} 
+			synchronized(roles) {
+				for (MyRole mr : roles) {
+					if (mr.name == b.depositorRole) {
+						if (mr.r instanceof DepositorRole) {
+							DepositorRole d = (DepositorRole)(mr.r);
+							mr.active = true;
+							state.ls = LocationState.bank;
+							if (money >= maxBalance) {
+								d.msgMakeDeposit();
+							}
+							if (money <= minBalance) {
+								d.msgMakeWithdrawal();
+							}
+						}
+						return;
 					}
-					if (money <= minBalance) {
-						d.msgMakeWithdrawal();
-					}
-					return;
 				}
 			}
 		}
 	}
 
 	private void goToWork() {
-		goToDestination(job.location);
-		JobRole r = RoleFactory(job.role);
-		synchronized(roles) {
-			for (MyRole mr : roles) {
-				if (mr.r == r) {
-					mr.active = true;
-					r.msgStartShift();
-					state.ws = WorkingState.working;
-					return;
+		if (state.ls != LocationState.atDestination) { 
+			goToDestination(job.location);
+		} else {
+			synchronized(roles) {
+				for (MyRole mr : roles) {
+					if (mr.name == job.role) {
+						if (mr.r instanceof JobRole) {
+							JobRole j = (JobRole)(mr.r);
+							mr.active = true;
+							j.msgStartShift();
+							state.ls = job.jobLocation;
+							state.ws = WorkingState.working;
+						}
+						return;
+					}
 				}
 			}
 		}
 	}
 
-	private void goToDestination(Point p) {
-		if (car != null & !nearDestination(p)) {
+	private void goToDestination(String d) {
+		if (car != null && !nearDestination(d)) {
 			DoGoToCar();
-			car.gotoDestination(p); //pass the destination to the car so it knows where to go
-			DoGoToDestination(p); //after car has reached destination
+			state.ts = TransportationState.inCar;
+			car.msgGoToDestination(d); //pass the destination to the car so it knows where to go
 		} else {
-			if (!nearDestination(p)) {
-				BusStop b = closestBusStop();
+			if (!nearDestination(d)) {
+				BusStopAgent b = closestBusStop();
 				DoGoToBusStop(b);
+				state.ts = TransportationState.waitingForBus;
+				destination = d;
 				b.msgWaitingForBus(this);
-				DoGoToDestination(p); //after getting off the bus
 			} else {
-				DoGoToDestination(p); //just walk there
+				state.ts = TransportationState.walking;
+				DoGoToDestination(locations.get(d)); //just walk there
+				state.ls = LocationState.atDestination;
 			}
 		}
 	}
