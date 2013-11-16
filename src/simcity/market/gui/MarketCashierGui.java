@@ -3,15 +3,15 @@ package simcity.market.gui;
 import java.awt.Color;
 import java.awt.Graphics2D;
 
-import simcity.market.DelivererRole;
+import simcity.market.MarketCashierRole;
 
-public class DelivererGui {
-	private DelivererRole role = null;
+public class MarketCashierGui {
+	private MarketCashierRole role = null;
 
-	private int xPos = -20, yPos = -20;//default Deliverer position
-	private int xDestination = -20, yDestination = -20;//default Deliverer destination
+	private int xPos = -20, yPos = -20;//default cashier position
+	private int xDestination = -20, yDestination = -20;//default cashier destination
 
-	public DelivererGui(DelivererRole r) {
+	public MarketCashierGui(MarketCashierRole r) {
 		this.role = r;
 
 	}
@@ -29,7 +29,7 @@ public class DelivererGui {
 	}
 
 	public void draw(Graphics2D g) {
-		g.setColor(Color.GREEN);
+		g.setColor(Color.RED);
 	}
 
 	public boolean isPresent() {

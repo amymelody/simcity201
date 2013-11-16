@@ -1,0 +1,28 @@
+package simcity.market.test.mock;
+
+
+import simcity.market.Order;
+import simcity.market.interfaces.MarketCashier;
+import simcity.market.interfaces.MarketEmployee;
+
+public class MockMarketEmployee extends Mock implements MarketEmployee {
+
+	/**
+	 * References for unit testing
+	 */
+	public MarketCashier cashier;
+	public String name;
+
+	public MockMarketEmployee(String n) {
+		super(n);
+
+		name = n;
+	}
+
+	@Override
+	public void msgGetItems(Order o) {
+		log.add(new LoggedEvent("Received order."));
+		
+	}
+	
+}

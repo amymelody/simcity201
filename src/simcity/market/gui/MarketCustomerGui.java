@@ -3,15 +3,15 @@ package simcity.market.gui;
 import java.awt.Color;
 import java.awt.Graphics2D;
 
-import simcity.market.CustomerRole;
+import simcity.market.MarketCustomerRole;
 
-public class CustomerGui {
-	private CustomerRole role = null;
+public class MarketCustomerGui {
+	private MarketCustomerRole role = null;
 
 	private int xPos = -20, yPos = -20;//default Customer position
 	private int xDestination = -20, yDestination = -20;//default Customer destination
 
-	public CustomerGui(CustomerRole r) {
+	public MarketCustomerGui(MarketCustomerRole r) {
 		this.role = r;
 
 	}

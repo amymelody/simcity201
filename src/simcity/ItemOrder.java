@@ -5,7 +5,7 @@ public class ItemOrder
 	private String food;
 	private int amount;
 	
-	ItemOrder(String f, int a) {
+	public ItemOrder(String f, int a) {
 		food = f;
 		amount = a;
 	}

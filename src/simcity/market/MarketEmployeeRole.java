@@ -7,14 +7,51 @@ import java.util.concurrent.Semaphore;
 
 import role.Role;
 import simcity.ItemOrder;
+import simcity.market.MarketCashierRole.myDeliverer;
+import simcity.market.MarketCashierRole.myEmployee;
 import simcity.market.Order.OrderState;
-import simcity.market.gui.EmployeeGui;
+import simcity.market.gui.MarketEmployeeGui;
+import simcity.market.interfaces.MarketCashier;
+import simcity.market.interfaces.MarketCustomer;
+import simcity.market.interfaces.MarketDeliverer;
+import simcity.market.interfaces.MarketEmployee;
 
-public class EmployeeRole extends Role {
+public class MarketEmployeeRole extends Role implements MarketEmployee {
 
+	/* Constructor */
+	String name;
+
+	public MarketEmployeeRole(String n) {
+		name = n;
+	}
+	
+	public String getMaitreDName() {
+		return name;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setCashier(MarketCashier ch) {
+		cashier = ch;
+	}
+
+
+	/* Hacks */
+	public void setOrder(MarketCustomer c, List<ItemOrder> i) {
+		orders.add(new Order(c, i));
+	}
+	
+	
+	/* Accessors */
+	public List getOrders() {
+		return orders;
+	}
+	
+	
 	/* Animation */
 	private Semaphore animation = new Semaphore(0, true);
-	EmployeeGui gui;
+	MarketEmployeeGui gui;
+	
 	
 	/* Data */
 	
@@ -23,30 +60,35 @@ public class EmployeeRole extends Role {
 	Order currentOrder = null;
 	
 	// References to other roles
-	CashierRole cashier;
+	MarketCashier cashier;
 	
 	// Employee Status
 	enum EmployeeState {nothing, getting, toCashier, walking, handing, done};
 	EmployeeState eS = EmployeeState.nothing;
 	
+	
 	/* Messages */
 	public void msgGetItems(Order o) {
 		orders.add(o);
-		//stateChanged();
+		stateChanged();
+	}
+	public void msgPay() {
+		person.msgEndShift();
 	}
 	
 	/* Animation Messages */
 	public void msgHaveItems() {
 		animation.release();
 		eS = EmployeeState.toCashier;
-		//stateChanged();
+		stateChanged();
 	}
 	
 	public void msgAtCashier() {
 		animation.release();
 		eS = EmployeeState.handing;
-		//stateChanged();
+		stateChanged();
 	}
+	
 	
 	/* Scheduler */
 	public boolean pickAndExecuteAnAction() {

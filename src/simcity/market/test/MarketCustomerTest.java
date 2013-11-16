@@ -1,15 +1,15 @@
 package simcity.market.test;
 
-import simcity.market.DelivererRole;
+import simcity.market.MarketCustomerRole;
 import junit.framework.*;
 
-public class DelivererTest extends TestCase
+public class MarketCustomerTest extends TestCase
 {
 	//these are instantiated for each test separately via the setUp() method.
-	CashierAgent cashier;
-	MockDeliverer waiter;
-	MockCustomer customer;
-	MockEmployee market1, market2;
+	JesusCashierAgent cashier;
+	MockMarketDeliverer waiter;
+	MockMarketCustomer customer;
+	MockMarketEmployee market1, market2;
 
 
 	/**
@@ -18,11 +18,11 @@ public class DelivererTest extends TestCase
 	 */
 	public void setUp() throws Exception{
 		super.setUp();		
-		cashier = new CashierAgent("Cashier");		
-		customer = new MockCustomer("MockCustomer");		
-		waiter = new MockDeliverer("MockWaiter");
-		market1 = new MockEmployee("MockMarket1");
-		market2 = new MockEmployee("MockMarket2");
+		cashier = new JesusCashierAgent("Cashier");		
+		customer = new MockMarketCustomer("MockCustomer");		
+		waiter = new MockMarketDeliverer("MockWaiter");
+		market1 = new MockMarketEmployee("MockMarket1");
+		market2 = new MockMarketEmployee("MockMarket2");
 	}	
 	/**
 	 * This tests the cashier under very simple terms: one customer is ready to pay the exact bill.

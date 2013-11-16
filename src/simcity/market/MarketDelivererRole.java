@@ -7,14 +7,50 @@ import java.util.concurrent.Semaphore;
 
 import role.Role;
 import simcity.ItemOrder;
+import simcity.market.MarketCashierRole.myDeliverer;
+import simcity.market.MarketCashierRole.myEmployee;
 import simcity.market.Order.OrderState;
-import simcity.market.gui.DelivererGui;
+import simcity.market.gui.MarketDelivererGui;
+import simcity.market.interfaces.MarketCashier;
+import simcity.market.interfaces.MarketCustomer;
+import simcity.market.interfaces.MarketDeliverer;
+import simcity.market.interfaces.MarketEmployee;
 
-public class DelivererRole extends Role {
+public class MarketDelivererRole extends Role implements MarketDeliverer {
 
+	/* Constructor */
+	String name;
+
+	public MarketDelivererRole(String n) {
+		name = n;
+	}
+	
+	public String getMaitreDName() {
+		return name;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setCashier(MarketCashier ch) {
+		cashier = ch;
+	}
+
+	/* Hacks */
+	public void setOrder(MarketCustomer c, List<ItemOrder> i) {
+		orders.add(new Order(c, i));
+	}
+	
+	
+	/* Accessors */
+	public List getOrders() {
+		return orders;
+	}
+	
+	
 	/* Animation */
 	private Semaphore animation = new Semaphore(0, true);
-	DelivererGui gui;
+	MarketDelivererGui gui;
+	
 	
 	/* Data */
 	
@@ -23,18 +59,19 @@ public class DelivererRole extends Role {
 	Order currentOrder = null;
 	
 	// References to other roles
-	CashierRole cashier;
+	MarketCashier cashier;
 	
 	// Employee Status
 	enum DelivererState {nothing, going, arrived, goingBack, arrivedBack};
 	DelivererState dS = DelivererState.nothing;
+	
 	
 	/* Messages */
 	public void msgDeliverItems(Order o) {
 		orders.add(o);
 		stateChanged();
 	}
-	public void msgPayment(CustomerRole c, int money) {
+	public void msgPayment(MarketCustomer c, int money) {
 		synchronized(orders) {
 			for(Order o: orders) {
 				if(o.customer.equals(c)) {
@@ -45,7 +82,7 @@ public class DelivererRole extends Role {
 			}
 		}
 	}
-	public void msgSignedInvoice(CustomerRole c) {
+	public void msgSignedInvoice(MarketCustomer c) {
 		synchronized(orders) {
 			for(Order o: orders) {
 				if(o.customer.equals(c)) {
@@ -54,6 +91,9 @@ public class DelivererRole extends Role {
 				}
 			}
 		}
+	}
+	public void msgPay() {
+		person.msgEndShift();
 	}
 	/* Animation Messages */
 	public void msgArrived() {
@@ -66,6 +106,7 @@ public class DelivererRole extends Role {
 		dS = DelivererState.arrivedBack;
 		stateChanged();
 	}
+	
 	
 	/* Scheduler */
 	public boolean pickAndExecuteAnAction() {
@@ -148,6 +189,7 @@ public class DelivererRole extends Role {
 		cashier.msgDelivered(currentOrder, this);
 		currentOrder = null;
 	}
+	
 	
 	/* Animation Actions used by Customer Role */
 	
