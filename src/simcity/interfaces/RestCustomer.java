@@ -1,4 +1,4 @@
-package interfaces;
+package simcity.interfaces;
 
 public interface RestCustomer {
 

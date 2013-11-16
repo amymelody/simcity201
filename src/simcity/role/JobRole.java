@@ -1,4 +1,4 @@
-package role;
+package simcity.role;
 
 public abstract class JobRole extends Role {
 

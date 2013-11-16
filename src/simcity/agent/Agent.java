@@ -1,10 +1,10 @@
-package agent;
+package simcity.agent;
 
 import java.io.*;
 import java.util.*;
 import java.util.concurrent.*;
 
-import mock.EventLog;
+import simcity.mock.EventLog;
 
 /**
  * Base class for simple agents

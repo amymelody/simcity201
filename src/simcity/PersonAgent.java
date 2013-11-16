@@ -4,11 +4,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.awt.Point;
 
-import agent.Agent;
-import role.Role;
-import role.JobRole;
+import simcity.agent.Agent;
+import simcity.interfaces.RestCustomer;
 import simcity.joshrestaurant.JoshCustomerRole;
-import interfaces.RestCustomer;
+import simcity.mock.LoggedEvent;
+import simcity.role.JobRole;
+import simcity.role.Role;
 
 import java.util.*;
 
@@ -20,11 +21,11 @@ public class PersonAgent extends Agent
 	private String name;
 	private boolean haveBankAccount;
 	private boolean rentDue;
-	private CarAgent car;
-	private BusAgent bus;
+	//private CarAgent car;
+	//private BusAgent bus;
 	private String destination;
 	
-	public List<BusStopAgent> busStops = Collections.synchronizedList(new ArrayList<BusStopAgent>());
+	//public List<BusStopAgent> busStops = Collections.synchronizedList(new ArrayList<BusStopAgent>());
 	public List<ItemOrder> foodNeeded = Collections.synchronizedList(new ArrayList<ItemOrder>());
 	public List<ItemOrder> groceries = Collections.synchronizedList(new ArrayList<ItemOrder>());
 
@@ -52,6 +53,13 @@ public class PersonAgent extends Agent
 		super();
 		this.name = name;
 		
+		haveBankAccount = false;
+		rentDue = false;
+		destination = null;
+		money = 400;
+		minBalance = 100;
+		maxBalance = 1000;
+		
 		state.ns = NourishmentState.normal;
 		state.ls = LocationState.outside;
 		state.ws = WorkingState.notWorking;
@@ -61,6 +69,10 @@ public class PersonAgent extends Agent
 		houses.add(new Housing("ownerHouse", "residentRole"));
 		
 		restaurants.add(new Restaurant("joshRestaurant", "italian", "joshCustomerRole"));
+		restaurants.add(new Restaurant("cherysRestaurant", "blah", "joshCustomerRole"));
+		restaurants.add(new Restaurant("jesusRestaurant", "bleh", "joshCustomerRole"));
+		restaurants.add(new Restaurant("alfredRestaurant", "bluh", "joshCustomerRole"));
+		restaurants.add(new Restaurant("anjaliRestaurant", "blih", "joshCustomerRole"));
 		
 		markets.add(new Market("market1", "market1CustomerRole"));
 		markets.add(new Market("market2", "market2CustomerRole"));
@@ -69,6 +81,14 @@ public class PersonAgent extends Agent
 		banks.add(new Bank("bank1", "bank1DepositorRole"));
 	}
 	
+	
+	public String getName() {
+		return name;
+	}
+	
+	public int getMoney() {
+		return money;
+	}
 	
 	private void addRole(Role r, String n) {
 		r.setPerson(this);
@@ -81,6 +101,10 @@ public class PersonAgent extends Agent
 			return new JoshCustomerRole(name);
 		}
 		return null;
+	}
+	
+	private boolean haventEatenOutInAWhile() {
+		return true;
 	}
 	
 	private Restaurant chooseRestaurant() {
@@ -117,6 +141,7 @@ public class PersonAgent extends Agent
 	}
 
 	public void msgImHungry() {
+		log.add(new LoggedEvent("Received msgImHungry"));
 		state.ns = NourishmentState.gotHungry;
 		stateChanged();
 	}
@@ -152,10 +177,10 @@ public class PersonAgent extends Agent
 		stateChanged();
 	}
 
-	public void msgBoughtCar(CarAgent c) {
+	/*public void msgBoughtCar(CarAgent c) {
 		car = c;
 		stateChanged();
-	}
+	}*/
 
 	public void msgIncome(int cash) {
 		money += cash;
@@ -182,10 +207,10 @@ public class PersonAgent extends Agent
 		stateChanged();
 	}
 	
-	public void msgBusIsHere(BusAgent b) {
+	/*public void msgBusIsHere(BusAgent b) {
         bus = b;
         stateChanged();
-	}
+	}*/
 	
 	public void msgGetOffBus(String d) {
 		state.ts = TransportationState.walking;
@@ -197,7 +222,7 @@ public class PersonAgent extends Agent
 	
 	public boolean pickAndExecuteAnAction() {
 		if (state.ts == TransportationState.walking) { 
-			if (job != null && state.ws == WorkingState.notWorking && time+30 >= job.startShifts.get(day)) { //if half an hour before your shift starts
+			if (job != null && state.ws == WorkingState.notWorking && (time.plus(30)).greaterThanOrEqualTo(job.startShifts.get(day))) { //if half an hour before your shift starts
 				if (state.ls == LocationState.home) {
 					leaveHouse();
 					return true;
@@ -206,7 +231,7 @@ public class PersonAgent extends Agent
 					return true;
 				}
 			}
-			if (state.ws == WorkingState.working && time >= job.endShifts.get(day) && !job.role.equals("landlord")) { //if your shift ends
+			if (state.ws == WorkingState.working && time.greaterThanOrEqualTo(job.endShifts.get(day) ) && !job.role.equals("landlord")) { //if your shift ends
 				endShift();
 				return true;
 			} 
@@ -275,10 +300,10 @@ public class PersonAgent extends Agent
 			} 
 		}
 		
-		if (state.ts == TransportationState.waitingForBus && bus != null) {
+		/*if (state.ts == TransportationState.waitingForBus && bus != null) {
 			boardBus();
 			return true;
-		}
+		}*/
 		
 		boolean anytrue = false;
 		synchronized(roles) {
@@ -305,11 +330,11 @@ public class PersonAgent extends Agent
 		state.ws = WorkingState.notWorking;
 	}
 	
-	private void boardBus() {
+	/*private void boardBus() {
 		bus.msgComingAboard(this, destination);
 		bus = null;
 		state.ts = TransportationState.ridingBus;
-	}
+	}*/
 
 	private void goHome() {
 		Housing h = houses.get(0); //person's house
@@ -506,7 +531,7 @@ public class PersonAgent extends Agent
 	}
 
 	private void goToDestination(String d) {
-		if (car != null && !nearDestination(d)) {
+		/*if (car != null && !nearDestination(d)) {
 			DoGoToCar();
 			state.ts = TransportationState.inCar;
 			car.msgGoToDestination(d); //pass the destination to the car so it knows where to go
@@ -517,12 +542,12 @@ public class PersonAgent extends Agent
 				state.ts = TransportationState.waitingForBus;
 				destination = d;
 				b.msgWaitingForBus(this);
-			} else {
+			} else {*/
 				state.ts = TransportationState.walking;
-				DoGoToDestination(locations.get(d)); //just walk there
+				//DoGoToDestination(locations.get(d)); //just walk there
 				state.ls = LocationState.atDestination;
-			}
-		}
+			//}
+		//}
 	}
 	
 	//inner classes
@@ -540,6 +565,33 @@ public class PersonAgent extends Agent
 	public class Time {
 		int hour;
 		int minute;
+		
+		Time(int h, int m) {
+			hour = h;
+			minute = m;
+		}
+		
+		Time plus(int minutes) {
+			int h = hour;
+			int m = minute;
+			if (m + minutes >= 60) {
+				h++;
+				m = minutes - (60 - m);
+			} else {
+				m += minutes;
+			}
+			return new Time(h, m);
+		}
+		
+		boolean greaterThanOrEqualTo(Time t) {
+			if (hour >= t.hour) {
+				return true;
+			}
+			if (hour == t.hour && minute >= t.minute) {
+				return true;
+			}
+			return false;
+		}
 	}
 
 	public class PersonState {

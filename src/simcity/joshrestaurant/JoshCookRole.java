@@ -1,9 +1,8 @@
 package simcity.joshrestaurant;
 
-import agent.Agent;
-
 import java.util.*;
 
+import simcity.agent.Agent;
 import simcity.joshrestaurant.gui.JoshCookGui;
 
 

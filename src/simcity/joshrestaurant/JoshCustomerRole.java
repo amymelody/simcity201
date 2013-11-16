@@ -1,9 +1,9 @@
 package simcity.joshrestaurant;
 
+import simcity.agent.Agent;
 import simcity.joshrestaurant.gui.JoshCustomerGui;
 import simcity.joshrestaurant.interfaces.JoshCustomer;
 import simcity.RestCustomerRole;
-import agent.Agent;
 
 import java.util.Timer;
 import java.util.TimerTask;

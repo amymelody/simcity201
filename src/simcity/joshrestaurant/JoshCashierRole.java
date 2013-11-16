@@ -1,11 +1,11 @@
 package simcity.joshrestaurant;
 
-import agent.Agent;
+import simcity.agent.Agent;
 import simcity.joshrestaurant.interfaces.JoshCustomer;
 import simcity.joshrestaurant.interfaces.JoshWaiter;
 import simcity.joshrestaurant.interfaces.JoshCashier;
 import simcity.joshrestaurant.interfaces.JoshMarket;
-import mock.LoggedEvent;
+import simcity.mock.LoggedEvent;
 
 import java.util.*;
 

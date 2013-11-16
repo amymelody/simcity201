@@ -1,7 +1,7 @@
 package simcity;
 
-import role.Role;
-import interfaces.RestCustomer;
+import simcity.interfaces.RestCustomer;
+import simcity.role.Role;
 
 public abstract class RestCustomerRole extends Role implements RestCustomer {
 

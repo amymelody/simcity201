@@ -1,6 +1,6 @@
 package simcity.joshrestaurant;
 
-import agent.Agent;
+import simcity.agent.Agent;
 import simcity.joshrestaurant.gui.JoshWaiterGui;
 import simcity.joshrestaurant.gui.JoshCookGui;
 import simcity.joshrestaurant.interfaces.JoshWaiter;

@@ -1,15 +1,17 @@
-package role;
+package simcity.role;
 
-import agent.StringUtil;
 import simcity.PersonAgent;
+import simcity.agent.StringUtil;
+import simcity.mock.EventLog;
 
 public abstract class Role
 {
     protected PersonAgent person;
+    public EventLog log;
 
     protected Role()
     {
-    	
+    	log = new EventLog();
     }
     
     public abstract boolean pickAndExecuteAnAction();

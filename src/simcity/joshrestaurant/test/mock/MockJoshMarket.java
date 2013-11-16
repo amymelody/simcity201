@@ -1,9 +1,9 @@
 package simcity.joshrestaurant.test.mock;
 
-import mock.Mock;
-import mock.LoggedEvent;
 import simcity.joshrestaurant.interfaces.JoshCashier;
 import simcity.joshrestaurant.interfaces.JoshMarket;
+import simcity.mock.LoggedEvent;
+import simcity.mock.Mock;
 
 public class MockJoshMarket extends Mock implements JoshMarket {
 	

@@ -1,6 +1,6 @@
 package simcity.joshrestaurant;
 
-import agent.Agent;
+import simcity.agent.Agent;
 import simcity.joshrestaurant.interfaces.JoshMarket;
 
 import java.util.*;
