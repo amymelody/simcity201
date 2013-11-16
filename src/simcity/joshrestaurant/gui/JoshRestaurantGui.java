@@ -13,7 +13,7 @@ import java.awt.event.*;
  */
 public class JoshRestaurantGui extends JFrame implements ActionListener {
 	
-	AnimationPanel animationPanel = new AnimationPanel();
+	JoshRestuarantAnimationPanel animationPanel = new JoshRestuarantAnimationPanel();
 	private JPanel controlPanel = new JPanel();
 	
     /* restPanel holds 2 panels

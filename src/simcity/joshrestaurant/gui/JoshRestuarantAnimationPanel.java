@@ -8,7 +8,7 @@ import java.awt.event.ActionListener;
 import java.util.List;
 import java.util.ArrayList;
 
-public class AnimationPanel extends JPanel implements ActionListener {
+public class JoshRestuarantAnimationPanel extends JPanel implements ActionListener {
 
 	//Get rid of the "magic numbers"
 	static final int TABLEX = 150;
@@ -24,7 +24,7 @@ public class AnimationPanel extends JPanel implements ActionListener {
 
     private List<Gui> guis = new ArrayList<Gui>();
 
-    public AnimationPanel() {
+    public JoshRestuarantAnimationPanel() {
     	setSize(WINDOWX, WINDOWY);
         setVisible(true);
         

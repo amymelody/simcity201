@@ -1,11 +1,11 @@
 package simcity;
 
-import role.Role;
+import role.JobRole;
 import java.awt.Point;
 import java.util.*;
 import java.util.concurrent.Semaphore;
 
-public class LandlordRole extends Role
+public class LandlordRole extends JobRole
 {
 
 //Data
@@ -124,7 +124,7 @@ public class LandlordRole extends Role
 		}
 		int temp = moneyEarned;
 		moneyEarned = 0;
-		person.endShift(temp);
+//		person.endShift(temp);
 	}
 
 	public void goToLocation(Point p)

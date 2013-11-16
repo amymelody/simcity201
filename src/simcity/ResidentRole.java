@@ -1,6 +1,7 @@
 package simcity;
 
 import role.Role;
+import simcity.ItemOrder;
 import java.awt.Point;
 import java.util.*;
 import java.util.concurrent.Semaphore;
@@ -148,14 +149,13 @@ public class ResidentRole extends Role
 		{
 			for(ItemOrder grocery : groceries)	
 			{
-				if(food.foodItem.equals(grocery.foodItem))
+				if(food.getFoodItem().equals(grocery.getFoodItem()))
 				{
-					food.amount += grocery.amount;
+					food.setAmount(food.getAmount() + grocery.getAmount());
 					break;
 				}
 			}
 		}
-		foodInFridge.add(groceries); //*
 		groceries.clear();
 		stateChanged();
 	}
@@ -163,7 +163,7 @@ public class ResidentRole extends Role
 	{
 		commands.remove(c);
 		goToLocation(locations.get("Fridge"));
-		ItemOrder food = foodInFridge.get(random.nextInt(4)).foodItem; //assuming that the max number of types of food is 4
+		String food = foodInFridge.get(random.nextInt(4)).getFoodItem(); //assuming that the max number of types of food is 4
 		foodInFridge.remove(food); //*
 		goToLocation(locations.get("Stove"));
 		timer.schedule(new TimerTask() 
@@ -226,7 +226,7 @@ public class ResidentRole extends Role
 		commands.remove(c);
 		goToLocation(locations.get("Outside"));
 		state = ResidentState.away;
-		person.msgLeftDestination();
+		person.msgLeftDestination(this);
 		stateChanged();
 	}
 

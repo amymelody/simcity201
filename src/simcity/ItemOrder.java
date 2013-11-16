@@ -2,19 +2,26 @@ package simcity;
 
 public class ItemOrder
 {
-	private String food;
+	private String foodItem;
 	private int amount;
 	
-	ItemOrder(String f, int a) {
-		food = f;
+	ItemOrder(String f, int a)
+	{
+		foodItem = f;
 		amount = a;
 	}
 	
-	public String getFood() {
-		return food;
+	public void setAmount(int a)
+	{
+		amount = a;
 	}
-	
-	public int getAmount() {
+	public int getAmount()
+	{
 		return amount;
 	}
+	public String getFoodItem()
+	{
+		return foodItem;
+	}
+	
 }
