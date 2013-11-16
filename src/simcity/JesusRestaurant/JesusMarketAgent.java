@@ -1,11 +1,11 @@
 package simcity.JesusRestaurant;
 
 import agent.Agent;
-import restaurant.CookAgent;
-import restaurant.CashierAgent.BillState;
 import restaurant.gui.MarketGui;
-import restaurant.interfaces.Cashier;
-import restaurant.interfaces.Market;
+import simcity.cherysrestaurant.CookAgent;
+import simcity.cherysrestaurant.CashierAgent.BillState;
+import simcity.cherysrestaurant.interfaces.Cashier;
+import simcity.cherysrestaurant.interfaces.Market;
 
 import java.util.*;
 import java.util.concurrent.Semaphore;

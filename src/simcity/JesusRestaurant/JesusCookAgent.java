@@ -1,8 +1,8 @@
 package simcity.JesusRestaurant;
 
 import agent.Agent;
-import restaurant.MarketAgent;
 import restaurant.gui.CookGui;
+import simcity.cherysrestaurant.MarketAgent;
 
 import java.util.*;
 import java.util.concurrent.Semaphore;

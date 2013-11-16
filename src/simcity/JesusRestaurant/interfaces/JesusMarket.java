@@ -1,6 +1,6 @@
 package simcity.JesusRestaurant.interfaces;
 
-import restaurant.CookAgent;
+import simcity.cherysrestaurant.CookAgent;
 
 public interface JesusMarket {
 	

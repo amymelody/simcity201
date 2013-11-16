@@ -1,7 +1,7 @@
 package simcity.JesusRestaurant.gui;
 
 
-import restaurant.CookAgent;
+import simcity.cherysrestaurant.CookAgent;
 
 import java.awt.*;
 import java.util.ArrayList;

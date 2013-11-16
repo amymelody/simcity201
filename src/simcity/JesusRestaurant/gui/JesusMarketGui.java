@@ -1,8 +1,8 @@
 package simcity.JesusRestaurant.gui;
 
 
-import restaurant.CookAgent;
-import restaurant.MarketAgent;
+import simcity.cherysrestaurant.CookAgent;
+import simcity.cherysrestaurant.MarketAgent;
 
 import java.awt.*;
 import java.util.HashMap;

@@ -1,7 +1,7 @@
 package simcity.JesusRestaurant.gui;
 
-import restaurant.CustomerAgent;
-import restaurant.HostAgent;
+import simcity.cherysrestaurant.CustomerAgent;
+import simcity.cherysrestaurant.HostAgent;
 
 import javax.swing.*;
 

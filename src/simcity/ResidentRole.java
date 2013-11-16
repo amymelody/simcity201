@@ -1,6 +1,6 @@
 package simcity;
 
-import role.Role;
+import simcity.role.Role;
 import simcity.ItemOrder;
 import java.awt.Point;
 import java.util.*;

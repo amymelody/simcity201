@@ -1,9 +1,9 @@
 package simcity.JesusRestaurant;
 
 import agent.Agent;
-import restaurant.gui.WaiterGui;
-import restaurant.interfaces.Customer;
-import restaurant.interfaces.Waiter;
+import simcity.cherysrestaurant.gui.WaiterGui;
+import simcity.cherysrestaurant.interfaces.Customer;
+import simcity.cherysrestaurant.interfaces.Waiter;
 
 import java.util.*;
 import java.util.concurrent.Semaphore;

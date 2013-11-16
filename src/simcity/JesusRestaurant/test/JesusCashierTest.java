@@ -1,12 +1,12 @@
 package simcity.JesusRestaurant.test;
 
-import restaurant.CashierAgent;
-import restaurant.CashierAgent.BillState;
-import restaurant.CashierAgent.CheckState;
-import restaurant.CashierAgent.Check;
-import restaurant.test.mock.MockCustomer;
-import restaurant.test.mock.MockMarket;
-import restaurant.test.mock.MockWaiter;
+import simcity.cherysrestaurant.CashierAgent;
+import simcity.cherysrestaurant.CashierAgent.BillState;
+import simcity.cherysrestaurant.CashierAgent.Check;
+import simcity.cherysrestaurant.CashierAgent.CheckState;
+import simcity.cherysrestaurant.test.mock.MockCustomer;
+import simcity.cherysrestaurant.test.mock.MockMarket;
+import simcity.cherysrestaurant.test.mock.MockWaiter;
 import junit.framework.*;
 
 public class JesusCashierTest extends TestCase

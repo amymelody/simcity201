@@ -1,11 +1,11 @@
 package simcity.JesusRestaurant;
 
-import restaurant.WaiterAgent.customerState;
-import restaurant.gui.CustomerGui;
-import restaurant.gui.RestaurantGui;
-import restaurant.interfaces.Cashier;
-import restaurant.interfaces.Customer;
-import restaurant.interfaces.Waiter;
+import simcity.cherysrestaurant.WaiterAgent.customerState;
+import simcity.cherysrestaurant.gui.CustomerGui;
+import simcity.cherysrestaurant.gui.RestaurantGui;
+import simcity.cherysrestaurant.interfaces.Cashier;
+import simcity.cherysrestaurant.interfaces.Customer;
+import simcity.cherysrestaurant.interfaces.Waiter;
 import agent.Agent;
 
 import java.util.Random;

@@ -1,6 +1,6 @@
 package simcity;
 
-import role.JobRole;
+import simcity.role.JobRole;
 import java.awt.Point;
 import java.util.*;
 import java.util.concurrent.Semaphore;

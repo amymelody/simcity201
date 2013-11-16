@@ -181,19 +181,19 @@ public class CityCreationPanel extends JPanel implements ActionListener
 				{
 					if(b == rich)
 					{
-						currentPerson.addMoney(500);
+						currentPerson.msgIncome(500);
 					}
 					else if(b == middle)
 					{
-						currentPerson.addMoney(250);
+						currentPerson.msgIncome(250);
 					}
 					else if(b == poor)
 					{
-						currentPerson.addMoney(50);
+						currentPerson.msgIncome(50);
 					}
 				}
 			}
-			currentPerson.changeJob(jobSting);
+//			currentPerson.changeJob(jobString);
 			creatingPanel();
 		}
 	}
@@ -215,7 +215,7 @@ public class CityCreationPanel extends JPanel implements ActionListener
 		title.setText("<html><pre><u> Edit " + currentPerson.getName() + " </u><br></pre></html>");
 		addButton.setLabel("Save Changes");
 		name.setEnabled(false);
-		ecoStatus.setText("Current balance = $" + currentPerson.getBalance() + " : ");
+		ecoStatus.setText("Current balance = $" + currentPerson.getMoney() + " : ");
 		
 //		for(JRadioButtonMenuItem b : jobs)
 //		{

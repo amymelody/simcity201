@@ -2,12 +2,12 @@ package simcity.JesusRestaurant;
 
 import agent.Agent;
 import restaurant.gui.CashierGui;
-import restaurant.interfaces.Cashier;
-import restaurant.interfaces.Customer;
-import restaurant.interfaces.Market;
-import restaurant.interfaces.Waiter;
-import restaurant.test.mock.EventLog;
-import restaurant.test.mock.LoggedEvent;
+import simcity.cherysrestaurant.interfaces.Cashier;
+import simcity.cherysrestaurant.interfaces.Customer;
+import simcity.cherysrestaurant.interfaces.Market;
+import simcity.cherysrestaurant.interfaces.Waiter;
+import simcity.cherysrestaurant.test.mock.EventLog;
+import simcity.cherysrestaurant.test.mock.LoggedEvent;
 
 import java.util.*;
 import java.util.concurrent.Semaphore;

@@ -1,11 +1,11 @@
 package simcity.JesusRestaurant.gui;
 
-import restaurant.CashierAgent;
-import restaurant.CustomerAgent;
-import restaurant.HostAgent;
-import restaurant.MarketAgent;
-import restaurant.WaiterAgent;
-import restaurant.CookAgent;
+import simcity.cherysrestaurant.CashierAgent;
+import simcity.cherysrestaurant.CookAgent;
+import simcity.cherysrestaurant.CustomerAgent;
+import simcity.cherysrestaurant.HostAgent;
+import simcity.cherysrestaurant.MarketAgent;
+import simcity.cherysrestaurant.WaiterAgent;
 
 import javax.swing.*;
 

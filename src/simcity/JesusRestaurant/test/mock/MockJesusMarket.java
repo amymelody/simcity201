@@ -1,12 +1,12 @@
 package simcity.JesusRestaurant.test.mock;
 
 
-import restaurant.CookAgent;
 import restaurant.Menu;
-import restaurant.interfaces.Cashier;
-import restaurant.interfaces.Customer;
-import restaurant.interfaces.Market;
-import restaurant.interfaces.Waiter;
+import simcity.cherysrestaurant.CookAgent;
+import simcity.cherysrestaurant.interfaces.Cashier;
+import simcity.cherysrestaurant.interfaces.Customer;
+import simcity.cherysrestaurant.interfaces.Market;
+import simcity.cherysrestaurant.interfaces.Waiter;
 
 public class MockJesusMarket extends Mock implements JesusMarket {
 
