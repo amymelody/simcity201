@@ -4,8 +4,7 @@ public class ItemOrder
 {
 	private String foodItem;
 	private int amount;
-	
-	ItemOrder(String f, int a)
+	public ItemOrder(String f, int a)
 	{
 		foodItem = f;
 		amount = a;

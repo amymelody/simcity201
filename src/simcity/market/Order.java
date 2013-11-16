@@ -3,9 +3,10 @@ package simcity.market;
 import java.util.List;
 
 import simcity.ItemOrder;
+import simcity.market.interfaces.MarketCustomer;
 
 public class Order {
-	CustomerRole customer;
+	MarketCustomer customer;
 	List<ItemOrder> items;
 	OrderState oS;
 	int price;
@@ -13,7 +14,7 @@ public class Order {
 	int change;
 	String location;
 	
-	Order(CustomerRole c, List<ItemOrder> i) {
+	Order(MarketCustomer c, List<ItemOrder> i) {
 		customer = c;
 		items = i;
 		oS = OrderState.none;
@@ -23,7 +24,7 @@ public class Order {
 		location = null;
 	}
 	
-	Order(CustomerRole c, List<ItemOrder> i, String l) {
+	Order(MarketCustomer c, List<ItemOrder> i, String l) {
 		customer = c;
 		items = i;
 		oS = OrderState.none;
