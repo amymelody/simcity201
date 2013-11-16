@@ -6,6 +6,8 @@ import simcity.ItemOrder;
 import simcity.market.interfaces.MarketCashier;
 import simcity.market.interfaces.MarketCustomer;
 import simcity.market.interfaces.MarketDeliverer;
+import simcity.mock.LoggedEvent;
+import simcity.mock.Mock;
 
 public class MockMarketCustomer extends Mock implements MarketCustomer {
 

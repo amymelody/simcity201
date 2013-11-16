@@ -1,10 +1,10 @@
 package simcity.JesusRestaurant.test.mock;
 
-
-import restaurant.Menu;
-import simcity.cherysrestaurant.interfaces.Cashier;
-import simcity.cherysrestaurant.interfaces.Customer;
-import simcity.cherysrestaurant.interfaces.Waiter;
+import simcity.mock.EventLog;
+import simcity.mock.Mock;
+import simcity.JesusRestaurant.interfaces.JesusCashier;
+import simcity.JesusRestaurant.interfaces.JesusCustomer;
+import simcity.JesusRestaurant.interfaces.JesusWaiter;
 
 public class MockJesusWaiter extends Mock implements JesusWaiter {
 
@@ -32,7 +32,7 @@ public class MockJesusWaiter extends Mock implements JesusWaiter {
 	}
 
 	@Override
-	public void msgCheckComputed(Customer cust, double amount, String name) {
+	public void msgCheckComputed(JesusCustomer cust, double amount, String name) {
 		// TODO Auto-generated method stub
 		
 	}

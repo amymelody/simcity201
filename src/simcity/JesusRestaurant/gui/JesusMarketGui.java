@@ -1,8 +1,7 @@
 package simcity.JesusRestaurant.gui;
 
-
-import simcity.cherysrestaurant.CookAgent;
-import simcity.cherysrestaurant.MarketAgent;
+import simcity.JesusRestaurant.JesusCookRole;
+import simcity.JesusRestaurant.JesusMarketRole;
 
 import java.awt.*;
 import java.util.HashMap;
@@ -12,7 +11,7 @@ import javax.swing.ImageIcon;
 
 public class JesusMarketGui implements JesusGui {
 
-	private MarketAgent agent = null;
+	private JesusMarketRole role = null;
 
 	private int xPos = 440, yPos = 440;//default cook position
 	private int xDestination = 440, yDestination = 440;//default cook destination
@@ -27,8 +26,8 @@ public class JesusMarketGui implements JesusGui {
 
 	Image cookImage;
 	
-	public JesusMarketGui(MarketAgent m) {
-		this.agent = m;
+	public JesusMarketGui(JesusMarketRole m) {
+		this.role = m;
 
 		ImageIcon cookIcon = new ImageIcon(this.getClass().getResource("images/luigi.png"));
 		cookImage = cookIcon.getImage();
@@ -57,7 +56,7 @@ public class JesusMarketGui implements JesusGui {
 	}
 
 	public void updateInventory(Integer stI, Integer sI, Integer pI) {
-		agent.updateInventory(stI, sI, pI);
+		role.updateInventory(stI, sI, pI);
 	}
 	
 	public boolean isPresent() {

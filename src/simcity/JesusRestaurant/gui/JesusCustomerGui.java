@@ -1,7 +1,7 @@
 package simcity.JesusRestaurant.gui;
 
-import simcity.cherysrestaurant.CustomerAgent;
-import simcity.cherysrestaurant.HostAgent;
+import simcity.JesusRestaurant.JesusCustomerRole;
+import simcity.JesusRestaurant.JesusHostRole;
 
 import java.awt.*;
 import java.util.HashMap;
@@ -15,7 +15,7 @@ public class JesusCustomerGui implements JesusGui{
 
 	Timer timer = new Timer();
 	
-	private CustomerAgent agent = null;
+	private JesusCustomerRole role = null;
 	private boolean isPresent = false;
 	private boolean isHungry = false;
 
@@ -50,8 +50,8 @@ public class JesusCustomerGui implements JesusGui{
 
 	Image customerImage;
 	
-	public JesusCustomerGui(CustomerAgent c, JesusRestaurantGui gui, int xW, int yW){
-		agent = c;
+	public JesusCustomerGui(JesusCustomerRole c, JesusRestaurantGui gui, int xW, int yW){
+		role = c;
 		xPos = -40;
 		yPos = -40;
 		xDestination = -40;
@@ -98,14 +98,14 @@ public class JesusCustomerGui implements JesusGui{
 			yPos--;
 
 		if (xPos == xDestination && yPos == yDestination) {
-			if (command==Command.GoToSeat) agent.msgAnimationFinishedGoToSeat();
+			if (command==Command.GoToSeat) role.msgAnimationFinishedGoToSeat();
 			else if (command==Command.LeaveRestaurant) {
-				agent.msgAnimationFinishedLeaveRestaurant();
+				role.msgAnimationFinishedLeaveRestaurant();
 				isHungry = false;
-				gui.setCustomerEnabled(agent);
+				gui.setCustomerEnabled(role);
 			}
 			else if(xPos == cashierxloc && yPos == cashieryloc) {
-				agent.msgAnimationFinishedGoToCashier();
+				role.msgAnimationFinishedGoToCashier();
 			}
 			command=Command.noCommand;
 		}
@@ -122,7 +122,7 @@ public class JesusCustomerGui implements JesusGui{
 	}
 	public void setHungry() {
 		isHungry = true;
-		agent.gotHungry();
+		role.gotHungry();
 		setPresent(true);
 		xDestination = xWait;
 		yDestination = yWait;
@@ -175,6 +175,6 @@ public class JesusCustomerGui implements JesusGui{
 	}
 	
 	public void updateMoney(Double m) {
-		agent.updateMoney(m);
+		role.updateMoney(m);
 	}
 }

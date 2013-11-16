@@ -1,13 +1,13 @@
 package simcity.JesusRestaurant;
 
-import agent.Agent;
-import restaurant.gui.CashierGui;
-import simcity.cherysrestaurant.interfaces.Cashier;
-import simcity.cherysrestaurant.interfaces.Customer;
-import simcity.cherysrestaurant.interfaces.Market;
-import simcity.cherysrestaurant.interfaces.Waiter;
-import simcity.cherysrestaurant.test.mock.EventLog;
-import simcity.cherysrestaurant.test.mock.LoggedEvent;
+import simcity.role.Role;
+import simcity.JesusRestaurant.gui.JesusCashierGui;
+import simcity.JesusRestaurant.interfaces.JesusCashier;
+import simcity.JesusRestaurant.interfaces.JesusCustomer;
+import simcity.JesusRestaurant.interfaces.JesusMarket;
+import simcity.JesusRestaurant.interfaces.JesusWaiter;
+import simcity.mock.EventLog;
+import simcity.mock.LoggedEvent;
 
 import java.util.*;
 import java.util.concurrent.Semaphore;
@@ -19,7 +19,7 @@ import java.util.concurrent.Semaphore;
 //does all the rest. Rather than calling the other agent a waiter, we called him
 //the HostAgent. A Host is the manager of a restaurant who sees that all
 //is proceeded as he wishes.
-public class JesusCashierAgent extends Agent implements JesusCashier {
+public class JesusCashierRole extends Agent implements JesusCashier {
 	public List<Check> checks = Collections.synchronizedList(new ArrayList<Check>());
 	public List<Bill> bills = Collections.synchronizedList(new ArrayList<Bill>());
 	public double money = 400.00;
@@ -35,7 +35,7 @@ public class JesusCashierAgent extends Agent implements JesusCashier {
 
 	public EventLog log = new EventLog();
 
-	public JesusCashierAgent(String name) {
+	public JesusCashierRole(String name) {
 		super();
 
 		this.name = name;

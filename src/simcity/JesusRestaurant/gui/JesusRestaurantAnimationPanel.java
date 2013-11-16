@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.Random;
 
-public class JesusAnimationPanel extends JPanel implements ActionListener {
+public class JesusRestaurantAnimationPanel extends JPanel implements ActionListener {
 	static final int TIMERINCR = 10;
 	static final int TABLESIZE = 50;
 	private final int WINDOWX = 440;
@@ -32,7 +32,7 @@ public class JesusAnimationPanel extends JPanel implements ActionListener {
 
 	Image bg, t1Image, t2Image, t3Image, t4Image, plateArea, cookArea, cashierArea;
 	
-	public JesusAnimationPanel() {
+	public JesusRestaurantAnimationPanel() {
 		setSize(WINDOWX, WINDOWY);
 		setVisible(true);
 		

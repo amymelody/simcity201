@@ -2,13 +2,10 @@ package simcity.market.interfaces;
 
 import java.util.List;
 
-import simcity.market.test.mock.EventLog;
 import simcity.ItemOrder;
 import simcity.market.Order;
 
 public interface MarketCashier {
-	
-	public EventLog log = new EventLog();
 	
 	public abstract void msgHired(MarketEmployee e, int salary);
 	
