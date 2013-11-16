@@ -47,7 +47,7 @@ public class PersonAgent extends Agent
 	public enum TransportationState {unknown, waitingForBus, ridingBus, inCar, walking};
 	public enum Day {Sun, Mon, Wed, Tue, Thu, Fri, Sat};
 
-	PersonState state;
+	public PersonState state = new PersonState();
 	
 	public PersonAgent(String name) {
 		super();
@@ -56,7 +56,7 @@ public class PersonAgent extends Agent
 		haveBankAccount = false;
 		rentDue = false;
 		destination = null;
-		money = 400;
+		money = 0;
 		minBalance = 100;
 		maxBalance = 1000;
 		
@@ -90,7 +90,7 @@ public class PersonAgent extends Agent
 		return money;
 	}
 	
-	private void addRole(Role r, String n) {
+	public void addRole(Role r, String n) {
 		r.setPerson(this);
 		roles.add(new MyRole(r, n));
 	}
@@ -145,6 +145,10 @@ public class PersonAgent extends Agent
 		state.ns = NourishmentState.gotHungry;
 		stateChanged();
 	}
+	
+	public void msgYoureHired(String l, String r, int p) {
+		job = new Job(l, r, p);
+	}
 
 	public void msgLeftDestination(Role r) {
 		synchronized(roles) {
@@ -194,7 +198,7 @@ public class PersonAgent extends Agent
 
 	public void msgEndShift() {
 		state.ws = WorkingState.notWorking;
-		money += job.paycheck;
+		money += job.payrate;
 		stateChanged();
 	}
 	
@@ -315,10 +319,10 @@ public class PersonAgent extends Agent
 			}
 		}
 		
-		if (state.ts == TransportationState.walking && state.ls != LocationState.home && state.ls != LocationState.leavingHouse) {
+		/*if (state.ts == TransportationState.walking && state.ls != LocationState.home && state.ls != LocationState.leavingHouse) {
 			goHome(); //if nothing left to do, go home and do whatever
 			return true;
-		}
+		}*/
 		
 		return false;
 	}
@@ -326,7 +330,7 @@ public class PersonAgent extends Agent
 	//Actions
 
 	private void endShift() {
-		money += job.paycheck;
+		money += job.payrate;
 		state.ws = WorkingState.notWorking;
 	}
 	
@@ -438,9 +442,9 @@ public class PersonAgent extends Agent
 			} 
 			synchronized(roles) {
 				for (MyRole mr : roles) {
-					if (mr.name == r.customerRole) {
-						if (mr.r instanceof RestCustomerRole) {
-							RestCustomerRole c = (RestCustomerRole)(mr.r);
+					if (mr.name.equals(r.customerRole)) {
+						if (mr.r instanceof RestCustomer) {
+							RestCustomer c = (RestCustomer)(mr.r);
 							mr.active = true;
 							state.ls = LocationState.restaurant;
 							c.gotHungry();
@@ -552,14 +556,19 @@ public class PersonAgent extends Agent
 	
 	//inner classes
 	public class MyRole {
+		Role r;
+		String name;
+		boolean active;
+		
 		MyRole(Role role, String n) {
 			r = role;
 			name = n;
 			active = false;
 		}
-		Role r;
-		String name;
-		boolean active;
+		
+		public boolean isActive() {
+			return active;
+		}
 	}
 
 	public class Time {
@@ -599,21 +608,53 @@ public class PersonAgent extends Agent
 		LocationState ls;
 		WorkingState ws;
 		TransportationState ts;
+		
+		PersonState() {
+			
+		}
+		
+		public NourishmentState getNState() {
+			return ns;
+		}
+		public LocationState getLState() {
+			return ls;
+		}
+		public WorkingState getWState() {
+			return ws;
+		}
+		public TransportationState getTState() {
+			return ts;
+		}
 	}
 
 	public class Job {
-		Job(String l, String r, LocationState jL, int p) {
+		Job(String l, String r, int p) {
 			location = l;
 			role = r;
-			jobLocation = jL;
-			paycheck = p;
+			payrate = p;
+			switch (location) {
+				case "joshRestaurant": case "cherysRestaurant": case "alfredRestaurant": case "anjaliRestaurant": case "jesusRestaurant":
+					jobLocation = LocationState.restaurant;
+					break;
+				case "market1": case "market2": case "market3":
+					jobLocation = LocationState.market;
+					break;
+				case "ownerHouse":
+					jobLocation = LocationState.ownerHouse;
+					break;
+				case "bank":
+					jobLocation = LocationState.bank;
+					break;
+				default:
+					break;
+			}
 		}
 		String role;
 		LocationState jobLocation;
 		String location;
 		Map<Day, Time> startShifts;
 		Map<Day, Time> endShifts;
-		int paycheck;
+		int payrate;
 	}
 
 	public class Housing {

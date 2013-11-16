@@ -16,7 +16,13 @@ public class MockRestCustomerRole extends Role implements RestCustomer {
 	}
 	
 	public boolean pickAndExecuteAnAction() {
-		
+		if (log.size() > 0) {
+			person.msgDoneEating();
+			person.msgExpense(16);
+			person.msgLeftDestination(this);
+			return true;
+		}
+		return false;
 	}
 	
 	public String toString() {
