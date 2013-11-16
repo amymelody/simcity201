@@ -1,11 +1,12 @@
 package simcity.JesusRestaurant;
 
-import restaurant.WaiterAgent.customerState;
-import restaurant.gui.CustomerGui;
-import restaurant.gui.RestaurantGui;
-import restaurant.interfaces.Cashier;
-import restaurant.interfaces.Customer;
-import restaurant.interfaces.Waiter;
+import simcity.role.Role;
+import simcity.JesusRestaurant.gui.JesusCustomerGui;
+import simcity.JesusRestaurant.gui.JesusRestaurantGui;
+import simcity.JesusRestaurant.interfaces.JesusCashier;
+import simcity.JesusRestaurant.interfaces.JesusCustomer;
+import simcity.JesusRestaurant.interfaces.JesusWaiter;
+import simcity.JesusRestaurant.JesusMenu;
 import agent.Agent;
 
 import java.util.Random;
@@ -15,7 +16,7 @@ import java.util.TimerTask;
 /**
  * Restaurant customer agent.
  */
-public class JesusCustomerAgent extends Agent implements JesusCustomer {
+public class JesusCustomerRole extends Role implements JesusCustomer {
 	private String name;
 	private int hungerLevel = 5; // determines length of meal
 	private double money = 20.00;
@@ -24,7 +25,7 @@ public class JesusCustomerAgent extends Agent implements JesusCustomer {
 	private JesusCustomerGui customerGui;
 
 	// agent correspondents
-	private JesusHostAgent host;
+	private JesusHostRole host;
 	private JesusWaiter waiter;
 	private JesusCashier cashier;
 
@@ -52,7 +53,7 @@ public class JesusCustomerAgent extends Agent implements JesusCustomer {
 		 * @param name name of the customer
 		 * @param gui  reference to the customergui so the customer can send it messages
 		 */
-		public JesusCustomerAgent(String name){
+		public JesusCustomerRole(String name){
 			super();
 			this.name = name;
 			foodChoice = "";
@@ -62,7 +63,7 @@ public class JesusCustomerAgent extends Agent implements JesusCustomer {
 		/**
 		 * hack to establish connection to Host agent.
 		 */
-		public void setHost(JesusHostAgent host) {
+		public void setHost(JesusHostRole host) {
 			this.host = host;
 		}
 

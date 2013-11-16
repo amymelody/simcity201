@@ -3,20 +3,20 @@ package simcity.market.test;
 import java.util.ArrayList;
 import java.util.List;
 
-import simcity.market.CashierRole;
-import simcity.market.test.mock.MockCustomer;
-import simcity.market.test.mock.MockDeliverer;
-import simcity.market.test.mock.MockEmployee;
+import simcity.market.MarketCashierRole;
+import simcity.market.test.mock.MockMarketCustomer;
+import simcity.market.test.mock.MockMarketDeliverer;
+import simcity.market.test.mock.MockMarketEmployee;
 import simcity.ItemOrder;
 import junit.framework.*;
 
 public class MarketCashierTest extends TestCase
 {
 	// Needed for tests
-	CashierRole cashier;
-	MockDeliverer deliverer1, deliverer2;
-	MockEmployee employee1, employee2;
-	MockCustomer customer1, customer2;
+	MarketCashierRole cashier;
+	MockMarketDeliverer deliverer1, deliverer2;
+	MockMarketEmployee employee1, employee2;
+	MockMarketCustomer customer1, customer2;
 
 	
 	/**
@@ -25,13 +25,13 @@ public class MarketCashierTest extends TestCase
 	 */
 	public void setUp() throws Exception{
 		super.setUp();		
-		cashier = new CashierRole("Cashier");
-		customer1 = new MockCustomer("MockCustomer");
-		customer1 = new MockCustomer("MockCustomer");
-		deliverer1 = new MockDeliverer("MockDeliverer1");
-		deliverer2 = new MockDeliverer("MockDeliverer1");
-		employee1 = new MockEmployee("MockEmployee1");
-		employee2 = new MockEmployee("MockEmployee2");
+		cashier = new MarketCashierRole("Cashier");
+		customer1 = new MockMarketCustomer("MockCustomer");
+		customer1 = new MockMarketCustomer("MockCustomer");
+		deliverer1 = new MockMarketDeliverer("MockDeliverer1");
+		deliverer2 = new MockMarketDeliverer("MockDeliverer1");
+		employee1 = new MockMarketEmployee("MockEmployee1");
+		employee2 = new MockMarketEmployee("MockEmployee2");
 	}
 	
 	

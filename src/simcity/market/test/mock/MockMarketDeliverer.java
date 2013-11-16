@@ -4,6 +4,8 @@ import simcity.market.Order;
 import simcity.market.interfaces.MarketCashier;
 import simcity.market.interfaces.MarketCustomer;
 import simcity.market.interfaces.MarketDeliverer;
+import simcity.mock.LoggedEvent;
+import simcity.mock.Mock;
 
 public class MockMarketDeliverer extends Mock implements MarketDeliverer {
 
@@ -35,6 +37,12 @@ public class MockMarketDeliverer extends Mock implements MarketDeliverer {
 	@Override
 	public void msgSignedInvoice(MarketCustomer c) {
 		log.add(new LoggedEvent("Delivery confirmed by customer."));
+		
+	}
+
+	@Override
+	public void msgPay() {
+		// TODO Auto-generated method stub
 		
 	}
 

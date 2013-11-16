@@ -1,8 +1,8 @@
 package simcity.JesusRestaurant;
 
-import agent.Agent;
-import restaurant.MarketAgent;
-import restaurant.gui.CookGui;
+import simcity.role.Role;
+import simcity.JesusRestaurant.JesusMarketRole;
+import simcity.JesusRestaurant.gui.JesusCookGui;
 
 import java.util.*;
 import java.util.concurrent.Semaphore;
@@ -16,7 +16,7 @@ import java.util.TimerTask;
 //does all the rest. Rather than calling the other agent a waiter, we called him
 //the HostAgent. A Host is the manager of a restaurant who sees that all
 //is proceeded as he wishes.
-public class JesusCookAgent extends Agent {
+public class JesusCookRole extends Role {
 	private static final int steakTime = 7000;
 	private static final int saladTime = 4000;
 	private static final int pizzaTime = 2000;
@@ -26,8 +26,8 @@ public class JesusCookAgent extends Agent {
 	public List<Order> orders = Collections.synchronizedList(new ArrayList<Order>());
 	public List<Food> foods = Collections.synchronizedList(new ArrayList<Food>());
 	public List<myMarket> markets = Collections.synchronizedList(new ArrayList<myMarket>());
-	public JesusHostAgent host;
-	public JesusCashierAgent cashier;
+	public JesusHostRole host;
+	public JesusCashierRole cashier;
 
 	public enum orderState {waiting, preparing, ready};
 	public enum stockState {none, checkFood, outOfFood, ordered, stockReplenished};
@@ -40,7 +40,7 @@ public class JesusCookAgent extends Agent {
 
 	public JesusCookGui cookGui = null;
 
-	public JesusCookAgent(String name) {
+	public JesusCookRole(String name) {
 		super();
 
 		this.name = name;
@@ -58,15 +58,15 @@ public class JesusCookAgent extends Agent {
 		return name;
 	}
 
-	public void setHost(JesusHostAgent h) {
+	public void setHost(JesusHostRole h) {
 		host = h;
 	}
 
-	public void setCashier(JesusCashierAgent ch) {
+	public void setCashier(JesusCashierRole ch) {
 		cashier = ch;
 	}
 	
-	public void addMarket(JesusMarketAgent m) {
+	public void addMarket(JesusMarketRole m) {
 		markets.add(new myMarket(m));
 	}
 
@@ -152,7 +152,7 @@ public class JesusCookAgent extends Agent {
 		stateChanged();
 	}
 
-	public void msgCookOrder(JesusWaiterAgent wait, String choice, String customerName) {
+	public void msgCookOrder(JesusWaiterRole wait, String choice, String customerName) {
 		orders.add(new Order(choice, wait, customerName));
 		stateChanged();
 	}
@@ -375,11 +375,11 @@ public class JesusCookAgent extends Agent {
 
 	private class Order {
 		String name;
-		JesusWaiterAgent waiter;
+		JesusWaiterRole waiter;
 		String custName;
 		orderState oState;
 
-		Order(String n, JesusWaiterAgent w, String cN) {
+		Order(String n, JesusWaiterRole w, String cN) {
 			name = n;
 			waiter = w;
 			custName = cN;
@@ -407,10 +407,10 @@ public class JesusCookAgent extends Agent {
 	}
 
 	private class myMarket {
-		JesusMarketAgent market;
+		JesusMarketRole market;
 		Map<String, Boolean> outStock;
 
-		myMarket(JesusMarketAgent m) {
+		myMarket(JesusMarketRole m) {
 			market = m;
 			outStock = new HashMap<String, Boolean>();
 			outStock.put("Steak", false);

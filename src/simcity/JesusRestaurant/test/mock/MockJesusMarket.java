@@ -1,12 +1,11 @@
 package simcity.JesusRestaurant.test.mock;
 
 
-import restaurant.CookAgent;
-import restaurant.Menu;
-import restaurant.interfaces.Cashier;
-import restaurant.interfaces.Customer;
-import restaurant.interfaces.Market;
-import restaurant.interfaces.Waiter;
+import simcity.mock.EventLog;
+import simcity.mock.Mock;
+import simcity.JesusRestaurant.JesusCookRole;
+import simcity.JesusRestaurant.interfaces.JesusCashier;
+import simcity.JesusRestaurant.interfaces.JesusMarket;
 
 public class MockJesusMarket extends Mock implements JesusMarket {
 
@@ -21,7 +20,7 @@ public class MockJesusMarket extends Mock implements JesusMarket {
 	}
 
 	@Override
-	public void msgNeedRestock(CookAgent cook, String choice, int amount) {
+	public void msgNeedRestock(JesusCookRole cook, String choice, int amount) {
 		// TODO Auto-generated method stub
 		
 	}

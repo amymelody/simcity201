@@ -1,10 +1,7 @@
 package simcity.JesusRestaurant.gui;
 
-
-import restaurant.CustomerAgent;
-import restaurant.WaiterAgent;
-import restaurant.WaiterAgent.AgentState;
-import restaurant.interfaces.Customer;
+import simcity.JesusRestaurant.JesusWaiterRole;
+import simcity.JesusRestaurant.interfaces.JesusCustomer;
 
 import java.awt.*;
 import java.util.HashMap;
@@ -14,7 +11,7 @@ import javax.swing.ImageIcon;
 
 public class JesusWaiterGui implements JesusGui {
 
-	private WaiterAgent agent = null;
+	private JesusWaiterRole agent = null;
 
 	private int xPos = 460, yPos = 0;//default waiter position
 	private int xDestination, yDestination;//default waiter destination
@@ -48,7 +45,7 @@ public class JesusWaiterGui implements JesusGui {
 	state gS = state.none;
 	boolean breakDeciding = false;
 
-	public JesusWaiterGui(WaiterAgent agent, JesusRestaurantGui g, int xh, int yh) {
+	public JesusWaiterGui(JesusWaiterRole agent, JesusRestaurantGui g, int xh, int yh) {
 		this.agent = agent;
 		gui = g;
 		

@@ -1,9 +1,10 @@
 package simcity.JesusRestaurant;
 
-import agent.Agent;
-import restaurant.gui.WaiterGui;
-import restaurant.interfaces.Customer;
-import restaurant.interfaces.Waiter;
+import simcity.JesusRestaurant.gui.JesusWaiterGui;
+import simcity.JesusRestaurant.interfaces.JesusCustomer;
+import simcity.JesusRestaurant.interfaces.JesusWaiter;
+import simcity.JesusRestaurant.JesusMenu;
+import simcity.role.Role;
 
 import java.util.*;
 import java.util.concurrent.Semaphore;
@@ -15,7 +16,7 @@ import java.util.concurrent.Semaphore;
 //does all the rest. Rather than calling the other agent a waiter, we called him
 //the HostAgent. A Host is the manager of a restaurant who sees that all
 //is proceeded as he wishes.
-public class JesusWaiterAgent extends Agent implements JesusWaiter {
+public class JesusWaiterRole extends Role implements JesusWaiter {
 	//Notice that we implement waitingCustomers using ArrayList, but type it
 	//with List semantics.
 	public List<myCustomer> myCustomers = Collections.synchronizedList(new ArrayList<myCustomer>());
@@ -28,9 +29,9 @@ public class JesusWaiterAgent extends Agent implements JesusWaiter {
 	public JesusWaiterGui waiterGui = null;
 
 	// agent correspondents
-	private JesusHostAgent host;
-	private JesusCookAgent cook;
-	private JesusCashierAgent cashier;
+	private JesusHostRole host;
+	private JesusCookRole cook;
+	private JesusCashierRole cashier;
 
 	private String currentPlate = "";
 	boolean breakTime = false;
@@ -55,7 +56,7 @@ public class JesusWaiterAgent extends Agent implements JesusWaiter {
 		
 		int ordersToGet = 0;
 
-		public JesusWaiterAgent(String name) {
+		public JesusWaiterRole(String name) {
 			super();
 
 			this.name = name;
@@ -69,15 +70,15 @@ public class JesusWaiterAgent extends Agent implements JesusWaiter {
 			return name;
 		}
 
-		public void setHost(JesusHostAgent h) {
+		public void setHost(JesusHostRole h) {
 			host = h;
 		}
 
-		public void setCook(JesusCookAgent c) {
+		public void setCook(JesusCookRole c) {
 			cook = c;
 		}
 
-		public void setCashier(JesusCashierAgent csh) {
+		public void setCashier(JesusCashierRole csh) {
 			cashier = csh;
 		}
 
@@ -104,7 +105,7 @@ public class JesusWaiterAgent extends Agent implements JesusWaiter {
 			event = AgentEvent.returnToWork;
 			stateChanged();
 		}
-		public void msgSeatCustomer(JesusCustomerAgent cust, int tableNum, String name) {
+		public void msgSeatCustomer(JesusCustomerRole cust, int tableNum, String name) {
 			myCustomers.add(new myCustomer(cust, tableNum, name));
 			event = AgentEvent.assigned;
 			stateChanged();

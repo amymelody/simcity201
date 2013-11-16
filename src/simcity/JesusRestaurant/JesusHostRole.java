@@ -1,7 +1,7 @@
 package simcity.JesusRestaurant;
 
-import agent.Agent;
-import restaurant.gui.HostGui;
+import simcity.role.Role;
+import simcity.JesusRestaurant.gui.JesusHostGui;
 
 import java.util.*;
 import java.util.concurrent.Semaphore;
@@ -13,7 +13,7 @@ import java.util.concurrent.Semaphore;
 //does all the rest. Rather than calling the other agent a waiter, we called him
 //the HostAgent. A Host is the manager of a restaurant who sees that all
 //is proceeded as he wishes.
-public class JesusHostAgent extends Agent {
+public class JesusHostRole extends Role {
 	static final int NTABLES = 4;//a global for the number of tables.
 	//Notice that we implement waitingCustomers using ArrayList, but type it
 	//with List semantics.
@@ -33,7 +33,7 @@ public class JesusHostAgent extends Agent {
 	
 	public JesusHostGui hostGui = null;
 
-	public JesusHostAgent(String name) {
+	public JesusHostRole(String name) {
 		super();
 
 		this.name = name;
@@ -45,7 +45,7 @@ public class JesusHostAgent extends Agent {
 	}
 
 	/*hack to set waiters*/
-	public void setWaiters(JesusWaiterAgent w) {
+	public void setWaiters(JesusWaiterRole w) {
 		waiters.add(new myWaiter(w));
 	}
 	
@@ -74,7 +74,7 @@ public class JesusHostAgent extends Agent {
 		open = false;
 		stateChanged();
 	}
-	public void msgGoingOnBreak(JesusWaiterAgent wait) {
+	public void msgGoingOnBreak(JesusWaiterRole wait) {
 		synchronized(waiters){
 		for(myWaiter w: waiters) {
 			if(w.waiter.getName().equals(wait.getName())) {
@@ -84,7 +84,7 @@ public class JesusHostAgent extends Agent {
 		}
 		}
 	}
-	public void msgReturningToWork(JesusWaiterAgent wait) {
+	public void msgReturningToWork(JesusWaiterRole wait) {
 		synchronized(waiters){
 		for(myWaiter w: waiters) {
 			if(w.waiter.getName().equals(wait.getName())) {
@@ -115,7 +115,7 @@ public class JesusHostAgent extends Agent {
 		}
 		}
 	}
-	public void msgIWantFood(JesusCustomerAgent cust) {
+	public void msgIWantFood(JesusCustomerRole cust) {
 		waitingCustomers.add(new myCustomer(cust));
 		state = AgentState.checking;
 		stateChanged();
@@ -248,12 +248,12 @@ public class JesusHostAgent extends Agent {
 	}
 
 	private class myWaiter {
-		JesusWaiterAgent waiter;
+		JesusWaiterRole waiter;
 		int numOfCust;
 		String name;
 		wState state;
 		
-		myWaiter(JesusWaiterAgent w) {
+		myWaiter(JesusWaiterRole w) {
 			this.waiter = w;
 			numOfCust = 0;
 			name = w.getName();
@@ -262,14 +262,14 @@ public class JesusHostAgent extends Agent {
 	}
 	
 	private class Table {
-		JesusCustomerAgent occupiedBy;
+		JesusCustomerRole occupiedBy;
 		int tableNumber;
 
 		Table(int tableNumber) {
 			this.tableNumber = tableNumber;
 		}
 
-		void setOccupant(JesusCustomerAgent cust) {
+		void setOccupant(JesusCustomerRole cust) {
 			occupiedBy = cust;
 		}
 
@@ -277,7 +277,7 @@ public class JesusHostAgent extends Agent {
 			occupiedBy = null;
 		}
 
-		JesusCustomerAgent getOccupant() {
+		JesusCustomerRole getOccupant() {
 			return occupiedBy;
 		}
 
@@ -304,10 +304,10 @@ public class JesusHostAgent extends Agent {
 	}
 	
 	public class myCustomer {
-		JesusCustomerAgent customer;
+		JesusCustomerRole customer;
 		boolean asked;
 		
-		myCustomer(JesusCustomerAgent c) {
+		myCustomer(JesusCustomerRole c) {
 			customer = c;
 			asked = false;
 		}

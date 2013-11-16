@@ -1,11 +1,11 @@
 package simcity.JesusRestaurant;
 
-import agent.Agent;
-import restaurant.CookAgent;
-import restaurant.CashierAgent.BillState;
-import restaurant.gui.MarketGui;
-import restaurant.interfaces.Cashier;
-import restaurant.interfaces.Market;
+import simcity.JesusRestaurant.JesusCookRole;
+import simcity.JesusRestaurant.JesusCashierRole.BillState;
+import simcity.JesusRestaurant.gui.JesusMarketGui;
+import simcity.JesusRestaurant.interfaces.JesusCashier;
+import simcity.JesusRestaurant.interfaces.JesusMarket;
+import simcity.role.Role;
 
 import java.util.*;
 import java.util.concurrent.Semaphore;
@@ -19,7 +19,7 @@ import java.util.TimerTask;
 //does all the rest. Rather than calling the other agent a waiter, we called him
 //the HostAgent. A Host is the manager of a restaurant who sees that all
 //is proceeded as he wishes.
-public class JesusMarketAgent extends Agent implements JesusMarket{
+public class JesusMarketRole extends Role implements JesusMarket {
 	private static final int prepareTime = 5000;
 	private static final int init_inv = 15;
 	private int id_cnt = 0;
@@ -30,7 +30,7 @@ public class JesusMarketAgent extends Agent implements JesusMarket{
 
 	public enum BillState {none, sending, sent, paying, owe};
 
-	JesusCookAgent cook;
+	JesusCookRole cook;
 	JesusCashier cashier;
 
 	public enum orderState {nothing, preparing, done, sending};
@@ -41,7 +41,7 @@ public class JesusMarketAgent extends Agent implements JesusMarket{
 
 	public JesusMarketGui marketGui = null;
 
-	public JesusMarketAgent(String name) {
+	public JesusMarketRole(String name) {
 		super();
 
 		this.name = name;
@@ -59,12 +59,12 @@ public class JesusMarketAgent extends Agent implements JesusMarket{
 		return name;
 	}
 
-	public void setCook(JesusCookAgent c) {
+	public void setCook(JesusCookRole c) {
 		cook = c;
 		cook.msgCheckInventory();
 	}
 
-	public void setCashier(JesusCashierAgent ch) {
+	public void setCashier(JesusCashierRole ch) {
 		cashier = ch;
 	}
 
@@ -133,7 +133,7 @@ public class JesusMarketAgent extends Agent implements JesusMarket{
 
 	// Messages
 
-	public void msgNeedRestock (JesusCookAgent cook, String choice, int amount) {
+	public void msgNeedRestock (JesusCookRole cook, String choice, int amount) {
 		stockOrders.add(new stockOrder(choice, cook, amount));
 		stateChanged();
 	}
@@ -288,12 +288,12 @@ public class JesusMarketAgent extends Agent implements JesusMarket{
 
 	private class stockOrder {
 		String name;
-		JesusCookAgent cook;
+		JesusCookRole cook;
 		int amount;
 		int amountLeft;
 		orderState oState;
 
-		stockOrder(String n, JesusCookAgent c, int a) {
+		stockOrder(String n, JesusCookRole c, int a) {
 			name = n;
 			cook = c;
 			amount = a;

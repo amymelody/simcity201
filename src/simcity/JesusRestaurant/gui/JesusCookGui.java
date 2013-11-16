@@ -1,7 +1,7 @@
 package simcity.JesusRestaurant.gui;
 
 
-import restaurant.CookAgent;
+import simcity.JesusRestaurant.JesusCookRole;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -14,7 +14,7 @@ import javax.swing.ImageIcon;
 
 public class JesusCookGui implements JesusGui {
 
-	private CookAgent agent = null;
+	private JesusCookRole role = null;
 
 	private int xPos = 400, yPos = 400;//default cook position
 	private int xDestination = 400, yDestination = 400;//default cook destination
@@ -31,8 +31,8 @@ public class JesusCookGui implements JesusGui {
 	int platexloc = 19, plateyloc = 16;
 	public static final Map<String, Image> foodImages = new HashMap<String, Image>();
 	
-	public JesusCookGui(CookAgent agent) {
-		this.agent = agent;
+	public JesusCookGui(JesusCookRole agent) {
+		this.role = role;
 
 		ImageIcon cookIcon = new ImageIcon(this.getClass().getResource("images/luigi.png"));
 		cookImage = cookIcon.getImage();
@@ -142,11 +142,11 @@ public class JesusCookGui implements JesusGui {
 	}
 	
 	public void checkInventory() {
-		agent.msgCheckInventory();
+		role.msgCheckInventory();
 	}
 
 	public void updateInventory(Integer stI, Integer sI, Integer pI) {
-		agent.updateInventory(stI, sI, pI);
+		role.updateInventory(stI, sI, pI);
 	}
 	
 	public class fImage {

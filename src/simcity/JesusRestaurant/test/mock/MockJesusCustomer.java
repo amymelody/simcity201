@@ -1,10 +1,12 @@
 package simcity.JesusRestaurant.test.mock;
 
-
-import restaurant.Menu;
-import restaurant.interfaces.Cashier;
-import restaurant.interfaces.Customer;
-import restaurant.interfaces.Waiter;
+import simcity.mock.EventLog;
+import simcity.mock.LoggedEvent;
+import simcity.mock.Mock;
+import simcity.JesusRestaurant.JesusMenu;
+import simcity.JesusRestaurant.interfaces.JesusCashier;
+import simcity.JesusRestaurant.interfaces.JesusCustomer;
+import simcity.JesusRestaurant.interfaces.JesusWaiter;
 
 public class MockJesusCustomer extends Mock implements JesusCustomer {
 
@@ -22,7 +24,7 @@ public class MockJesusCustomer extends Mock implements JesusCustomer {
 	}
 
 	@Override
-	public void msgSitAtTable(Waiter w, int tNum, Menu menu) {
+	public void msgSitAtTable(JesusWaiter w, int tNum, JesusMenu menu) {
 		// TODO Auto-generated method stub
 		log.add(new LoggedEvent ("Sitting"));
 	}
@@ -34,7 +36,7 @@ public class MockJesusCustomer extends Mock implements JesusCustomer {
 	}
 
 	@Override
-	public void msgRetakeOrder(Menu m) {
+	public void msgRetakeOrder(JesusMenu m) {
 		// TODO Auto-generated method stub
 		log.add(new LoggedEvent ("Order retook"));
 	}

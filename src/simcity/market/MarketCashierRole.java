@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import role.Role;
+import simcity.role.Role;
 import simcity.ItemOrder;
 import simcity.market.Order.OrderState;
 import simcity.market.interfaces.MarketCashier;
@@ -75,7 +75,7 @@ public class MarketCashierRole extends Role implements MarketCashier {
 	public List<Order> orders =  Collections.synchronizedList(new ArrayList<Order>());
 
 	// A list of prices
-	public PriceList prices = new PriceList();
+	public InventoryList inventory = new InventoryList();
 
 	// Lists of workers
 	public List<myEmployee> employees = Collections.synchronizedList(new ArrayList<myEmployee>());
@@ -139,8 +139,10 @@ public class MarketCashierRole extends Role implements MarketCashier {
 		mS = MarketState.closing;
 		stateChanged();
 	}
+	// Inventory updated +10 every time market opens
 	public void msgWereOpen() {
 		mS = MarketState.open;
+		inventory.opening();
 	}
 
 	// Normative Scenario #1
@@ -281,6 +283,9 @@ public class MarketCashierRole extends Role implements MarketCashier {
 			for(myEmployee me: employees) {
 				if(me.unoccupied && me.working) {
 					me.employee.msgGetItems(o);
+					for(ItemOrder iO: o.items) {
+						inventory.updateAmount(iO.getFoodItem(), iO.getAmount(), false);
+					}
 				}
 			}
 		}
@@ -292,6 +297,9 @@ public class MarketCashierRole extends Role implements MarketCashier {
 			for(myDeliverer md: deliverers) {
 				if(md.unoccupied && md.working) {
 					md.deliverer.msgDeliverItems(o);
+					for(ItemOrder iO: o.items) {
+						inventory.updateAmount(iO.getFoodItem(), iO.getAmount(), false);
+					}
 				}
 			}
 		}
@@ -363,7 +371,7 @@ public class MarketCashierRole extends Role implements MarketCashier {
 	/* Calculation functions by Cashier */
 	private void calculatePrice(Order o) {
 		for(ItemOrder iO: o.items) {
-			o.price += prices.getPrice(iO.getFood());
+			o.price += inventory.getPrice(iO.getFoodItem());
 		}
 	}
 	private void transaction(Order o) {
@@ -372,5 +380,5 @@ public class MarketCashierRole extends Role implements MarketCashier {
 	private void updateMarketMoney(Order o) {
 		marketMoney += o.price;
 	}
-
+	
 }

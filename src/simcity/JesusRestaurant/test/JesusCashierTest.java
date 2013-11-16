@@ -1,18 +1,18 @@
 package simcity.JesusRestaurant.test;
 
-import restaurant.CashierAgent;
-import restaurant.CashierAgent.BillState;
-import restaurant.CashierAgent.CheckState;
-import restaurant.CashierAgent.Check;
-import restaurant.test.mock.MockCustomer;
-import restaurant.test.mock.MockMarket;
-import restaurant.test.mock.MockWaiter;
+import simcity.JesusRestaurant.JesusCashierRole;
+import simcity.JesusRestaurant.JesusCashierRole.BillState;
+import simcity.JesusRestaurant.JesusCashierRole.CheckState;
+import simcity.JesusRestaurant.JesusCashierRole.Check;
+import simcity.JesusRestaurant.test.mock.MockJesusCustomer;
+import simcity.JesusRestaurant.test.mock.MockJesusMarket;
+import simcity.JesusRestaurant.test.mock.MockJesusWaiter;
 import junit.framework.*;
 
 public class JesusCashierTest extends TestCase
 {
 	//these are instantiated for each test separately via the setUp() method.
-	CashierAgent cashier;
+	JesusCashierRole cashier;
 	MockJesusWaiter waiter;
 	MockJesusCustomer customer;
 	MockJesusMarket market1, market2;
@@ -24,11 +24,11 @@ public class JesusCashierTest extends TestCase
 	 */
 	public void setUp() throws Exception{
 		super.setUp();		
-		cashier = new CashierAgent("Cashier");		
-		customer = new MockJesusCustomer("MockCustomer");		
-		waiter = new MockJesusWaiter("MockWaiter");
-		market1 = new MockJesusMarket("MockMarket1");
-		market2 = new MockJesusMarket("MockMarket2");
+		cashier = new JesusCashierRole("Cashier");		
+		customer = new MockJesusCustomer("MockJesusCustomer");		
+		waiter = new MockJesusWaiter("MockJesusWaiter");
+		market1 = new MockJesusMarket("MockJesusMarket1");
+		market2 = new MockJesusMarket("MockJesusMarket2");
 	}	
 	/**
 	 * This tests the cashier under very simple terms: one customer is ready to pay the exact bill.
@@ -43,7 +43,7 @@ public class JesusCashierTest extends TestCase
 		market2.cashier = cashier;
 		//check preconditions
 		assertEquals("Cashier should have 0 checks in it. It doesn't.",cashier.checks.size(), 0);		
-		assertEquals("CashierAgent should have an empty event log before the Cashier's ComputeCheck is called. Instead, the Cashier's event log reads: "
+		assertEquals("JesusCashierRole should have an empty event log before the Cashier's ComputeCheck is called. Instead, the Cashier's event log reads: "
 				+ cashier.log.toString(), 0, cashier.log.size());
 
 		//step 1a of the test
@@ -56,14 +56,14 @@ public class JesusCashierTest extends TestCase
 
 		//check postconditions for step 1b and preconditions for step 2
 
-		assertEquals("MockMarket should have an empty event log before the Cashier's scheduler is called. Instead, the MockMarket's event log reads: "
+		assertEquals("MockJesusMarket should have an empty event log before the Cashier's scheduler is called. Instead, the MockJesusMarket's event log reads: "
 				+ market1.log.toString(), 0, market1.log.size());
 
 		assertEquals("Cashier should have 1 bill in it. It doesn't.", cashier.bills.size(), 1);
 
 		//check postconditions for step 1a and preconditions for step 2
 
-		assertEquals("MockWaiter should have an empty event log before the Cashier's scheduler is called. Instead, the MockWaiter's event log reads: "
+		assertEquals("MockJesusWaiter should have an empty event log before the Cashier's scheduler is called. Instead, the MockJesusWaiter's event log reads: "
 				+ waiter.log.toString(), 0, waiter.log.size());
 
 		assertEquals("Cashier should have 1 check in it. It doesn't.", cashier.checks.size(), 1);
@@ -71,11 +71,11 @@ public class JesusCashierTest extends TestCase
 		assertFalse("Cashier's scheduler should have returned true, but didn't.", !cashier.pickAndExecuteAnAction());
 
 		assertEquals(
-				"MockWaiter should have an empty event log after the Cashier's scheduler is called for the first time. Instead, the MockWaiter's event log reads: "
+				"MockJesusWaiter should have an empty event log after the Cashier's scheduler is called for the first time. Instead, the MockJesusWaiter's event log reads: "
 						+ waiter.log.toString(), 0, waiter.log.size());
 
 		assertEquals(
-				"MockCustomer should have an empty event log after the Cashier's scheduler is called for the first time. Instead, the MockCustomer's event log reads: "
+				"MockJesusCustomer should have an empty event log after the Cashier's scheduler is called for the first time. Instead, the MockJesusCustomer's event log reads: "
 						+ waiter.log.toString(), 0, waiter.log.size());
 
 		//step 2 of the test
@@ -119,7 +119,7 @@ public class JesusCashierTest extends TestCase
 		assertFalse("Cashier's scheduler should have returned true, but didn't.", !cashier.pickAndExecuteAnAction());
 
 		assertEquals(
-				"MockMarket should have an empty event log after the Cashier's scheduler is called for the first time. Instead, the MockWaiter's event log reads: "
+				"MockJesusMarket should have an empty event log after the Cashier's scheduler is called for the first time. Instead, the MockJesusWaiter's event log reads: "
 						+ market1.log.toString(), 0, market1.log.size());
 
 		//check postconditions for step 6 / preconditions for step 7
@@ -148,7 +148,7 @@ public class JesusCashierTest extends TestCase
 
 		//check preconditions
 		assertEquals("Cashier should have 0 checks in it. It doesn't.",cashier.checks.size(), 0);		
-		assertEquals("CashierAgent should have an empty event log before the Cashier's HereIsBill is called. Instead, the Cashier's event log reads: "
+		assertEquals("JesusCashierRole should have an empty event log before the Cashier's HereIsBill is called. Instead, the Cashier's event log reads: "
 				+ cashier.log.toString(), 0, cashier.log.size());
 
 		//step 1 of the test
@@ -157,7 +157,7 @@ public class JesusCashierTest extends TestCase
 
 		//check postconditions for step 1 and preconditions for step 2
 
-		assertEquals("MockWaiter should have an empty event log before the Cashier's scheduler is called. Instead, the MockWaiter's event log reads: "
+		assertEquals("MockJesusWaiter should have an empty event log before the Cashier's scheduler is called. Instead, the MockJesusWaiter's event log reads: "
 				+ waiter.log.toString(), 0, waiter.log.size());
 
 		assertEquals("Cashier's checks list should contain a check in it. It doesn't.", cashier.checks.size(), 1);
@@ -165,11 +165,11 @@ public class JesusCashierTest extends TestCase
 		assertFalse("Cashier's scheduler should have returned true, but didn't.", !cashier.pickAndExecuteAnAction());
 
 		assertEquals(
-				"MockWaiter should have an empty event log after the Cashier's scheduler is called for the first time. Instead, the MockWaiter's event log reads: "
+				"MockJesusWaiter should have an empty event log after the Cashier's scheduler is called for the first time. Instead, the MockJesusWaiter's event log reads: "
 						+ waiter.log.toString(), 0, waiter.log.size());
 
 		assertEquals(
-				"MockCustomer should have an empty event log after the Cashier's scheduler is called for the first time. Instead, the MockCustomer's event log reads: "
+				"MockJesusCustomer should have an empty event log after the Cashier's scheduler is called for the first time. Instead, the MockJesusCustomer's event log reads: "
 						+ waiter.log.toString(), 0, waiter.log.size());
 
 		//step 2 of the test
@@ -200,7 +200,7 @@ public class JesusCashierTest extends TestCase
 		assertTrue("Cashier's checks list should contain a check with state == owe. It doesn't.",
 				cashier.checks.get(0).cS == CheckState.owe);
 
-		assertTrue("MockCustomer's event log should not be empty. It is.",
+		assertTrue("MockJesusCustomer's event log should not be empty. It is.",
 				customer.log.size()>0);
 
 		assertFalse("Cashier's scheduler should have returned false (no actions left to do), but didn't.", 
@@ -219,7 +219,7 @@ public class JesusCashierTest extends TestCase
 		market2.cashier = cashier;
 		//check preconditions
 		assertEquals("Cashier should have 0 checks in it. It doesn't.",cashier.checks.size(), 0);		
-		assertEquals("CashierAgent should have an empty event log before the Cashier's ComputeCheck is called. Instead, the Cashier's event log reads: "
+		assertEquals("JesusCashierRole should have an empty event log before the Cashier's ComputeCheck is called. Instead, the Cashier's event log reads: "
 				+ cashier.log.toString(), 0, cashier.log.size());
 
 		//step 1 of the test
@@ -228,7 +228,7 @@ public class JesusCashierTest extends TestCase
 
 		//check postconditions for step 1 and preconditions for step 2
 
-		assertEquals("MockWaiter should have an empty event log before the Cashier's scheduler is called. Instead, the MockWaiter's event log reads: "
+		assertEquals("MockJesusWaiter should have an empty event log before the Cashier's scheduler is called. Instead, the MockJesusWaiter's event log reads: "
 				+ waiter.log.toString(), 0, waiter.log.size());
 
 		assertEquals("Cashier should have 1 check in it. It doesn't.", cashier.checks.size(), 1);
@@ -236,11 +236,11 @@ public class JesusCashierTest extends TestCase
 		assertFalse("Cashier's scheduler should have returned true, but didn't.", !cashier.pickAndExecuteAnAction());
 
 		assertEquals(
-				"MockWaiter should have an empty event log after the Cashier's scheduler is called for the first time. Instead, the MockWaiter's event log reads: "
+				"MockJesusWaiter should have an empty event log after the Cashier's scheduler is called for the first time. Instead, the MockJesusWaiter's event log reads: "
 						+ waiter.log.toString(), 0, waiter.log.size());
 
 		assertEquals(
-				"MockCustomer should have an empty event log after the Cashier's scheduler is called for the first time. Instead, the MockCustomer's event log reads: "
+				"MockJesusCustomer should have an empty event log after the Cashier's scheduler is called for the first time. Instead, the MockJesusCustomer's event log reads: "
 						+ waiter.log.toString(), 0, waiter.log.size());
 
 		//step 2 of the test
@@ -289,7 +289,7 @@ public class JesusCashierTest extends TestCase
 
 		//check preconditions
 		assertEquals("Cashier should have 0 bills in it. It doesn't.",cashier.bills.size(), 0);		
-		assertEquals("CashierAgent should have an empty event log before the Cashier's message is called. Instead, the Cashier's event log reads: "
+		assertEquals("JesusCashierRole should have an empty event log before the Cashier's message is called. Instead, the Cashier's event log reads: "
 				+ cashier.log.toString(), 0, cashier.log.size());
 
 		//step 1 of the test
@@ -298,7 +298,7 @@ public class JesusCashierTest extends TestCase
 
 		//check postconditions for step 1 and preconditions for step 2
 
-		assertEquals("MockMarket should have an empty event log before the Cashier's scheduler is called. Instead, the MockMarket's event log reads: "
+		assertEquals("MockJesusMarket should have an empty event log before the Cashier's scheduler is called. Instead, the MockJesusMarket's event log reads: "
 				+ market1.log.toString(), 0, market1.log.size());
 
 		assertEquals("Cashier should have 1 bill in it. It doesn't.", cashier.bills.size(), 1);
@@ -316,7 +316,7 @@ public class JesusCashierTest extends TestCase
 		assertFalse("Cashier's scheduler should have returned true, but didn't.", !cashier.pickAndExecuteAnAction());
 
 		assertEquals(
-				"MockMarket should have an empty event log after the Cashier's scheduler is called for the first time. Instead, the MockWaiter's event log reads: "
+				"MockJesusMarket should have an empty event log after the Cashier's scheduler is called for the first time. Instead, the MockJesusWaiter's event log reads: "
 						+ market1.log.toString(), 0, market1.log.size());
 
 		//check postconditions for step 3 / preconditions for step 4
@@ -345,7 +345,7 @@ public class JesusCashierTest extends TestCase
 
 		//check preconditions
 		assertEquals("Cashier should have 0 bills in it. It doesn't.",cashier.bills.size(), 0);		
-		assertEquals("CashierAgent should have an empty event log before the Cashier's message is called. Instead, the Cashier's event log reads: "
+		assertEquals("JesusCashierRole should have an empty event log before the Cashier's message is called. Instead, the Cashier's event log reads: "
 				+ cashier.log.toString(), 0, cashier.log.size());
 
 		//step 1a of the test
@@ -354,7 +354,7 @@ public class JesusCashierTest extends TestCase
 
 		//check postconditions for step 1a and preconditions for step 2
 
-		assertEquals("MockMarket should have an empty event log before the Cashier's scheduler is called. Instead, the MockMarket's event log reads: "
+		assertEquals("MockJesusMarket should have an empty event log before the Cashier's scheduler is called. Instead, the MockJesusMarket's event log reads: "
 				+ market1.log.toString(), 0, market1.log.size());
 
 		assertEquals("Cashier should have 1 bill in it. It doesn't.", cashier.bills.size(), 1);
@@ -365,7 +365,7 @@ public class JesusCashierTest extends TestCase
 
 		//check postconditions for step 1b and preconditions for step 2
 
-		assertEquals("MockMarket should have an empty event log before the Cashier's scheduler is called. Instead, the MockMarket's event log reads: "
+		assertEquals("MockJesusMarket should have an empty event log before the Cashier's scheduler is called. Instead, the MockJesusMarket's event log reads: "
 				+ market2.log.toString(), 0, market2.log.size());
 
 		assertEquals("Cashier should have 2 bills in it. It doesn't.", cashier.bills.size(), 2);
@@ -392,7 +392,7 @@ public class JesusCashierTest extends TestCase
 		assertFalse("Cashier's scheduler should have returned true, but didn't.", !cashier.pickAndExecuteAnAction());
 
 		assertEquals(
-				"MockMarket should have an empty event log after the Cashier's scheduler is called for the first time. Instead, the MockWaiter's event log reads: "
+				"MockJesusMarket should have an empty event log after the Cashier's scheduler is called for the first time. Instead, the MockJesusWaiter's event log reads: "
 						+ market1.log.toString(), 0, market1.log.size());
 
 		//check postconditions for step 3 / preconditions for step 4
@@ -407,7 +407,7 @@ public class JesusCashierTest extends TestCase
 		assertFalse("Cashier's scheduler should have returned true, but didn't.", !cashier.pickAndExecuteAnAction());
 
 		assertEquals(
-				"MockMarket should have an empty event log after the Cashier's scheduler is called for the first time. Instead, the MockWaiter's event log reads: "
+				"MockJesusMarket should have an empty event log after the Cashier's scheduler is called for the first time. Instead, the MockJesusWaiter's event log reads: "
 						+ market2.log.toString(), 0, market2.log.size());
 
 		//check postconditions for step 3 / preconditions for step 4
@@ -436,7 +436,7 @@ public class JesusCashierTest extends TestCase
 
 		//check preconditions
 		assertEquals("Cashier should have 0 bills in it. It doesn't.",cashier.bills.size(), 0);		
-		assertEquals("CashierAgent should have an empty event log before the Cashier's message is called. Instead, the Cashier's event log reads: "
+		assertEquals("JesusCashierRole should have an empty event log before the Cashier's message is called. Instead, the Cashier's event log reads: "
 				+ cashier.log.toString(), 0, cashier.log.size());
 
 		//step 1 of the test
@@ -445,7 +445,7 @@ public class JesusCashierTest extends TestCase
 
 		//check postconditions for step 1 and preconditions for step 2
 
-		assertEquals("MockMarket should have an empty event log before the Cashier's scheduler is called. Instead, the MockMarket's event log reads: "
+		assertEquals("MockJesusMarket should have an empty event log before the Cashier's scheduler is called. Instead, the MockJesusMarket's event log reads: "
 				+ market1.log.toString(), 0, market1.log.size());
 
 		assertEquals("Cashier should have 1 bill in it. It doesn't.", cashier.bills.size(), 1);
@@ -463,7 +463,7 @@ public class JesusCashierTest extends TestCase
 		assertFalse("Cashier's scheduler should have returned true, but didn't.", !cashier.pickAndExecuteAnAction());
 
 		assertEquals(
-				"MockMarket should have an empty event log after the Cashier's scheduler is called for the first time. Instead, the MockWaiter's event log reads: "
+				"MockJesusMarket should have an empty event log after the Cashier's scheduler is called for the first time. Instead, the MockJesusWaiter's event log reads: "
 						+ market1.log.toString(), 0, market1.log.size());
 
 		//check postconditions for step 3 / preconditions for step 4

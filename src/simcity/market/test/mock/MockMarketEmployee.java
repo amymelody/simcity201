@@ -4,6 +4,8 @@ package simcity.market.test.mock;
 import simcity.market.Order;
 import simcity.market.interfaces.MarketCashier;
 import simcity.market.interfaces.MarketEmployee;
+import simcity.mock.LoggedEvent;
+import simcity.mock.Mock;
 
 public class MockMarketEmployee extends Mock implements MarketEmployee {
 
@@ -22,6 +24,12 @@ public class MockMarketEmployee extends Mock implements MarketEmployee {
 	@Override
 	public void msgGetItems(Order o) {
 		log.add(new LoggedEvent("Received order."));
+		
+	}
+
+	@Override
+	public void msgPay() {
+		// TODO Auto-generated method stub
 		
 	}
 	

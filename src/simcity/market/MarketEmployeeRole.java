@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Semaphore;
 
-import role.Role;
+import simcity.role.Role;
 import simcity.ItemOrder;
 import simcity.market.MarketCashierRole.myDeliverer;
 import simcity.market.MarketCashierRole.myEmployee;

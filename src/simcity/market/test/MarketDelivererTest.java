@@ -6,7 +6,7 @@ import junit.framework.*;
 public class MarketDelivererTest extends TestCase
 {
 	//these are instantiated for each test separately via the setUp() method.
-	JesusCashierAgent cashier;
+	JesusCashierRole cashier;
 	MockMarketDeliverer waiter;
 	MockMarketCustomer customer;
 	MockMarketEmployee market1, market2;
@@ -18,7 +18,7 @@ public class MarketDelivererTest extends TestCase
 	 */
 	public void setUp() throws Exception{
 		super.setUp();		
-		cashier = new JesusCashierAgent("Cashier");		
+		cashier = new JesusCashierRole("Cashier");		
 		customer = new MockMarketCustomer("MockCustomer");		
 		waiter = new MockMarketDeliverer("MockWaiter");
 		market1 = new MockMarketEmployee("MockMarket1");

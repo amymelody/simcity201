@@ -1,8 +1,8 @@
 package simcity.JesusRestaurant.gui;
 
-import restaurant.CustomerAgent;
-import restaurant.MarketAgent;
-import restaurant.WaiterAgent;
+import simcity.JesusRestaurant.JesusCustomerRole;
+import simcity.JesusRestaurant.JesusMarketRole;
+import simcity.JesusRestaurant.JesusWaiterRole;
 
 import javax.swing.*;
 
@@ -123,12 +123,12 @@ public class JesusRestaurantGui extends JFrame implements ActionListener, MouseM
 	public void updateInfoPanel(Object person) {
 		currentPerson = person;
 
-		if (person instanceof CustomerAgent) {
+		if (person instanceof JesusCustomerRole) {
 			stateCB.setVisible(true);
 			breakB.setVisible(false);
 			invB.setVisible(false);
 			moneyB.setVisible(true);
-			CustomerAgent customer = (CustomerAgent) person;
+			JesusCustomerRole customer = (JesusCustomerRole) person;
 			stateCB.setText("Hungry?");
 			//Should checkmark be there? 
 			stateCB.setSelected(customer.getGui().isHungry());
@@ -138,12 +138,12 @@ public class JesusRestaurantGui extends JFrame implements ActionListener, MouseM
 			infoLabel.setText(
 					"<html><pre>     Name: " + customer.getName() + "      Type: Customer </pre><pre>       Hunger Lvl: " + customer.getHungerLevel() + "       Money: $" + customer.getMoney() + "</pre></html>");
 		}
-		else if (person instanceof WaiterAgent) {
+		else if (person instanceof JesusWaiterRole) {
 			stateCB.setVisible(false);
 			breakB.setVisible(true);
 			invB.setVisible(false);
 			moneyB.setVisible(false);
-			WaiterAgent waiter = (WaiterAgent) person;
+			JesusWaiterRole waiter = (JesusWaiterRole) person;
 			breakB.setEnabled(!waiter.getGui().breakDeciding);
 			if(waiter.getGui().onBreak) {
 				breakB.setText("Return to Work");
@@ -154,12 +154,12 @@ public class JesusRestaurantGui extends JFrame implements ActionListener, MouseM
 			infoLabel.setText(
 					"<html><pre>     Name: " + waiter.getName() + "      Type: Waiter </pre><pre>      Status: " + waiter.getGui().getOnBreak() + " </pre></html>");
 		}
-		else if (person instanceof MarketAgent) {
+		else if (person instanceof JesusMarketRole) {
 			stateCB.setVisible(false);
 			breakB.setVisible(false);
 			invB.setVisible(true);
 			moneyB.setVisible(false);
-			MarketAgent market = (MarketAgent) person;
+			JesusMarketRole market = (JesusMarketRole) person;
 			infoLabel.setText(
 					"<html><pre>     Name: " + market.getName() + "      Type: Market </pre><pre>       Inventory:</pre><pre>            Steak: " + market.getInventory("Steak") + "       Salad: " + market.getInventory("Salad") + "       Pizza: " + market.getInventory("Pizza") + "</pre></html>");
 		}
@@ -176,22 +176,22 @@ public class JesusRestaurantGui extends JFrame implements ActionListener, MouseM
 				JOptionPane.showMessageDialog(this, "Please add a waiter first.");
 				stateCB.setSelected(false);
 			}
-			else if (currentPerson instanceof CustomerAgent) {
-				CustomerAgent c = (CustomerAgent) currentPerson;
+			else if (currentPerson instanceof JesusCustomerRole) {
+				JesusCustomerRole c = (JesusCustomerRole) currentPerson;
 				c.getGui().setHungry();
 				stateCB.setEnabled(false);
 			}
 		}
 		else if(e.getSource() == breakB) {
-			if(currentPerson instanceof WaiterAgent) {
-				WaiterAgent w = (WaiterAgent) currentPerson;
+			if(currentPerson instanceof JesusWaiterRole) {
+				JesusWaiterRole w = (JesusWaiterRole) currentPerson;
 				w.getGui().goOnBreak();
 				updateInfoPanel(w);
 			}
 		}
 		else if(e.getSource() == invB) {
-			if(currentPerson instanceof MarketAgent) {
-				MarketAgent m = (MarketAgent) currentPerson;
+			if(currentPerson instanceof JesusMarketRole) {
+				JesusMarketRole m = (JesusMarketRole) currentPerson;
 				JTextField steak = new JTextField();
 				JTextField salad = new JTextField();
 				JTextField pizza = new JTextField();
@@ -236,8 +236,8 @@ public class JesusRestaurantGui extends JFrame implements ActionListener, MouseM
 			}
 		}
 		else if(e.getSource() == moneyB) {
-			if(currentPerson instanceof CustomerAgent) {
-				CustomerAgent c = (CustomerAgent) currentPerson;
+			if(currentPerson instanceof JesusCustomerRole) {
+				JesusCustomerRole c = (JesusCustomerRole) currentPerson;
 				String money = JOptionPane.showInputDialog("Please input a money amount");
 				if (money.length() > 0) {
 					boolean number;
@@ -274,9 +274,9 @@ public class JesusRestaurantGui extends JFrame implements ActionListener, MouseM
 	 *
 	 * @param c reference to the customer
 	 */
-	public void setCustomerEnabled(CustomerAgent c) {
-		if (currentPerson instanceof CustomerAgent) {
-			CustomerAgent cust = (CustomerAgent) currentPerson;
+	public void setCustomerEnabled(JesusCustomerRole c) {
+		if (currentPerson instanceof JesusCustomerRole) {
+			JesusCustomerRole cust = (JesusCustomerRole) currentPerson;
 			if (c.equals(cust)) {
 				stateCB.setEnabled(true);
 				stateCB.setSelected(false);
