@@ -6,6 +6,10 @@ import java.awt.Point;
 
 import simcity.agent.Agent;
 import simcity.interfaces.RestCustomer;
+import simcity.interfaces.MarketCustomer;
+import simcity.interfaces.Resident;
+import simcity.interfaces.Depositor;
+import simcity.interfaces.JobInterface;
 import simcity.joshrestaurant.JoshCustomerRole;
 import simcity.mock.LoggedEvent;
 import simcity.role.JobRole;
@@ -97,11 +101,47 @@ public class PersonAgent extends Agent
 	
 	private RestCustomer RestCustomerFactory(String roleName) {
 		switch(roleName) {
-		case "joshCustomerRole":
-			return new JoshCustomerRole(name);
+			case "joshCustomerRole":
+				return new JoshCustomerRole(name);
+			default:
+				break;
 		}
 		return null;
 	}
+	
+	/*private MarketCustomer MarketCustomerFactory(String roleName) {
+		switch(roleName) {
+			case "market1CustomerRole":
+				return new MarketCustomerRole(name);
+			case "market2CustomerRole":
+				return new MarketCustomerRole(name);
+			case "market3CustomerRole":
+				return new MarketCustomerRole(name);
+			default:
+				break;
+		}
+		return null;
+	}
+	
+	private Depositor DepositorFactory(String roleName) {
+		switch(roleName) {
+			case "bank1DepositorRole":
+				return new DepositorRole(name);
+			default:
+				break;
+		}
+		return null;
+	}
+	
+	private Resident ResidentFactory(String roleName) {
+		switch(roleName) {
+			case "residentRole":
+				return new ResidentRole(name);
+			default:
+				break;
+		}
+		return null;
+	}*/
 	
 	private boolean haventEatenOutInAWhile() {
 		return true;
@@ -345,10 +385,10 @@ public class PersonAgent extends Agent
 		if (state.ls != LocationState.atDestination) {
 			goToDestination(h.location);
 		} else {
-			if (!findRole(h.residentRole)) {
-				ResidentRole r = (ResidentRole)RoleFactory(h.residentRole);
+			/*if (!findRole(h.residentRole)) {
+				ResidentRole r = (ResidentRole)ResidentFactory(h.residentRole);
 				addRole(r, h.residentRole);
-			}
+			}*/
 			synchronized(roles) {
 				for (MyRole mr : roles) {
 					if (mr.name == h.residentRole) {
@@ -411,10 +451,10 @@ public class PersonAgent extends Agent
 		if (state.ls != LocationState.atDestination) {
 			goToDestination(h.location);
 		} else {
-			if (!findRole(h.residentRole)) {
-				ResidentRole r = (ResidentRole)RoleFactory(h.residentRole);
+			/*if (!findRole(h.residentRole)) {
+				ResidentRole r = (ResidentRole)ResidentFactory(h.residentRole);
 				addRole(r, h.residentRole);
-			} 
+			} */
 			synchronized(roles) {
 				for (MyRole mr : roles) {
 					if (mr.name == h.residentRole) {
@@ -462,15 +502,15 @@ public class PersonAgent extends Agent
 		if (state.ls != LocationState.atDestination) {
 			goToDestination(m.location);
 		} else {
-			if (!findRole(m.customerRole)) {
+			/*if (!findRole(m.customerRole)) {
 				MarketCustomerRole c = (MarketCustomerRole)RoleFactory(m.customerRole);
 				addRole(c, m.customerRole);
-			} 
+			} */
 			synchronized(roles) {
 				for (MyRole mr : roles) {
 					if (mr.name == m.customerRole) {
-						if (mr.r instanceof MarketCustomerRole) {
-							MarketCustomerRole c = (MarketCustomerRole)(mr.r);
+						if (mr.r instanceof MarketCustomer) {
+							MarketCustomer c = (MarketCustomer)(mr.r);
 							mr.active = true;
 							state.ls = LocationState.market;
 							c.msgOrderItems(foodNeeded);
@@ -488,22 +528,22 @@ public class PersonAgent extends Agent
 		if (state.ls != LocationState.atDestination) {
 			goToDestination(b.location);
 		} else {
-			if (!findRole(b.depositorRole)) {
-				DepositorRole d = (DepositorRole)RoleFactory(b.depositorRole);
+			/*if (!findRole(b.depositorRole)) {
+				DepositorRole d = (DepositorRole)DepositorFactory(b.depositorRole);
 				addRole(d, b.depositorRole);
-			} 
+			} */
 			synchronized(roles) {
 				for (MyRole mr : roles) {
 					if (mr.name == b.depositorRole) {
-						if (mr.r instanceof DepositorRole) {
-							DepositorRole d = (DepositorRole)(mr.r);
+						if (mr.r instanceof Depositor) {
+							Depositor d = (Depositor)(mr.r);
 							mr.active = true;
 							state.ls = LocationState.bank;
 							if (money >= maxBalance) {
-								d.msgMakeDeposit();
+								d.msgMakeDeposit(money-minBalance-(maxBalance-minBalance)/2);
 							}
 							if (money <= minBalance) {
-								d.msgMakeWithdrawal();
+								d.msgMakeWithdrawal(minBalance+(maxBalance-minBalance)/3-money);
 							}
 						}
 						return;
@@ -520,8 +560,8 @@ public class PersonAgent extends Agent
 			synchronized(roles) {
 				for (MyRole mr : roles) {
 					if (mr.name == job.role) {
-						if (mr.r instanceof JobRole) {
-							JobRole j = (JobRole)(mr.r);
+						if (mr.r instanceof JobInterface) {
+							JobInterface j = (JobInterface)(mr.r);
 							mr.active = true;
 							j.msgStartShift();
 							state.ls = job.jobLocation;
