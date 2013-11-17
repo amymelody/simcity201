@@ -9,6 +9,10 @@ public class TrafficNode extends Point{
 	//neighbors nodes
 	private LinkedList<TrafficNode> neighbors;
 
+	public TrafficNode(int x, int y) {
+		super(x,y);
+	}
+
 	//get neighbors
 	public LinkedList<TrafficNode> getNeighbors() {
 		return neighbors;

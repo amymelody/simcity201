@@ -2,7 +2,8 @@ package simcity;
 
 import java.awt.Point;
 
-import agent.Agent;
+import simcity.agent.Agent;
+
 //Car Agent
 //TODO, it will ask transportation to know how to move to destination
 // (must pass through some points)
@@ -23,6 +24,8 @@ public class CarAgent extends Agent{
 		none, started, gotDestination
 		
 	};
+	
+	private PersonAgent person;
 
 	private AgentEvent event = AgentEvent.none;
 	
@@ -35,6 +38,7 @@ public class CarAgent extends Agent{
 		}
 		if (state ==  AgentState.GoingToDestination && event == AgentEvent.gotDestination){
 			state = AgentState.DoingNothing;
+			person.msgGotDestination();
 			return true;
 		}
 		return false;
