@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.awt.Point;
 
 import simcity.agent.Agent;
-import simcity.housing.ResidentRole;
 import simcity.interfaces.RestCustomer;
 import simcity.interfaces.MarketCustomer;
 import simcity.interfaces.Resident;
@@ -44,7 +43,6 @@ public class PersonAgent extends Agent
 	public Map<String, Point> locations;
 
 	private Job job;
-	private Day day;
 	private Time time;
 
 	public enum NourishmentState {unknown, normal, gotHungry, hungry, full};
@@ -53,7 +51,6 @@ public class PersonAgent extends Agent
 	public enum FinancialState {unknown, poor, middleClass, rich};
 	public enum TransportationState {unknown, waitingForBus, ridingBus, inCar, walking, walkingFromVehicle};
 	public enum PhysicalState {unknown, fit, average, lazy};
-	public enum Day {Sun, Mon, Wed, Tue, Thu, Fri, Sat};
 
 	public PersonState state = new PersonState();
 	
@@ -97,6 +94,10 @@ public class PersonAgent extends Agent
 	
 	public int getMoney() {
 		return money;
+	}
+	
+	public String getJob() {
+		return job.role;
 	}
 	
 	public void setPState(PhysicalState ps) {
@@ -169,7 +170,7 @@ public class PersonAgent extends Agent
 	}
 	
 	private boolean takeBus(String destination) {
-		if (job != null && destination.equals(job.location) && (time.plus(15)).greaterThanOrEqualTo(job.startShifts.get(day))) {
+		if (job != null && destination.equals(job.location) && (time.plus(15)).greaterThanOrEqualTo(job.startShifts.get(time.getDay()))) {
 			return true;
 		}
 		/*if (nearDestination(destination)) {
@@ -218,7 +219,7 @@ public class PersonAgent extends Agent
 	//Messages
 
 	public void msgUpdateWatch(Day d, int h, int m) {
-		day = d;
+		time.day = d;
 		time.hour = h;
 		time.minute = m;
 		stateChanged();
@@ -230,8 +231,8 @@ public class PersonAgent extends Agent
 		stateChanged();
 	}
 	
-	public void msgYoureHired(String l, String r, int p) {
-		job = new Job(l, r, p);
+	public void msgYoureHired(String l, String r, int p, Map<Day,Time> startShifts, Map<Day,Time> endShifts) {
+		job = new Job(l, r, p, startShifts, endShifts);
 		stateChanged();
 	}
 
@@ -255,7 +256,7 @@ public class PersonAgent extends Agent
 	}
 
 	public void msgExpense(int cost) {
-		log.add(new LoggedEvent("Received msgImExpense"));
+		log.add(new LoggedEvent("Received msgExpense"));
 		money -= cost;
 		stateChanged();
 	}
@@ -312,7 +313,7 @@ public class PersonAgent extends Agent
 	
 	public boolean pickAndExecuteAnAction() {
 		if (state.ts == TransportationState.walking || state.ts == TransportationState.walkingFromVehicle) { 
-			if (job != null && state.ws == WorkingState.notWorking && (time.plus(30)).greaterThanOrEqualTo(job.startShifts.get(day))) { //if half an hour before your shift starts
+			if (job != null && state.ws == WorkingState.notWorking && job.startShifts.get(time.getDay()) != job.endShifts.get(time.getDay()) && (time.plus(30)).greaterThanOrEqualTo(job.startShifts.get(time.getDay()))) { //if half an hour before your shift starts
 				if (state.ls == LocationState.home) {
 					leaveHouse();
 					return true;
@@ -321,7 +322,7 @@ public class PersonAgent extends Agent
 					return true;
 				}
 			}
-			if (state.ws == WorkingState.working && time.greaterThanOrEqualTo(job.endShifts.get(day) ) && !job.role.equals("landlord")) { //if your shift ends
+			if (state.ws == WorkingState.working && time.greaterThanOrEqualTo(job.endShifts.get(time.getDay()) ) && !job.role.equals("landlord")) { //if your shift ends
 				endShift();
 				return true;
 			} 
@@ -657,38 +658,6 @@ public class PersonAgent extends Agent
 		}
 	}
 
-	public class Time {
-		int hour;
-		int minute;
-		
-		Time(int h, int m) {
-			hour = h;
-			minute = m;
-		}
-		
-		Time plus(int minutes) {
-			int h = hour;
-			int m = minute;
-			if (m + minutes >= 60) {
-				h++;
-				m = minutes - (60 - m);
-			} else {
-				m += minutes;
-			}
-			return new Time(h, m);
-		}
-		
-		boolean greaterThanOrEqualTo(Time t) {
-			if (hour >= t.hour) {
-				return true;
-			}
-			if (hour == t.hour && minute >= t.minute) {
-				return true;
-			}
-			return false;
-		}
-	}
-
 	public class PersonState {
 		NourishmentState ns;
 		LocationState ls;
@@ -722,7 +691,7 @@ public class PersonAgent extends Agent
 	}
 
 	public class Job {
-		Job(String l, String r, int p) {
+		Job(String l, String r, int p, Map<Day,Time> startShifts, Map<Day,Time> endShifts) {
 			location = l;
 			role = r;
 			payrate = p;
@@ -741,6 +710,16 @@ public class PersonAgent extends Agent
 					break;
 				default:
 					break;
+			}
+			Day tempDay = Day.Sun;
+			for (Time t : startShifts.values()) {
+				this.startShifts.put(tempDay, t);
+				tempDay = tempDay.next();
+			}
+			tempDay = Day.Sun;
+			for (Time t : endShifts.values()) {
+				this.endShifts.put(tempDay, t);
+				tempDay = tempDay.next();
 			}
 		}
 		String role;
