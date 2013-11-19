@@ -10,9 +10,10 @@ import simcity.interfaces.MarketCustomer;
 import simcity.interfaces.Resident;
 import simcity.interfaces.Depositor;
 import simcity.interfaces.JobInterface;
-import simcity.joshrestaurant.JoshCustomerRole;
+import simcity.interfaces.Bus;
+import simcity.interfaces.Car;
+import simcity.interfaces.BusStop;
 import simcity.mock.LoggedEvent;
-import simcity.role.JobRole;
 import simcity.role.Role;
 
 import java.util.*;
@@ -25,11 +26,11 @@ public class PersonAgent extends Agent
 	private String name;
 	private boolean haveBankAccount;
 	private boolean rentDue;
-	//private CarAgent car;
-	//private BusAgent bus;
+	private Car car;
+	private Bus bus;
 	private String destination;
 	
-	//public List<BusStopAgent> busStops = Collections.synchronizedList(new ArrayList<BusStopAgent>());
+	public List<BusStop> busStops = Collections.synchronizedList(new ArrayList<BusStop>());
 	public List<ItemOrder> foodNeeded = Collections.synchronizedList(new ArrayList<ItemOrder>());
 	public List<ItemOrder> groceries = Collections.synchronizedList(new ArrayList<ItemOrder>());
 
@@ -48,7 +49,9 @@ public class PersonAgent extends Agent
 	public enum NourishmentState {unknown, normal, gotHungry, hungry, full};
 	public enum LocationState {unknown, outside, leavingHouse, home, ownerHouse, restaurant, market, bank, atDestination};
 	public enum WorkingState {unknown, notWorking, working};
-	public enum TransportationState {unknown, waitingForBus, ridingBus, inCar, walking};
+	public enum FinancialState {unknown, poor, middleClass, rich};
+	public enum TransportationState {unknown, waitingForBus, ridingBus, inCar, walking, walkingFromVehicle};
+	public enum PhysicalState {unknown, fit, average, lazy};
 	public enum Day {Sun, Mon, Wed, Tue, Thu, Fri, Sat};
 
 	public PersonState state = new PersonState();
@@ -60,6 +63,7 @@ public class PersonAgent extends Agent
 		haveBankAccount = false;
 		rentDue = false;
 		destination = null;
+		job = null;
 		money = 0;
 		minBalance = 100;
 		maxBalance = 1000;
@@ -94,12 +98,20 @@ public class PersonAgent extends Agent
 		return money;
 	}
 	
+	public void setPState(PhysicalState ps) {
+		state.ps = ps;
+	}
+	
 	public void addRole(Role r, String n) {
 		r.setPerson(this);
 		roles.add(new MyRole(r, n));
 	}
 	
-	private RestCustomer RestCustomerFactory(String roleName) {
+	public void addBusStop(BusStop b) {
+		busStops.add(b);
+	}
+	
+	/*private RestCustomer RestCustomerFactory(String roleName) {
 		switch(roleName) {
 			case "joshCustomerRole":
 				return new JoshCustomerRole(name);
@@ -109,7 +121,7 @@ public class PersonAgent extends Agent
 		return null;
 	}
 	
-	/*private MarketCustomer MarketCustomerFactory(String roleName) {
+	private MarketCustomer MarketCustomerFactory(String roleName) {
 		switch(roleName) {
 			case "market1CustomerRole":
 				return new MarketCustomerRole(name);
@@ -145,6 +157,37 @@ public class PersonAgent extends Agent
 	
 	private boolean haventEatenOutInAWhile() {
 		return true;
+	}
+	
+	private BusStop closestBusStop() {
+		return busStops.get(0);
+	}
+	
+	private boolean nearDestination(String destination) {
+		return false;
+	}
+	
+	private boolean takeBus(String destination) {
+		if (job != null && destination.equals(job.location) && (time.plus(15)).greaterThanOrEqualTo(job.startShifts.get(day))) {
+			return true;
+		}
+		/*if (nearDestination(destination)) {
+			return false;
+		}*/
+		if (state.ps == PhysicalState.fit) {
+			return false;
+		}
+		if (state.ps == PhysicalState.average) {
+			int rand = (int)(Math.random() * 2);
+			if (rand == 0) {
+				return true;
+			}
+			return false;
+		}
+		if (state.ps == PhysicalState.lazy) {
+			return true;
+		}
+		return false;
 	}
 	
 	private Restaurant chooseRestaurant() {
@@ -188,6 +231,7 @@ public class PersonAgent extends Agent
 	
 	public void msgYoureHired(String l, String r, int p) {
 		job = new Job(l, r, p);
+		stateChanged();
 	}
 
 	public void msgLeftDestination(Role r) {
@@ -210,6 +254,7 @@ public class PersonAgent extends Agent
 	}
 
 	public void msgExpense(int cost) {
+		log.add(new LoggedEvent("Received msgImExpense"));
 		money -= cost;
 		stateChanged();
 	}
@@ -221,10 +266,10 @@ public class PersonAgent extends Agent
 		stateChanged();
 	}
 
-	/*public void msgBoughtCar(CarAgent c) {
+	public void msgBoughtCar(Car c) {
 		car = c;
 		stateChanged();
-	}*/
+	}
 
 	public void msgIncome(int cash) {
 		money += cash;
@@ -251,13 +296,13 @@ public class PersonAgent extends Agent
 		stateChanged();
 	}
 	
-	/*public void msgBusIsHere(BusAgent b) {
+	public void msgBusIsHere(Bus b) {
         bus = b;
         stateChanged();
-	}*/
+	}
 	
-	public void msgGetOffBus(String d) {
-		state.ts = TransportationState.walking;
+	public void msgAtDestination(String d) {
+		state.ts = TransportationState.walkingFromVehicle;
 		destination = d;
 		stateChanged();
 	}
@@ -265,7 +310,7 @@ public class PersonAgent extends Agent
 	//Scheduler
 	
 	public boolean pickAndExecuteAnAction() {
-		if (state.ts == TransportationState.walking) { 
+		if (state.ts == TransportationState.walking || state.ts == TransportationState.walkingFromVehicle) { 
 			if (job != null && state.ws == WorkingState.notWorking && (time.plus(30)).greaterThanOrEqualTo(job.startShifts.get(day))) { //if half an hour before your shift starts
 				if (state.ls == LocationState.home) {
 					leaveHouse();
@@ -289,7 +334,7 @@ public class PersonAgent extends Agent
 						return true;
 					} 
 				} 
-				if (money <= minBalance && haveBankAccount) {
+				if (money <= minBalance) {
 					if (state.ls == LocationState.home) {
 						leaveHouse();
 						return true;
@@ -344,10 +389,10 @@ public class PersonAgent extends Agent
 			} 
 		}
 		
-		/*if (state.ts == TransportationState.waitingForBus && bus != null) {
+		if (state.ts == TransportationState.waitingForBus && bus != null) {
 			boardBus();
 			return true;
-		}*/
+		}
 		
 		boolean anytrue = false;
 		synchronized(roles) {
@@ -374,11 +419,11 @@ public class PersonAgent extends Agent
 		state.ws = WorkingState.notWorking;
 	}
 	
-	/*private void boardBus() {
+	private void boardBus() {
 		bus.msgComingAboard(this, destination);
 		bus = null;
 		state.ts = TransportationState.ridingBus;
-	}*/
+	}
 
 	private void goHome() {
 		Housing h = houses.get(0); //person's house
@@ -391,11 +436,11 @@ public class PersonAgent extends Agent
 			}*/
 			synchronized(roles) {
 				for (MyRole mr : roles) {
-					if (mr.name == h.residentRole) {
+					if (mr.name.equals(h.residentRole)) {
 						mr.active = true;
 						state.ls = LocationState.home;
-						if (mr.r instanceof ResidentRole) {
-							ResidentRole r = (ResidentRole)(mr.r);
+						if (mr.r instanceof Resident) {
+							Resident r = (Resident)(mr.r);
 							r.msgImHome();
 							if (!groceries.isEmpty()) {
 								r.msgGroceries(groceries);
@@ -417,9 +462,9 @@ public class PersonAgent extends Agent
 		Housing h = houses.get(0); //person's house
 		synchronized(roles) {
 			for (MyRole mr : roles) {
-				if (mr.name == h.residentRole) {
-					if (mr.r instanceof ResidentRole) {
-						ResidentRole r = (ResidentRole)(mr.r);
+				if (mr.name.equals(h.residentRole)) {
+					if (mr.r instanceof Resident) {
+						Resident r = (Resident)(mr.r);
 						mr.active = true;
 		                r.msgEat();
 		                state.ns = NourishmentState.hungry;
@@ -434,9 +479,9 @@ public class PersonAgent extends Agent
 		Housing h = houses.get(0); //person's house
 		synchronized(roles) {
 			for (MyRole mr : roles) {
-				if (mr.name == h.residentRole) {
-					if (mr.r instanceof ResidentRole) {
-						ResidentRole r = (ResidentRole)(mr.r);
+				if (mr.name.equals(h.residentRole)) {
+					if (mr.r instanceof Resident) {
+						Resident r = (Resident)(mr.r);
 						r.msgLeave();
 						state.ls = LocationState.leavingHouse;
 					}
@@ -457,9 +502,9 @@ public class PersonAgent extends Agent
 			} */
 			synchronized(roles) {
 				for (MyRole mr : roles) {
-					if (mr.name == h.residentRole) {
-						if (mr.r instanceof ResidentRole) {
-							ResidentRole r = (ResidentRole)(mr.r);
+					if (mr.name.equals(h.residentRole)) {
+						if (mr.r instanceof Resident) {
+							Resident r = (Resident)(mr.r);
 							mr.active = true;
 							state.ls = LocationState.ownerHouse;
 							r.msgAtLandlord();
@@ -476,10 +521,10 @@ public class PersonAgent extends Agent
 		if (state.ls != LocationState.atDestination) {
 			goToDestination(r.location);
 		} else {
-			if (!findRole(r.customerRole)) {
+			/*if (!findRole(r.customerRole)) {
 				RestCustomerRole c = (RestCustomerRole)RestCustomerFactory(r.customerRole);
 				addRole(c, r.customerRole);
-			} 
+			} */
 			synchronized(roles) {
 				for (MyRole mr : roles) {
 					if (mr.name.equals(r.customerRole)) {
@@ -508,7 +553,7 @@ public class PersonAgent extends Agent
 			} */
 			synchronized(roles) {
 				for (MyRole mr : roles) {
-					if (mr.name == m.customerRole) {
+					if (mr.name.equals(m.customerRole)) {
 						if (mr.r instanceof MarketCustomer) {
 							MarketCustomer c = (MarketCustomer)(mr.r);
 							mr.active = true;
@@ -534,7 +579,7 @@ public class PersonAgent extends Agent
 			} */
 			synchronized(roles) {
 				for (MyRole mr : roles) {
-					if (mr.name == b.depositorRole) {
+					if (mr.name.equals(b.depositorRole)) {
 						if (mr.r instanceof Depositor) {
 							Depositor d = (Depositor)(mr.r);
 							mr.active = true;
@@ -559,7 +604,7 @@ public class PersonAgent extends Agent
 		} else {
 			synchronized(roles) {
 				for (MyRole mr : roles) {
-					if (mr.name == job.role) {
+					if (mr.name.equals(job.role)) {
 						if (mr.r instanceof JobInterface) {
 							JobInterface j = (JobInterface)(mr.r);
 							mr.active = true;
@@ -575,23 +620,23 @@ public class PersonAgent extends Agent
 	}
 
 	private void goToDestination(String d) {
-		/*if (car != null && !nearDestination(d)) {
-			DoGoToCar();
+		if (car != null && !nearDestination(d) && state.ts != TransportationState.walkingFromVehicle) {
+			//DoGoToCar();
 			state.ts = TransportationState.inCar;
-			car.msgGoToDestination(d); //pass the destination to the car so it knows where to go
+			car.msgGoToDestination(this, d); //pass the destination to the car so it knows where to go
 		} else {
-			if (!nearDestination(d)) {
-				BusStopAgent b = closestBusStop();
-				DoGoToBusStop(b);
+			if (takeBus(d) && state.ts != TransportationState.walkingFromVehicle) {
+				BusStop b = closestBusStop();
+				//DoGoToBusStop(b);
 				state.ts = TransportationState.waitingForBus;
 				destination = d;
 				b.msgWaitingForBus(this);
-			} else {*/
+			} else {
 				state.ts = TransportationState.walking;
 				//DoGoToDestination(locations.get(d)); //just walk there
 				state.ls = LocationState.atDestination;
-			//}
-		//}
+			}
+		}
 	}
 	
 	//inner classes
@@ -648,6 +693,8 @@ public class PersonAgent extends Agent
 		LocationState ls;
 		WorkingState ws;
 		TransportationState ts;
+		FinancialState fs;
+		PhysicalState ps;
 		
 		PersonState() {
 			
@@ -664,6 +711,12 @@ public class PersonAgent extends Agent
 		}
 		public TransportationState getTState() {
 			return ts;
+		}
+		public FinancialState getFState() {
+			return fs;
+		}
+		public PhysicalState getPState() {
+			return ps;
 		}
 	}
 

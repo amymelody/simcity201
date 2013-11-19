@@ -5,6 +5,10 @@ import simcity.PersonAgent.LocationState;
 import simcity.PersonAgent.NourishmentState;
 import simcity.PersonAgent.TransportationState;
 import simcity.test.mock.MockRestCustomerRole;
+import simcity.test.mock.MockDepositorRole;
+import simcity.test.mock.MockJobRole;
+import simcity.test.mock.MockMarketCustomerRole;
+import simcity.test.mock.MockResidentRole;
 import junit.framework.*;
 
 public class PersonTest extends TestCase
@@ -12,17 +16,20 @@ public class PersonTest extends TestCase
 	//these are instantiated for each test separately via the setUp() method.
 	PersonAgent person;
 	MockRestCustomerRole customer;
+	MockDepositorRole depositor;
 	
 	public void setUp() throws Exception{
 		super.setUp();		
 		person = new PersonAgent("person");
 		customer = new MockRestCustomerRole("joshCustomer");
-		person.addRole(customer, "joshCustomerRole");
+		depositor = new MockDepositorRole("depositor");
 		person.msgIncome(400);
 	}	
 	
 	public void testRestaurantCustomer()
 	{
+		person.addRole(customer, "joshCustomerRole");
+		
 		assertEquals("Person should have 1 role. It doesn't.", 1, person.roles.size());
 		
 		assertEquals("First role in roles should be inactive. It isn't.", false, person.roles.get(0).isActive());
@@ -66,6 +73,98 @@ public class PersonTest extends TestCase
 		assertEquals("First role in roles should be inactive. It isn't.", false, person.roles.get(0).isActive());
 		
 		assertEquals("Person should have $384. It doesn't.", 384, person.getMoney());
+		
+		assertFalse("Person's scheduler should have returned false, but didn't.", person.pickAndExecuteAnAction());
+		
+	}
+	
+	public void testDepositor()
+	{
+		person.addRole(depositor, "bank1DepositorRole");
+		
+		assertEquals("Person should have 1 role. It doesn't.", 1, person.roles.size());
+		
+		assertEquals("First role in roles should be inactive. It isn't.", false, person.roles.get(0).isActive());
+		
+		assertEquals("Person should have an empty event log before the first message. Instead, the Person's event log reads: "
+				+ person.log.toString(), 0, person.log.size());
+		
+		assertEquals("Person should have $400. It doesn't.", 400, person.getMoney());
+		
+		assertEquals("Person's location state should be outside. It isn't", LocationState.outside, person.state.getLState());
+		
+		person.msgExpense(300);
+		
+		assertEquals("Person should have $100. It doesn't.", 100, person.getMoney());
+		
+		assertTrue("Person should have logged \"Received msgImExpense\" but didn't. His last event logged reads instead: " 
+				+ person.log.getLastLoggedEvent().toString(), person.log.containsString("Received msgImExpense"));
+		
+		assertTrue("Person's scheduler should have returned true (it should call goToBank, which then calls goToDestination), but didn't.", person.pickAndExecuteAnAction());
+		
+		assertEquals("Person's location state should be atDestination. It isn't", LocationState.atDestination, person.state.getLState());
+		
+		assertTrue("Person's scheduler should have returned true (it should call goToBank), but didn't.", person.pickAndExecuteAnAction());
+		
+		assertEquals("Person should have 1 role. It doesn't.", person.roles.size(), 1);
+		
+		assertEquals("First role in roles should be active. It isn't.", true, person.roles.get(0).isActive());
+		
+		assertEquals("Person's location state should be bank. It isn't", LocationState.bank, person.state.getLState());
+		
+		assertTrue("Person's scheduler should have returned true (it should call depositor role's scheduler), but didn't.", person.pickAndExecuteAnAction());
+		
+		assertEquals("Person should have $400. It doesn't.", 400, person.getMoney());
+		
+		assertEquals("Person's location state should be outside. It isn't", LocationState.outside, person.state.getLState());
+		
+		assertEquals("First role in roles should be inactive. It isn't.", false, person.roles.get(0).isActive());
+		
+		assertFalse("Person's scheduler should have returned false, but didn't.", person.pickAndExecuteAnAction());
+		
+	}
+	
+	public void testGoToWorkByBus()
+	{
+		person.addRole(depositor, "bank1DepositorRole");
+		
+		assertEquals("Person should have 1 role. It doesn't.", 1, person.roles.size());
+		
+		assertEquals("First role in roles should be inactive. It isn't.", false, person.roles.get(0).isActive());
+		
+		assertEquals("Person should have an empty event log before the first message. Instead, the Person's event log reads: "
+				+ person.log.toString(), 0, person.log.size());
+		
+		assertEquals("Person should have $400. It doesn't.", 400, person.getMoney());
+		
+		assertEquals("Person's location state should be outside. It isn't", LocationState.outside, person.state.getLState());
+		
+		person.msgExpense(300);
+		
+		assertEquals("Person should have $100. It doesn't.", 100, person.getMoney());
+		
+		assertTrue("Person should have logged \"Received msgImExpense\" but didn't. His last event logged reads instead: " 
+				+ person.log.getLastLoggedEvent().toString(), person.log.containsString("Received msgImExpense"));
+		
+		assertTrue("Person's scheduler should have returned true (it should call goToBank, which then calls goToDestination), but didn't.", person.pickAndExecuteAnAction());
+		
+		assertEquals("Person's location state should be atDestination. It isn't", LocationState.atDestination, person.state.getLState());
+		
+		assertTrue("Person's scheduler should have returned true (it should call goToBank), but didn't.", person.pickAndExecuteAnAction());
+		
+		assertEquals("Person should have 1 role. It doesn't.", person.roles.size(), 1);
+		
+		assertEquals("First role in roles should be active. It isn't.", true, person.roles.get(0).isActive());
+		
+		assertEquals("Person's location state should be bank. It isn't", LocationState.bank, person.state.getLState());
+		
+		assertTrue("Person's scheduler should have returned true (it should call depositor role's scheduler), but didn't.", person.pickAndExecuteAnAction());
+		
+		assertEquals("Person should have $400. It doesn't.", 400, person.getMoney());
+		
+		assertEquals("Person's location state should be outside. It isn't", LocationState.outside, person.state.getLState());
+		
+		assertEquals("First role in roles should be inactive. It isn't.", false, person.roles.get(0).isActive());
 		
 		assertFalse("Person's scheduler should have returned false, but didn't.", person.pickAndExecuteAnAction());
 		
