@@ -43,7 +43,7 @@ public class PersonAgent extends Agent
 	public Map<String, Point> locations;
 
 	private Job job;
-	private Time time;
+	private Time time = new Time(Day.Sun, 0, 0);
 
 	public enum NourishmentState {unknown, normal, gotHungry, hungry, full};
 	public enum LocationState {unknown, outside, leavingHouse, home, ownerHouse, restaurant, market, bank, atDestination};
@@ -75,10 +75,10 @@ public class PersonAgent extends Agent
 		houses.add(new Housing("ownerHouse", "residentRole"));
 		
 		restaurants.add(new Restaurant("joshRestaurant", "italian", "joshCustomerRole"));
-		restaurants.add(new Restaurant("cherysRestaurant", "blah", "joshCustomerRole"));
-		restaurants.add(new Restaurant("jesusRestaurant", "bleh", "joshCustomerRole"));
-		restaurants.add(new Restaurant("alfredRestaurant", "bluh", "joshCustomerRole"));
-		restaurants.add(new Restaurant("anjaliRestaurant", "blih", "joshCustomerRole"));
+		restaurants.add(new Restaurant("cherysRestaurant", "blah", "cherysCustomerRole"));
+		restaurants.add(new Restaurant("jesusRestaurant", "bleh", "jesusCustomerRole"));
+		restaurants.add(new Restaurant("alfredRestaurant", "bluh", "alfredCustomerRole"));
+		restaurants.add(new Restaurant("anjaliRestaurant", "blih", "anjaliCustomerRole"));
 		
 		markets.add(new Market("market1", "market1CustomerRole"));
 		markets.add(new Market("market2", "market2CustomerRole"));
@@ -98,6 +98,14 @@ public class PersonAgent extends Agent
 	
 	public String getJob() {
 		return job.role;
+	}
+	
+	public String getDestination() {
+		return destination;
+	}
+	
+	public void setRentDue(boolean b) {
+		rentDue = b;
 	}
 	
 	public void setPState(PhysicalState ps) {
@@ -193,10 +201,38 @@ public class PersonAgent extends Agent
 	}
 	
 	private Restaurant chooseRestaurant() {
+		if (destination != null) {
+			if (destination.equals("joshRestaurant")) {
+				return restaurants.get(0);
+			}
+			if (destination.equals("cherysRestaurant")) {
+				return restaurants.get(1);
+			}
+			if (destination.equals("jesusRestaurant")) {
+				return restaurants.get(2);
+			}
+			if (destination.equals("alfredRestaurant")) {
+				return restaurants.get(3);
+			}
+			if (destination.equals("anjaliRestaurant")) {
+				return restaurants.get(4);
+			}
+		}
 		return restaurants.get(0);
 	}
 	
 	private Market chooseMarket() {
+		if (destination != null) {
+			if (destination.equals("market1")) {
+				return markets.get(0);
+			}
+			if (destination.equals("market2")) {
+				return markets.get(1);
+			}
+			if (destination.equals("market3")) {
+				return markets.get(2);
+			}
+		}
 		return markets.get(0);
 	}
 	
@@ -219,6 +255,7 @@ public class PersonAgent extends Agent
 	//Messages
 
 	public void msgUpdateWatch(Day d, int h, int m) {
+		log.add(new LoggedEvent("Received msgUpdateWatch"));
 		time.day = d;
 		time.hour = h;
 		time.minute = m;
@@ -237,11 +274,13 @@ public class PersonAgent extends Agent
 	}
 
 	public void msgLeftDestination(Role r) {
+		log.add(new LoggedEvent("Received msgLeftDestination"));
 		synchronized(roles) {
 			for (MyRole mr : roles) {
 				if (mr.r == r) {
 						mr.active = false;
 						state.ls = LocationState.outside;
+						destination = null;
 				}
 			}
 		}
@@ -313,35 +352,49 @@ public class PersonAgent extends Agent
 	
 	public boolean pickAndExecuteAnAction() {
 		if (state.ts == TransportationState.walking || state.ts == TransportationState.walkingFromVehicle) { 
-			if (job != null && state.ws == WorkingState.notWorking && job.startShifts.get(time.getDay()) != job.endShifts.get(time.getDay()) && (time.plus(30)).greaterThanOrEqualTo(job.startShifts.get(time.getDay()))) { //if half an hour before your shift starts
+			if (job != null && state.ws == WorkingState.notWorking && job.startShifts.get(time.getDay()) != job.endShifts.get(time.getDay()) && (time.plus(30)).greaterThanOrEqualTo(job.startShifts.get(time.getDay())) && !time.greaterThanOrEqualTo(job.endShifts.get(time.getDay()))) { //if half an hour before your shift starts
 				if (state.ls == LocationState.home) {
 					leaveHouse();
 					return true;
 				} else if (state.ls == LocationState.outside || state.ls == LocationState.atDestination) {
 					goToWork();
+					print("goToWork");
 					return true;
 				}
 			}
 			if (state.ws == WorkingState.working && time.greaterThanOrEqualTo(job.endShifts.get(time.getDay()) ) && !job.role.equals("landlord")) { //if your shift ends
 				endShift();
+				print("endShift");
 				return true;
 			} 
 			if (state.ws == WorkingState.notWorking) {
-				if (rentDue) {
-					if (state.ls == LocationState.home) {
-						leaveHouse();
-						return true;
-					} else if (state.ls == LocationState.outside || state.ls == LocationState.atDestination) {
-						goToOwnerHouse();
-						return true;
-					} 
-				} 
 				if (money <= minBalance) {
 					if (state.ls == LocationState.home) {
 						leaveHouse();
 						return true;
 					} else if (state.ls == LocationState.outside || state.ls == LocationState.atDestination) {
 						goToBank();
+						print("goToBank");
+						return true;
+					} 
+				} 
+				if (rentDue) {
+					if (state.ls == LocationState.home) {
+						leaveHouse();
+						return true;
+					} else if (state.ls == LocationState.outside || state.ls == LocationState.atDestination) {
+						goToOwnerHouse();
+						print("goToOwnerHouse");
+						return true;
+					} 
+				} 
+				if (!foodNeeded.isEmpty()) {
+					if (state.ls == LocationState.home) {
+						leaveHouse();
+						return true;
+					} else if (state.ls == LocationState.outside || state.ls == LocationState.atDestination) {
+						goToMarket();
+						print("goToMarket");
 						return true;
 					} 
 				} 
@@ -352,30 +405,25 @@ public class PersonAgent extends Agent
 							return true;
 						} else if (state.ls == LocationState.outside || state.ls == LocationState.atDestination) {
 							goToRestaurant();
+							print("goToRestaurant");
 							return true;
 						} 
 					} else {
 						if (state.ls == LocationState.home) {
 							goEat();
+							print("goEat");
 							return true;
 						} else if (state.ls == LocationState.outside || state.ls == LocationState.atDestination) {
 							goHome();
+							print("goHome");
 							return true;
 						} 
-					} 
-				} 
-				if (!foodNeeded.isEmpty()) {
-					if (state.ls == LocationState.home) {
-						leaveHouse();
-						return true;
-					} else if (state.ls == LocationState.outside || state.ls == LocationState.atDestination) {
-						goToMarket();
-						return true;
 					} 
 				} 
 				if (!groceries.isEmpty()) {
 					if (state.ls == LocationState.outside || state.ls == LocationState.atDestination) {
 						goHome();
+						print("goHome");
 						return true;
 					} 
 				} 
@@ -385,6 +433,7 @@ public class PersonAgent extends Agent
 						return true;
 					} else if (state.ls == LocationState.outside || state.ls == LocationState.atDestination) {
 			        	goToBank();
+			        	print("goToBank");
 						return true;
 					} 
 				} 
@@ -393,6 +442,7 @@ public class PersonAgent extends Agent
 		
 		if (state.ts == TransportationState.waitingForBus && bus != null) {
 			boardBus();
+			print("boardBus");
 			return true;
 		}
 		
@@ -401,6 +451,7 @@ public class PersonAgent extends Agent
 			for (MyRole mr : roles) {
 				if (mr.active) {
 					anytrue = mr.r.pickAndExecuteAnAction();
+					print("roleScheduler");
 					return anytrue;
 				}
 			}
@@ -417,8 +468,19 @@ public class PersonAgent extends Agent
 	//Actions
 
 	private void endShift() {
-		money += job.payrate;
-		state.ws = WorkingState.notWorking;
+		synchronized(roles) {
+			for (MyRole mr : roles) {
+				if (mr.name.equals(job.role)) {
+					if (mr.r instanceof JobInterface) {
+						JobInterface j = (JobInterface)(mr.r);
+						j.msgEndShift();
+						money += job.payrate;
+						state.ws = WorkingState.notWorking;
+					}
+					return;
+				}
+			}
+		}
 	}
 	
 	private void boardBus() {
@@ -429,7 +491,7 @@ public class PersonAgent extends Agent
 
 	private void goHome() {
 		Housing h = houses.get(0); //person's house
-		if (state.ls != LocationState.atDestination) {
+		if (state.ls != LocationState.atDestination || (destination != null && !destination.equals(h.location))) {
 			goToDestination(h.location);
 		} else {
 			/*if (!findRole(h.residentRole)) {
@@ -495,7 +557,7 @@ public class PersonAgent extends Agent
 
 	private void goToOwnerHouse() {
 		Housing h = houses.get(1); //owner's house
-		if (state.ls != LocationState.atDestination) {
+		if (state.ls != LocationState.atDestination || (destination != null && !destination.equals(h.location))) {
 			goToDestination(h.location);
 		} else {
 			/*if (!findRole(h.residentRole)) {
@@ -520,7 +582,7 @@ public class PersonAgent extends Agent
 
 	private void goToRestaurant() {
 		Restaurant r = chooseRestaurant();
-		if (state.ls != LocationState.atDestination) {
+		if (state.ls != LocationState.atDestination || (destination != null && !destination.equals(r.location))) {
 			goToDestination(r.location);
 		} else {
 			/*if (!findRole(r.customerRole)) {
@@ -546,7 +608,7 @@ public class PersonAgent extends Agent
 
 	private void goToMarket() {
 		Market m = chooseMarket();
-		if (state.ls != LocationState.atDestination) {
+		if (state.ls != LocationState.atDestination || (destination != null && !destination.equals(m.location))) {
 			goToDestination(m.location);
 		} else {
 			/*if (!findRole(m.customerRole)) {
@@ -572,7 +634,7 @@ public class PersonAgent extends Agent
 
 	private void goToBank() {
 		Bank b = chooseBank();
-		if (state.ls != LocationState.atDestination) {
+		if (state.ls != LocationState.atDestination || (destination != null && !destination.equals(b.location))) {
 			goToDestination(b.location);
 		} else {
 			/*if (!findRole(b.depositorRole)) {
@@ -601,7 +663,7 @@ public class PersonAgent extends Agent
 	}
 
 	private void goToWork() {
-		if (state.ls != LocationState.atDestination) { 
+		if (state.ls != LocationState.atDestination || (destination != null && !destination.equals(job.location))) { 
 			goToDestination(job.location);
 		} else {
 			synchronized(roles) {
@@ -625,6 +687,7 @@ public class PersonAgent extends Agent
 		if (car != null && !nearDestination(d) && state.ts != TransportationState.walkingFromVehicle) {
 			//DoGoToCar();
 			state.ts = TransportationState.inCar;
+			destination = d;
 			car.msgGoToDestination(this, d); //pass the destination to the car so it knows where to go
 		} else {
 			if (takeBus(d) && state.ts != TransportationState.walkingFromVehicle) {
@@ -635,13 +698,16 @@ public class PersonAgent extends Agent
 				b.msgWaitingForBus(this);
 			} else {
 				state.ts = TransportationState.walking;
+				destination = d;
 				//DoGoToDestination(locations.get(d)); //just walk there
 				state.ls = LocationState.atDestination;
 			}
 		}
 	}
 	
+	
 	//inner classes
+	
 	public class MyRole {
 		Role r;
 		String name;
@@ -711,7 +777,9 @@ public class PersonAgent extends Agent
 				default:
 					break;
 			}
-			Day tempDay = Day.Sun;
+			this.startShifts = startShifts;
+			this.endShifts = endShifts;
+			/*Day tempDay = Day.Sun;
 			for (Time t : startShifts.values()) {
 				this.startShifts.put(tempDay, t);
 				tempDay = tempDay.next();
@@ -720,7 +788,7 @@ public class PersonAgent extends Agent
 			for (Time t : endShifts.values()) {
 				this.endShifts.put(tempDay, t);
 				tempDay = tempDay.next();
-			}
+			}*/
 		}
 		String role;
 		LocationState jobLocation;

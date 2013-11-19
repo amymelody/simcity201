@@ -20,11 +20,12 @@ public class MockJobRole extends Role implements JobInterface {
 	}
 	
 	public boolean pickAndExecuteAnAction() {
-		if (log.size() > 0) {
+		log.add(new LoggedEvent("Ran scheduler"));
+		if (log.containsString("Received msgEndShift")) {
 			person.msgLeftDestination(this);
 			return true;
 		}
-		return false;
+		return true;
 	}
 	
 	public String toString() {
