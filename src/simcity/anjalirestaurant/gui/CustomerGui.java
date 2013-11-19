@@ -7,7 +7,7 @@ import restaurant.CustomerAgent;
 
 public class CustomerGui implements Gui{
 
-	private CustomerAgent agent = null;
+	private CherysCustomerRole agent = null;
 	private boolean isPresent = false;
 	private boolean isHungry = false;
 
@@ -22,7 +22,7 @@ public class CustomerGui implements Gui{
 	public static final int xTable = 200;
 	public static final int yTable = 250;
 	private int xHomePos = 0;
-	public CustomerGui(CustomerAgent c, RestaurantGui gui, int xPos){ //HostAgent m) {
+	public CustomerGui(CherysCustomerRole c, RestaurantGui gui, int xPos){ //HostAgent m) {
 		this.xHomePos = xPos;
 		agent = c;
 		xPos = -20;

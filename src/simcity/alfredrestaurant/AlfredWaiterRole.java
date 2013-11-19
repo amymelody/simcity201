@@ -28,13 +28,13 @@ public class AlfredWaiterRole extends Agent {
 
 	AgentEvent event = AgentEvent.none;
 
-	private HostAgent hostAgent;
+	private CherysHostRole hostAgent;
 
-	private WaiterGui waiterGui;
+	private CherysWaiterGui waiterGui;
 	
 	private int index;
 
-	public WaiterAgent(HostAgent hostAgent, int index) {
+	public WaiterAgent(CherysHostRole hostAgent, int index) {
 		this.hostAgent = hostAgent;
 		this.index = index;
 	}
@@ -43,13 +43,13 @@ public class AlfredWaiterRole extends Agent {
 		int hostXPos = waiterGui.getXPos();
 		int hostYPos = waiterGui.getYPos();
 		
-		if (x >= hostXPos && x <= hostXPos + WaiterGui.sizeHost &&
-				y >= hostYPos && y <= hostYPos + WaiterGui.sizeHost ){
+		if (x >= hostXPos && x <= hostXPos + CherysWaiterGui.sizeHost &&
+				y >= hostYPos && y <= hostYPos + CherysWaiterGui.sizeHost ){
 			wantingToGoOnBreak = true;
 		}
 	}
 
-	private CustomerAgent currentCustomer;
+	private CherysCustomerRole currentCustomer;
 	private Table table;
 
 	public boolean isAvailable() {
@@ -67,7 +67,7 @@ public class AlfredWaiterRole extends Agent {
 	 * @param waiterGui
 	 *            the waiterGui to set
 	 */
-	public void setWaiterGui(WaiterGui waiterGui) {
+	public void setWaiterGui(CherysWaiterGui waiterGui) {
 		this.waiterGui = waiterGui;
 	}
 
@@ -198,7 +198,7 @@ public class AlfredWaiterRole extends Agent {
 	/**
 	 * @return the currentCustomer
 	 */
-	public CustomerAgent getCurrentCustomer() {
+	public CherysCustomerRole getCurrentCustomer() {
 		return currentCustomer;
 	}
 
@@ -224,19 +224,19 @@ public class AlfredWaiterRole extends Agent {
 		stateChanged();
 	}
 
-	public void hasCustomer(CustomerAgent customer, Table table) {
+	public void hasCustomer(CherysCustomerRole customer, Table table) {
 		currentCustomer = customer;
 		this.table = table;
 		event = AgentEvent.haveCustomer;
 		stateChanged();
 	}
-	public void messeageleaveDuetoExpensive(CustomerAgent customer){
+	public void messeageleaveDuetoExpensive(CherysCustomerRole customer){
 		print("Got messeageleaveDuetoExpensive");
 		event = AgentEvent.leaveDuetoExpensive;
 		System.out.println("state: " + state);
 		stateChanged();
 	}
-	public void messeageReadyToOrder(CustomerAgent customer) {
+	public void messeageReadyToOrder(CherysCustomerRole customer) {
 		print("Got messeageReadyToOrder");
 		event = AgentEvent.readyToOrder;
 		System.out.println("state: " + state);
@@ -290,7 +290,7 @@ public class AlfredWaiterRole extends Agent {
 	/**
 	 * @return the hostAgent
 	 */
-	public HostAgent getHostAgent() {
+	public CherysHostRole getHostAgent() {
 		return hostAgent;
 	}
 
@@ -314,7 +314,7 @@ public class AlfredWaiterRole extends Agent {
 	/**
 	 * @return the waiterGui
 	 */
-	public WaiterGui getWaiterGui() {
+	public CherysWaiterGui getWaiterGui() {
 		return waiterGui;
 	}
 	

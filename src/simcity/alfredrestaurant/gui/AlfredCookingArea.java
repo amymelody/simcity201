@@ -18,7 +18,7 @@ import restaurant.CustomerAgent;
 public class CookingArea extends JPanel{
 	
 	RestauranGUI restaurantGui;
-	CookAgent cookAgent;
+	CherysCookRole cookAgent;
 	CookerGui cookerGui;
 	
 	public static int xRefrigeratorPos;

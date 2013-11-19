@@ -67,9 +67,9 @@ public class RestauranGUI extends JFrame{
 	 * @param c
 	 *            reference to the customer
 	 */
-	public void setCustomerEnabled(CustomerAgent c) {
-		if (currentPerson instanceof CustomerAgent) {
-			CustomerAgent cust = (CustomerAgent) currentPerson;
+	public void setCustomerEnabled(CherysCustomerRole c) {
+		if (currentPerson instanceof CherysCustomerRole) {
+			CherysCustomerRole cust = (CherysCustomerRole) currentPerson;
 			if (c.equals(cust)) {
 				controlRestaurantPanel.stateCB.setEnabled(true);
 				controlRestaurantPanel.stateCB.setSelected(false);

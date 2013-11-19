@@ -19,21 +19,21 @@ import java.util.Vector;
 public class RestaurantPanel extends JPanel {
 
 	// Host, cook, waiters and customers
-	private HostAgent host;
+	private CherysHostRole host;
 	private HostGui hostGui;
 	private CookerGui cookerGui;
-	private java.util.List<CustomerAgent> customers = Collections.synchronizedList(new java.util.ArrayList<CustomerAgent>());
-	private Vector<MarketAgent> markets = new Vector<MarketAgent>();
+	private java.util.List<CherysCustomerRole> customers = Collections.synchronizedList(new java.util.ArrayList<CherysCustomerRole>());
+	private Vector<CherysMarketRole> markets = new Vector<CherysMarketRole>();
 
 	private JPanel restLabel = new JPanel();
-	private ListPanel customerPanel;
+	private CherysListPanel customerPanel;
 	private JPanel group = new JPanel();
 
 	public RestauranGUI restauranGUI; // reference to main gui
 	
-	public RestaurantPanel(RestauranGUI gui, HostAgent hostAgent) {
+	public RestaurantPanel(RestauranGUI gui, CherysHostRole hostAgent) {
 		this.restauranGUI = gui;
-		customerPanel = new ListPanel(gui, this,"Customers");
+		customerPanel = new CherysListPanel(gui, this,"Customers");
 		hostGui = new HostGui(hostAgent);
 		host = hostAgent;
 		host.setGui(hostGui);
@@ -44,14 +44,14 @@ public class RestaurantPanel extends JPanel {
 		
 		//create some markets
 		for (int i = 0; i < 10; i++){
-			MarketAgent ma = new MarketAgent(host.getCook(), host.cashierAgent);
+			CherysMarketRole ma = new CherysMarketRole(host.getCook(), host.cashierAgent);
 			ma.startThread();
 			markets.add(ma);
 		}
 
 		// add waiters to customer
-		for (WaiterAgent waiter : host.getWaiters()) {
-			WaiterGui waiterGui = new WaiterGui(waiter);
+		for (CherysWaiterRole waiter : host.getWaiters()) {
+			CherysWaiterGui waiterGui = new CherysWaiterGui(waiter);
 			gui.animationPanel.addGui(waiterGui);
 			waiter.setWaiterGui(waiterGui);
 			waiter.startThread();
@@ -67,8 +67,8 @@ public class RestaurantPanel extends JPanel {
 		add(group);
 	}
 
-	public void addWaiter(WaiterAgent waiter) {
-		WaiterGui waiterGui = new WaiterGui(waiter);
+	public void addWaiter(CherysWaiterRole waiter) {
+		CherysWaiterGui waiterGui = new CherysWaiterGui(waiter);
 		restauranGUI.animationPanel.addGui(waiterGui);
 		waiter.setWaiterGui(waiterGui);
 		waiter.startThread();
@@ -108,7 +108,7 @@ public class RestaurantPanel extends JPanel {
 		if (type.equals("Customers")) {
 
 			for (int i = 0; i < customers.size(); i++) {
-				CustomerAgent temp = customers.get(i);
+				CherysCustomerRole temp = customers.get(i);
 				if (temp.getName() == name)
 					restauranGUI.controlRestaurantPanel.updateInfoPanel(temp);
 			}
@@ -126,8 +126,8 @@ public class RestaurantPanel extends JPanel {
 	public void addPerson(String type, String name, boolean hungry) {
 
 		if (type.equals("Customers")) {
-			CustomerAgent c = new CustomerAgent(name);
-			CustomerGui g = new CustomerGui(c, restauranGUI);
+			CherysCustomerRole c = new CherysCustomerRole(name);
+			CherysCustomerGui g = new CherysCustomerGui(c, restauranGUI);
 			if (hungry) {
 				g.setHungry();
 			}
@@ -141,11 +141,11 @@ public class RestaurantPanel extends JPanel {
 		}
 	}
 
-	public HostAgent getHost() {
+	public CherysHostRole getHost() {
 		return host;
 	}
 
-	public java.util.List<CustomerAgent> getCustomers() {
+	public java.util.List<CherysCustomerRole> getCustomers() {
 		return customers;
 	}
 

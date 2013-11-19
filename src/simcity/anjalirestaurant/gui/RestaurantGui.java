@@ -117,8 +117,8 @@ public class RestaurantGui extends JFrame implements ActionListener {
         //stateWB.setVisible(true);
         currentPerson = person;
 
-        if (person instanceof CustomerAgent) {
-            CustomerAgent customer = (CustomerAgent) person;
+        if (person instanceof CherysCustomerRole) {
+            CherysCustomerRole customer = (CherysCustomerRole) person;
             stateCB.setText("Hungry?");
           //Should checkmark be there? 
             stateCB.setSelected(customer.getGui().isHungry());
@@ -129,8 +129,8 @@ public class RestaurantGui extends JFrame implements ActionListener {
                "<html><pre>     Name: " + customer.getName() + " </pre></html>");
         }
         
-       if(person instanceof WaiterAgent){
-    	   WaiterAgent waiter = (WaiterAgent) person;
+       if(person instanceof CherysWaiterRole){
+    	   CherysWaiterRole waiter = (CherysWaiterRole) person;
     	   stateCB.setText("Wants break?");
     	   //Setting checkmark false because waiter doesn't want break immediately
     	   stateCB.setSelected(false);
@@ -149,15 +149,15 @@ public class RestaurantGui extends JFrame implements ActionListener {
      */
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == stateCB) {
-            if (currentPerson instanceof CustomerAgent) {
-                CustomerAgent c = (CustomerAgent) currentPerson;
+            if (currentPerson instanceof CherysCustomerRole) {
+                CherysCustomerRole c = (CherysCustomerRole) currentPerson;
                 c.getGui().setHungry();
                 stateCB.setEnabled(false);
             }
         }
         if(e.getSource() == stateCB){
-        	if(currentPerson instanceof WaiterAgent){
-        		WaiterAgent w = (WaiterAgent) currentPerson;
+        	if(currentPerson instanceof CherysWaiterRole){
+        		CherysWaiterRole w = (CherysWaiterRole) currentPerson;
         		System.out.println("Waiter wants break button selected");
         		w.msgWantsBreak();
         		stateCB.setEnabled(false);
@@ -171,9 +171,9 @@ public class RestaurantGui extends JFrame implements ActionListener {
      *
      * @param c reference to the CustomerAgent
      */
-    public void setCustomerEnabled(CustomerAgent c) {
-        if (currentPerson instanceof CustomerAgent) {
-            CustomerAgent cust = (CustomerAgent) currentPerson;
+    public void setCustomerEnabled(CherysCustomerRole c) {
+        if (currentPerson instanceof CherysCustomerRole) {
+            CherysCustomerRole cust = (CherysCustomerRole) currentPerson;
             if (c.equals(cust)) {
                 stateCB.setEnabled(true);
                 stateCB.setSelected(false);

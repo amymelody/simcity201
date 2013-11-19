@@ -6,12 +6,12 @@ import java.util.TimerTask;
 import agent.Agent;
 import restaurant.interfaces.Market;
 
-public class AlfredMarketRole extends Agent implements Market{
+public class AlfredMarketRole extends Agent implements CherysMarket{
 
-	private CookAgent cook;
-	private CashierAgent cashier;
+	private CherysCookRole cook;
+	private CherysCashierRole cashier;
 	
-	public MarketAgent(CookAgent cook, CashierAgent cashier) {
+	public MarketAgent(CherysCookRole cook, CherysCashierRole cashier) {
 		this.cook = cook;
 		this.cashier = cashier;
 		cook.addMarket(this);

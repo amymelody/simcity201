@@ -25,26 +25,26 @@ import restaurant.interfaces.Waiter;
 public class RestaurantPanel extends JPanel {
 
     //Host, cook, waiters and customers
-    private HostAgent host = new HostAgent("Sarah");
+    private CherysHostRole host = new CherysHostRole("Sarah");
     private HostGui hostGui = new HostGui(host);
     
    
   //private  Waiter waiter = new Waiter("Jack");
  //  private WaiterGui waiterGui = new WaiterGui("waiter");
    
-    private CookAgent cook = new CookAgent("Cook");
+    private CherysCookRole cook = new CherysCookRole("Cook");
    
 	
-    private CashierAgent cashier = new CashierAgent("Cashier");
+    private CherysCashierRole cashier = new CherysCashierRole("Cashier");
     
-    private MarketAgent market1 = new MarketAgent("Market 1");
-    private MarketAgent market2 = new MarketAgent("Market 2");
-    private MarketAgent market3 = new MarketAgent("Market 3");
+    private CherysMarketRole market1 = new CherysMarketRole("Market 1");
+    private CherysMarketRole market2 = new CherysMarketRole("Market 2");
+    private CherysMarketRole market3 = new CherysMarketRole("Market 3");
 
     
-    private Vector<CustomerAgent> customers = new Vector<CustomerAgent>();
-    private Vector<Waiter> waiters = new Vector<Waiter>();
-    private Vector<MarketAgent> markets = new Vector<MarketAgent>();
+    private Vector<CherysCustomerRole> customers = new Vector<CherysCustomerRole>();
+    private Vector<CherysWaiter> waiters = new Vector<CherysWaiter>();
+    private Vector<CherysMarketRole> markets = new Vector<CherysMarketRole>();
     private JPanel restLabel = new JPanel();
     private ListPanel customerPanel = new ListPanel(this, "Customers");
     private JPanel group = new JPanel();
@@ -118,14 +118,14 @@ public class RestaurantPanel extends JPanel {
         if (type.equals("Customers")) {
 
             for (int i = 0; i < customers.size(); i++) {
-                Customer temp = customers.get(i);
+                CherysCustomer temp = customers.get(i);
                 if (temp.getName() == name)
                     gui.updateInfoPanel(temp);
             }
         }
         if(type.equals("Waiters")){
         	for(int i = 0; i < waiters.size(); i++){
-        		Waiter temp = waiters.get(i);
+        		CherysWaiter temp = waiters.get(i);
         		if(temp.getName() == name){
         			gui.updateInfoPanel(temp);
         		}
@@ -143,7 +143,7 @@ public class RestaurantPanel extends JPanel {
     	
     	if (type.equals("Customers")) {
     		int xPos = 0;
-    		CustomerAgent c = new CustomerAgent(name);	
+    		CherysCustomerRole c = new CherysCustomerRole(name);	
     		customers.add(c);
     		xPos = (50*customers.size());
     		CustomerGui g = new CustomerGui(c, gui, xPos);
@@ -168,7 +168,7 @@ public class RestaurantPanel extends JPanel {
     public void addWaiter(String type, String name){
     	int yPos = 0;
     	if(type.equals("Waiters")){
-    		WaiterAgent w = new WaiterAgent(name);
+    		CherysWaiterRole w = new CherysWaiterRole(name);
     		waiters.add(w);
     		yPos = (50*waiters.size());
     		WaiterGui wg= new WaiterGui(w, gui, yPos);

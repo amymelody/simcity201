@@ -12,21 +12,21 @@ import java.util.TimerTask;
 /**
  * Restaurant customer agent.
  */
-public class AlfredCustomerRole extends Agent implements Customer{
+public class AlfredCustomerRole extends Agent implements CherysCustomer{
 
 	private static int ID = 1;
 	
 	private String name;
 	private int hungerLevel = 5; // determines length of meal
 	Timer timer = new Timer();
-	private CustomerGui customerGui;
+	private CherysCustomerGui customerGui;
 	private Table table;
 	// agent correspondents
-	private HostAgent host;
+	private CherysHostRole host;
 	
 	private int id;
 
-	private WaiterAgent waiter;
+	private CherysWaiterRole waiter;
 	
 	int foodIndex = -1;
 
@@ -69,11 +69,11 @@ public class AlfredCustomerRole extends Agent implements Customer{
 	/**
 	 * hack to establish connection to Host agent.
 	 */
-	public void setHost(HostAgent host) {
+	public void setHost(CherysHostRole host) {
 		this.host = host;
 	}
 
-	public void setWaiter(WaiterAgent waiter) {
+	public void setWaiter(CherysWaiterRole waiter) {
 		this.waiter = waiter;
 	}
 
@@ -202,7 +202,7 @@ public class AlfredCustomerRole extends Agent implements Customer{
 	}
 
 	private void doSomeThingBeforeReadyToOrder() {
-		final CustomerAgent thisAgent = this;
+		final CherysCustomerRole thisAgent = this;
 		timer.schedule(new TimerTask() {
 			public void run() {
 				//want to leave, expensive food
@@ -276,11 +276,11 @@ public class AlfredCustomerRole extends Agent implements Customer{
 		return "customer " + getName();
 	}
 
-	public void setGui(CustomerGui g) {
+	public void setGui(CherysCustomerGui g) {
 		customerGui = g;
 	}
 
-	public CustomerGui getGui() {
+	public CherysCustomerGui getGui() {
 		return customerGui;
 	}
 

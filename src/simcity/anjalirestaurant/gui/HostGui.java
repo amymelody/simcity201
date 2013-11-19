@@ -8,7 +8,7 @@ import restaurant.HostAgent;
 
 public class HostGui implements Gui {
 
-    private HostAgent agent = null;
+    private CherysHostRole agent = null;
 
     private int xPos = -20, yPos = -20;//default waiter position
     private int xDestination = -20, yDestination = -20;//default start position
@@ -17,7 +17,7 @@ public class HostGui implements Gui {
     public static final int yTable = 250;
     public static final int x2Table = 100;
     public static final int y2Table = 150;
-    public HostGui(HostAgent agent) {
+    public HostGui(CherysHostRole agent) {
         this.agent = agent;
     }
 
@@ -50,7 +50,7 @@ public class HostGui implements Gui {
         return true;
     }
 
-    public void DoBringToTable(CustomerAgent customer, int xLocation, int yLocation) {
+    public void DoBringToTable(CherysCustomerRole customer, int xLocation, int yLocation) {
         xDestination = xLocation + 20;
         yDestination = yLocation - 20;
     }

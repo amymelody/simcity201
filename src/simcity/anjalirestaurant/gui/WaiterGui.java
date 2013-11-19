@@ -9,7 +9,7 @@ import restaurant.WaiterAgent;
 
 public class WaiterGui implements Gui {
 
-    private WaiterAgent agent = null;
+    private CherysWaiterRole agent = null;
   private boolean isPresent = false;
   private boolean releaseIt = false;
   private String choice = " ";
@@ -20,7 +20,7 @@ public class WaiterGui implements Gui {
     private int yHomePosition = 0; 
    
     
-    public WaiterGui(WaiterAgent w, RestaurantGui gui, int yPosition){ //HostAgent m) {
+    public WaiterGui(CherysWaiterRole w, RestaurantGui gui, int yPosition){ //HostAgent m) {
 		this.yHomePosition = yPosition;
     	agent = w;
 		xPos = -20;
@@ -83,7 +83,7 @@ public class WaiterGui implements Gui {
     	yDestination = 20;
     	releaseIt = true;
     }
-    public void DoBringToTable(CustomerAgent c, int xLocation, int yLocation) {
+    public void DoBringToTable(CherysCustomerRole c, int xLocation, int yLocation) {
         xDestination = xLocation;
         yDestination = yLocation;
         releaseIt = true;

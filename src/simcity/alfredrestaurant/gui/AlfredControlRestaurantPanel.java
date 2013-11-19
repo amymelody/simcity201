@@ -25,7 +25,7 @@ public class ControlRestaurantPanel extends JPanel implements ActionListener {
 	 * customers all constructed in RestaurantPanel() 2) the infoPanel about the
 	 * clicked Customer (created just below)
 	 */
-	private RestaurantPanel restPanel;
+	private CherysRestaurantPanel restPanel;
 
 	/* infoPanel holds information about the clicked customer, if there is one */
 	private JPanel infoPanel;
@@ -49,7 +49,7 @@ public class ControlRestaurantPanel extends JPanel implements ActionListener {
 	private JTextField txtTableXPos = new JTextField(3);
 	private JTextField txtTableYPos = new JTextField(3);
 
-	public HostAgent host = new HostAgent("Sarah");
+	public CherysHostRole host = new CherysHostRole("Sarah");
 	private JComboBox cboTablesName = new JComboBox();
 
 	
@@ -72,7 +72,7 @@ public class ControlRestaurantPanel extends JPanel implements ActionListener {
 
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
-		restPanel = new RestaurantPanel(gui, host);
+		restPanel = new CherysRestaurantPanel(gui, host);
 //		customerWaitingArea.setRestaurantPanel(restPanel);
 		
 		
@@ -181,8 +181,8 @@ public class ControlRestaurantPanel extends JPanel implements ActionListener {
 		stateCB.setVisible(true);
 		currentPerson = person;
 
-		if (person instanceof CustomerAgent) {
-			CustomerAgent customer = (CustomerAgent) person;
+		if (person instanceof CherysCustomerRole) {
+			CherysCustomerRole customer = (CherysCustomerRole) person;
 			stateCB.setText("Hungry?");
 			// Should checkmark be there?
 			stateCB.setSelected(customer.getGui().isHungry());
@@ -202,8 +202,8 @@ public class ControlRestaurantPanel extends JPanel implements ActionListener {
 	 */
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == stateCB) {
-			if (currentPerson instanceof CustomerAgent) {
-				CustomerAgent c = (CustomerAgent) currentPerson;
+			if (currentPerson instanceof CherysCustomerRole) {
+				CherysCustomerRole c = (CherysCustomerRole) currentPerson;
 				c.getGui().setHungry();
 				stateCB.setEnabled(false);
 				
@@ -212,7 +212,7 @@ public class ControlRestaurantPanel extends JPanel implements ActionListener {
 //				customerWaitingArea.validate();
 			}
 		} else if (e.getSource() == btnAddTable) {
-			HostAgent host = restPanel.getHost();
+			CherysHostRole host = restPanel.getHost();
 			host.increaseTable();
 			MutableComboBoxModel model = (MutableComboBoxModel) cboTablesName
 					.getModel();
@@ -223,7 +223,7 @@ public class ControlRestaurantPanel extends JPanel implements ActionListener {
 //			customerWaitingArea.validate();
 			
 		} else if (e.getSource() == btnAddWaiter) {
-			HostAgent host = restPanel.getHost();
+			CherysHostRole host = restPanel.getHost();
 			host.increaseWaiter();
 			MutableComboBoxModel model = (MutableComboBoxModel) cboWaitersName
 					.getModel();
@@ -256,11 +256,11 @@ public class ControlRestaurantPanel extends JPanel implements ActionListener {
 			// HostGui.yTable = yTable;
 		} else if (e.getSource() == btnPause) {
 			if (btnPause.getText().equals("Pause")) {
-				HostAgent host = restPanel.getHost();
+				CherysHostRole host = restPanel.getHost();
 				host.pause();
 				btnPause.setText("Restart");
 			} else {
-				HostAgent host = restPanel.getHost();
+				CherysHostRole host = restPanel.getHost();
 				host.startThread();
 				btnPause.setText("Pause");
 			}
@@ -291,9 +291,9 @@ public class ControlRestaurantPanel extends JPanel implements ActionListener {
 	 * @param c
 	 *            reference to the customer
 	 */
-	public void setCustomerEnabled(CustomerAgent c) {
-		if (currentPerson instanceof CustomerAgent) {
-			CustomerAgent cust = (CustomerAgent) currentPerson;
+	public void setCustomerEnabled(CherysCustomerRole c) {
+		if (currentPerson instanceof CherysCustomerRole) {
+			CherysCustomerRole cust = (CherysCustomerRole) currentPerson;
 			if (c.equals(cust)) {
 				stateCB.setEnabled(true);
 				stateCB.setSelected(false);
@@ -305,7 +305,7 @@ public class ControlRestaurantPanel extends JPanel implements ActionListener {
 	/**
 	 * @return the restPanel
 	 */
-	public RestaurantPanel getRestPanel() {
+	public CherysRestaurantPanel getRestPanel() {
 		return restPanel;
 	}
 }

@@ -8,7 +8,7 @@ import restaurant.CookAgent;
 
 public class CookGui implements Gui {
 
-    private CookAgent agent = null;
+    private CherysCookRole agent = null;
   private boolean isPresent = false;
   private boolean releaseIt = false;
   private String choice = " ";
@@ -19,7 +19,7 @@ public class CookGui implements Gui {
     private int yHomePosition = 0; 
    
     
-    public CookGui(CookAgent c, RestaurantGui gui){ //HostAgent m) {
+    public CookGui(CherysCookRole c, RestaurantGui gui){ //HostAgent m) {
     	agent = c;
 		xPos = 0;
 		yPos = 250;
