@@ -27,7 +27,7 @@ public class WaiterWaitingArea extends JPanel{
 		int xPos = 10;
 		int yPos = 30;
 		try{
-			for (WaiterAgent waiterAgent: restaurantGui.controlRestaurantPanel.host.getWaiters()){
+			for (CherysWaiterRole waiterAgent: restaurantGui.controlRestaurantPanel.host.getWaiters()){
 				if (waiterAgent.isWaiting()){
 					g.drawImage(waiterAgent.getWaiterGui().getImage(), xPos, yPos, null);
 					g.drawString("(" + waiterAgent.getIndex() + ")", xPos, yPos + 10);

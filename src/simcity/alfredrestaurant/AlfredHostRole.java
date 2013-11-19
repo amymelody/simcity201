@@ -31,7 +31,7 @@ public class AlfredHostRole extends Agent {
 
 	// Notice that we implement waitingCustomers using ArrayList, but type it
 	// with List semantics.
-	private List<CustomerAgent> waitingCustomers = Collections.synchronizedList(new ArrayList<CustomerAgent>());
+	private List<CherysCustomerRole> waitingCustomers = Collections.synchronizedList(new ArrayList<CherysCustomerRole>());
 	public Collection<Table> tables;
 	// note that tables is typed with Collection semantics.
 	// Later we will see how it is implemented
@@ -39,23 +39,23 @@ public class AlfredHostRole extends Agent {
 
 	public HostGui hostGui = null;
 		
-	public CashierAgent cashierAgent = new CashierAgent("cashier"); 
+	public CherysCashierRole cashierAgent = new CherysCashierRole("cashier"); 
 
 	//try catch ConcurrentModificationException instead of synchonized
-	private List<WaiterAgent> waiters = new ArrayList<WaiterAgent>();
+	private List<CherysWaiterRole> waiters = new ArrayList<CherysWaiterRole>();
 
-	private CookAgent cook = new CookAgent(this);
+	private CherysCookRole cook = new CherysCookRole(this);
 
 	public Menu getMenu() {
 		return menu;
 	}
 
-	public CookAgent getCook() {
+	public CherysCookRole getCook() {
 		return cook;
 	}
 	
 	public void clickOn(int x, int y){
-		for (WaiterAgent waiter : waiters){
+		for (CherysWaiterRole waiter : waiters){
 			waiter.clickOn(x, y);
 		}
 	}
@@ -76,7 +76,7 @@ public class AlfredHostRole extends Agent {
 		}
 
 		for (int ix = 0; ix < NWAITERS; ix++) {
-			waiters.add(new WaiterAgent(this, ix + 1));
+			waiters.add(new CherysWaiterRole(this, ix + 1));
 		}
 		cook.startThread();
 		
@@ -155,7 +155,7 @@ public class AlfredHostRole extends Agent {
 	public void increaseWaiter() {
 		NWAITERS++;
 
-		WaiterAgent waiter = new WaiterAgent(this, NWAITERS);
+		CherysWaiterRole waiter = new CherysWaiterRole(this, NWAITERS);
 		
 		synchronized (waiters) {
 			waiters.add(waiter);
@@ -195,7 +195,7 @@ public class AlfredHostRole extends Agent {
 
 	// Messages
 
-	public void msgIWantFood(CustomerAgent cust) {
+	public void msgIWantFood(CherysCustomerRole cust) {
 		System.out.println(cust.getCustomerName() + " want food");
 		synchronized (waitingCustomers) {
 			waitingCustomers.add(cust);
@@ -234,7 +234,7 @@ public class AlfredHostRole extends Agent {
 					synchronized (waitingCustomers) {
 						if (!waitingCustomers.isEmpty()) {
 							// find waiters
-							for (WaiterAgent waiter : waiters) {
+							for (CherysWaiterRole waiter : waiters) {
 								if (waiter.isAvailable()) {
 									System.out.println(waitingCustomers.get(0).getCustomerName() + ": host seat customer" + " table = " + table.tableNumber);
 									seatCustomer(waitingCustomers.get(0), table, waiter);// the  action									
@@ -267,8 +267,8 @@ public class AlfredHostRole extends Agent {
 	}
 
 	// Actions
-	private void seatCustomer(CustomerAgent customer, Table table,
-			WaiterAgent waiter) {
+	private void seatCustomer(CherysCustomerRole customer, Table table,
+			CherysWaiterRole waiter) {
 		// customer.setTable(table);
 		// customer.msgSitAtTable();
 		// DoSeatCustomer(customer, table);
@@ -318,13 +318,13 @@ public class AlfredHostRole extends Agent {
 	/**
 	 * @return the waiters
 	 */
-	public List<WaiterAgent> getWaiters() {
+	public List<CherysWaiterRole> getWaiters() {
 		return waiters;
 	}
 
-	public RestaurantPanel restaurantPanel;
+	public CherysRestaurantPanel restaurantPanel;
 
-	public void setRestaurantPanel(RestaurantPanel restaurantPanel) {
+	public void setRestaurantPanel(CherysRestaurantPanel restaurantPanel) {
 		this.restaurantPanel = restaurantPanel;
 	}
 
@@ -340,13 +340,13 @@ public class AlfredHostRole extends Agent {
 				synchronized (waiters) {
 					//allow break only if there are more than 1 waiter
 					int count = 0;
-					for (WaiterAgent waiter: waiters){
+					for (CherysWaiterRole waiter: waiters){
 						if (!waiter.beingOnBreak){
 							count++;
 						}
 					}
 					if (count > 1){
-						for (WaiterAgent waiter: waiters){
+						for (CherysWaiterRole waiter: waiters){
 							if (waiter.isAvailable() && waiter.wantingToGoOnBreak){
 								waiter.doOnBreak();
 								System.out.println("Allow waiter to break....");

@@ -9,7 +9,7 @@ import javax.imageio.ImageIO;
 
 import restaurant.CookAgent;
 
-public class CookerGui implements Gui {
+public class CookerGui implements CherysGui {
 
 	private final int xDoNothingPosition = 50;
 	private final int yDoNothingPosition = 20;
@@ -18,7 +18,7 @@ public class CookerGui implements Gui {
 	private BufferedImage image;
 	private int xPos = xDoNothingPosition, yPos = yDoNothingPosition;
 	private int xDestination = xDoNothingPosition, yDestination = yDoNothingPosition;
-	private CookAgent agent;
+	private CherysCookRole agent;
 	
 	private enum Command {
 		noCommand, GoToRefrigerator, GoToCookingArea, GoToPlatingArea, GoToNoCommandArea
@@ -103,7 +103,7 @@ public class CookerGui implements Gui {
 	/**
 	 * @param agent the agent to set
 	 */
-	public void setAgent(CookAgent agent) {
+	public void setAgent(CherysCookRole agent) {
 		this.agent = agent;
 	}
 

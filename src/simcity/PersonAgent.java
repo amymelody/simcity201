@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.awt.Point;
 
 import simcity.agent.Agent;
+import simcity.housing.ResidentRole;
 import simcity.interfaces.RestCustomer;
 import simcity.interfaces.MarketCustomer;
 import simcity.interfaces.Resident;

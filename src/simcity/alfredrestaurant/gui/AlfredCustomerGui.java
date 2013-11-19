@@ -11,9 +11,9 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-public class CustomerGui implements Gui {
+public class CustomerGui implements CherysGui {
 
-	private CustomerAgent agent = null;
+	private CherysCustomerRole agent = null;
 	private boolean isPresent = false;
 	private boolean isHungry = false;
 	// private HostAgent host;
@@ -33,7 +33,7 @@ public class CustomerGui implements Gui {
 
 	// public static final int xTable = 200;
 	// public static final int yTable = 250;
-	public CustomerGui(CustomerAgent c, RestauranGUI gui) { // HostAgent m) {
+	public CustomerGui(CherysCustomerRole c, RestauranGUI gui) { // HostAgent m) {
 		agent = c;
 		xPos = defaultPosition;
 		yPos = defaultPosition;

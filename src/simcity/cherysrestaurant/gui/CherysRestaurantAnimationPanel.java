@@ -27,7 +27,7 @@ public class CherysRestaurantAnimationPanel extends JPanel implements ActionList
     private Dimension bufferSize;
     private int buff = 1;
 
-    private List<Gui> guis = new ArrayList<Gui>();
+    private List<CherysGui> guis = new ArrayList<CherysGui>();
     
     class Table
     {
@@ -89,7 +89,7 @@ public class CherysRestaurantAnimationPanel extends JPanel implements ActionList
 	        g2.fillRect(tables.get(i).x, tables.get(i).y, tableDimensions, tableDimensions);//200 and 250 need to be table params
         }
 
-        for(Gui gui : guis)
+        for(CherysGui gui : guis)
         {
             if (gui.isPresent())
             {
@@ -97,7 +97,7 @@ public class CherysRestaurantAnimationPanel extends JPanel implements ActionList
             }
         }
 
-        for(Gui gui : guis)
+        for(CherysGui gui : guis)
         {
             if (gui.isPresent())
             {
@@ -106,11 +106,11 @@ public class CherysRestaurantAnimationPanel extends JPanel implements ActionList
         }
     }
 
-    public void addGui(CustomerGui gui)
+    public void addGui(CherysCustomerGui gui)
     {
         guis.add(gui);
     }
-    public void addGui(WaiterGui gui)
+    public void addGui(CherysWaiterGui gui)
     {
         guis.add(gui);
     }

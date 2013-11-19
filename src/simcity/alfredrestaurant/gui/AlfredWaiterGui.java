@@ -13,9 +13,9 @@ import restaurant.CustomerAgent;
 import restaurant.Table;
 import restaurant.WaiterAgent;
 
-public class WaiterGui implements Gui {
+public class WaiterGui implements CherysGui {
 
-	private WaiterAgent agent = null;
+	private CherysWaiterRole agent = null;
 	private int xPos = -50, yPos = -50;// default waiter position
 	private int xDestination = -50, yDestination = -50;// default start position
 			// public static int xTable = 200;
@@ -25,7 +25,7 @@ public class WaiterGui implements Gui {
 	private static final int defaultPosition = -50;
 	private final String IMAGE_FILE = "C:/Users/AlfredKoshan/Documents/GitHub/restaurant_akoshan/host.jpg";
 
-	public WaiterGui(WaiterAgent agent) {
+	public WaiterGui(CherysWaiterRole agent) {
 		System.out.println("WaiterGui has been created");
 		this.agent = agent;
 		try {
@@ -43,7 +43,7 @@ public class WaiterGui implements Gui {
 	private Command command = Command.noCommand;
 
 	public void updatePosition() {
-		CustomerAgent cust = null;
+		CherysCustomerRole cust = null;
 		Point tablePos = null;
 		Table table = null;
 		if (agent.getCurrentCustomer() != null) {
@@ -117,7 +117,7 @@ public class WaiterGui implements Gui {
 		command = Command.ComeToPlatingArea;
 	}
 
-	public void DoBringToTable(CustomerAgent customer, Table table) {
+	public void DoBringToTable(CherysCustomerRole customer, Table table) {
 		Point tablePos = table.getPosition();
 		xDestination = tablePos.x + sizeHost;
 		yDestination = tablePos.y - sizeHost;
@@ -130,7 +130,7 @@ public class WaiterGui implements Gui {
 		command = Command.LeavingDone;
 	}
 	
-	public void DoBringNoFoodToTable(CustomerAgent customer, Table table) {
+	public void DoBringNoFoodToTable(CherysCustomerRole customer, Table table) {
 		Point tablePos = table.getPosition();
 		xDestination = tablePos.x + sizeHost;
 		yDestination = tablePos.y - sizeHost;
@@ -139,7 +139,7 @@ public class WaiterGui implements Gui {
 	}	
 	
 
-	public void sitCustomerToTable(CustomerAgent customer, Table table) {
+	public void sitCustomerToTable(CherysCustomerRole customer, Table table) {
 		Point tablePos = table.getPosition();
 		xDestination = tablePos.x + sizeHost;
 		yDestination = tablePos.y - sizeHost;

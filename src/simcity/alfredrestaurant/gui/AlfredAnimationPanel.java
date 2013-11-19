@@ -20,12 +20,12 @@ public class AnimationPanel extends JPanel implements ActionListener, MouseListe
 	private Image bufferImage;
 	private Dimension bufferSize;
 
-	private List<Gui> guis = new ArrayList<Gui>();
+	private List<CherysGui> guis = new ArrayList<CherysGui>();
 
-	private HostAgent agent;
+	private CherysHostRole agent;
 	private RestauranGUI restaurantGUI;
 	
-	public void setHostAgent(HostAgent agent){
+	public void setHostAgent(CherysHostRole agent){
 		this.agent = agent;
 	}
 	public AnimationPanel(RestauranGUI restaurantGUI) {
@@ -60,13 +60,13 @@ public class AnimationPanel extends JPanel implements ActionListener, MouseListe
 					HostGui.sizeTable);// 200 and 250 need to be table params
 		}
 
-		for (Gui gui : guis) {
+		for (CherysGui gui : guis) {
 			if (gui.isPresent()) {
 				gui.updatePosition();
 			}
 		}
 
-		for (Gui gui : guis) {
+		for (CherysGui gui : guis) {
 			if (gui.isPresent()) {
 				gui.draw(g2);
 			}
@@ -76,7 +76,7 @@ public class AnimationPanel extends JPanel implements ActionListener, MouseListe
 		restaurantGUI.cookingArea.repaint();
 	}
 
-	public void addGui(Gui gui) {
+	public void addGui(CherysGui gui) {
 		guis.add(gui);
 	}
 

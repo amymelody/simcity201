@@ -45,14 +45,14 @@ public class AlfredCashierRole extends Agent implements AlfredCashier{
 			System.out.println("Cashier proccessed request - pick and execute.");
 			if (processingBill.size() > 0){
 				BillState bill =  processingBill.remove(0);
-				if (bill.agent instanceof Customer){
-					((Customer)bill.agent).msgCheckRequestDone();
-				}else if (bill.agent instanceof Market){
+				if (bill.agent instanceof CherysCustomer){
+					((CherysCustomer)bill.agent).msgCheckRequestDone();
+				}else if (bill.agent instanceof CherysMarket){
 					System.out.println("Market....");
 					if (Math.random() < 0.2){ //not enough money
-						((Market)bill.agent).IOwnYou();
+						((CherysMarket)bill.agent).IOwnYou();
 					}else{
-						((Market)bill.agent).hadPayment();
+						((CherysMarket)bill.agent).hadPayment();
 					}
 				}
 				return true;
@@ -72,14 +72,14 @@ public class AlfredCashierRole extends Agent implements AlfredCashier{
 //	}
 	
 	//send from customer
-	public void msgPaymentRequest(Customer agent, Bill bill){
+	public void msgPaymentRequest(CherysCustomer agent, Bill bill){
 		event = AgentEvent.hasRequest;
 		bills.add(new BillState(bill, agent)); //add to tail
 		stateChanged();
 	}
 	
 	//send message to ask for paying
-	public void msgMarketRequest(Market agent, Bill bill){
+	public void msgMarketRequest(CherysMarket agent, Bill bill){
 		event = AgentEvent.hasRequest;
 		bills.add(new BillState(bill, agent)); //add to tail
 		stateChanged();

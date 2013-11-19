@@ -25,7 +25,7 @@ public class CustomerWaitingArea extends JPanel{
 		int xPos = 10;
 		int yPos = 30;
 		synchronized (restaurantGui.controlRestaurantPanel.getRestPanel().getCustomers()) {
-			for (CustomerAgent agent: restaurantGui.controlRestaurantPanel.getRestPanel().getCustomers()){
+			for (CherysCustomerRole agent: restaurantGui.controlRestaurantPanel.getRestPanel().getCustomers()){
 				if (agent.isWaiting()){
 					g.drawImage(agent.getGui().getImage(), xPos, yPos, null);
 					xPos += 40;

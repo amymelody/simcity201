@@ -11,9 +11,9 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-public class HostGui implements Gui{
+public class HostGui implements CherysGui{
 
-	private HostAgent agent = null;
+	private CherysHostRole agent = null;
 	private int xPos = -50, yPos = -50;// default waiter position
 	private int xDestination = -50, yDestination = -50;// default start position
 			// public static int xTable = 200;
@@ -23,7 +23,7 @@ public class HostGui implements Gui{
 	private static final int defaultPosition = -50;
 	private final String IMAGE_FILE = "C:/Users/AlfredKoshan/Documents/GitHub/restaurant_akoshan/host.jpg";
 
-	public HostGui(HostAgent agent) {
+	public HostGui(CherysHostRole agent) {
 		this.agent = agent;
 		try {
 			image = ImageIO.read(new File(IMAGE_FILE));
@@ -77,7 +77,7 @@ public class HostGui implements Gui{
 		return true;
 	}
 
-	public void DoBringToTable(CustomerAgent customer, int tableNumber) {
+	public void DoBringToTable(CherysCustomerRole customer, int tableNumber) {
 		Point tablePos = agent.getTablePosition(tableNumber);
 		xDestination = tablePos.x + sizeHost;
 		yDestination = tablePos.y - sizeHost;

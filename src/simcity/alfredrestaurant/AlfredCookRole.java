@@ -12,7 +12,7 @@ import agent.Agent;
 
 public class AlfredCookRole extends Agent {
 	Timer timer = new Timer();
-	private HostAgent hostAgent;
+	private CherysHostRole hostAgent;
 	private Inventory inventory = new Inventory();
 	private final int ORDER_QUANTITY = 10;
 	private final int INVENTORY_SLEEPING = 5000;
@@ -20,7 +20,7 @@ public class AlfredCookRole extends Agent {
 	
 	
 	//references to MarketAgent objects, they are created in Restaurant Panel
-	private Vector<MarketAgent> markets = new Vector<MarketAgent>();
+	private Vector<CherysMarketRole> markets = new Vector<CherysMarketRole>();
 
 	public enum AgentState {
 
@@ -39,16 +39,16 @@ public class AlfredCookRole extends Agent {
 
 	AgentEvent event = AgentEvent.none;
 	
-	public CookAgent(HostAgent hostAgent) {
+	public CookAgent(CherysHostRole hostAgent) {
 		this.hostAgent = hostAgent;
 		InventoryThread inventoryThread = new InventoryThread();
 		inventoryThread.start();
 	}
 	
-	public List<QueueItem> orderQueue = Collections.synchronizedList(new LinkedList<CookAgent.QueueItem>());
-	public List<QueueItem> cookingQueue = new LinkedList<CookAgent.QueueItem>();
-	public List<QueueItem> readyQueue = new LinkedList<CookAgent.QueueItem>();
-	public List<QueueItem> platingQueue = new LinkedList<CookAgent.QueueItem>();
+	public List<QueueItem> orderQueue = Collections.synchronizedList(new LinkedList<CherysCookRole.QueueItem>());
+	public List<QueueItem> cookingQueue = new LinkedList<CherysCookRole.QueueItem>();
+	public List<QueueItem> readyQueue = new LinkedList<CherysCookRole.QueueItem>();
+	public List<QueueItem> platingQueue = new LinkedList<CherysCookRole.QueueItem>();
 	
 	@Override
 	protected boolean pickAndExecuteAnAction() {
@@ -160,7 +160,7 @@ public class AlfredCookRole extends Agent {
 		stateChanged();
 	}
 	
-	public void msgOrder(WaiterAgent waiter, String food) {
+	public void msgOrder(CherysWaiterRole waiter, String food) {
 		boolean hasFood = inventory.getItem(food);
 		if (hasFood){
 			synchronized (orderQueue) {
@@ -192,14 +192,14 @@ public class AlfredCookRole extends Agent {
 		event = AgentEvent.comeDoNothingArea;
 		stateChanged();
 	}
-	public void addMarket(MarketAgent m){
+	public void addMarket(CherysMarketRole m){
 		markets.add(m);
 	}
 	
 	class QueueItem{
-		WaiterAgent waiter;
+		CherysWaiterRole waiter;
 		String food;
-		QueueItem(WaiterAgent waiter, String food){
+		QueueItem(CherysWaiterRole waiter, String food){
 			this.waiter = waiter;
 			this.food = food;
 		}
@@ -208,7 +208,7 @@ public class AlfredCookRole extends Agent {
 	//call by inventory thread
 	private void marketOrderItem(String item, int quantity){
 		synchronized (markets) {
-			for (MarketAgent m: markets){
+			for (CherysMarketRole m: markets){
 				if (m.isAvailable()){
 					m.order(item, quantity);					
 				}
