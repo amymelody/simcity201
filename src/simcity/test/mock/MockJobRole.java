@@ -15,6 +15,10 @@ public class MockJobRole extends Role implements JobInterface {
 		log.add(new LoggedEvent("Received msgStartShift"));
 	}
 	
+	public void msgEndShift() {
+		log.add(new LoggedEvent("Received msgEndShift"));
+	}
+	
 	public boolean pickAndExecuteAnAction() {
 		if (log.size() > 0) {
 			person.msgLeftDestination(this);
