@@ -7,20 +7,20 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.Vector;
 
-import restaurant.gui.CookerGui;
-import agent.Agent;
+import simcity.alfredrestaurant.gui.AlfredCookerGui;
+import simcity.agent.Agent;
 
 public class AlfredCookRole extends Agent {
 	Timer timer = new Timer();
-	private CherysHostRole hostAgent;
-	private Inventory inventory = new Inventory();
+	private AlfredHostRole hostAgent;
+	private AlfredInventory inventory = new AlfredInventory();
 	private final int ORDER_QUANTITY = 10;
 	private final int INVENTORY_SLEEPING = 5000;
-	private CookerGui cookGui;
+	private AlfredCookerGui cookGui;
 	
 	
 	//references to MarketAgent objects, they are created in Restaurant Panel
-	private Vector<CherysMarketRole> markets = new Vector<CherysMarketRole>();
+	private Vector<AlfredMarketRole> markets = new Vector<AlfredMarketRole>();
 
 	public enum AgentState {
 
@@ -39,16 +39,16 @@ public class AlfredCookRole extends Agent {
 
 	AgentEvent event = AgentEvent.none;
 	
-	public CookAgent(CherysHostRole hostAgent) {
+	public CookAgent(AlfredHostRole hostAgent) {
 		this.hostAgent = hostAgent;
 		InventoryThread inventoryThread = new InventoryThread();
 		inventoryThread.start();
 	}
 	
-	public List<QueueItem> orderQueue = Collections.synchronizedList(new LinkedList<CherysCookRole.QueueItem>());
-	public List<QueueItem> cookingQueue = new LinkedList<CherysCookRole.QueueItem>();
-	public List<QueueItem> readyQueue = new LinkedList<CherysCookRole.QueueItem>();
-	public List<QueueItem> platingQueue = new LinkedList<CherysCookRole.QueueItem>();
+	public List<QueueItem> orderQueue = Collections.synchronizedList(new LinkedList<AlfredCookRole.QueueItem>());
+	public List<QueueItem> cookingQueue = new LinkedList<AlfredCookRole.QueueItem>();
+	public List<QueueItem> readyQueue = new LinkedList<AlfredCookRole.QueueItem>();
+	public List<QueueItem> platingQueue = new LinkedList<AlfredCookRole.QueueItem>();
 	
 	@Override
 	protected boolean pickAndExecuteAnAction() {
@@ -160,7 +160,7 @@ public class AlfredCookRole extends Agent {
 		stateChanged();
 	}
 	
-	public void msgOrder(CherysWaiterRole waiter, String food) {
+	public void msgOrder(AlfredWaiterRole waiter, String food) {
 		boolean hasFood = inventory.getItem(food);
 		if (hasFood){
 			synchronized (orderQueue) {
@@ -192,14 +192,14 @@ public class AlfredCookRole extends Agent {
 		event = AgentEvent.comeDoNothingArea;
 		stateChanged();
 	}
-	public void addMarket(CherysMarketRole m){
+	public void addMarket(AlfredMarketRole m){
 		markets.add(m);
 	}
 	
 	class QueueItem{
-		CherysWaiterRole waiter;
+		AlfredWaiterRole waiter;
 		String food;
-		QueueItem(CherysWaiterRole waiter, String food){
+		QueueItem(AlfredWaiterRole waiter, String food){
 			this.waiter = waiter;
 			this.food = food;
 		}
@@ -208,7 +208,7 @@ public class AlfredCookRole extends Agent {
 	//call by inventory thread
 	private void marketOrderItem(String item, int quantity){
 		synchronized (markets) {
-			for (CherysMarketRole m: markets){
+			for (AlfredMarketRole m: markets){
 				if (m.isAvailable()){
 					m.order(item, quantity);					
 				}
@@ -251,14 +251,14 @@ public class AlfredCookRole extends Agent {
 	/**
 	 * @return the inventory
 	 */
-	public Inventory getInventory() {
+	public AlfredInventory getInventory() {
 		return inventory;
 	}
 
 	/**
 	 * @param cookGui the cookGui to set
 	 */
-	public void setCookGui(CookerGui cookGui) {
+	public void setCookGui(AlfredCookerGui cookGui) {
 		this.cookGui = cookGui;
 	}
 	

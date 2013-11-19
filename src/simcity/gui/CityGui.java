@@ -16,7 +16,7 @@ public class CityGui extends JFrame
 	private int windowX = 650;
 	private int windowY = 500;
 	private int bufferFromTopOfScreen = 50;
-	private int bufferFromSideOfScreen = 50;
+	private int bufferFromSideOfScreen = 15;
 
 	/**
 	 * Constructor
@@ -43,4 +43,5 @@ public class CityGui extends JFrame
 		animationPanel.setMaximumSize(animDim);
 		add(animationPanel, frameLayout.CENTER);
 	}
+	
 }

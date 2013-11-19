@@ -6,9 +6,9 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import restaurant.interfaces.Cashier;
-import restaurant.interfaces.Customer;
-import restaurant.interfaces.Market;
+import simcity.alfredrestaurant.interfaces.Cashier;
+import simcity.alfredrestaurant.interfaces.Customer;
+import simcity.alfredrestaurant.interfaces.Market;
 import simcity.agent.Agent;
 
 public class AlfredCashierRole extends Agent implements AlfredCashier{
@@ -32,7 +32,7 @@ public class AlfredCashierRole extends Agent implements AlfredCashier{
 
 	public AgentEvent event = AgentEvent.none;
 	
-	public CashierAgent(String name) {
+	public AlfredCashierRole(String name) {
 		this.name = name;
 	}
 
@@ -45,14 +45,14 @@ public class AlfredCashierRole extends Agent implements AlfredCashier{
 			System.out.println("Cashier proccessed request - pick and execute.");
 			if (processingBill.size() > 0){
 				BillState bill =  processingBill.remove(0);
-				if (bill.agent instanceof CherysCustomer){
-					((CherysCustomer)bill.agent).msgCheckRequestDone();
-				}else if (bill.agent instanceof CherysMarket){
+				if (bill.agent instanceof AlfredCustomer){
+					((AlfredCustomer)bill.agent).msgCheckRequestDone();
+				}else if (bill.agent instanceof AlfredMarket){
 					System.out.println("Market....");
 					if (Math.random() < 0.2){ //not enough money
-						((CherysMarket)bill.agent).IOwnYou();
+						((AlfredMarket)bill.agent).IOwnYou();
 					}else{
-						((CherysMarket)bill.agent).hadPayment();
+						((AlfredMarket)bill.agent).hadPayment();
 					}
 				}
 				return true;
@@ -72,14 +72,14 @@ public class AlfredCashierRole extends Agent implements AlfredCashier{
 //	}
 	
 	//send from customer
-	public void msgPaymentRequest(CherysCustomer agent, Bill bill){
+	public void msgPaymentRequest(AlfredCustomer agent, AlfredBill bill){
 		event = AgentEvent.hasRequest;
 		bills.add(new BillState(bill, agent)); //add to tail
 		stateChanged();
 	}
 	
 	//send message to ask for paying
-	public void msgMarketRequest(CherysMarket agent, Bill bill){
+	public void msgMarketRequest(AlfredMarket agent, AlfredBill bill){
 		event = AgentEvent.hasRequest;
 		bills.add(new BillState(bill, agent)); //add to tail
 		stateChanged();
@@ -103,10 +103,10 @@ public class AlfredCashierRole extends Agent implements AlfredCashier{
 		return false;
 	}
 	class BillState{
-		Bill bill;
+		AlfredBill bill;
 		Object agent;
 		
-		public BillState(Bill bill, Object agent){
+		public BillState(AlfredBill bill, Object agent){
 			this.bill = bill;
 			this.agent = agent;
 		}

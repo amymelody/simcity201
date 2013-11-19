@@ -1,4 +1,4 @@
-package restaurant.gui;
+package simcity.alfredrestaurant.gui;
 
 import javax.swing.*;
 
@@ -10,9 +10,9 @@ import java.awt.event.MouseListener;
 import java.util.List;
 import java.util.ArrayList;
 
-import restaurant.HostAgent;
+import simcity.alfredrestaurant.AlfredHostRole;
 
-public class AnimationPanel extends JPanel implements ActionListener, MouseListener {
+public class AlfredRestaurantAnimationPanel extends JPanel implements ActionListener, MouseListener {
 
 	// private final int WINDOWX = 450;
 	// private final int WINDOWY = 350;
@@ -20,15 +20,15 @@ public class AnimationPanel extends JPanel implements ActionListener, MouseListe
 	private Image bufferImage;
 	private Dimension bufferSize;
 
-	private List<CherysGui> guis = new ArrayList<CherysGui>();
+	private List<AlfredGui> guis = new ArrayList<AlfredGui>();
 
-	private CherysHostRole agent;
-	private RestauranGUI restaurantGUI;
+	private AlfredHostRole agent;
+	private AlfredRestaurantGUI restaurantGUI;
 	
-	public void setHostAgent(CherysHostRole agent){
+	public void setHostAgent(AlfredHostRole agent){
 		this.agent = agent;
 	}
-	public AnimationPanel(RestauranGUI restaurantGUI) {
+	public AlfredRestaurantAnimationPanel(AlfredRestaurantGUI restaurantGUI) {
 		// setSize(WINDOWX, WINDOWY);
 		// setVisible(true);
 		this.restaurantGUI = restaurantGUI;
@@ -56,17 +56,17 @@ public class AnimationPanel extends JPanel implements ActionListener, MouseListe
 		// draw table
 		for (int i = 1; i <= agent.NTABLES; i++) {
 			g2.fillRect(agent.getTablePosition(i).x,
-					agent.getTablePosition(i).y, HostGui.sizeTable,
-					HostGui.sizeTable);// 200 and 250 need to be table params
+					agent.getTablePosition(i).y, AlfredHostGui.sizeTable,
+					AlfredHostGui.sizeTable);// 200 and 250 need to be table params
 		}
 
-		for (CherysGui gui : guis) {
+		for (AlfredGui gui : guis) {
 			if (gui.isPresent()) {
 				gui.updatePosition();
 			}
 		}
 
-		for (CherysGui gui : guis) {
+		for (AlfredGui gui : guis) {
 			if (gui.isPresent()) {
 				gui.draw(g2);
 			}
@@ -76,7 +76,7 @@ public class AnimationPanel extends JPanel implements ActionListener, MouseListe
 		restaurantGUI.cookingArea.repaint();
 	}
 
-	public void addGui(CherysGui gui) {
+	public void addGui(AlfredGui gui) {
 		guis.add(gui);
 	}
 
