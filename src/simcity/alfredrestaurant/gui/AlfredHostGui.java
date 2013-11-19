@@ -1,8 +1,8 @@
-package restaurant.gui;
+package simcity.alfredrestaurant.gui;
 
-import restaurant.CustomerAgent;
-import restaurant.HostAgent;
-import restaurant.Table;
+import simcity.alfredrestaurant.AlfredCustomerRole;
+import simcity.alfredrestaurant.AlfredHostRole;
+import simcity.alfredrestaurant.AlfredTable;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -11,9 +11,9 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-public class HostGui implements CherysGui{
+public class AlfredHostGui implements AlfredGui{
 
-	private CherysHostRole agent = null;
+	private AlfredHostRole agent = null;
 	private int xPos = -50, yPos = -50;// default waiter position
 	private int xDestination = -50, yDestination = -50;// default start position
 			// public static int xTable = 200;
@@ -23,7 +23,7 @@ public class HostGui implements CherysGui{
 	private static final int defaultPosition = -50;
 	private final String IMAGE_FILE = "C:/Users/AlfredKoshan/Documents/GitHub/restaurant_akoshan/host.jpg";
 
-	public HostGui(CherysHostRole agent) {
+	public AlfredHostGui(AlfredHostRole agent) {
 		this.agent = agent;
 		try {
 			image = ImageIO.read(new File(IMAGE_FILE));
@@ -77,7 +77,7 @@ public class HostGui implements CherysGui{
 		return true;
 	}
 
-	public void DoBringToTable(CherysCustomerRole customer, int tableNumber) {
+	public void DoBringToTable(AlfredCustomerRole customer, int tableNumber) {
 		Point tablePos = agent.getTablePosition(tableNumber);
 		xDestination = tablePos.x + sizeHost;
 		yDestination = tablePos.y - sizeHost;

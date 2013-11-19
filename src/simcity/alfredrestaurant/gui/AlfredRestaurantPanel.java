@@ -1,9 +1,9 @@
-package restaurant.gui;
+package simcity.alfredrestaurant.gui;
 
-import restaurant.CustomerAgent;
-import restaurant.HostAgent;
-import restaurant.MarketAgent;
-import restaurant.WaiterAgent;
+import simcity.alfredrestaurant.AlfredCustomerRole;
+import simcity.alfredrestaurant.AlfredHostRole;
+import simcity.alfredrestaurant.AlfredMarketRole;
+import simcity.alfredrestaurant.AlfredWaiterRole;
 
 import javax.swing.*;
 
@@ -16,42 +16,42 @@ import java.util.Vector;
  * Panel in frame that contains all the restaurant information, including host,
  * cook, waiters, and customers.
  */
-public class RestaurantPanel extends JPanel {
+public class AlfredRestaurantPanel extends JPanel {
 
 	// Host, cook, waiters and customers
-	private CherysHostRole host;
-	private HostGui hostGui;
-	private CookerGui cookerGui;
-	private java.util.List<CherysCustomerRole> customers = Collections.synchronizedList(new java.util.ArrayList<CherysCustomerRole>());
-	private Vector<CherysMarketRole> markets = new Vector<CherysMarketRole>();
+	private AlfredHostRole host;
+	private AlfredHostGui hostGui;
+	private AlfredCookerGui cookerGui;
+	private java.util.List<AlfredCustomerRole> customers = Collections.synchronizedList(new java.util.ArrayList<AlfredCustomerRole>());
+	private Vector<AlfredMarketRole> markets = new Vector<AlfredMarketRole>();
 
 	private JPanel restLabel = new JPanel();
-	private CherysListPanel customerPanel;
+	private AlfredListPanel customerPanel;
 	private JPanel group = new JPanel();
 
-	public RestauranGUI restauranGUI; // reference to main gui
+	public AlfredRestaurantGUI restauranGUI; // reference to main gui
 	
-	public RestaurantPanel(RestauranGUI gui, CherysHostRole hostAgent) {
+	public AlfredRestaurantPanel(AlfredRestaurantGUI gui, AlfredHostRole hostAgent) {
 		this.restauranGUI = gui;
-		customerPanel = new CherysListPanel(gui, this,"Customers");
-		hostGui = new HostGui(hostAgent);
+		customerPanel = new AlfredListPanel(gui, this,"Customers");
+		hostGui = new AlfredHostGui(hostAgent);
 		host = hostAgent;
 		host.setGui(hostGui);
 		hostAgent.setRestaurantPanel(this);
 //		gui.animationPanel.addGui(hostGui);
 		host.startThread();
-		cookerGui = new CookerGui();
+		cookerGui = new AlfredCookerGui();
 		
 		//create some markets
 		for (int i = 0; i < 10; i++){
-			CherysMarketRole ma = new CherysMarketRole(host.getCook(), host.cashierAgent);
+			AlfredMarketRole ma = new AlfredMarketRole(host.getCook(), host.cashierAgent);
 			ma.startThread();
 			markets.add(ma);
 		}
 
 		// add waiters to customer
-		for (CherysWaiterRole waiter : host.getWaiters()) {
-			CherysWaiterGui waiterGui = new CherysWaiterGui(waiter);
+		for (AlfredWaiterRole waiter : host.getWaiters()) {
+			AlfredWaiterGui waiterGui = new AlfredWaiterGui(waiter);
 			gui.animationPanel.addGui(waiterGui);
 			waiter.setWaiterGui(waiterGui);
 			waiter.startThread();
@@ -67,8 +67,8 @@ public class RestaurantPanel extends JPanel {
 		add(group);
 	}
 
-	public void addWaiter(CherysWaiterRole waiter) {
-		CherysWaiterGui waiterGui = new CherysWaiterGui(waiter);
+	public void addWaiter(AlfredWaiterRole waiter) {
+		AlfredWaiterGui waiterGui = new AlfredWaiterGui(waiter);
 		restauranGUI.animationPanel.addGui(waiterGui);
 		waiter.setWaiterGui(waiterGui);
 		waiter.startThread();
@@ -108,7 +108,7 @@ public class RestaurantPanel extends JPanel {
 		if (type.equals("Customers")) {
 
 			for (int i = 0; i < customers.size(); i++) {
-				CherysCustomerRole temp = customers.get(i);
+				AlfredCustomerRole temp = customers.get(i);
 				if (temp.getName() == name)
 					restauranGUI.controlRestaurantPanel.updateInfoPanel(temp);
 			}
@@ -126,8 +126,8 @@ public class RestaurantPanel extends JPanel {
 	public void addPerson(String type, String name, boolean hungry) {
 
 		if (type.equals("Customers")) {
-			CherysCustomerRole c = new CherysCustomerRole(name);
-			CherysCustomerGui g = new CherysCustomerGui(c, restauranGUI);
+			AlfredCustomerRole c = new AlfredCustomerRole(name);
+			AlfredCustomerGui g = new AlfredCustomerGui(c, restauranGUI);
 			if (hungry) {
 				g.setHungry();
 			}
@@ -141,18 +141,18 @@ public class RestaurantPanel extends JPanel {
 		}
 	}
 
-	public CherysHostRole getHost() {
+	public AlfredHostRole getHost() {
 		return host;
 	}
 
-	public java.util.List<CherysCustomerRole> getCustomers() {
+	public java.util.List<AlfredCustomerRole> getCustomers() {
 		return customers;
 	}
 
 	/**
 	 * @return the cookerGui
 	 */
-	public CookerGui getCookerGui() {
+	public AlfredCookerGui getCookerGui() {
 		return cookerGui;
 	}
 	

@@ -1,10 +1,10 @@
 package simcity.alfredrestaurant;
 
-import restaurant.WaiterAgent.AgentEvent;
-import restaurant.WaiterAgent.AgentState;
-import restaurant.gui.CustomerGui;
-import restaurant.interfaces.Customer;
-import agent.Agent;
+import simcity.alfredrestaurant.AlfredWaiterRole.AgentEvent;
+import simcity.alfredrestaurant.AlfredWaiterRole.AgentState;
+import simcity.alfredrestaurant.gui.AlfredCustomerGui;
+import simcity.alfredrestaurant.interfaces.AlfredCustomer;
+import simcity.agent.Agent;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -12,25 +12,25 @@ import java.util.TimerTask;
 /**
  * Restaurant customer agent.
  */
-public class AlfredCustomerRole extends Agent implements CherysCustomer{
+public class AlfredCustomerRole extends Agent implements AlfredCustomer{
 
 	private static int ID = 1;
 	
 	private String name;
 	private int hungerLevel = 5; // determines length of meal
 	Timer timer = new Timer();
-	private CherysCustomerGui customerGui;
-	private Table table;
+	private AlfredCustomerGui customerGui;
+	private AlfredTable table;
 	// agent correspondents
-	private CherysHostRole host;
+	private AlfredHostRole host;
 	
 	private int id;
 
-	private CherysWaiterRole waiter;
+	private AlfredWaiterRole waiter;
 	
 	int foodIndex = -1;
 
-	public Table getTable() {
+	public AlfredTable getTable() {
 		return table;
 	}
 
@@ -69,18 +69,18 @@ public class AlfredCustomerRole extends Agent implements CherysCustomer{
 	/**
 	 * hack to establish connection to Host agent.
 	 */
-	public void setHost(CherysHostRole host) {
+	public void setHost(AlfredHostRole host) {
 		this.host = host;
 	}
 
-	public void setWaiter(CherysWaiterRole waiter) {
+	public void setWaiter(AlfredWaiterRole waiter) {
 		this.waiter = waiter;
 	}
 
 	/**
 	 * hack to establish connection to table
 	 */
-	public void setTable(Table table) {
+	public void setTable(AlfredTable table) {
 		this.table = table;
 	}
 
@@ -159,7 +159,7 @@ public class AlfredCustomerRole extends Agent implements CherysCustomer{
 //			waiter.msgDoneEating();
 			//state = AgentState.WaitingForBill;
 			
-			host.cashierAgent.msgPaymentRequest(this, new Bill(Menu.FOODS[foodIndex], Menu.PRICES[foodIndex]));
+			host.cashierAgent.msgPaymentRequest(this, new AlfredBill(AlfredMenu.FOODS[foodIndex], AlfredMenu.PRICES[foodIndex]));
 			state = AgentState.WaitForFullfillPaymentRequest;
 			return true;
 		}
@@ -202,7 +202,7 @@ public class AlfredCustomerRole extends Agent implements CherysCustomer{
 	}
 
 	private void doSomeThingBeforeReadyToOrder() {
-		final CherysCustomerRole thisAgent = this;
+		final AlfredCustomerRole thisAgent = this;
 		timer.schedule(new TimerTask() {
 			public void run() {
 				//want to leave, expensive food
@@ -276,11 +276,11 @@ public class AlfredCustomerRole extends Agent implements CherysCustomer{
 		return "customer " + getName();
 	}
 
-	public void setGui(CherysCustomerGui g) {
+	public void setGui(AlfredCustomerGui g) {
 		customerGui = g;
 	}
 
-	public CherysCustomerGui getGui() {
+	public AlfredCustomerGui getGui() {
 		return customerGui;
 	}
 
@@ -290,20 +290,20 @@ public class AlfredCustomerRole extends Agent implements CherysCustomer{
 		stateChanged();
 	}
 
-	public void msgFollowMeToTable(Menu menu) {
+	public void msgFollowMeToTable(AlfredMenu menu) {
 		print("Received msgFollowMeToTable");
 		event = AgentEvent.followWaiter;
 		stateChanged();
 	}
 
 	private String lastFood  = "";
-	public void msgWhatWouldYouLike(Menu menu) {
-		foodIndex = (int)(Math.random() * Menu.MAX_FOODS);
+	public void msgWhatWouldYouLike(AlfredMenu menu) {
+		foodIndex = (int)(Math.random() * AlfredMenu.MAX_FOODS);
 		String food = menu.chooseFood(foodIndex);
 		
 		//try to prevent duplicate not available food
 		while (food.equals(lastFood)){
-			foodIndex = (int)(Math.random() * Menu.MAX_FOODS);
+			foodIndex = (int)(Math.random() * AlfredMenu.MAX_FOODS);
 			food = menu.chooseFood(foodIndex);
 		}
 		lastFood = food;

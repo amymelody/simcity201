@@ -80,8 +80,8 @@ public class CityAnimationPanel extends JPanel implements ActionListener
         }
     }
 
-    public void addGui(PersonGui gui)
-    {
-        guis.add(gui);
-    }
+//    public void addGui(PersonGui gui)
+//    {
+//        guis.add(gui);
+//    }
 }

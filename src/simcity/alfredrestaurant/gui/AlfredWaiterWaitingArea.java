@@ -1,4 +1,4 @@
-package restaurant.gui;
+package simcity.alfredrestaurant.gui;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -8,14 +8,14 @@ import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import restaurant.CustomerAgent;
-import restaurant.WaiterAgent;
+import simcity.alfredrestaurant.AlfredCustomerRole;
+import simcity.alfredrestaurant.AlfredWaiterRole;
 
-public class WaiterWaitingArea extends JPanel{
+public class AlfredWaiterWaitingArea extends JPanel{
 	
-	RestauranGUI restaurantGui;
+	AlfredRestaurantGUI restaurantGui;
 	
-	public WaiterWaitingArea(RestauranGUI restaurantGui){
+	public AlfredWaiterWaitingArea(AlfredRestaurantGUI restaurantGui){
 		this.restaurantGui = restaurantGui;
 		setBorder(BorderFactory.createTitledBorder("waiter waiting area"));
 	}	
@@ -27,7 +27,7 @@ public class WaiterWaitingArea extends JPanel{
 		int xPos = 10;
 		int yPos = 30;
 		try{
-			for (CherysWaiterRole waiterAgent: restaurantGui.controlRestaurantPanel.host.getWaiters()){
+			for (AlfredWaiterRole waiterAgent: restaurantGui.controlRestaurantPanel.host.getWaiters()){
 				if (waiterAgent.isWaiting()){
 					g.drawImage(waiterAgent.getWaiterGui().getImage(), xPos, yPos, null);
 					g.drawString("(" + waiterAgent.getIndex() + ")", xPos, yPos + 10);

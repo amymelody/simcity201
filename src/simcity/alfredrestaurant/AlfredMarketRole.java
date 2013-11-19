@@ -3,15 +3,15 @@ package simcity.alfredrestaurant;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import agent.Agent;
-import restaurant.interfaces.Market;
+import simcity.agent.Agent;
+import simcity.alfredrestaurant.interfaces.Market;
 
-public class AlfredMarketRole extends Agent implements CherysMarket{
+public class AlfredMarketRole extends Agent implements AlfredMarket{
 
-	private CherysCookRole cook;
-	private CherysCashierRole cashier;
+	private AlfredCookRole cook;
+	private AlfredCashierRole cashier;
 	
-	public MarketAgent(CherysCookRole cook, CherysCashierRole cashier) {
+	public MarketAgent(AlfredCookRole cook, AlfredCashierRole cashier) {
 		this.cook = cook;
 		this.cashier = cashier;
 		cook.addMarket(this);
@@ -46,7 +46,7 @@ public class AlfredMarketRole extends Agent implements CherysMarket{
 			return true;
 		}else if (state == AgentState.Ordering 	&& event == AgentEvent.orderArrived) {
 			state = AgentState.RequestPayment;
-			cashier.msgMarketRequest(this, new Bill(item, 1.5 * quanity)); //Assume that price = 1.5			
+			cashier.msgMarketRequest(this, new AlfredBill(item, 1.5 * quanity)); //Assume that price = 1.5			
 			return true;
 		}else if (state == AgentState.RequestPayment && event == AgentEvent.HadPayment) {
 			state = AgentState.DoingNothing;

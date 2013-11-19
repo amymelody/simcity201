@@ -1,13 +1,13 @@
 package simcity.alfredrestaurant;
 
-import agent.Agent;
+import simcity.agent.Agent;
 
 import java.awt.Point;
 
-import restaurant.gui.HostGui;
-import restaurant.gui.ControlRestaurantPanel;
-import restaurant.gui.RestauranGUI;
-import restaurant.gui.RestaurantPanel;
+import simcity.alfredrestaurant.gui.AlfredHostGui;
+import simcity.alfredrestaurant.gui.AlfredControlRestaurantPanel;
+import simcity.alfredrestaurant.gui.AlfredRestaurantGUI;
+import simcity.alfredrestaurant.gui.AlfredRestaurantPanel;
 
 import java.util.*;
 import java.util.concurrent.Semaphore;
@@ -31,52 +31,52 @@ public class AlfredHostRole extends Agent {
 
 	// Notice that we implement waitingCustomers using ArrayList, but type it
 	// with List semantics.
-	private List<CherysCustomerRole> waitingCustomers = Collections.synchronizedList(new ArrayList<CherysCustomerRole>());
-	public Collection<Table> tables;
+	private List<AlfredCustomerRole> waitingCustomers = Collections.synchronizedList(new ArrayList<AlfredCustomerRole>());
+	public Collection<AlfredTable> tables;
 	// note that tables is typed with Collection semantics.
 	// Later we will see how it is implemented
 	private String name;
 
-	public HostGui hostGui = null;
+	public AlfredHostGui hostGui = null;
 		
-	public CherysCashierRole cashierAgent = new CherysCashierRole("cashier"); 
+	public AlfredCashierRole cashierAgent = new AlfredCashierRole("cashier"); 
 
 	//try catch ConcurrentModificationException instead of synchonized
-	private List<CherysWaiterRole> waiters = new ArrayList<CherysWaiterRole>();
+	private List<AlfredWaiterRole> waiters = new ArrayList<AlfredWaiterRole>();
 
-	private CherysCookRole cook = new CherysCookRole(this);
+	private AlfredCookRole cook = new AlfredCookRole(this);
 
-	public Menu getMenu() {
+	public AlfredMenu getMenu() {
 		return menu;
 	}
 
-	public CherysCookRole getCook() {
+	public AlfredCookRole getCook() {
 		return cook;
 	}
 	
 	public void clickOn(int x, int y){
-		for (CherysWaiterRole waiter : waiters){
+		for (AlfredWaiterRole waiter : waiters){
 			waiter.clickOn(x, y);
 		}
 	}
 
-	private Menu menu = new Menu();
+	private AlfredMenu menu = new AlfredMenu();
 
 	public HostAgent(String name) {
 		super();
 
 		this.name = name;
 		// make some tables
-		tables = Collections.synchronizedList(new ArrayList<Table>());
+		tables = Collections.synchronizedList(new ArrayList<AlfredTable>());
 		for (int ix = 1; ix <= NTABLES; ix++) {
-			Table table = new Table(ix);
+			AlfredTable table = new AlfredTable(ix);
 			table.position = findTablePosition();
 			tables.add(table);// how you add to a collections
 
 		}
 
 		for (int ix = 0; ix < NWAITERS; ix++) {
-			waiters.add(new CherysWaiterRole(this, ix + 1));
+			waiters.add(new AlfredWaiterRole(this, ix + 1));
 		}
 		cook.startThread();
 		
@@ -86,9 +86,9 @@ public class AlfredHostRole extends Agent {
 
 	// get table [i] position
 	public Point getTablePosition(int tableNumber) {
-		Iterator<Table> iter = tables.iterator();
+		Iterator<AlfredTable> iter = tables.iterator();
 		while (iter.hasNext()) {
-			Table table = iter.next();
+			AlfredTable table = iter.next();
 			if (table.tableNumber == tableNumber) {
 				return table.position;
 			}
@@ -97,10 +97,10 @@ public class AlfredHostRole extends Agent {
 	}
 
 	// get table by number
-	public Table getTable(int tableNumber) {
-		Iterator<Table> iter = tables.iterator();
+	public AlfredTable getTable(int tableNumber) {
+		Iterator<AlfredTable> iter = tables.iterator();
 		while (iter.hasNext()) {
-			Table table = iter.next();
+			AlfredTable table = iter.next();
 			if (table.tableNumber == tableNumber) {
 				return table;
 			}
@@ -125,11 +125,11 @@ public class AlfredHostRole extends Agent {
 					+ TABLE_OFFSET;
 			yPos = random.nextInt(TABLE_VIEW_HEIGHT - TABLE_OFFSET)
 					+ TABLE_OFFSET;
-			Iterator<Table> iter = tables.iterator();
+			Iterator<AlfredTable> iter = tables.iterator();
 			while (iter.hasNext()) {
 				Point p = iter.next().position;
 				if (Math.sqrt((xPos - p.x) * (xPos - p.x) + (yPos - p.y)
-						* (yPos - p.y)) < 2 * HostGui.sizeTable) {
+						* (yPos - p.y)) < 2 * AlfredHostGui.sizeTable) {
 					overlap = true;
 					break;
 				}
@@ -142,7 +142,7 @@ public class AlfredHostRole extends Agent {
 	// increase the number of tables
 	public void increaseTable() {
 		NTABLES++;
-		Table table = new Table(NTABLES);
+		AlfredTable table = new AlfredTable(NTABLES);
 		table.position = findTablePosition();
 		synchronized (tables) {
 			tables.add(table);
@@ -155,7 +155,7 @@ public class AlfredHostRole extends Agent {
 	public void increaseWaiter() {
 		NWAITERS++;
 
-		CherysWaiterRole waiter = new CherysWaiterRole(this, NWAITERS);
+		AlfredWaiterRole waiter = new AlfredWaiterRole(this, NWAITERS);
 		
 		synchronized (waiters) {
 			waiters.add(waiter);
@@ -195,7 +195,7 @@ public class AlfredHostRole extends Agent {
 
 	// Messages
 
-	public void msgIWantFood(CherysCustomerRole cust) {
+	public void msgIWantFood(AlfredCustomerRole cust) {
 		System.out.println(cust.getCustomerName() + " want food");
 		synchronized (waitingCustomers) {
 			waitingCustomers.add(cust);
@@ -229,12 +229,12 @@ public class AlfredHostRole extends Agent {
 		 * the table.
 		 */
 		synchronized (tables) {
-			for (Table table : tables) {
+			for (AlfredTable table : tables) {
 				if (!table.isOccupied()) {
 					synchronized (waitingCustomers) {
 						if (!waitingCustomers.isEmpty()) {
 							// find waiters
-							for (CherysWaiterRole waiter : waiters) {
+							for (AlfredWaiterRole waiter : waiters) {
 								if (waiter.isAvailable()) {
 									System.out.println(waitingCustomers.get(0).getCustomerName() + ": host seat customer" + " table = " + table.tableNumber);
 									seatCustomer(waitingCustomers.get(0), table, waiter);// the  action									
@@ -267,8 +267,8 @@ public class AlfredHostRole extends Agent {
 	}
 
 	// Actions
-	private void seatCustomer(CherysCustomerRole customer, Table table,
-			CherysWaiterRole waiter) {
+	private void seatCustomer(AlfredCustomerRole customer, AlfredTable table,
+			AlfredWaiterRole waiter) {
 		// customer.setTable(table);
 		// customer.msgSitAtTable();
 		// DoSeatCustomer(customer, table);
@@ -302,15 +302,15 @@ public class AlfredHostRole extends Agent {
 	// }
 
 	// utilities
-	public void setGui(HostGui gui) {
+	public void setGui(AlfredHostGui gui) {
 		hostGui = gui;
 	}
 
-	public HostGui getGui() {
+	public AlfredHostGui getGui() {
 		return hostGui;
 	}
 
-	public void msgTableIsFree(Table table) {
+	public void msgTableIsFree(AlfredTable table) {
 		table.setUnoccupied();
 		stateChanged();
 	}
@@ -318,13 +318,13 @@ public class AlfredHostRole extends Agent {
 	/**
 	 * @return the waiters
 	 */
-	public List<CherysWaiterRole> getWaiters() {
+	public List<AlfredWaiterRole> getWaiters() {
 		return waiters;
 	}
 
-	public CherysRestaurantPanel restaurantPanel;
+	public AlfredRestaurantPanel restaurantPanel;
 
-	public void setRestaurantPanel(CherysRestaurantPanel restaurantPanel) {
+	public void setRestaurantPanel(AlfredRestaurantPanel restaurantPanel) {
 		this.restaurantPanel = restaurantPanel;
 	}
 
@@ -340,13 +340,13 @@ public class AlfredHostRole extends Agent {
 				synchronized (waiters) {
 					//allow break only if there are more than 1 waiter
 					int count = 0;
-					for (CherysWaiterRole waiter: waiters){
+					for (AlfredWaiterRole waiter: waiters){
 						if (!waiter.beingOnBreak){
 							count++;
 						}
 					}
 					if (count > 1){
-						for (CherysWaiterRole waiter: waiters){
+						for (AlfredWaiterRole waiter: waiters){
 							if (waiter.isAvailable() && waiter.wantingToGoOnBreak){
 								waiter.doOnBreak();
 								System.out.println("Allow waiter to break....");
@@ -360,9 +360,9 @@ public class AlfredHostRole extends Agent {
 			}
 		}
 	}
-	private ControlRestaurantPanel restaurantGui;
+	private AlfredControlRestaurantPanel restaurantGui;
 
-	public void setRestaurantGUI(ControlRestaurantPanel restaurantGui) {
+	public void setRestaurantGUI(AlfredControlRestaurantPanel restaurantGui) {
 		this.restaurantGui = restaurantGui;		
 	}
 }

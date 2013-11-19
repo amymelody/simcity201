@@ -1,8 +1,8 @@
-package restaurant.gui;
+package simcity.alfredrestaurant.gui;
 
 import java.awt.*;
 
-public interface Gui {
+public interface AlfredGui {
 
 	public void updatePosition();
 

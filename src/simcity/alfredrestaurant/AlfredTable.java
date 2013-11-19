@@ -11,15 +11,15 @@ import java.awt.Point;
  */
 public class AlfredTable {
 
-	volatile CherysCustomerRole occupiedBy;
+	volatile AlfredCustomerRole occupiedBy;
 	int tableNumber;
 	Point position;
 
-	Table(int tableNumber) {
+	AlfredTable(int tableNumber) {
 		this.tableNumber = tableNumber;
 	}
 
-	void setOccupant(CherysCustomerRole cust) {
+	void setOccupant(AlfredCustomerRole cust) {
 		occupiedBy = cust;
 	}
 
@@ -27,7 +27,7 @@ public class AlfredTable {
 		occupiedBy = null;
 	}
 
-	CherysCustomerRole getOccupant() {
+	AlfredCustomerRole getOccupant() {
 		return occupiedBy;
 	}
 
