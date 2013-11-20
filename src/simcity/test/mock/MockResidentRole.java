@@ -34,12 +34,18 @@ public class MockResidentRole extends Role implements Resident {
 	}
 	
 	public boolean pickAndExecuteAnAction() {
-		if (log.containsString("Received msgOrderItems")) {
-			person.msgExpense(16);
+		if (log.containsString("Received msgLeave")) {
+			log.clear();
 			person.msgLeftDestination(this);
 			return true;
 		}
-		return false;
+		if (log.containsString("Received msgAtLandlord")) {
+			log.clear();
+			person.msgExpense(100);
+			person.msgLeftDestination(this);
+			return true;
+		}
+		return true;
 	}
 	
 	public String toString() {

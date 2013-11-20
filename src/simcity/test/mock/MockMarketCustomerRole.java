@@ -8,12 +8,16 @@ import simcity.ItemOrder;
 
 public class MockMarketCustomerRole extends Role implements MarketCustomer {
 	String name;
+	List<ItemOrder> foods = new ArrayList<ItemOrder>();
 
 	public MockMarketCustomerRole(String name) {
 		this.name = name;
 	}
 	
 	public void msgOrderItems(List<ItemOrder> i) {
+		for (ItemOrder item : i) {
+			foods.add(item);
+		}
 		log.add(new LoggedEvent("Received msgOrderItems"));
 	}
 	
@@ -23,7 +27,8 @@ public class MockMarketCustomerRole extends Role implements MarketCustomer {
 	
 	public boolean pickAndExecuteAnAction() {
 		if (log.containsString("Received msgOrderItems")) {
-			person.msgExpense(16);
+			person.msgReceivedItems(foods);
+			person.msgExpense(30);
 			person.msgLeftDestination(this);
 			return true;
 		}

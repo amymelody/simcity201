@@ -8,7 +8,7 @@ import simcity.agent.Agent;
 import simcity.interfaces.RestCustomer;
 import simcity.interfaces.MarketCustomer;
 import simcity.interfaces.Resident;
-import simcity.interfaces.Depositor;
+import simcity.interfaces.BankDepositor;
 import simcity.interfaces.JobInterface;
 import simcity.interfaces.Bus;
 import simcity.interfaces.Car;
@@ -110,6 +110,10 @@ public class PersonAgent extends Agent
 	
 	public void setPState(PhysicalState ps) {
 		state.ps = ps;
+	}
+	
+	public void setLState(LocationState ls) {
+		state.ls = ls;
 	}
 	
 	public void addRole(Role r, String n) {
@@ -288,6 +292,7 @@ public class PersonAgent extends Agent
 	}
 
 	public void msgFoodLow(List<ItemOrder> items) {
+		log.add(new LoggedEvent("Received msgFoodLow"));
 		for (ItemOrder i : items) {
 			foodNeeded.add(i);
 		}
@@ -301,6 +306,7 @@ public class PersonAgent extends Agent
 	}
 
 	public void msgReceivedItems(List<ItemOrder> items) {
+		log.add(new LoggedEvent("Received msgReceivedItems"));
 		for (ItemOrder i : items) {
 			groceries.add(i);
 		}
@@ -330,11 +336,6 @@ public class PersonAgent extends Agent
 	
 	public void msgCreatedAccount() {
 		haveBankAccount = true;
-	}
-
-	public void msgRentDue() {
-		rentDue = true;
-		stateChanged();
 	}
 	
 	public void msgBusIsHere(Bus b) {
@@ -546,6 +547,7 @@ public class PersonAgent extends Agent
 				if (mr.name.equals(h.residentRole)) {
 					if (mr.r instanceof Resident) {
 						Resident r = (Resident)(mr.r);
+						mr.active = true;
 						r.msgLeave();
 						state.ls = LocationState.leavingHouse;
 					}
@@ -644,8 +646,8 @@ public class PersonAgent extends Agent
 			synchronized(roles) {
 				for (MyRole mr : roles) {
 					if (mr.name.equals(b.depositorRole)) {
-						if (mr.r instanceof Depositor) {
-							Depositor d = (Depositor)(mr.r);
+						if (mr.r instanceof BankDepositor) {
+							BankDepositor d = (BankDepositor)(mr.r);
 							mr.active = true;
 							state.ls = LocationState.bank;
 							if (money >= maxBalance) {
