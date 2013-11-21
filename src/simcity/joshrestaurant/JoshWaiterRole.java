@@ -1,6 +1,6 @@
 package simcity.joshrestaurant;
 
-import simcity.agent.Agent;
+import simcity.role.JobRole;
 import simcity.joshrestaurant.gui.JoshWaiterGui;
 import simcity.joshrestaurant.gui.JoshCookGui;
 import simcity.joshrestaurant.interfaces.JoshWaiter;
@@ -12,7 +12,7 @@ import java.util.concurrent.Semaphore;
 /**
  * Restaurant Waiter Agent
  */
-public class JoshWaiterRole extends Agent implements JoshWaiter {
+public class JoshWaiterRole extends JobRole implements JoshWaiter {
 	public List<MyCustomer> customers
 	= new ArrayList<MyCustomer>();
 	JoshHostRole host;
@@ -25,6 +25,7 @@ public class JoshWaiterRole extends Agent implements JoshWaiter {
 	private Semaphore atTable = new Semaphore(0,true);
 	private Semaphore atCook = new Semaphore(0,true);
 	private boolean returningHome = false;
+	private boolean working;
 	private JoshMenu menu;
 	Timer timer = new Timer();
 	
@@ -43,6 +44,7 @@ public class JoshWaiterRole extends Agent implements JoshWaiter {
 	public JoshWaiterRole(String name) {
 		super();
 		this.name = name;
+		working = false;
 		
 		prices.put("steak", 16);
 		prices.put("chicken", 11);
@@ -107,6 +109,16 @@ public class JoshWaiterRole extends Agent implements JoshWaiter {
 	}
 	
 	// Messages
+	
+	public void msgStartShift() {
+		working = true;
+		stateChanged();
+	}
+	
+	public void msgEndShift() {
+		working = false;
+		stateChanged();
+	}
 	
 	public void msgWantToGoOnBreak() {
 		state = WaiterState.WantToGoOnBreak;
@@ -244,6 +256,10 @@ public class JoshWaiterRole extends Agent implements JoshWaiter {
 	 */
 	public boolean pickAndExecuteAnAction() {
 		try {
+			if (!working && doneServingCustomers()) {
+				leaveRestaurant();
+				return true;
+			}
 			if (state == WaiterState.WantToGoOnBreak) {
 				wantToGoOnBreak();
 				return true;
@@ -317,6 +333,11 @@ public class JoshWaiterRole extends Agent implements JoshWaiter {
 	}
 
 	// Actions
+	
+	private void leaveRestaurant() {
+		//waiterGui.DoLeaveRestaurant();
+		person.msgLeftDestination(this);
+	}
 	
 	private void wantToGoOnBreak() {
 		print(host + ", I want to go on break.");

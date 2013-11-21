@@ -50,7 +50,8 @@ public class JoshCustomerRole extends RestCustomerRole implements JoshCustomer {
 		super();
 		this.name = name;
 		
-		cash = 30;
+		//cash = 30;
+		cash = person.getMoney();
 		if (name.equals("cheapskate") || name.equals("poor")) {
 			cash = 5;
 		}
@@ -99,6 +100,7 @@ public class JoshCustomerRole extends RestCustomerRole implements JoshCustomer {
 	public void gotHungry() {//from animation
 		print("I'm hungry");
 		event = AgentEvent.gotHungry;
+		cash = person.getMoney();
 		stateChanged();
 	}
 	
@@ -180,6 +182,7 @@ public class JoshCustomerRole extends RestCustomerRole implements JoshCustomer {
 		}
 		else {
 			cash += change;
+			person.msgIncome(change);
 			charge = 0;
 		}
 		event = AgentEvent.receivedChange;
@@ -200,7 +203,6 @@ public class JoshCustomerRole extends RestCustomerRole implements JoshCustomer {
 	 * Scheduler.  Determine what action is called for, and do it.
 	 */
 	public boolean pickAndExecuteAnAction() {
-		//	CustomerAgent is a finite state machine
 
 		if (state == AgentState.DoingNothing && event == AgentEvent.gotHungry){
 			state = AgentState.GoingToRestaurant;
@@ -274,7 +276,7 @@ public class JoshCustomerRole extends RestCustomerRole implements JoshCustomer {
 		}
 		if (state == AgentState.Leaving && event == AgentEvent.doneLeaving){
 			state = AgentState.DoingNothing;
-			//no action
+			goOutside();
 			return true;
 		}
 		return false;
@@ -338,6 +340,7 @@ public class JoshCustomerRole extends RestCustomerRole implements JoshCustomer {
 		timer.schedule(new TimerTask() {
 			public void run() {
 				print("Done eating " + choice);
+				person.msgDoneEating();
 				event = AgentEvent.doneEating;
 				stateChanged();
 			}
@@ -366,6 +369,11 @@ public class JoshCustomerRole extends RestCustomerRole implements JoshCustomer {
 		Do("Paying $" + payment);
 		cashier.msgPayment(this, payment);
 		cash -= payment;
+		person.msgExpense(payment);
+	}
+	
+	private void goOutside() {
+		person.msgLeftDestination(this);
 	}
 
 	// Accessors, etc.

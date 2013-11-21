@@ -7,6 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 import java.util.ArrayList;
+import simcity.gui.Gui;
 
 public class JoshRestaurantAnimationPanel extends JPanel implements ActionListener {
 
