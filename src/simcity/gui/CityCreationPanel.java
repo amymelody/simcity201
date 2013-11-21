@@ -34,7 +34,7 @@ public class CityCreationPanel extends JPanel implements ActionListener
 	private JRadioButtonMenuItem employeeM = new JRadioButtonMenuItem("Market Employee");
 	private JRadioButtonMenuItem delivererM = new JRadioButtonMenuItem("Market Deliverer");
 	private JRadioButtonMenuItem chashierM = new JRadioButtonMenuItem("Market Cashier");
-	private JRadioButtonMenuItem headB = new JRadioButtonMenuItem("Bank Owner");
+	private JRadioButtonMenuItem managerB = new JRadioButtonMenuItem("Bank Manager");
 	private JRadioButtonMenuItem tellerB = new JRadioButtonMenuItem("Bank Teller");
 	private JRadioButtonMenuItem unemployeed = new JRadioButtonMenuItem("Unemployeed");
 	private Vector<JRadioButtonMenuItem> ecos = new Vector<JRadioButtonMenuItem>();
@@ -97,8 +97,8 @@ public class CityCreationPanel extends JPanel implements ActionListener
 		jobGroup.add(chashierM);
 		add(chashierM);
 		add(new JLabel(""));
-		jobGroup.add(headB);
-		add(headB);
+		jobGroup.add(managerB);
+		add(managerB);
 		add(new JLabel(""));
 		jobGroup.add(tellerB);
 		add(tellerB);
