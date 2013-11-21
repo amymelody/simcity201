@@ -7,14 +7,6 @@ import java.util.Map;
 
 public class CityDirectory
 {
-//	Map<Integer, WaiterFood> menu;
-//	menu = new HashMap<Integer, WaiterFood>();
-//	menu.put(0, new WaiterFood("Steak", "ST", priceSteak));
-//	menu.put(1, new WaiterFood("Chicken", "CK", priceChicken));
-//	menu.put(2, new WaiterFood("Salad", "SA", priceSalad));
-//	menu.put(3, new WaiterFood("Pizza", "PZ", pricePizza));
-//	menu.get(i)
-
 	Map<Integer, PersonInfo> personMap;
 	class PersonInfo
 	{
@@ -29,7 +21,7 @@ public class CityDirectory
 			ID = i;
 			person = p;
 			name = p.getName();
-			job = p.getJob();
+			job = p.getJob(); //not actual function yet
 			jobBuilding = jobB;
 			homeBuilding = homeB;
 			if(homeBuilding == "apartment10" || homeBuilding == "apartment11" || homeBuilding == "apartment12" || homeBuilding == "apartment13" || homeBuilding == "apartment14" || homeBuilding == "apartment15")
@@ -157,7 +149,7 @@ public class CityDirectory
 				}
 			}
 		}
-		if(role.equals(market))
+		if(role.equals(market)) //in progress
 		return 0;
 	}
 }
