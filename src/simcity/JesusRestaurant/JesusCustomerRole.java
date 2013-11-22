@@ -13,9 +13,6 @@ import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
-/**
- * Restaurant customer agent.
- */
 public class JesusCustomerRole extends Role implements JesusCustomer {
 	private String name;
 	private int hungerLevel = 5; // determines length of meal

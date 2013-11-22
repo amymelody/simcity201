@@ -3,16 +3,20 @@ package simcity.market;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.Semaphore;
 
+import simcity.role.JobRole;
 import simcity.role.Role;
 import simcity.ItemOrder;
 import simcity.market.Order.OrderState;
+import simcity.market.gui.MarketCashierGui;
+import simcity.market.gui.MarketCustomerGui;
 import simcity.market.interfaces.MarketCashier;
 import simcity.market.interfaces.MarketCustomer;
 import simcity.market.interfaces.MarketDeliverer;
 import simcity.market.interfaces.MarketEmployee;
 
-public class MarketCashierRole extends Role implements MarketCashier {
+public class MarketCashierRole extends JobRole implements MarketCashier {
 
 	/* Constructor */
 	String name;
@@ -51,6 +55,7 @@ public class MarketCashierRole extends Role implements MarketCashier {
 	public void setMarketState(boolean open) {
 		if(open) {
 			mS = MarketState.open;
+			working = true;
 		}
 		else {
 			mS = MarketState.closing;
@@ -69,6 +74,11 @@ public class MarketCashierRole extends Role implements MarketCashier {
 	}
 
 
+	/* Animation */
+	private Semaphore animation = new Semaphore(0, true);
+	MarketCashierGui gui;
+	
+	
 	/* Data */
 
 	// A list of orders
@@ -88,9 +98,18 @@ public class MarketCashierRole extends Role implements MarketCashier {
 
 	// Cashier Status Data
 	int salary;
+	boolean working = false;
 
 
 	/* Messages */
+	
+	// Start/End Shift
+	public void msgStartShift() {
+		working = true;
+	}
+	public void msgEndShift() {
+		working = false;
+	}
 
 	// Worker interactions (hiring, enter/exit shift, etc.)
 	public void msgHired(MarketEmployee e, int salary) {
@@ -137,7 +156,7 @@ public class MarketCashierRole extends Role implements MarketCashier {
 	}
 	public void msgDoneForTheDay() {
 		mS = MarketState.closing;
-		stateChanged();
+		//stateChanged();
 	}
 	// Inventory updated +10 every time market opens
 	public void msgWereOpen() {
@@ -148,7 +167,7 @@ public class MarketCashierRole extends Role implements MarketCashier {
 	// Normative Scenario #1
 	public void msgIWantItems(MarketCustomer c, List<ItemOrder> items) {
 		orders.add(new Order(c, items));
-		stateChanged();
+		//stateChanged();
 	}
 	public void msgHereAreItems(Order order, MarketEmployee e) {
 		synchronized(orders) {
@@ -166,7 +185,7 @@ public class MarketCashierRole extends Role implements MarketCashier {
 				}
 			}
 		}
-		stateChanged();
+		//stateChanged();
 	}
 	public void msgPayment(MarketCustomer c, int money) {
 		synchronized(orders) {
@@ -183,7 +202,7 @@ public class MarketCashierRole extends Role implements MarketCashier {
 	// Normative Scenario #2
 	public void msgIWantDelivery(MarketCustomer c, List<ItemOrder> i, String location) {
 		orders.add(new Order(c, i, location));
-		stateChanged();
+		//stateChanged();
 	}
 	public void msgDelivered(Order order, MarketDeliverer d) {
 		synchronized(orders) {
@@ -201,12 +220,12 @@ public class MarketCashierRole extends Role implements MarketCashier {
 				}
 			}
 		}
-		stateChanged();
+		//stateChanged();
 	}
 
 	/* Scheduler */
 	public boolean pickAndExecuteAnAction() {
-		if(mS != MarketState.closed) {
+		if(mS != MarketState.closed && working) {
 			synchronized(orders) {
 				for(Order o: orders) {
 					if(o.oS == OrderState.none) {
@@ -271,10 +290,10 @@ public class MarketCashierRole extends Role implements MarketCashier {
 			}
 		}
 		person.msgEndShift();
+		working = false;
 		marketMoney -= salary;
 		// Send a message to the bank to store money surplus
 		marketMoney = 100;
-		WereClosed(); // stub to let market GUI know
 	}
 
 	private void HandToEmployee(Order o) {

@@ -9,16 +9,8 @@ import simcity.role.Role;
 import java.util.*;
 import java.util.concurrent.Semaphore;
 
-/**
- * Restaurant Host Agent
- */
-//We only have 2 types of agents in this prototype. A customer and an agent that
-//does all the rest. Rather than calling the other agent a waiter, we called him
-//the HostAgent. A Host is the manager of a restaurant who sees that all
-//is proceeded as he wishes.
 public class JesusWaiterRole extends Role implements JesusWaiter {
-	//Notice that we implement waitingCustomers using ArrayList, but type it
-	//with List semantics.
+	
 	public List<myCustomer> myCustomers = Collections.synchronizedList(new ArrayList<myCustomer>());
 
 	public JesusMenu menu = new JesusMenu();

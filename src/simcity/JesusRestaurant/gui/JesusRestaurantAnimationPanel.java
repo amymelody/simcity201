@@ -36,7 +36,7 @@ public class JesusRestaurantAnimationPanel extends JPanel implements ActionListe
 		setSize(WINDOWX, WINDOWY);
 		setVisible(true);
 		
-		ImageIcon bgIcon = new ImageIcon(this.getClass().getResource("images/floor_texture.png"));
+		ImageIcon bgIcon = new ImageIcon(this.getClass().getResource("simcity/images/jesus_floor.png"));
 		bg = bgIcon.getImage();
 
 		ImageIcon plateIcon = new ImageIcon(this.getClass().getResource("images/plate_area.png"));

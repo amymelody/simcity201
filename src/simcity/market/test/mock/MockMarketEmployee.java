@@ -14,6 +14,7 @@ public class MockMarketEmployee extends Mock implements MarketEmployee {
 	 */
 	public MarketCashier cashier;
 	public String name;
+	public Order testOrder;
 
 	public MockMarketEmployee(String n) {
 		super(n);
@@ -24,7 +25,7 @@ public class MockMarketEmployee extends Mock implements MarketEmployee {
 	@Override
 	public void msgGetItems(Order o) {
 		log.add(new LoggedEvent("Received order."));
-		
+		testOrder = o;
 	}
 
 	@Override

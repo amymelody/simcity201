@@ -12,14 +12,7 @@ import simcity.mock.LoggedEvent;
 import java.util.*;
 import java.util.concurrent.Semaphore;
 
-/**
- * Restaurant Host Agent
- */
-//We only have 2 types of agents in this prototype. A customer and an agent that
-//does all the rest. Rather than calling the other agent a waiter, we called him
-//the HostAgent. A Host is the manager of a restaurant who sees that all
-//is proceeded as he wishes.
-public class JesusCashierRole extends Agent implements JesusCashier {
+public class JesusCashierRole extends Role implements JesusCashier {
 	public List<Check> checks = Collections.synchronizedList(new ArrayList<Check>());
 	public List<Bill> bills = Collections.synchronizedList(new ArrayList<Bill>());
 	public double money = 400.00;

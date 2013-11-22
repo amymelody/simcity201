@@ -34,5 +34,9 @@ public class Order {
 		location = l;
 	}
 	
+	public OrderState getOS() {
+		return oS;
+	}
+	
 	public enum OrderState {none, newDelivery, handing, getting, ready, paying, paid, done, delivered};
 }

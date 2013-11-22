@@ -9,13 +9,6 @@ import java.util.concurrent.Semaphore;
 import java.util.Timer;
 import java.util.TimerTask;
 
-/**
- * Restaurant Host Agent
- */
-//We only have 2 types of agents in this prototype. A customer and an agent that
-//does all the rest. Rather than calling the other agent a waiter, we called him
-//the HostAgent. A Host is the manager of a restaurant who sees that all
-//is proceeded as he wishes.
 public class JesusCookRole extends Role {
 	private static final int steakTime = 7000;
 	private static final int saladTime = 4000;

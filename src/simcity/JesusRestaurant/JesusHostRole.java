@@ -6,13 +6,6 @@ import simcity.JesusRestaurant.gui.JesusHostGui;
 import java.util.*;
 import java.util.concurrent.Semaphore;
 
-/**
- * Restaurant Host Agent
- */
-//We only have 2 types of agents in this prototype. A customer and an agent that
-//does all the rest. Rather than calling the other agent a waiter, we called him
-//the HostAgent. A Host is the manager of a restaurant who sees that all
-//is proceeded as he wishes.
 public class JesusHostRole extends Role {
 	static final int NTABLES = 4;//a global for the number of tables.
 	//Notice that we implement waitingCustomers using ArrayList, but type it

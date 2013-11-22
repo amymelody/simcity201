@@ -5,18 +5,16 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Semaphore;
 
-import role.Role;
+import simcity.role.Role;
 import simcity.ItemOrder;
-import simcity.market.MarketCashierRole.myDeliverer;
-import simcity.market.MarketCashierRole.myEmployee;
 import simcity.market.Order.OrderState;
 import simcity.market.gui.MarketDelivererGui;
 import simcity.market.interfaces.MarketCashier;
 import simcity.market.interfaces.MarketCustomer;
 import simcity.market.interfaces.MarketDeliverer;
-import simcity.market.interfaces.MarketEmployee;
+import simcity.role.JobRole;
 
-public class MarketDelivererRole extends Role implements MarketDeliverer {
+public class MarketDelivererRole extends JobRole implements MarketDeliverer {
 
 	/* Constructor */
 	String name;
@@ -67,6 +65,16 @@ public class MarketDelivererRole extends Role implements MarketDeliverer {
 	
 	
 	/* Messages */
+	
+	// Start/End Shifts
+	public void msgStartShift() {
+		
+	}
+	public void msgEndShift() {
+		
+	}
+	
+	// Normative Scenarios
 	public void msgDeliverItems(Order o) {
 		orders.add(o);
 		stateChanged();
