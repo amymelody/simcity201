@@ -2,8 +2,6 @@ package simcity;
 
 import java.awt.Point;
 import java.util.*;
-import java.util.HashMap;
-import java.util.Map;
 
 import simcity.housing.ResidentRole;
 import simcity.role.JobRole;
@@ -21,7 +19,7 @@ import simcity.joshrestaurant.JoshHostRole;
 import simcity.joshrestaurant.JoshCustomerRole;
 import simcity.joshrestaurant.JoshCookRole;
 import simcity.joshrestaurant.JoshWaiterRole;
-import simcity.anjalirestaurant.AnjaliCashierRole;
+/*import simcity.anjalirestaurant.AnjaliCashierRole;
 import simcity.anjalirestaurant.AnjaliHostRole;
 import simcity.anjalirestaurant.AnjaliCustomerRole;
 import simcity.anjalirestaurant.AnjaliCookRole;
@@ -40,11 +38,30 @@ import simcity.alfredrestaurant.AlfredCashierRole;
 import simcity.alfredrestaurant.AlfredHostRole;
 import simcity.alfredrestaurant.AlfredCustomerRole;
 import simcity.alfredrestaurant.AlfredCookRole;
-import simcity.alfredrestaurant.AlfredWaiterRole;
+import simcity.alfredrestaurant.AlfredWaiterRole;*/
 
 public class CityDirectory
 {
 	Map<Integer, PersonInfo> personMap;
+	
+	//All job roles in the city
+	private Vector<JoshWaiterRole> joshWaiters = new Vector<JoshWaiterRole>();
+	private Vector<MarketEmployeeRole> market1Employees = new Vector<MarketEmployeeRole>();
+	private Vector<MarketEmployeeRole> market2Employees = new Vector<MarketEmployeeRole>();
+	private Vector<MarketEmployeeRole> market3Employees = new Vector<MarketEmployeeRole>();
+	private Vector<MarketDelivererRole> market1Deliverers = new Vector<MarketDelivererRole>();
+	private Vector<MarketDelivererRole> market2Deliverers = new Vector<MarketDelivererRole>();
+	private Vector<MarketDelivererRole> market3Deliverers = new Vector<MarketDelivererRole>();
+	private Vector<BankTellerRole> bank1Tellers = new Vector<BankTellerRole>();
+	private Vector<LandlordRole> landlords = new Vector<LandlordRole>();
+	private MarketCashierRole market1Cashier = new MarketCashierRole();
+	private MarketCashierRole market2Cashier = new MarketCashierRole();
+	private MarketCashierRole market3Cashier = new MarketCashierRole();
+	private BankManagerRole bank1Manager = new BankManagerRole();
+	private JoshCashierRole joshCashier = new JoshCashierRole();
+	private JoshCookRole joshCook = new JoshCookRole();
+	private JoshHostRole joshHost = new JoshHostRole();
+	
 	class PersonInfo
 	{
 		int ID;
@@ -174,14 +191,14 @@ public class CityDirectory
 		switch(role) {
 		case "joshCustomerRole":
 			return new JoshCustomerRole();
-		case "anjaliCustomerRole":
+		/*case "anjaliCustomerRole":
 			return new AnjaliCustomerRole();
 		case "cherysCustomerRole":
 			return new CherysCustomerRole();
 		case "alfredCustomerRole":
 			return new AlfredCustomerRole();
 		case "jesusCustomerRole":
-			return new JesusCustomerRole();
+			return new JesusCustomerRole();*/
 		default:
 			return null;
 		}
@@ -212,19 +229,241 @@ public class CityDirectory
 	public JobRole JobFactory(String role) {
 		switch(role) {
 		case "landlordRole":
-			return new LandlordRole();
+			LandlordRole l = new LandlordRole();
+			landlords.add(l);
+			return l;
 		case "marketCashierRole":
-			return new MarketCashierRole();
+			return pickMarketCashier();
 		case "marketDelivererRole":
-			return new MarketDelivererRole();
+			MarketDelivererRole d = new MarketDelivererRole();
+			addMarketDeliverer(d);
+			return d;
 		case "marketEmployeeRole":
-			return new MarketEmployeeRole();
+			MarketEmployeeRole e  = new MarketEmployeeRole();
+			addMarketEmployee(e);
+			return e;
 		case "bankTellerRole":
-			return new BankTellerRole();
+			BankTellerRole t = new BankTellerRole();
+			addBankTeller(t);
+			return t;
 		case "bankManagerRole":
-			return new BankManagerRole();
+			return pickBankManager();
 		case "restCashierRole":
-			
+			return pickRestCashier();
+		case "restCookRole":
+			return pickRestCook();
+		case "restHostRole":
+			return pickRestHost();
+		case "restWaiterRole":
+			return addRestWaiter();
+		}
+	}
+	
+	public void addMarketDeliverer(MarketDelivererRole d) {
+		int num = getNumPeople("marketDelivererRole","market1");
+		if (num > getNumPeople("marketDelivererRole","market2")) {
+			num = getNumPeople("marketDelivererRole","market2");
+		}
+		if (num > getNumPeople("marketDelivererRole","market3")) {
+			num = getNumPeople("marketDelivererRole","market3");
+		}
+		switch(num) {
+		case getNumPeople("marketDelivererRole","market1"):
+			market1Deliverers.add(d);
+			break;
+		case getNumPeople("marketDelivererRole","market2"):
+			market2Deliverers.add(d);
+			break;
+		case getNumPeople("marketDelivererRole","market3"):
+			market3Deliverers.add(d);
+			break;
+		default:
+			market1Deliverers.add(d);
+			break;
+		}
+	}
+	
+	public void addMarketEmployee(MarketEmployeeRole e) {
+		int num = getNumPeople("marketEmployeeRole","market1");
+		if (num > getNumPeople("marketEmployeeRole","market2")) {
+			num = getNumPeople("marketEmployeeRole","market2");
+		}
+		if (num > getNumPeople("marketEmployeeRole","market3")) {
+			num = getNumPeople("marketEmployeeRole","market3");
+		}
+		switch(num) {
+		case getNumPeople("marketEmployeeRole","market1"):
+			market1Employees.add(e);
+			break;
+		case getNumPeople("marketEmployeeRole","market2"):
+			market2Employees.add(e);
+			break;
+		case getNumPeople("marketEmployeeRole","market3"):
+			market3Employees.add(e);
+			break;
+		default:
+			market1Employees.add(e);
+			break;
+		}
+	}
+	
+	public void addBankTeller(BankTellerRole t) {
+		bank1Tellers.add(t);
+	}
+	
+	public RestWaiterRole addRestWaiter() {
+		int num = getNumPeople("restWaiterRole","joshRestaurant");
+		/*if (num > getNumPeople("restWaiterRole","cherysRestaurant")) {
+			num = getNumPeople("restWaiterRole","cherysRestaurant");
+		}
+		if (num > getNumPeople("restWaiterRole","anjaliRestaurant")) {
+			num = getNumPeople("restWaiterRole","anjaliRestaurant");
+		}
+		if (num > getNumPeople("restWaiterRole","alfredRestaurant")) {
+			num = getNumPeople("restWaiterRole","alfredRestaurant");
+		}
+		if (num > getNumPeople("restWaiterRole","jesusRestaurant")) {
+			num = getNumPeople("restWaiterRole","jesusRestaurant");
+		}*/
+		switch(num) {
+		case getNumPeople("restWaiterRole","joshRestaurant"):
+			JoshWaiterRole w = new JoshWaiterRole();
+			joshWaiters.add(w);
+			return w;
+		/*case getNumPeople("restWaiterRole","cherysRestaurant"):
+			CherysWaiterRole w = new CherysWaiterRole();
+			cherysWaiters.add(w);
+			return w;
+		case getNumPeople("restWaiterRole","anjaliRestaurant"):
+			AnjaliWaiterRole w = new AnjaliWaiterRole();
+			anjaliWaiters.add(w);
+			return w;
+		case getNumPeople("restWaiterRole","alfredRestaurant"):
+			AlfredWaiterRole w = new AlfredWaiterRole();
+			alfredWaiters.add(w);
+			return w;
+		case getNumPeople("restWaiterRole","jesusRestaurant"):
+			JesusWaiterRole w = new JesusWaiterRole();
+			jesusWaiters.add(w);
+			return w;*/
+		default:
+			JoshWaiterRole w = new JoshWaiterRole();
+			joshWaiters.add(w);
+			return w;
+		}
+	}
+	
+	public MarketCashierRole pickMarketCashier() {
+		int num = getNumPeople("marketCashierRole","market1");
+		if (num > getNumPeople("marketCashierRole","market2")) {
+			num = getNumPeople("marketCashierRole","market2");
+		}
+		if (num > getNumPeople("marketCashierRole","market3")) {
+			num = getNumPeople("marketCashierRole","market3");
+		}
+		switch(num) {
+		case getNumPeople("marketCashierRole","market1"):
+			return market1Cashier;
+		case getNumPeople("marketCashierRole","market2"):
+			return market2Cashier;
+		case getNumPeople("marketCashierRole","market3"):
+			return market3Cashier;
+		default:
+			return market1Cashier;
+		}
+	}
+	
+	public BankManagerRole pickBankManager() {
+		return bank1Manager;
+	}
+	
+	public RestCashierRole pickRestCashier() {
+		int num = getNumPeople("restCashierRole","joshRestaurant");
+		/*if (num > getNumPeople("restCashierRole","cherysRestaurant")) {
+			num = getNumPeople("restCashierRole","cherysRestaurant");
+		}
+		if (num > getNumPeople("restCashierRole","anjaliRestaurant")) {
+			num = getNumPeople("restCashierRole","anjaliRestaurant");
+		}
+		if (num > getNumPeople("restCashierRole","alfredRestaurant")) {
+			num = getNumPeople("restCashierRole","alfredRestaurant");
+		}
+		if (num > getNumPeople("restCashierRole","jesusRestaurant")) {
+			num = getNumPeople("restCashierRole","jesusRestaurant");
+		}*/
+		switch(num) {
+		case getNumPeople("restCashierRole","joshRestaurant"):
+			return joshCashier;
+		/*case getNumPeople("restCashierRole","cherysRestaurant"):
+			return cherysCashier;
+		case getNumPeople("restCashierRole","anjaliRestaurant"):
+			return anjaliCashier;
+		case getNumPeople("restCashierRole","alfredRestaurant"):
+			return alfredCashier;
+		case getNumPeople("restCashierRole","jesusRestaurant"):
+			return jesusCashier;*/
+		default:
+			return joshCashier;
+		}
+	}
+	
+	public RestCookRole pickRestCook() {
+		int num = getNumPeople("restCookRole","joshRestaurant");
+		/*if (num > getNumPeople("restCookRole","cherysRestaurant")) {
+			num = getNumPeople("restCookRole","cherysRestaurant");
+		}
+		if (num > getNumPeople("restCookRole","anjaliRestaurant")) {
+			num = getNumPeople("restCookRole","anjaliRestaurant");
+		}
+		if (num > getNumPeople("restCookRole","alfredRestaurant")) {
+			num = getNumPeople("restCookRole","alfredRestaurant");
+		}
+		if (num > getNumPeople("restCookRole","jesusRestaurant")) {
+			num = getNumPeople("restCookRole","jesusRestaurant");
+		}*/
+		switch(num) {
+		case getNumPeople("restCookRole","joshRestaurant"):
+			return joshCook;
+		/*case getNumPeople("restCookRole","cherysRestaurant"):
+			return cherysCook;
+		case getNumPeople("restCookRole","anjaliRestaurant"):
+			return anjaliCook;
+		case getNumPeople("restCookRole","alfredRestaurant"):
+			return alfredCook;
+		case getNumPeople("restCookRole","jesusRestaurant"):
+			return jesusCook;*/
+		default:
+			return joshCook;
+		}
+	}
+	
+	public RestHostRole pickRestHost() {
+		int num = getNumPeople("restHostRole","joshRestaurant");
+		/*if (num > getNumPeople("restHostRole","cherysRestaurant")) {
+			num = getNumPeople("restHostRole","cherysRestaurant");
+		}
+		if (num > getNumPeople("restHostRole","anjaliRestaurant")) {
+			num = getNumPeople("restHostRole","anjaliRestaurant");
+		}
+		if (num > getNumPeople("restHostRole","alfredRestaurant")) {
+			num = getNumPeople("restHostRole","alfredRestaurant");
+		}
+		if (num > getNumPeople("restHostRole","jesusRestaurant")) {
+			num = getNumPeople("restHostRole","jesusRestaurant");
+		}*/
+		switch(num) {
+		case getNumPeople("restHostRole","joshRestaurant"):
+			return joshHost;
+		/*case getNumPeople("restHostRole","cherysRestaurant"):
+			return cherysHost;
+		case getNumPeople("restHostRole","anjaliRestaurant"):
+			return anjaliHost;
+		case getNumPeople("restHostRole","alfredRestaurant"):
+			return alfredHost;
+		case getNumPeople("restHostRole","jesusRestaurant"):
+			return jesusHost;*/
+		default:
+			return joshHost;
 		}
 	}
 	
