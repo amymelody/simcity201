@@ -5,6 +5,8 @@ import java.util.Collections;
 import java.awt.Point;
 
 import simcity.agent.Agent;
+import simcity.gui.PersonGui;
+import simcity.CityDirectory;
 import simcity.interfaces.RestCustomer;
 import simcity.interfaces.MarketCustomer;
 import simcity.interfaces.Resident;
@@ -29,6 +31,8 @@ public class PersonAgent extends Agent
 	private Car car;
 	private Bus bus;
 	private String destination;
+	private CityDirectory city;
+	private PersonGui gui;
 	
 	public List<BusStop> busStops = Collections.synchronizedList(new ArrayList<BusStop>());
 	public List<ItemOrder> foodNeeded = Collections.synchronizedList(new ArrayList<ItemOrder>());
@@ -496,7 +500,7 @@ public class PersonAgent extends Agent
 			goToDestination(h.location);
 		} else {
 			/*if (!findRole(h.residentRole)) {
-				ResidentRole r = (ResidentRole)ResidentFactory(h.residentRole);
+				ResidentRole r = (ResidentRole)(city.ResidentFactory(h.residentRole));
 				addRole(r, h.residentRole);
 			}*/
 			synchronized(roles) {
@@ -563,7 +567,7 @@ public class PersonAgent extends Agent
 			goToDestination(h.location);
 		} else {
 			/*if (!findRole(h.residentRole)) {
-				ResidentRole r = (ResidentRole)ResidentFactory(h.residentRole);
+				ResidentRole r = (ResidentRole)(city.ResidentFactory(h.residentRole));
 				addRole(r, h.residentRole);
 			} */
 			synchronized(roles) {
@@ -588,7 +592,7 @@ public class PersonAgent extends Agent
 			goToDestination(r.location);
 		} else {
 			/*if (!findRole(r.customerRole)) {
-				RestCustomerRole c = (RestCustomerRole)RestCustomerFactory(r.customerRole);
+				RestCustomerRole c = (RestCustomerRole)(city.RestCustomerFactory(r.customerRole));
 				addRole(c, r.customerRole);
 			} */
 			synchronized(roles) {
@@ -614,7 +618,7 @@ public class PersonAgent extends Agent
 			goToDestination(m.location);
 		} else {
 			/*if (!findRole(m.customerRole)) {
-				MarketCustomerRole c = (MarketCustomerRole)RoleFactory(m.customerRole);
+				MarketCustomerRole c = (MarketCustomerRole)(city.MarketCustomerFactory(m.customerRole));
 				addRole(c, m.customerRole);
 			} */
 			synchronized(roles) {
@@ -640,7 +644,7 @@ public class PersonAgent extends Agent
 			goToDestination(b.location);
 		} else {
 			/*if (!findRole(b.depositorRole)) {
-				DepositorRole d = (DepositorRole)DepositorFactory(b.depositorRole);
+				BankDepositorRole d = (BankDepositorRole)(city.BankDepositorFactory(b.depositorRole));
 				addRole(d, b.depositorRole);
 			} */
 			synchronized(roles) {
@@ -687,21 +691,21 @@ public class PersonAgent extends Agent
 
 	private void goToDestination(String d) {
 		if (car != null && !nearDestination(d) && state.ts != TransportationState.walkingFromVehicle) {
-			//DoGoToCar();
+			//gui.DoGoToCar();
 			state.ts = TransportationState.inCar;
 			destination = d;
 			car.msgGoToDestination(this, d); //pass the destination to the car so it knows where to go
 		} else {
 			if (takeBus(d) && state.ts != TransportationState.walkingFromVehicle) {
 				BusStop b = closestBusStop();
-				//DoGoToBusStop(b);
+				//gui.DoGoToBusStop(b);
 				state.ts = TransportationState.waitingForBus;
 				destination = d;
 				b.msgWaitingForBus(this);
 			} else {
 				state.ts = TransportationState.walking;
 				destination = d;
-				//DoGoToDestination(locations.get(d)); //just walk there
+				//gui.DoGoToDestination(locations.get(d)); //just walk there
 				state.ls = LocationState.atDestination;
 			}
 		}

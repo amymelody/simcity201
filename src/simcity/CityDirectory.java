@@ -5,6 +5,43 @@ import java.util.*;
 import java.util.HashMap;
 import java.util.Map;
 
+import simcity.housing.ResidentRole;
+import simcity.role.JobRole;
+import simcity.housing.LandlordRole;
+import simcity.bank.BankManagerRole;
+import simcity.bank.BankTellerRole;
+import simcity.bank.BankDepositorRole;
+import simcity.market.MarketEmployeeRole;
+import simcity.market.MarketCashierRole;
+import simcity.market.MarketDelivererRole;
+import simcity.market.MarketCustomerRole;
+import simcity.RestCustomerRole;
+import simcity.joshrestaurant.JoshCashierRole;
+import simcity.joshrestaurant.JoshHostRole;
+import simcity.joshrestaurant.JoshCustomerRole;
+import simcity.joshrestaurant.JoshCookRole;
+import simcity.joshrestaurant.JoshWaiterRole;
+import simcity.anjalirestaurant.AnjaliCashierRole;
+import simcity.anjalirestaurant.AnjaliHostRole;
+import simcity.anjalirestaurant.AnjaliCustomerRole;
+import simcity.anjalirestaurant.AnjaliCookRole;
+import simcity.anjalirestaurant.AnjaliWaiterRole;
+import simcity.cherysrestaurant.CherysCashierRole;
+import simcity.cherysrestaurant.CherysHostRole;
+import simcity.cherysrestaurant.CherysCustomerRole;
+import simcity.cherysrestaurant.CherysCookRole;
+import simcity.cherysrestaurant.CherysWaiterRole;
+import simcity.jesusrestaurant.JesusCashierRole;
+import simcity.jesusrestaurant.JesusHostRole;
+import simcity.jesusrestaurant.JesusCustomerRole;
+import simcity.jesusrestaurant.JesusCookRole;
+import simcity.jesusrestaurant.JesusWaiterRole;
+import simcity.alfredrestaurant.AlfredCashierRole;
+import simcity.alfredrestaurant.AlfredHostRole;
+import simcity.alfredrestaurant.AlfredCustomerRole;
+import simcity.alfredrestaurant.AlfredCookRole;
+import simcity.alfredrestaurant.AlfredWaiterRole;
+
 public class CityDirectory
 {
 	Map<Integer, PersonInfo> personMap;
@@ -123,7 +160,74 @@ public class CityDirectory
 		apartment1ResIDs = new ArrayList<Integer>();
 		apartment2ResIDs = new ArrayList<Integer>();
 	}
-
+	
+	public ResidentRole ResidentFactory(String role) {
+		switch(role) {
+		case "residentRole":
+			return new ResidentRole();
+		default:
+			return null;
+		}
+	}
+	
+	public RestCustomerRole RestCustomerFactory(String role) {
+		switch(role) {
+		case "joshCustomerRole":
+			return new JoshCustomerRole();
+		case "anjaliCustomerRole":
+			return new AnjaliCustomerRole();
+		case "cherysCustomerRole":
+			return new CherysCustomerRole();
+		case "alfredCustomerRole":
+			return new AlfredCustomerRole();
+		case "jesusCustomerRole":
+			return new JesusCustomerRole();
+		default:
+			return null;
+		}
+	}
+	
+	public MarketCustomerRole MarketCustomerFactory(String role) {
+		switch(role) {
+		case "market1CustomerRole":
+			return new MarketCustomerRole();
+		case "market2CustomerRole":
+			return new MarketCustomerRole();
+		case "market3CustomerRole":
+			return new MarketCustomerRole();
+		default:
+			return null;
+		}
+	}
+	
+	public BankDepositorRole BankDepositorFactory(String role) {
+		switch(role) {
+		case "bank1DepositorRole":
+			return new BankDepositorRole();
+		default:
+			return null;
+		}
+	}
+	
+	public JobRole JobFactory(String role) {
+		switch(role) {
+		case "landlordRole":
+			return new LandlordRole();
+		case "marketCashierRole":
+			return new MarketCashierRole();
+		case "marketDelivererRole":
+			return new MarketDelivererRole();
+		case "marketEmployeeRole":
+			return new MarketEmployeeRole();
+		case "bankTellerRole":
+			return new BankTellerRole();
+		case "bankManagerRole":
+			return new BankManagerRole();
+		case "restCashierRole":
+			
+		}
+	}
+	
 	public void addBuilding(String name, String orientation, Point loc)
 	{
 		buildingMap.put(name, new BuildingInfo(name, orientation, loc));
