@@ -45,6 +45,10 @@ public class LandlordRole extends JobRole
 		commands.add(Command.callRenters);
 		stateChanged();
 	}
+	public void msgEndShift()
+	{
+		//dummy method unnecessary for landlord 
+	}
 	public void msgDingDong(ResidentRole r) //from Resident
 	{
 		commands.add(Command.collectRent);
@@ -78,13 +82,36 @@ public class LandlordRole extends JobRole
 //Scheduler
     public boolean pickAndExecuteAnAction()
     {
-//	+ If (there exists) Command c in commands (such that) c == Command.callRenters,
-//	then sendRentDue(c);
-//	+ If (there exists) Command c in commands (such that) c == Command.collectRent,
-//			then sendAmountOwed(c);
-//	+ If !(there exists) Renter r in renters (such that) r.state != RenterState.Paid,
-//			then sendEndShift();
-//	+ Else goToLocation(locations.get("TV"));
+    	for(Command c : commands)
+    	{
+    		if(c == Command.collectRent)
+    		{
+    			sendAmountOwed(c);
+    			return true;
+    		}
+    	}
+    	for(Command c : commands)
+    	{
+    		if(c == Command.callRenters)
+    		{
+    			sendRentDue(c);
+    			return true;
+    		}
+    	}
+    	boolean allRentCollected = true;
+    	for(Renter r : renters)
+    	{
+    		if(r.state != RenterState.paid)
+    		{
+    			allRentCollected = false;
+    		}
+    	}
+    	if(allRentCollected)
+    	{
+    		sendEndShift();
+    		return true;
+    	}
+    	goToLocation(locations.get("Sofa"));
     	return false;
     }
 
@@ -96,8 +123,8 @@ public class LandlordRole extends JobRole
 		{
 			if(r.state == RenterState.away)
 			{
-				r.resident.msgRentDue();
 				r.state = RenterState.called;
+				r.resident.msgRentDue();
 			}
 		}
 		stateChanged();
@@ -105,13 +132,13 @@ public class LandlordRole extends JobRole
 	public void sendAmountOwed(Command c)
 	{
 		commands.remove(c);
-		goToLocation(locations.get("Door"));
+		goToLocation(locations.get("Doorway"));
 		for(Renter r : renters)
 		{
 			if(r.state == RenterState.arrived)
 			{
-				r.resident.msgAmountOwed(rent);
 				r.state = RenterState.askedToPay;
+				r.resident.msgAmountOwed(rent);
 			}
 		}
 		stateChanged();

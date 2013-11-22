@@ -87,27 +87,67 @@ public class ResidentRole extends Role implements Resident
 //Scheduler
     public boolean pickAndExecuteAnAction()
     {
-//	  + If state == ResidentState.atHome, then
-//	    {
-//	      + If (there exists) Command c in commands (such that) c == Command.putAwayGroceries,
-//		    then putGroceriesInFridge(c);
-//	      + If (there exists) Command c in commands (such that) c == Command.eat,
-//		    then eat(c);
-//	      + If (there exists) Command c in commands (such that) c == Command.leave,
-//		    then leaveHousing(c);
-//		  + If maintenanceSchedule =< 0,
-//		    then clean();
-//		  + Else goToLocation("TV");
-//		}
-//	  + If state == ResidentState.atLandlord, then
-//		{
-//	      + If (there exists) Command c in commands (such that) c == Command.talkToLandlord,
-//		    then sendDingDong(c);
-//	      + If (there exists) Command c in commands (such that) c == Command.payLandlord,
-//		    then sendPayRent(c);
-//	      + If (there exists) Command c in commands (such that) c == Command.leave,
-//		    then leaveHousing(c);
-//		}
+    	if(state == ResidentState.atHome)
+	    {
+    		for(Command c : commands)
+    		{
+    			if(c == Command.putAwayGroceries)
+    			{
+    				putGroceriesInFridge(c);
+        	    	return true;
+    			}
+    		}
+    		for(Command c : commands)
+    		{
+    			if(c == Command.eat)
+    			{
+    				eat(c);
+        	    	return true;
+    			}
+    		}
+    		for(Command c : commands)
+    		{
+    			if(c == Command.leave)
+    			{
+    				leaveHousing(c);
+        	    	return true;
+    			}
+    		}
+    		if(maintenanceSchedule <= 0)
+    		{
+    			clean();
+    	    	return true;
+    		}
+    		goToLocation(locations.get("Sofa"));
+        	return false;
+		}
+    	if(state == ResidentState.atLandlord)
+		{
+    		for(Command c : commands)
+    		{
+    			if(c == Command.talkToLandlord)
+    			{
+    				sendDingDong(c);
+        	    	return true;
+    			}
+    		}
+    		for(Command c : commands)
+    		{
+    			if(c == Command.payLandlord)
+    			{
+    				sendPayRent(c);
+        	    	return true;
+    			}
+    		}
+    		for(Command c : commands)
+    		{
+    			if(c == Command.leave)
+    			{
+    				leaveHousing(c);
+        	    	return true;
+    			}
+    		}
+		}
     	return false;
     }
 
@@ -191,7 +231,7 @@ public class ResidentRole extends Role implements Resident
 		{
 			public void run()
 			{
-				goToLocation(locations.get("TV"));
+				goToLocation(locations.get("Sofa"));
 			}
 		}, 1000);
 		Do("Cleaning Sofa");
@@ -199,7 +239,7 @@ public class ResidentRole extends Role implements Resident
 		{
 			public void run()
 			{
-				goToLocation(locations.get("Door"));
+				goToLocation(locations.get("Doorway"));
 			}
 		}, 1000);
 		Do("Cleaning Door");
