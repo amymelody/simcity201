@@ -8,6 +8,7 @@ import java.util.concurrent.Semaphore;
 import simcity.role.JobRole;
 import simcity.role.Role;
 import simcity.ItemOrder;
+import simcity.PersonAgent;
 import simcity.market.Order.OrderState;
 import simcity.market.gui.MarketCashierGui;
 import simcity.market.gui.MarketCustomerGui;
@@ -21,8 +22,8 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 	/* Constructor */
 	String name;
 
-	public MarketCashierRole(String n) {
-		name = n;
+	public MarketCashierRole() {
+		super();
 	}
 
 	public String getMaitreDName() {
@@ -30,6 +31,10 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 	}
 	public String getName() {
 		return name;
+	}
+	public void setPerson(PersonAgent p) {
+		super.setPerson(p);
+		name = p.getName();
 	}
 
 
@@ -167,8 +172,9 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 	// Normative Scenario #1
 	public void msgIWantItems(MarketCustomer c, List<ItemOrder> items) {
 		orders.add(new Order(c, items));
-		//stateChanged();
+		stateChanged();
 	}
+	
 	public void msgHereAreItems(Order order, MarketEmployee e) {
 		synchronized(orders) {
 			for(Order o: orders) {
@@ -185,7 +191,7 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 				}
 			}
 		}
-		//stateChanged();
+		stateChanged();
 	}
 	public void msgPayment(MarketCustomer c, int money) {
 		synchronized(orders) {
@@ -200,9 +206,9 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 	}
 
 	// Normative Scenario #2
-	public void msgIWantDelivery(MarketCustomer c, List<ItemOrder> i, String location) {
-		orders.add(new Order(c, i, location));
-		//stateChanged();
+	public void msgIWantDelivery(RestCookRole rCk, RestCashierRole rCh, List<ItemOrder> i, String location) {
+		orders.add(new Order(rCk, rCh, i, location));
+		stateChanged();
 	}
 	public void msgDelivered(Order order, MarketDeliverer d) {
 		synchronized(orders) {
@@ -220,7 +226,7 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 				}
 			}
 		}
-		//stateChanged();
+		stateChanged();
 	}
 
 	/* Scheduler */
@@ -316,6 +322,7 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 			for(myDeliverer md: deliverers) {
 				if(md.unoccupied && md.working) {
 					md.deliverer.msgDeliverItems(o);
+					o.cook.msgHereIsWhatICanFulfill(o.items, HaveSomeItems(o.items)); // figure out how much he can fulfill
 					for(ItemOrder iO: o.items) {
 						inventory.updateAmount(iO.getFoodItem(), iO.getAmount(), false);
 					}
@@ -398,6 +405,14 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 	}
 	private void updateMarketMoney(Order o) {
 		marketMoney += o.price;
+	}
+	private boolean HaveSomeItems(List<ItemOrder> items) {
+		for(ItemOrder iO: items) {
+			if(inventory.getAmount(iO.getFoodItem()) == 0) {
+				return false;
+			}
+		}
+		return true;
 	}
 	
 }

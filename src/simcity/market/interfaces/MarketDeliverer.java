@@ -8,8 +8,6 @@ public interface MarketDeliverer {
 
 	public abstract void msgPayment(MarketCustomer c, int money);
 
-	public abstract void msgSignedInvoice(MarketCustomer c);
-
 	public abstract void msgPay();
 	
 }

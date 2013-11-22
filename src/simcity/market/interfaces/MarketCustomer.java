@@ -10,8 +10,6 @@ public interface MarketCustomer {
 	
 	public abstract void msgHereAreItemsandPrice(List<ItemOrder> i, int price);
 	
-	public abstract void msgHereIsOrder(List<ItemOrder> i, int price, MarketDeliverer del);
-	
 	public abstract void msgThankYou(int change);
 
 }
