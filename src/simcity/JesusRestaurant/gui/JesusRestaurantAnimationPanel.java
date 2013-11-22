@@ -1,4 +1,4 @@
-package simcity.jesusrestaurant.gui;
+package simcity.JesusRestaurant.gui;
 
 import javax.swing.*;
 
