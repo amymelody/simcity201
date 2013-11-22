@@ -2,14 +2,14 @@ package simcity.joshrestaurant;
 
 import java.util.*;
 
-import simcity.role.JobRole;
 import simcity.PersonAgent;
+import simcity.RestHostRole;
 
 /**
  * Restaurant Host Agent
  */
 
-public class JoshHostRole extends JobRole {
+public class JoshHostRole extends RestHostRole {
 	static final int NTABLES = 3;
 	public List<MyCustomer> customers = Collections.synchronizedList(new ArrayList<MyCustomer>());
 	public List<MyWaiter> waiters = Collections.synchronizedList(new ArrayList<MyWaiter>());

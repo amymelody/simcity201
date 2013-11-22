@@ -1,10 +1,10 @@
 package simcity.joshrestaurant;
 
-import simcity.role.JobRole;
+import simcity.RestCashierRole;
+import simcity.interfaces.MarketDeliverer;
 import simcity.joshrestaurant.interfaces.JoshCustomer;
 import simcity.joshrestaurant.interfaces.JoshWaiter;
 import simcity.joshrestaurant.interfaces.JoshCashier;
-import simcity.joshrestaurant.interfaces.JoshMarket;
 import simcity.mock.LoggedEvent;
 import simcity.PersonAgent;
 
@@ -15,7 +15,7 @@ import java.util.*;
  * Restaurant Cashier Agent
  */
 
-public class JoshCashierRole extends JobRole implements JoshCashier {
+public class JoshCashierRole extends RestCashierRole implements JoshCashier {
 	public List<Check> checks = Collections.synchronizedList(new ArrayList<Check>());
 	public List<Bill> bills = Collections.synchronizedList(new ArrayList<Bill>());
 
@@ -46,6 +46,10 @@ public class JoshCashierRole extends JobRole implements JoshCashier {
 
 	public String getName() {
 		return name;
+	}
+	
+	public void setName(String n) {
+		name = n;
 	}
 	
 	public int getCash() {
@@ -83,9 +87,15 @@ public class JoshCashierRole extends JobRole implements JoshCashier {
 		}
 	}
 	
-	public void msgHereIsBill(int bill, JoshMarket market) {
-		log.add(new LoggedEvent("Received msgHereIsBill"));
-		bills.add(new Bill(market, bill));
+	public void msgDelivery(int bill, MarketDeliverer deliverer) {
+		log.add(new LoggedEvent("Received msgDelivery"));
+		bills.add(new Bill(deliverer, bill));
+		stateChanged();
+	}
+	
+	public void msgChange(int change) {
+		log.add(new LoggedEvent("Received msgChange"));
+		cash += change;
 		stateChanged();
 	}
 
@@ -151,23 +161,23 @@ public class JoshCashierRole extends JobRole implements JoshCashier {
 	private void payBill(Bill bill) {
 		cash -= bill.charge;
 		print("Paying bill. Cash = $" + cash);
-		bill.market.msgPayment(bill.charge);
+		bill.deliverer.msgPayment(bill.charge);
 		bills.remove(bill);
 	}
 
 	//utilities
 	
 	public class Bill {
-		JoshMarket market;
+		MarketDeliverer deliverer;
 		int charge;
 		
-		Bill(JoshMarket m, int c) {
-			market = m;
+		Bill(MarketDeliverer d, int c) {
+			deliverer = d;
 			charge = c;
 		}
 		
-		public JoshMarket getMarket() {
-			return market;
+		public MarketDeliverer getDeliverer() {
+			return deliverer;
 		}
 		
 		public int getCharge() {

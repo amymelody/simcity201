@@ -2,20 +2,22 @@ package simcity.joshrestaurant;
 
 import java.util.*;
 
-import simcity.role.JobRole;
+import simcity.ItemOrder;
+import simcity.RestCookRole;
 import simcity.joshrestaurant.gui.JoshCookGui;
 import simcity.PersonAgent;
+import simcity.interfaces.MarketCashier;
 
 
 /**
  * Restaurant Cook Agent
  */
 
-public class JoshCookRole extends JobRole {
+public class JoshCookRole extends RestCookRole {
 	public List<Order> orders
 	= new ArrayList<Order>();
 	public List<MyMarket> markets = new ArrayList<MyMarket>();
-	public List<JoshItemOrder> itemOrders = new ArrayList<JoshItemOrder>();
+	public List<ItemOrder> itemOrders = new ArrayList<ItemOrder>();
 
 	private JoshHostRole host;
 	private String name;
@@ -23,6 +25,7 @@ public class JoshCookRole extends JobRole {
 	private boolean orderedItems;
 	private JoshCookGui cookGui;
 	private boolean working;
+	private String location = "joshRestaurant";
 	
 	Food steak = new Food("steak", 15, 3, 1, 1);
 	Food chicken = new Food("chicken", 20, 3, 1, 1);
@@ -81,7 +84,7 @@ public class JoshCookRole extends JobRole {
 		stateChanged();
 	}
 	
-	public void addMarket(JoshMarketRole m) {
+	public void addMarket(MarketCashier m) {
 		markets.add(new MyMarket(m));
 	}
 	
@@ -90,27 +93,27 @@ public class JoshCookRole extends JobRole {
 		stateChanged();
 	}
 	
-	public void msgHereIsWhatICanFulfill(List<JoshItemOrder> orders) {
+	public void msgHereIsWhatICanFulfill(List<ItemOrder> orders, boolean canFulfill) {
 		for (Food f : foods.values()) {
 			if (f.state == FoodState.Ordered) {
 				f.state = FoodState.MustBeOrdered;
 			}
 		}
-		for (JoshItemOrder o : orders) {
-			foods.get(o.getFood()).setState(FoodState.WaitingForOrder);
+		for (ItemOrder o : orders) {
+			foods.get(o.getFoodItem()).setState(FoodState.WaitingForOrder);
 		}
 		stateChanged();
 	}
 	
-	public void msgOrderDelivered(List<JoshItemOrder> orders) {
-		List<JoshItemOrder> temp = new ArrayList<JoshItemOrder>();
-		for (JoshItemOrder o : orders) {
+	public void msgDelivery(List<ItemOrder> orders) {
+		List<ItemOrder> temp = new ArrayList<ItemOrder>();
+		for (ItemOrder o : orders) {
 			temp.add(o);
 		}
-		for (JoshItemOrder o : temp) {
-			foods.get(o.getFood()).amount += o.getAmount();
-			print(o.getFood() + " inventory: " + foods.get(o.getFood()).amount);
-			foods.get(o.getFood()).state = FoodState.ReceivedOrder;
+		for (ItemOrder o : temp) {
+			foods.get(o.getFoodItem()).amount += o.getAmount();
+			print(o.getFoodItem() + " inventory: " + foods.get(o.getFoodItem()).amount);
+			foods.get(o.getFoodItem()).state = FoodState.ReceivedOrder;
 		}
 		stateChanged();
 	}
@@ -203,7 +206,7 @@ public class JoshCookRole extends JobRole {
 	private void orderFoodFromMarket() {
 		for (Food food : foods.values()) {
 			if ((food.getState() == FoodState.MustBeOrdered || food.getState() == FoodState.Enough) && food.amount <= food.low) {
-				itemOrders.add(new JoshItemOrder(food.type, food.capacity - food.amount));
+				itemOrders.add(new ItemOrder(food.type, food.capacity - food.amount));
 				food.setState(FoodState.Ordered);
 			}
 		}
@@ -216,10 +219,10 @@ public class JoshCookRole extends JobRole {
 			}
 		}
 		print("I am ordering from " + markets.get(index).market.getName());
-		for (JoshItemOrder io : itemOrders) {
-			print("I need " + io.getAmount() + " " + io.getFood() + "s");
+		for (ItemOrder io : itemOrders) {
+			print("I need " + io.getAmount() + " " + io.getFoodItem() + "s");
 		}
-		markets.get(index).market.msgHereIsOrder(itemOrders);
+		markets.get(index).market.msgIWantDelivery(this, itemOrders, location);
 		markets.get(index).incrementOrderedFrom();
 		itemOrders.clear();
 	}
@@ -237,10 +240,10 @@ public class JoshCookRole extends JobRole {
 	//utilities
 	
 	private class MyMarket {
-		JoshMarketRole market;
+		MarketCashier market;
 		int orderedFrom;
 		
-		MyMarket(JoshMarketRole m) {
+		MyMarket(MarketCashier m) {
 			market = m;
 			orderedFrom = 0;
 		}
