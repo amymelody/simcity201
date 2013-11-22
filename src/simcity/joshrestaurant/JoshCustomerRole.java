@@ -4,6 +4,7 @@ import simcity.agent.Agent;
 import simcity.joshrestaurant.gui.JoshCustomerGui;
 import simcity.joshrestaurant.interfaces.JoshCustomer;
 import simcity.RestCustomerRole;
+import simcity.PersonAgent;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -46,11 +47,12 @@ public class JoshCustomerRole extends RestCustomerRole implements JoshCustomer {
 	 * @param name name of the customer
 	 * @param gui  reference to the customergui so the customer can send it messages
 	 */
-	public JoshCustomerRole(String name){
+	public JoshCustomerRole(){
 		super();
-		this.name = name;
+		name = person.getName();
 		
-		cash = 30;
+		//cash = 30;
+		cash = person.getMoney();
 		if (name.equals("cheapskate") || name.equals("poor")) {
 			cash = 5;
 		}
@@ -60,9 +62,12 @@ public class JoshCustomerRole extends RestCustomerRole implements JoshCustomer {
 		charge = 0;
 	}
 
-	/**
-	 * hack to establish connection to Host agent.
-	 */
+	public void setPerson(PersonAgent p) {
+		super.setPerson(p);
+		name = person.getName();
+		cash = person.getMoney();
+	}
+	
 	public void setHost(JoshHostRole host) {
 		this.host = host;
 	}
@@ -99,6 +104,7 @@ public class JoshCustomerRole extends RestCustomerRole implements JoshCustomer {
 	public void gotHungry() {//from animation
 		print("I'm hungry");
 		event = AgentEvent.gotHungry;
+		cash = person.getMoney();
 		stateChanged();
 	}
 	
@@ -180,6 +186,7 @@ public class JoshCustomerRole extends RestCustomerRole implements JoshCustomer {
 		}
 		else {
 			cash += change;
+			person.msgIncome(change);
 			charge = 0;
 		}
 		event = AgentEvent.receivedChange;
@@ -200,7 +207,6 @@ public class JoshCustomerRole extends RestCustomerRole implements JoshCustomer {
 	 * Scheduler.  Determine what action is called for, and do it.
 	 */
 	public boolean pickAndExecuteAnAction() {
-		//	CustomerAgent is a finite state machine
 
 		if (state == AgentState.DoingNothing && event == AgentEvent.gotHungry){
 			state = AgentState.GoingToRestaurant;
@@ -274,7 +280,7 @@ public class JoshCustomerRole extends RestCustomerRole implements JoshCustomer {
 		}
 		if (state == AgentState.Leaving && event == AgentEvent.doneLeaving){
 			state = AgentState.DoingNothing;
-			//no action
+			goOutside();
 			return true;
 		}
 		return false;
@@ -338,6 +344,7 @@ public class JoshCustomerRole extends RestCustomerRole implements JoshCustomer {
 		timer.schedule(new TimerTask() {
 			public void run() {
 				print("Done eating " + choice);
+				person.msgDoneEating();
 				event = AgentEvent.doneEating;
 				stateChanged();
 			}
@@ -366,6 +373,11 @@ public class JoshCustomerRole extends RestCustomerRole implements JoshCustomer {
 		Do("Paying $" + payment);
 		cashier.msgPayment(this, payment);
 		cash -= payment;
+		person.msgExpense(payment);
+	}
+	
+	private void goOutside() {
+		person.msgLeftDestination(this);
 	}
 
 	// Accessors, etc.

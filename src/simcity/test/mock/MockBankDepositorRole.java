@@ -1,15 +1,15 @@
 package simcity.test.mock;
 
-import simcity.interfaces.Depositor;
+import simcity.interfaces.BankDepositor;
 import simcity.mock.LoggedEvent;
 import simcity.role.Role;
 
-public class MockDepositorRole extends Role implements Depositor {
+public class MockBankDepositorRole extends Role implements BankDepositor {
 	String name;
 	int deposit;
 	int withdrawal;
 
-	public MockDepositorRole(String name) {
+	public MockBankDepositorRole(String name) {
 		this.name = name;
 	}
 	

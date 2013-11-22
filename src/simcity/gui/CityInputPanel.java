@@ -22,17 +22,35 @@ public class CityInputPanel extends JPanel implements ActionListener
 
     private CityGui gui; //reference to main GUI
     
-    
+    @Override
+    public void paint(Graphics g){
+    	super.paint(g);
+    	System.out.println(this.getSize().width + "," + this.getSize().height);
+    	Graphics2D g2d  = (Graphics2D) g;
+    	g2d.setColor(Color.black);
+    	g2d.fillRect(0, 0, this.getSize().width, this.getSize().height);
+    }
 	public CityInputPanel(CityGui g)
 	{
 		gui = g;
-		
+		System.out.println("lol im here");
         setLayout(new BoxLayout(this, 0));
         add(creationPanel);
         add(new JLabel(""));
         add(new JLabel("Citizens:"));
         personPane.setViewportView(view);
         add(personPane);
+        final CityInputPanel me = this;
+        (new Thread(new Runnable(){
+        	@Override
+        	public void run(){
+        		while(true){
+        			me.repaint();
+        			System.out.println("please work");
+        			
+        		}
+        	}
+        })).start();
 	}
 
     public void actionPerformed(ActionEvent e)
@@ -43,7 +61,7 @@ public class CityInputPanel extends JPanel implements ActionListener
             {
             	for(PersonAgent p : people)
             	{
-            		if(p.getName() == b.getLabel())
+            		if(p.getName() == b.getText())
             		{
             			creationPanel.setState(p);
             		}

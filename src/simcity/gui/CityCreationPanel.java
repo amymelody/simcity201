@@ -30,11 +30,11 @@ public class CityCreationPanel extends JPanel implements ActionListener
 	private JRadioButtonMenuItem hostR = new JRadioButtonMenuItem("Restaurant Host");
 	private JRadioButtonMenuItem cookR = new JRadioButtonMenuItem("Restaurant Cook");
 	private JRadioButtonMenuItem waiterR = new JRadioButtonMenuItem("Restaurant Waiter");
-	private JRadioButtonMenuItem chashierR = new JRadioButtonMenuItem("Restaurant Cashier");
+	private JRadioButtonMenuItem cashierR = new JRadioButtonMenuItem("Restaurant Cashier");
 	private JRadioButtonMenuItem employeeM = new JRadioButtonMenuItem("Market Employee");
 	private JRadioButtonMenuItem delivererM = new JRadioButtonMenuItem("Market Deliverer");
 	private JRadioButtonMenuItem chashierM = new JRadioButtonMenuItem("Market Cashier");
-	private JRadioButtonMenuItem ownerB = new JRadioButtonMenuItem("Bank Owner");
+	private JRadioButtonMenuItem managerB = new JRadioButtonMenuItem("Bank Manager");
 	private JRadioButtonMenuItem tellerB = new JRadioButtonMenuItem("Bank Teller");
 	private JRadioButtonMenuItem unemployeed = new JRadioButtonMenuItem("Unemployeed");
 	private Vector<JRadioButtonMenuItem> ecos = new Vector<JRadioButtonMenuItem>();
@@ -85,8 +85,8 @@ public class CityCreationPanel extends JPanel implements ActionListener
 		jobGroup.add(waiterR);
 		add(waiterR);
 		add(new JLabel(""));
-		jobGroup.add(chashierR);
-		add(chashierR);
+		jobGroup.add(cashierR);
+		add(cashierR);
 		add(new JLabel(""));
 		jobGroup.add(employeeM);
 		add(employeeM);
@@ -97,8 +97,8 @@ public class CityCreationPanel extends JPanel implements ActionListener
 		jobGroup.add(chashierM);
 		add(chashierM);
 		add(new JLabel(""));
-		jobGroup.add(ownerB);
-		add(ownerB);
+		jobGroup.add(managerB);
+		add(managerB);
 		add(new JLabel(""));
 		jobGroup.add(tellerB);
 		add(tellerB);
@@ -139,7 +139,7 @@ public class CityCreationPanel extends JPanel implements ActionListener
 				{
 					if(b.isSelected())
 					{
-						jobString = b.getLabel();
+						jobString = b.getText();
 					}
 				}
 				for(JRadioButtonMenuItem b : ecos)
@@ -166,13 +166,12 @@ public class CityCreationPanel extends JPanel implements ActionListener
 		}
 		else if(e.getSource() == addButton && currentState == State.editing)
 		{
-
 			String jobString = "";
 			for(JRadioButtonMenuItem b : jobs)
 			{
 				if(b.isSelected())
 				{
-					jobString = b.getLabel();
+					jobString = b.getText();
 				}
 			}
 			for(JRadioButtonMenuItem b : ecos)
@@ -201,7 +200,7 @@ public class CityCreationPanel extends JPanel implements ActionListener
 	private void creatingPanel()
 	{
 		title.setText("<html><pre><u> Create a Citizen </u><br></pre></html>");
-		addButton.setLabel("Add Citizen");
+		addButton.setText("Add Citizen");
 		name.setEnabled(true);
 		name.setText(null);
 		jobGroup.clearSelection();
@@ -213,7 +212,7 @@ public class CityCreationPanel extends JPanel implements ActionListener
 	private void editingPanel()
 	{
 		title.setText("<html><pre><u> Edit " + currentPerson.getName() + " </u><br></pre></html>");
-		addButton.setLabel("Save Changes");
+		addButton.setText("Save Changes");
 		name.setEnabled(false);
 		ecoStatus.setText("Current balance = $" + currentPerson.getMoney() + " : ");
 		
@@ -224,9 +223,9 @@ public class CityCreationPanel extends JPanel implements ActionListener
 //				b.setSelected(true);
 //			}
 //		}
-		rich.setLabel("+ $500");
-		middle.setLabel("+ $250");
-		poor.setLabel("+ $50");
+		rich.setText("+ $500");
+		middle.setText("+ $250");
+		poor.setText("+ $50");
 //		if they have a car, car.setEnabled(false) and car.setSelected(true), else car.setSelected(false)
 	}
 	

@@ -3,9 +3,9 @@ package simcity.alfredrestaurant;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import restaurant.CustomerAgent.AgentEvent;
-import restaurant.gui.WaiterGui;
-import agent.Agent;
+import simcity.alfredrestaurant.AlfredCustomerAgent.AgentEvent;
+import simcity.alfredrestaurant.gui.AlfredWaiterGui;
+import simcity.agent.Agent;
 
 public class AlfredWaiterRole extends Agent {
 
@@ -28,13 +28,13 @@ public class AlfredWaiterRole extends Agent {
 
 	AgentEvent event = AgentEvent.none;
 
-	private CherysHostRole hostAgent;
+	private AlfredHostRole hostAgent;
 
-	private CherysWaiterGui waiterGui;
+	private AlfredWaiterGui waiterGui;
 	
 	private int index;
 
-	public WaiterAgent(CherysHostRole hostAgent, int index) {
+	public WaiterAgent(AlfredHostRole hostAgent, int index) {
 		this.hostAgent = hostAgent;
 		this.index = index;
 	}
@@ -43,14 +43,14 @@ public class AlfredWaiterRole extends Agent {
 		int hostXPos = waiterGui.getXPos();
 		int hostYPos = waiterGui.getYPos();
 		
-		if (x >= hostXPos && x <= hostXPos + CherysWaiterGui.sizeHost &&
-				y >= hostYPos && y <= hostYPos + CherysWaiterGui.sizeHost ){
+		if (x >= hostXPos && x <= hostXPos + AlfredWaiterGui.sizeHost &&
+				y >= hostYPos && y <= hostYPos + AlfredWaiterGui.sizeHost ){
 			wantingToGoOnBreak = true;
 		}
 	}
 
-	private CherysCustomerRole currentCustomer;
-	private Table table;
+	private AlfredCustomerRole currentCustomer;
+	private AlfredTable table;
 
 	public boolean isAvailable() {
 		return currentCustomer == null && beingOnBreak == false;
@@ -67,7 +67,7 @@ public class AlfredWaiterRole extends Agent {
 	 * @param waiterGui
 	 *            the waiterGui to set
 	 */
-	public void setWaiterGui(CherysWaiterGui waiterGui) {
+	public void setWaiterGui(AlfredWaiterGui waiterGui) {
 		this.waiterGui = waiterGui;
 	}
 
@@ -87,7 +87,7 @@ public class AlfredWaiterRole extends Agent {
 			return true;
 		}
 		if (state == AgentState.WaitForReadyOrder && event == AgentEvent.readyToOrder) {
-			currentCustomer.msgWhatWouldYouLike(new Menu());
+			currentCustomer.msgWhatWouldYouLike(new AlfredMenu());
 			state = AgentState.WaitForAnswer;
 			return true;
 		}
@@ -198,7 +198,7 @@ public class AlfredWaiterRole extends Agent {
 	/**
 	 * @return the currentCustomer
 	 */
-	public CherysCustomerRole getCurrentCustomer() {
+	public AlfredCustomerRole getCurrentCustomer() {
 		return currentCustomer;
 	}
 
@@ -224,19 +224,19 @@ public class AlfredWaiterRole extends Agent {
 		stateChanged();
 	}
 
-	public void hasCustomer(CherysCustomerRole customer, Table table) {
+	public void hasCustomer(AlfredCustomerRole customer, AlfredTable table) {
 		currentCustomer = customer;
 		this.table = table;
 		event = AgentEvent.haveCustomer;
 		stateChanged();
 	}
-	public void messeageleaveDuetoExpensive(CherysCustomerRole customer){
+	public void messeageleaveDuetoExpensive(AlfredCustomerRole customer){
 		print("Got messeageleaveDuetoExpensive");
 		event = AgentEvent.leaveDuetoExpensive;
 		System.out.println("state: " + state);
 		stateChanged();
 	}
-	public void messeageReadyToOrder(CherysCustomerRole customer) {
+	public void messeageReadyToOrder(AlfredCustomerRole customer) {
 		print("Got messeageReadyToOrder");
 		event = AgentEvent.readyToOrder;
 		System.out.println("state: " + state);
@@ -290,7 +290,7 @@ public class AlfredWaiterRole extends Agent {
 	/**
 	 * @return the hostAgent
 	 */
-	public CherysHostRole getHostAgent() {
+	public AlfredHostRole getHostAgent() {
 		return hostAgent;
 	}
 
@@ -314,7 +314,7 @@ public class AlfredWaiterRole extends Agent {
 	/**
 	 * @return the waiterGui
 	 */
-	public CherysWaiterGui getWaiterGui() {
+	public AlfredWaiterGui getWaiterGui() {
 		return waiterGui;
 	}
 	

@@ -2,6 +2,7 @@ package simcity.joshrestaurant.gui;
 
 
 import simcity.joshrestaurant.JoshWaiterRole;
+import simcity.gui.Gui;
 
 import java.awt.*;
 import java.util.*;

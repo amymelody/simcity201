@@ -6,7 +6,7 @@ public class Time
 	int minute;
 	Day day;
 	
-	Time(Day d, int h, int m) {
+	public Time(Day d, int h, int m) {
 		day = d;
 		hour = h;
 		minute = m;

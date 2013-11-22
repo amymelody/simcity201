@@ -1,4 +1,4 @@
-package restaurant.gui;
+package simcity.alfredrestaurant.gui;
 
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
@@ -7,9 +7,9 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-import restaurant.CookAgent;
+import simcity.alfredrestaurant.AlfredCookRole;
 
-public class CookerGui implements CherysGui {
+public class AlfredCookerGui implements AlfredGui {
 
 	private final int xDoNothingPosition = 50;
 	private final int yDoNothingPosition = 20;
@@ -18,7 +18,7 @@ public class CookerGui implements CherysGui {
 	private BufferedImage image;
 	private int xPos = xDoNothingPosition, yPos = yDoNothingPosition;
 	private int xDestination = xDoNothingPosition, yDestination = yDoNothingPosition;
-	private CherysCookRole agent;
+	private AlfredCookRole agent;
 	
 	private enum Command {
 		noCommand, GoToRefrigerator, GoToCookingArea, GoToPlatingArea, GoToNoCommandArea
@@ -26,7 +26,7 @@ public class CookerGui implements CherysGui {
 
 	private Command command = Command.noCommand;
 	
-	public CookerGui(){
+	public AlfredCookerGui(){
 		try {
 			image = ImageIO.read(new File(IMAGE_FILE));
 		} catch (IOException ex) {
@@ -62,7 +62,7 @@ public class CookerGui implements CherysGui {
 	}
 	
 	public boolean isAtCookingArea(){
-		return xPos == CookingArea.xCookingPos && yPos == CookingArea.yCookingPos;
+		return xPos == AlfredCookingArea.xCookingPos && yPos == AlfredCookingArea.yCookingPos;
 	}
 	public boolean isAtDoNothingArea(){
 		return xPos == xDoNothingPosition && yPos == yDoNothingPosition;
@@ -73,20 +73,20 @@ public class CookerGui implements CherysGui {
 	}
 	
 	public void msgGoToRefrigerator(){
-		xDestination = CookingArea.xRefrigeratorPos;
-		yDestination = CookingArea.yRefrigeratorPos;
+		xDestination = AlfredCookingArea.xRefrigeratorPos;
+		yDestination = AlfredCookingArea.yRefrigeratorPos;
 		command = Command.GoToRefrigerator;
 	}
 	
 	public void msgGoToCookingArea(){
-		xDestination = CookingArea.xCookingPos;
-		yDestination = CookingArea.yCookingPos;
+		xDestination = AlfredCookingArea.xCookingPos;
+		yDestination = AlfredCookingArea.yCookingPos;
 		command = Command.GoToCookingArea;
 	}
 	
 	public void msgGoToPlatingArea(){
-		xDestination = CookingArea.xPlatingPos;
-		yDestination = CookingArea.yPlatingPos;
+		xDestination = AlfredCookingArea.xPlatingPos;
+		yDestination = AlfredCookingArea.yPlatingPos;
 		command = Command.GoToPlatingArea;
 	}
 	
@@ -103,7 +103,7 @@ public class CookerGui implements CherysGui {
 	/**
 	 * @param agent the agent to set
 	 */
-	public void setAgent(CherysCookRole agent) {
+	public void setAgent(AlfredCookRole agent) {
 		this.agent = agent;
 	}
 

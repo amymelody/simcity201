@@ -2,13 +2,14 @@ package simcity.joshrestaurant;
 
 import java.util.*;
 
-import simcity.agent.Agent;
+import simcity.role.JobRole;
+import simcity.PersonAgent;
 
 /**
  * Restaurant Host Agent
  */
 
-public class JoshHostRole extends Agent {
+public class JoshHostRole extends JobRole {
 	static final int NTABLES = 3;
 	public List<MyCustomer> customers = Collections.synchronizedList(new ArrayList<MyCustomer>());
 	public List<MyWaiter> waiters = Collections.synchronizedList(new ArrayList<MyWaiter>());
@@ -16,19 +17,26 @@ public class JoshHostRole extends Agent {
 	public Collection<Table> tables;
 
 	private String name;
+	private boolean working;
 	
 	public enum WaiterState
 	{OnTheJob, WantToGoOnBreak, AboutToGoOnBreak, OnBreak};
 
-	public JoshHostRole(String name) {
+	public JoshHostRole() {
 		super();
 
-		this.name = name;
+		name = person.getName();
+		working = false;
 		// make some tables
 		tables = Collections.synchronizedList(new ArrayList<Table>(NTABLES));
 		for (int ix = 1; ix <= NTABLES; ix++) {
 			tables.add(new Table(ix));//how you add to a collections
 		}
+	}
+	
+	public void setPerson(PersonAgent p) {
+		super.setPerson(p);
+		name = person.getName();
 	}
 
 	public String getMaitreDName() {
@@ -74,6 +82,16 @@ public class JoshHostRole extends Agent {
 	}
 	
 	// Messages
+	
+	public void msgStartShift() {
+		working = true;
+		stateChanged();
+	}
+	
+	public void msgEndShift() {
+		working = false;
+		stateChanged();
+	}
 	
 	public void addWaiter(JoshWaiterRole waiter) {
 		waiters.add(new MyWaiter(waiter));
@@ -150,6 +168,12 @@ public class JoshHostRole extends Agent {
 	 * Scheduler.  Determine what action is called for, and do it.
 	 */
 	public boolean pickAndExecuteAnAction() {
+		
+		if (!working) {
+			leaveRestaurant();
+			return true;
+		}
+		
 		synchronized(customers) {
 			for (MyCustomer mc : customers) {
 				if (mc.waiting && restaurantFull()) {
@@ -211,6 +235,10 @@ public class JoshHostRole extends Agent {
 	}
 
 	// Actions
+	
+	private void leaveRestaurant() {
+		person.msgLeftDestination(this);
+	}
 
 	private void callWaiter(JoshWaiterRole waiter, MyCustomer mc, Table table) {
 		print(waiter + ", please bring " + mc.cust + " to " + table);

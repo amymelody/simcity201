@@ -1,4 +1,4 @@
-package restaurant.gui;
+package simcity.alfredrestaurant.gui;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -9,14 +9,14 @@ import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import restaurant.CustomerAgent;
-import restaurant.WaiterAgent;
+import simcity.alfredrestaurant.AlfredCustomerRole;
+import simcity.alfredrestaurant.AlfredWaiterRole;
 
-public class PlatingArea extends JPanel{
+public class AlfredPlatingArea extends JPanel{
 	
-	RestauranGUI restaurantGui;
+	AlfredRestaurantGUI restaurantGui;
 	
-	public PlatingArea(RestauranGUI restaurantGui){
+	public AlfredPlatingArea(AlfredRestaurantGUI restaurantGui){
 		this.restaurantGui = restaurantGui;
 		setBorder(BorderFactory.createTitledBorder("plating area"));
 	}	
@@ -32,7 +32,7 @@ public class PlatingArea extends JPanel{
 		int xPos = 10;
 		int yPos = 30;
 		try{
-			for (CherysWaiterRole waiterAgent: restaurantGui.controlRestaurantPanel.host.getWaiters()){
+			for (AlfredWaiterRole waiterAgent: restaurantGui.controlRestaurantPanel.host.getWaiters()){
 				if (waiterAgent.isWaitingCooking()){
 					g.drawImage(waiterAgent.getWaiterGui().getImage(), xPos, yPos, null);
 					g.setColor(Color.BLACK);

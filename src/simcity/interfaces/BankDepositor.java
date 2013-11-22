@@ -1,6 +1,6 @@
 package simcity.interfaces;
 
-public interface Depositor {
+public interface BankDepositor {
 
 	public abstract void msgMakeDeposit(int amount);
 	

@@ -5,10 +5,12 @@ import java.util.Collections;
 import java.awt.Point;
 
 import simcity.agent.Agent;
+import simcity.gui.PersonGui;
+import simcity.CityDirectory;
 import simcity.interfaces.RestCustomer;
 import simcity.interfaces.MarketCustomer;
 import simcity.interfaces.Resident;
-import simcity.interfaces.Depositor;
+import simcity.interfaces.BankDepositor;
 import simcity.interfaces.JobInterface;
 import simcity.interfaces.Bus;
 import simcity.interfaces.Car;
@@ -29,6 +31,8 @@ public class PersonAgent extends Agent
 	private Car car;
 	private Bus bus;
 	private String destination;
+	private CityDirectory city;
+	private PersonGui gui;
 	
 	public List<BusStop> busStops = Collections.synchronizedList(new ArrayList<BusStop>());
 	public List<ItemOrder> foodNeeded = Collections.synchronizedList(new ArrayList<ItemOrder>());
@@ -43,7 +47,7 @@ public class PersonAgent extends Agent
 	public Map<String, Point> locations;
 
 	private Job job;
-	private Time time;
+	private Time time = new Time(Day.Sun, 0, 0);
 
 	public enum NourishmentState {unknown, normal, gotHungry, hungry, full};
 	public enum LocationState {unknown, outside, leavingHouse, home, ownerHouse, restaurant, market, bank, atDestination};
@@ -75,10 +79,10 @@ public class PersonAgent extends Agent
 		houses.add(new Housing("ownerHouse", "residentRole"));
 		
 		restaurants.add(new Restaurant("joshRestaurant", "italian", "joshCustomerRole"));
-		restaurants.add(new Restaurant("cherysRestaurant", "blah", "joshCustomerRole"));
-		restaurants.add(new Restaurant("jesusRestaurant", "bleh", "joshCustomerRole"));
-		restaurants.add(new Restaurant("alfredRestaurant", "bluh", "joshCustomerRole"));
-		restaurants.add(new Restaurant("anjaliRestaurant", "blih", "joshCustomerRole"));
+		restaurants.add(new Restaurant("cherysRestaurant", "blah", "cherysCustomerRole"));
+		restaurants.add(new Restaurant("jesusRestaurant", "bleh", "jesusCustomerRole"));
+		restaurants.add(new Restaurant("alfredRestaurant", "bluh", "alfredCustomerRole"));
+		restaurants.add(new Restaurant("anjaliRestaurant", "blih", "anjaliCustomerRole"));
 		
 		markets.add(new Market("market1", "market1CustomerRole"));
 		markets.add(new Market("market2", "market2CustomerRole"));
@@ -100,8 +104,20 @@ public class PersonAgent extends Agent
 		return job.role;
 	}
 	
+	public String getDestination() {
+		return destination;
+	}
+	
+	public void setRentDue(boolean b) {
+		rentDue = b;
+	}
+	
 	public void setPState(PhysicalState ps) {
 		state.ps = ps;
+	}
+	
+	public void setLState(LocationState ls) {
+		state.ls = ls;
 	}
 	
 	public void addRole(Role r, String n) {
@@ -193,10 +209,38 @@ public class PersonAgent extends Agent
 	}
 	
 	private Restaurant chooseRestaurant() {
+		if (destination != null) {
+			if (destination.equals("joshRestaurant")) {
+				return restaurants.get(0);
+			}
+			if (destination.equals("cherysRestaurant")) {
+				return restaurants.get(1);
+			}
+			if (destination.equals("jesusRestaurant")) {
+				return restaurants.get(2);
+			}
+			if (destination.equals("alfredRestaurant")) {
+				return restaurants.get(3);
+			}
+			if (destination.equals("anjaliRestaurant")) {
+				return restaurants.get(4);
+			}
+		}
 		return restaurants.get(0);
 	}
 	
 	private Market chooseMarket() {
+		if (destination != null) {
+			if (destination.equals("market1")) {
+				return markets.get(0);
+			}
+			if (destination.equals("market2")) {
+				return markets.get(1);
+			}
+			if (destination.equals("market3")) {
+				return markets.get(2);
+			}
+		}
 		return markets.get(0);
 	}
 	
@@ -219,6 +263,7 @@ public class PersonAgent extends Agent
 	//Messages
 
 	public void msgUpdateWatch(Day d, int h, int m) {
+		log.add(new LoggedEvent("Received msgUpdateWatch"));
 		time.day = d;
 		time.hour = h;
 		time.minute = m;
@@ -237,11 +282,13 @@ public class PersonAgent extends Agent
 	}
 
 	public void msgLeftDestination(Role r) {
+		log.add(new LoggedEvent("Received msgLeftDestination"));
 		synchronized(roles) {
 			for (MyRole mr : roles) {
 				if (mr.r == r) {
 						mr.active = false;
 						state.ls = LocationState.outside;
+						destination = null;
 				}
 			}
 		}
@@ -249,6 +296,7 @@ public class PersonAgent extends Agent
 	}
 
 	public void msgFoodLow(List<ItemOrder> items) {
+		log.add(new LoggedEvent("Received msgFoodLow"));
 		for (ItemOrder i : items) {
 			foodNeeded.add(i);
 		}
@@ -262,6 +310,7 @@ public class PersonAgent extends Agent
 	}
 
 	public void msgReceivedItems(List<ItemOrder> items) {
+		log.add(new LoggedEvent("Received msgReceivedItems"));
 		for (ItemOrder i : items) {
 			groceries.add(i);
 		}
@@ -292,11 +341,6 @@ public class PersonAgent extends Agent
 	public void msgCreatedAccount() {
 		haveBankAccount = true;
 	}
-
-	public void msgRentDue() {
-		rentDue = true;
-		stateChanged();
-	}
 	
 	public void msgBusIsHere(Bus b) {
         bus = b;
@@ -313,35 +357,49 @@ public class PersonAgent extends Agent
 	
 	public boolean pickAndExecuteAnAction() {
 		if (state.ts == TransportationState.walking || state.ts == TransportationState.walkingFromVehicle) { 
-			if (job != null && state.ws == WorkingState.notWorking && job.startShifts.get(time.getDay()) != job.endShifts.get(time.getDay()) && (time.plus(30)).greaterThanOrEqualTo(job.startShifts.get(time.getDay()))) { //if half an hour before your shift starts
+			if (job != null && state.ws == WorkingState.notWorking && job.startShifts.get(time.getDay()) != job.endShifts.get(time.getDay()) && (time.plus(30)).greaterThanOrEqualTo(job.startShifts.get(time.getDay())) && !time.greaterThanOrEqualTo(job.endShifts.get(time.getDay()))) { //if half an hour before your shift starts
 				if (state.ls == LocationState.home) {
 					leaveHouse();
 					return true;
 				} else if (state.ls == LocationState.outside || state.ls == LocationState.atDestination) {
 					goToWork();
+					print("goToWork");
 					return true;
 				}
 			}
 			if (state.ws == WorkingState.working && time.greaterThanOrEqualTo(job.endShifts.get(time.getDay()) ) && !job.role.equals("landlord")) { //if your shift ends
 				endShift();
+				print("endShift");
 				return true;
 			} 
 			if (state.ws == WorkingState.notWorking) {
-				if (rentDue) {
-					if (state.ls == LocationState.home) {
-						leaveHouse();
-						return true;
-					} else if (state.ls == LocationState.outside || state.ls == LocationState.atDestination) {
-						goToOwnerHouse();
-						return true;
-					} 
-				} 
 				if (money <= minBalance) {
 					if (state.ls == LocationState.home) {
 						leaveHouse();
 						return true;
 					} else if (state.ls == LocationState.outside || state.ls == LocationState.atDestination) {
 						goToBank();
+						print("goToBank");
+						return true;
+					} 
+				} 
+				if (rentDue) {
+					if (state.ls == LocationState.home) {
+						leaveHouse();
+						return true;
+					} else if (state.ls == LocationState.outside || state.ls == LocationState.atDestination) {
+						goToOwnerHouse();
+						print("goToOwnerHouse");
+						return true;
+					} 
+				} 
+				if (!foodNeeded.isEmpty()) {
+					if (state.ls == LocationState.home) {
+						leaveHouse();
+						return true;
+					} else if (state.ls == LocationState.outside || state.ls == LocationState.atDestination) {
+						goToMarket();
+						print("goToMarket");
 						return true;
 					} 
 				} 
@@ -352,30 +410,25 @@ public class PersonAgent extends Agent
 							return true;
 						} else if (state.ls == LocationState.outside || state.ls == LocationState.atDestination) {
 							goToRestaurant();
+							print("goToRestaurant");
 							return true;
 						} 
 					} else {
 						if (state.ls == LocationState.home) {
 							goEat();
+							print("goEat");
 							return true;
 						} else if (state.ls == LocationState.outside || state.ls == LocationState.atDestination) {
 							goHome();
+							print("goHome");
 							return true;
 						} 
-					} 
-				} 
-				if (!foodNeeded.isEmpty()) {
-					if (state.ls == LocationState.home) {
-						leaveHouse();
-						return true;
-					} else if (state.ls == LocationState.outside || state.ls == LocationState.atDestination) {
-						goToMarket();
-						return true;
 					} 
 				} 
 				if (!groceries.isEmpty()) {
 					if (state.ls == LocationState.outside || state.ls == LocationState.atDestination) {
 						goHome();
+						print("goHome");
 						return true;
 					} 
 				} 
@@ -385,6 +438,7 @@ public class PersonAgent extends Agent
 						return true;
 					} else if (state.ls == LocationState.outside || state.ls == LocationState.atDestination) {
 			        	goToBank();
+			        	print("goToBank");
 						return true;
 					} 
 				} 
@@ -393,6 +447,7 @@ public class PersonAgent extends Agent
 		
 		if (state.ts == TransportationState.waitingForBus && bus != null) {
 			boardBus();
+			print("boardBus");
 			return true;
 		}
 		
@@ -401,6 +456,7 @@ public class PersonAgent extends Agent
 			for (MyRole mr : roles) {
 				if (mr.active) {
 					anytrue = mr.r.pickAndExecuteAnAction();
+					print("roleScheduler");
 					return anytrue;
 				}
 			}
@@ -417,8 +473,19 @@ public class PersonAgent extends Agent
 	//Actions
 
 	private void endShift() {
-		money += job.payrate;
-		state.ws = WorkingState.notWorking;
+		synchronized(roles) {
+			for (MyRole mr : roles) {
+				if (mr.name.equals(job.role)) {
+					if (mr.r instanceof JobInterface) {
+						JobInterface j = (JobInterface)(mr.r);
+						j.msgEndShift();
+						money += job.payrate;
+						state.ws = WorkingState.notWorking;
+					}
+					return;
+				}
+			}
+		}
 	}
 	
 	private void boardBus() {
@@ -429,11 +496,11 @@ public class PersonAgent extends Agent
 
 	private void goHome() {
 		Housing h = houses.get(0); //person's house
-		if (state.ls != LocationState.atDestination) {
+		if (state.ls != LocationState.atDestination || (destination != null && !destination.equals(h.location))) {
 			goToDestination(h.location);
 		} else {
 			/*if (!findRole(h.residentRole)) {
-				ResidentRole r = (ResidentRole)ResidentFactory(h.residentRole);
+				ResidentRole r = (ResidentRole)(city.ResidentFactory(h.residentRole));
 				addRole(r, h.residentRole);
 			}*/
 			synchronized(roles) {
@@ -484,6 +551,7 @@ public class PersonAgent extends Agent
 				if (mr.name.equals(h.residentRole)) {
 					if (mr.r instanceof Resident) {
 						Resident r = (Resident)(mr.r);
+						mr.active = true;
 						r.msgLeave();
 						state.ls = LocationState.leavingHouse;
 					}
@@ -495,11 +563,11 @@ public class PersonAgent extends Agent
 
 	private void goToOwnerHouse() {
 		Housing h = houses.get(1); //owner's house
-		if (state.ls != LocationState.atDestination) {
+		if (state.ls != LocationState.atDestination || (destination != null && !destination.equals(h.location))) {
 			goToDestination(h.location);
 		} else {
 			/*if (!findRole(h.residentRole)) {
-				ResidentRole r = (ResidentRole)ResidentFactory(h.residentRole);
+				ResidentRole r = (ResidentRole)(city.ResidentFactory(h.residentRole));
 				addRole(r, h.residentRole);
 			} */
 			synchronized(roles) {
@@ -520,11 +588,11 @@ public class PersonAgent extends Agent
 
 	private void goToRestaurant() {
 		Restaurant r = chooseRestaurant();
-		if (state.ls != LocationState.atDestination) {
+		if (state.ls != LocationState.atDestination || (destination != null && !destination.equals(r.location))) {
 			goToDestination(r.location);
 		} else {
 			/*if (!findRole(r.customerRole)) {
-				RestCustomerRole c = (RestCustomerRole)RestCustomerFactory(r.customerRole);
+				RestCustomerRole c = (RestCustomerRole)(city.RestCustomerFactory(r.customerRole));
 				addRole(c, r.customerRole);
 			} */
 			synchronized(roles) {
@@ -546,11 +614,11 @@ public class PersonAgent extends Agent
 
 	private void goToMarket() {
 		Market m = chooseMarket();
-		if (state.ls != LocationState.atDestination) {
+		if (state.ls != LocationState.atDestination || (destination != null && !destination.equals(m.location))) {
 			goToDestination(m.location);
 		} else {
 			/*if (!findRole(m.customerRole)) {
-				MarketCustomerRole c = (MarketCustomerRole)RoleFactory(m.customerRole);
+				MarketCustomerRole c = (MarketCustomerRole)(city.MarketCustomerFactory(m.customerRole));
 				addRole(c, m.customerRole);
 			} */
 			synchronized(roles) {
@@ -572,18 +640,18 @@ public class PersonAgent extends Agent
 
 	private void goToBank() {
 		Bank b = chooseBank();
-		if (state.ls != LocationState.atDestination) {
+		if (state.ls != LocationState.atDestination || (destination != null && !destination.equals(b.location))) {
 			goToDestination(b.location);
 		} else {
 			/*if (!findRole(b.depositorRole)) {
-				DepositorRole d = (DepositorRole)DepositorFactory(b.depositorRole);
+				BankDepositorRole d = (BankDepositorRole)(city.BankDepositorFactory(b.depositorRole));
 				addRole(d, b.depositorRole);
 			} */
 			synchronized(roles) {
 				for (MyRole mr : roles) {
 					if (mr.name.equals(b.depositorRole)) {
-						if (mr.r instanceof Depositor) {
-							Depositor d = (Depositor)(mr.r);
+						if (mr.r instanceof BankDepositor) {
+							BankDepositor d = (BankDepositor)(mr.r);
 							mr.active = true;
 							state.ls = LocationState.bank;
 							if (money >= maxBalance) {
@@ -601,7 +669,7 @@ public class PersonAgent extends Agent
 	}
 
 	private void goToWork() {
-		if (state.ls != LocationState.atDestination) { 
+		if (state.ls != LocationState.atDestination || (destination != null && !destination.equals(job.location))) { 
 			goToDestination(job.location);
 		} else {
 			synchronized(roles) {
@@ -623,25 +691,29 @@ public class PersonAgent extends Agent
 
 	private void goToDestination(String d) {
 		if (car != null && !nearDestination(d) && state.ts != TransportationState.walkingFromVehicle) {
-			//DoGoToCar();
+			//gui.DoGoToCar();
 			state.ts = TransportationState.inCar;
+			destination = d;
 			car.msgGoToDestination(this, d); //pass the destination to the car so it knows where to go
 		} else {
 			if (takeBus(d) && state.ts != TransportationState.walkingFromVehicle) {
 				BusStop b = closestBusStop();
-				//DoGoToBusStop(b);
+				//gui.DoGoToBusStop(b);
 				state.ts = TransportationState.waitingForBus;
 				destination = d;
 				b.msgWaitingForBus(this);
 			} else {
 				state.ts = TransportationState.walking;
-				//DoGoToDestination(locations.get(d)); //just walk there
+				destination = d;
+				//gui.DoGoToDestination(locations.get(d)); //just walk there
 				state.ls = LocationState.atDestination;
 			}
 		}
 	}
 	
+	
 	//inner classes
+	
 	public class MyRole {
 		Role r;
 		String name;
@@ -711,7 +783,9 @@ public class PersonAgent extends Agent
 				default:
 					break;
 			}
-			Day tempDay = Day.Sun;
+			this.startShifts = startShifts;
+			this.endShifts = endShifts;
+			/*Day tempDay = Day.Sun;
 			for (Time t : startShifts.values()) {
 				this.startShifts.put(tempDay, t);
 				tempDay = tempDay.next();
@@ -720,7 +794,7 @@ public class PersonAgent extends Agent
 			for (Time t : endShifts.values()) {
 				this.endShifts.put(tempDay, t);
 				tempDay = tempDay.next();
-			}
+			}*/
 		}
 		String role;
 		LocationState jobLocation;

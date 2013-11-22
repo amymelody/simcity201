@@ -1,4 +1,4 @@
-package restaurant.gui;
+package simcity.alfredrestaurant.gui;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -9,13 +9,13 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-import restaurant.CustomerAgent;
-import restaurant.Table;
-import restaurant.WaiterAgent;
+import simcity.alfredrestaurant.AlfredCustomerRole;
+import simcity.alfredrestaurant.AlfredTable;
+import simcity.alfredrestaurant.AlfredWaiterRole;
 
-public class WaiterGui implements CherysGui {
+public class AlfredWaiterGui implements AlfredGui {
 
-	private CherysWaiterRole agent = null;
+	private AlfredWaiterRole agent = null;
 	private int xPos = -50, yPos = -50;// default waiter position
 	private int xDestination = -50, yDestination = -50;// default start position
 			// public static int xTable = 200;
@@ -25,7 +25,7 @@ public class WaiterGui implements CherysGui {
 	private static final int defaultPosition = -50;
 	private final String IMAGE_FILE = "C:/Users/AlfredKoshan/Documents/GitHub/restaurant_akoshan/host.jpg";
 
-	public WaiterGui(CherysWaiterRole agent) {
+	public AlfredWaiterGui(AlfredWaiterRole agent) {
 		System.out.println("WaiterGui has been created");
 		this.agent = agent;
 		try {
@@ -43,9 +43,9 @@ public class WaiterGui implements CherysGui {
 	private Command command = Command.noCommand;
 
 	public void updatePosition() {
-		CherysCustomerRole cust = null;
+		AlfredCustomerRole cust = null;
 		Point tablePos = null;
-		Table table = null;
+		AlfredTable table = null;
 		if (agent.getCurrentCustomer() != null) {
 			cust = agent.getCurrentCustomer();
 			table = cust.getTable();
@@ -117,7 +117,7 @@ public class WaiterGui implements CherysGui {
 		command = Command.ComeToPlatingArea;
 	}
 
-	public void DoBringToTable(CherysCustomerRole customer, Table table) {
+	public void DoBringToTable(AlfredCustomerRole customer, AlfredTable table) {
 		Point tablePos = table.getPosition();
 		xDestination = tablePos.x + sizeHost;
 		yDestination = tablePos.y - sizeHost;
@@ -130,7 +130,7 @@ public class WaiterGui implements CherysGui {
 		command = Command.LeavingDone;
 	}
 	
-	public void DoBringNoFoodToTable(CherysCustomerRole customer, Table table) {
+	public void DoBringNoFoodToTable(AlfredCustomerRole customer, AlfredTable table) {
 		Point tablePos = table.getPosition();
 		xDestination = tablePos.x + sizeHost;
 		yDestination = tablePos.y - sizeHost;
@@ -139,7 +139,7 @@ public class WaiterGui implements CherysGui {
 	}	
 	
 
-	public void sitCustomerToTable(CherysCustomerRole customer, Table table) {
+	public void sitCustomerToTable(AlfredCustomerRole customer, AlfredTable table) {
 		Point tablePos = table.getPosition();
 		xDestination = tablePos.x + sizeHost;
 		yDestination = tablePos.y - sizeHost;

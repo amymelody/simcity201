@@ -1,12 +1,13 @@
 package simcity.housing;
 
+import simcity.interfaces.Resident;
 import simcity.role.Role;
 import simcity.ItemOrder;
 import java.awt.Point;
 import java.util.*;
 import java.util.concurrent.Semaphore;
 
-public class ResidentRole extends Role
+public class ResidentRole extends Role implements Resident
 {
 
 //Data
@@ -21,7 +22,6 @@ public class ResidentRole extends Role
 	private ResidentState state = ResidentState.away;
 	private enum Command
 	{
-		rentDue,
 		talkToLandlord,
 		payLandlord,
 		eat,
@@ -43,9 +43,7 @@ public class ResidentRole extends Role
 //Messages
 	public void msgRentDue() //from Landlord
 	{
-		commands.add(Command.rentDue);
-		maintenanceSchedule--;
-		stateChanged();
+		person.setRentDue(true);
 	}
 	public void msgAtLandlord() //from Person
 	{
@@ -91,8 +89,6 @@ public class ResidentRole extends Role
     {
 //	  + If state == ResidentState.atHome, then
 //	    {
-//	      + If (there exists) Command c in commands (such that) c == Command.rentDue,
-//		    then sendRentDue(c);
 //	      + If (there exists) Command c in commands (such that) c == Command.putAwayGroceries,
 //		    then putGroceriesInFridge(c);
 //	      + If (there exists) Command c in commands (such that) c == Command.eat,
@@ -112,21 +108,10 @@ public class ResidentRole extends Role
 //	      + If (there exists) Command c in commands (such that) c == Command.leave,
 //		    then leaveHousing(c);
 //		}
-//	  + If state == ResidentState.away, then
-//		{
-//	      + If (there exists) Command c in commands (such that) c == Command.rentDue,
-//		    then sendRentDue();
-//		}
     	return false;
     }
 
 //Actions
-	private void sendRentDue(Command c)
-	{
-		commands.remove(c);
-		person.msgRentDue();
-		stateChanged();
-	}
 	private void sendDingDong(Command c)
 	{
 		commands.remove(c);

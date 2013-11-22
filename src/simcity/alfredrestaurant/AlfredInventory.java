@@ -9,7 +9,7 @@ public class AlfredInventory {
 	private int MINIMUM_QUANTITY = 5;
 	private int DEFAULT_QUANTITY = 6;
 	private int ORDER_TIME_MILLI = 60*1000;//60 seconds
-	public Inventory(){
+	public AlfredInventory(){
 		//default add some foods
 		items.add(new Item("Steak", DEFAULT_QUANTITY));
 		items.add(new Item("Chicken", DEFAULT_QUANTITY));

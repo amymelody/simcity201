@@ -1,11 +1,12 @@
 package simcity.joshrestaurant;
 
-import simcity.agent.Agent;
+import simcity.role.JobRole;
 import simcity.joshrestaurant.interfaces.JoshCustomer;
 import simcity.joshrestaurant.interfaces.JoshWaiter;
 import simcity.joshrestaurant.interfaces.JoshCashier;
 import simcity.joshrestaurant.interfaces.JoshMarket;
 import simcity.mock.LoggedEvent;
+import simcity.PersonAgent;
 
 import java.util.*;
 
@@ -14,20 +15,22 @@ import java.util.*;
  * Restaurant Cashier Agent
  */
 
-public class JoshCashierRole extends Agent implements JoshCashier {
+public class JoshCashierRole extends JobRole implements JoshCashier {
 	public List<Check> checks = Collections.synchronizedList(new ArrayList<Check>());
 	public List<Bill> bills = Collections.synchronizedList(new ArrayList<Bill>());
 
 	private String name;
 	private int cash;
+	private boolean working;
 	
 	Map<String, Integer> prices = new HashMap<String, Integer>();
 	
 	public enum CheckState {Created, GivenToWaiter, Paid, Done};
 
-	public JoshCashierRole(String name) {
+	public JoshCashierRole() {
 		super();
-		this.name = name;
+		name = person.getName();
+		working = false;
 		cash = 200;
 		
 		prices.put("steak", 16);
@@ -36,6 +39,10 @@ public class JoshCashierRole extends Agent implements JoshCashier {
 		prices.put("pizza", 9);
 	}
 	
+	public void setPerson(PersonAgent p) {
+		super.setPerson(p);
+		name = person.getName();
+	}
 
 	public String getName() {
 		return name;
@@ -46,6 +53,16 @@ public class JoshCashierRole extends Agent implements JoshCashier {
 	}
 	
 	// Messages
+	
+	public void msgStartShift() {
+		working = true;
+		stateChanged();
+	}
+	
+	public void msgEndShift() {
+		working = false;
+		stateChanged();
+	}
 	
 	public void msgProduceCheck(JoshWaiter w, JoshCustomer c, String choice) {
 		log.add(new LoggedEvent("Received msgProduceCheck"));
@@ -76,6 +93,10 @@ public class JoshCashierRole extends Agent implements JoshCashier {
 	 * Scheduler.  Determine what action is called for, and do it.
 	 */
 	public boolean pickAndExecuteAnAction() { //Changed to public for unit testing
+		if (!working) {
+			leaveRestaurant();
+			return true;
+		}
 		synchronized(checks) {
 			for (Check check : checks) {
 				if (check.state == CheckState.Created) {
@@ -104,6 +125,10 @@ public class JoshCashierRole extends Agent implements JoshCashier {
 
 	// Actions
 
+	private void leaveRestaurant() {
+		person.msgLeftDestination(this);
+	}
+	
 	private void giveToWaiter(Check c) {
 		print(c.waiter + ", here is the check for " + c.cust);
 		c.setState(CheckState.GivenToWaiter);

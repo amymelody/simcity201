@@ -1,19 +1,19 @@
-package restaurant.gui;
+package simcity.alfredrestaurant.gui;
 
-import restaurant.CustomerAgent;
+import simcity.alfredrestaurant.AlfredCustomerRole;
 
 import javax.swing.*;
 
 import java.awt.*;
 import java.awt.event.*;
 
-import restaurant.HostAgent;
-import restaurant.Table;
+import simcity.alfredrestaurant.AlfredHostRole;
+import simcity.alfredrestaurant.AlfredTable;
 
 /**
  * Main GUI class. Contains the main frame and subsequent panels
  */
-public class ControlRestaurantPanel extends JPanel implements ActionListener {
+public class AlfredControlRestaurantPanel extends JPanel implements ActionListener {
 	/*
 	 * The GUI has two frames, the control frame (in variable gui) and the
 	 * animation frame, (in variable animationFrame within gui)
@@ -25,7 +25,7 @@ public class ControlRestaurantPanel extends JPanel implements ActionListener {
 	 * customers all constructed in RestaurantPanel() 2) the infoPanel about the
 	 * clicked Customer (created just below)
 	 */
-	private CherysRestaurantPanel restPanel;
+	private AlfredRestaurantPanel restPanel;
 
 	/* infoPanel holds information about the clicked customer, if there is one */
 	private JPanel infoPanel;
@@ -49,7 +49,7 @@ public class ControlRestaurantPanel extends JPanel implements ActionListener {
 	private JTextField txtTableXPos = new JTextField(3);
 	private JTextField txtTableYPos = new JTextField(3);
 
-	public CherysHostRole host = new CherysHostRole("Sarah");
+	public AlfredHostRole host = new AlfredHostRole("Sarah");
 	private JComboBox cboTablesName = new JComboBox();
 
 	
@@ -57,27 +57,27 @@ public class ControlRestaurantPanel extends JPanel implements ActionListener {
 	private JButton btnWantToBeOnBreak = new JButton("Want to be On Break");
 	private JButton btnBackToWork = new JButton("Back to Work");
 	
-	RestauranGUI gui;
+	AlfredRestaurantGUI gui;
 	/**
 	 * Constructor for RestaurantGui class. Sets up all the gui components.
 	 */
-	public ControlRestaurantPanel(RestauranGUI gui) {
+	public AlfredControlRestaurantPanel(AlfredRestaurantGUI gui) {
 		this.gui = gui;
 		// animationFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		// animationFrame.setBounds(100+WINDOWX, 50 , WINDOWX+100, WINDOWY+100);
 		// animationFrame.setVisible(true);
 		// animationFrame.add(animationPanel);
 
-		setBounds(50, 50, Configuration.WINDOWX, Configuration.WINDOWY);
+		setBounds(50, 50, AlfredConfiguration.WINDOWX, AlfredConfiguration.WINDOWY);
 
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
-		restPanel = new CherysRestaurantPanel(gui, host);
+		restPanel = new AlfredRestaurantPanel(gui, host);
 //		customerWaitingArea.setRestaurantPanel(restPanel);
 		
 		
 		
-		Dimension restDim = new Dimension(Configuration.WINDOWX, 200);
+		Dimension restDim = new Dimension(AlfredConfiguration.WINDOWX, 200);
 		restPanel.setPreferredSize(restDim);
 		restPanel.setMinimumSize(restDim);
 		restPanel.setMaximumSize(restDim);
@@ -86,7 +86,7 @@ public class ControlRestaurantPanel extends JPanel implements ActionListener {
 		
 		
 		// Now, setup the info panel
-		Dimension infoDim = new Dimension(Configuration.WINDOWX, 50);
+		Dimension infoDim = new Dimension(AlfredConfiguration.WINDOWX, 50);
 		infoPanel = new JPanel();
 		infoPanel.setPreferredSize(infoDim);
 		infoPanel.setMinimumSize(infoDim);
@@ -114,7 +114,7 @@ public class ControlRestaurantPanel extends JPanel implements ActionListener {
 		JPanel tableConfigPanel = new JPanel();
 		tableConfigPanel.setBorder(BorderFactory
 				.createTitledBorder("Configuration"));
-		txtTableSize.setText("" + HostGui.sizeTable);
+		txtTableSize.setText("" + AlfredHostGui.sizeTable);
 
 		JPanel tablePanel = new JPanel();
 		tablePanel.setLayout(new BoxLayout((Container) tablePanel,
@@ -181,8 +181,8 @@ public class ControlRestaurantPanel extends JPanel implements ActionListener {
 		stateCB.setVisible(true);
 		currentPerson = person;
 
-		if (person instanceof CherysCustomerRole) {
-			CherysCustomerRole customer = (CherysCustomerRole) person;
+		if (person instanceof AlfredCustomerRole) {
+			AlfredCustomerRole customer = (AlfredCustomerRole) person;
 			stateCB.setText("Hungry?");
 			// Should checkmark be there?
 			stateCB.setSelected(customer.getGui().isHungry());
@@ -202,8 +202,8 @@ public class ControlRestaurantPanel extends JPanel implements ActionListener {
 	 */
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == stateCB) {
-			if (currentPerson instanceof CherysCustomerRole) {
-				CherysCustomerRole c = (CherysCustomerRole) currentPerson;
+			if (currentPerson instanceof AlfredCustomerRole) {
+				AlfredCustomerRole c = (AlfredCustomerRole) currentPerson;
 				c.getGui().setHungry();
 				stateCB.setEnabled(false);
 				
@@ -212,7 +212,7 @@ public class ControlRestaurantPanel extends JPanel implements ActionListener {
 //				customerWaitingArea.validate();
 			}
 		} else if (e.getSource() == btnAddTable) {
-			CherysHostRole host = restPanel.getHost();
+			AlfredHostRole host = restPanel.getHost();
 			host.increaseTable();
 			MutableComboBoxModel model = (MutableComboBoxModel) cboTablesName
 					.getModel();
@@ -223,7 +223,7 @@ public class ControlRestaurantPanel extends JPanel implements ActionListener {
 //			customerWaitingArea.validate();
 			
 		} else if (e.getSource() == btnAddWaiter) {
-			CherysHostRole host = restPanel.getHost();
+			AlfredHostRole host = restPanel.getHost();
 			host.increaseWaiter();
 			MutableComboBoxModel model = (MutableComboBoxModel) cboWaitersName
 					.getModel();
@@ -250,17 +250,17 @@ public class ControlRestaurantPanel extends JPanel implements ActionListener {
 						"Please check table position!");
 				return;
 			}
-			Table table = host.getTable(Integer.parseInt(cboTablesName
+			AlfredTable table = host.getTable(Integer.parseInt(cboTablesName
 					.getSelectedItem().toString()));
 			table.setLocation(new Point(xTable, yTable));
 			// HostGui.yTable = yTable;
 		} else if (e.getSource() == btnPause) {
 			if (btnPause.getText().equals("Pause")) {
-				CherysHostRole host = restPanel.getHost();
+				AlfredHostRole host = restPanel.getHost();
 				host.pause();
 				btnPause.setText("Restart");
 			} else {
-				CherysHostRole host = restPanel.getHost();
+				AlfredHostRole host = restPanel.getHost();
 				host.startThread();
 				btnPause.setText("Pause");
 			}
@@ -291,9 +291,9 @@ public class ControlRestaurantPanel extends JPanel implements ActionListener {
 	 * @param c
 	 *            reference to the customer
 	 */
-	public void setCustomerEnabled(CherysCustomerRole c) {
-		if (currentPerson instanceof CherysCustomerRole) {
-			CherysCustomerRole cust = (CherysCustomerRole) currentPerson;
+	public void setCustomerEnabled(AlfredCustomerRole c) {
+		if (currentPerson instanceof AlfredCustomerRole) {
+			AlfredCustomerRole cust = (AlfredCustomerRole) currentPerson;
 			if (c.equals(cust)) {
 				stateCB.setEnabled(true);
 				stateCB.setSelected(false);
@@ -305,7 +305,7 @@ public class ControlRestaurantPanel extends JPanel implements ActionListener {
 	/**
 	 * @return the restPanel
 	 */
-	public CherysRestaurantPanel getRestPanel() {
+	public AlfredRestaurantPanel getRestPanel() {
 		return restPanel;
 	}
 }

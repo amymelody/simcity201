@@ -1,7 +1,7 @@
-package restaurant.gui;
+package simcity.alfredrestaurant.gui;
 
-import restaurant.CustomerAgent;
-import restaurant.HostAgent;
+import simcity.alfredrestaurant.AlfredCustomerRole;
+import simcity.alfredrestaurant.AlfredHostRole;
 
 import javax.swing.*;
 
@@ -14,7 +14,7 @@ import java.util.ArrayList;
  * Subpanel of restaurantPanel. This holds the scroll panes for the customers
  * and, later, for waiters
  */
-public class ListPanel extends JPanel implements ActionListener {
+public class AlfredListPanel extends JPanel implements ActionListener {
 
 	private static final int NEW_CUSTOMER_PANEL_WIDTH = 200;
 	private static final int NEW_CUSTOMER_PANEL_HEIGHT = 30;
@@ -29,9 +29,9 @@ public class ListPanel extends JPanel implements ActionListener {
 	private JTextField txtNewCustomer = new JTextField();
 	private JCheckBox chkNewHungry = new JCheckBox("Hungry");
 
-	private CherysRestaurantPanel restPanel;
+	private AlfredRestaurantPanel restPanel;
 	private String type;
-	private RestauranGUI restaurantGui;
+	private AlfredRestaurantGUI restaurantGui;
 	/**
 	 * Constructor for ListPanel. Sets up all the gui
 	 * 
@@ -40,7 +40,7 @@ public class ListPanel extends JPanel implements ActionListener {
 	 * @param type
 	 *            indicates if this is for customers or waiters
 	 */
-	public ListPanel(RestauranGUI restaurantGui, CherysRestaurantPanel rp, String type) {
+	public AlfredListPanel(AlfredRestaurantGUI restaurantGui, AlfredRestaurantPanel rp, String type) {
 		
 		restPanel = rp;
 		this.type = type;

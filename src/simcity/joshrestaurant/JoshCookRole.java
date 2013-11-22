@@ -2,15 +2,16 @@ package simcity.joshrestaurant;
 
 import java.util.*;
 
-import simcity.agent.Agent;
+import simcity.role.JobRole;
 import simcity.joshrestaurant.gui.JoshCookGui;
+import simcity.PersonAgent;
 
 
 /**
  * Restaurant Cook Agent
  */
 
-public class JoshCookRole extends Agent {
+public class JoshCookRole extends JobRole {
 	public List<Order> orders
 	= new ArrayList<Order>();
 	public List<MyMarket> markets = new ArrayList<MyMarket>();
@@ -21,6 +22,7 @@ public class JoshCookRole extends Agent {
 	private Timer timer = new Timer();
 	private boolean orderedItems;
 	private JoshCookGui cookGui;
+	private boolean working;
 	
 	Food steak = new Food("steak", 15, 3, 1, 1);
 	Food chicken = new Food("chicken", 20, 3, 1, 1);
@@ -34,9 +36,10 @@ public class JoshCookRole extends Agent {
 	public enum FoodState
 	{Enough, MustBeOrdered, Ordered, WaitingForOrder, ReceivedOrder};
 
-	public JoshCookRole(String name) {
+	public JoshCookRole() {
 		super();
-		this.name = name;
+		name = person.getName();
+		working = false;
 		orderedItems = false;
 		
 		foods.put("steak", steak);
@@ -45,6 +48,10 @@ public class JoshCookRole extends Agent {
 		foods.put("pizza", pizza);
 	}
 	
+	public void setPerson(PersonAgent p) {
+		super.setPerson(p);
+		name = person.getName();
+	}
 
 	public String getName() {
 		return name;
@@ -63,6 +70,16 @@ public class JoshCookRole extends Agent {
 	}
 	
 	// Messages
+
+	public void msgStartShift() {
+		working = true;
+		stateChanged();
+	}
+	
+	public void msgEndShift() {
+		working = false;
+		stateChanged();
+	}
 	
 	public void addMarket(JoshMarketRole m) {
 		markets.add(new MyMarket(m));
@@ -103,6 +120,10 @@ public class JoshCookRole extends Agent {
 	 */
 	public boolean pickAndExecuteAnAction() {
 		try {
+			if (!working) {
+				leaveRestaurant();
+				return true;
+			}
 			if (orderedItems == false) {
 				orderedItems = true;
 				orderFoodFromMarket();
@@ -143,6 +164,10 @@ public class JoshCookRole extends Agent {
 	}
 
 	// Actions
+	
+	private void leaveRestaurant() {
+		person.msgLeftDestination(this);
+	}
 
 	private void cookIt(Order o) {
 		if (foods.get(o.choice).getAmount() == 0) {

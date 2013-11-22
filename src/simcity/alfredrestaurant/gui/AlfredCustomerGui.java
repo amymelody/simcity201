@@ -1,8 +1,8 @@
-package restaurant.gui;
+package simcity.alfredrestaurant.gui;
 
-import restaurant.CustomerAgent;
-import restaurant.HostAgent;
-import restaurant.Table;
+import simcity.alfredrestaurant.AlfredCustomerRole;
+import simcity.alfredrestaurant.AlfredHostRole;
+import simcity.alfredrestaurant.AlfredTable;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -11,13 +11,13 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-public class CustomerGui implements CherysGui {
+public class AlfredCustomerGui implements AlfredGui {
 
-	private CherysCustomerRole agent = null;
+	private AlfredCustomerRole agent = null;
 	private boolean isPresent = false;
 	private boolean isHungry = false;
 	// private HostAgent host;
-	RestauranGUI gui;
+	AlfredRestaurantGUI gui;
 	private int xPos, yPos;
 	private int xDestination, yDestination;
 	private String food = "";
@@ -33,7 +33,7 @@ public class CustomerGui implements CherysGui {
 
 	// public static final int xTable = 200;
 	// public static final int yTable = 250;
-	public CustomerGui(CherysCustomerRole c, RestauranGUI gui) { // HostAgent m) {
+	public AlfredCustomerGui(AlfredCustomerRole c, AlfredRestaurantGUI gui) { // HostAgent m) {
 		agent = c;
 		xPos = defaultPosition;
 		yPos = defaultPosition;
@@ -86,9 +86,9 @@ public class CustomerGui implements CherysGui {
 		
 		//draw food next to table
 		if (!food.equals("")){
-			Table table = agent.getTable();
+			AlfredTable table = agent.getTable();
 			g.setColor(Color.BLACK);
-			g.drawString(food, (int)table.getPosition().getX() + HostGui.sizeTable, 
+			g.drawString(food, (int)table.getPosition().getX() + AlfredHostGui.sizeTable, 
 					(int)table.getPosition().getY());
 		}
 	}

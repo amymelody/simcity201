@@ -7,8 +7,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 import java.util.ArrayList;
+import simcity.gui.Gui;
 
-public class JoshRestuarantAnimationPanel extends JPanel implements ActionListener {
+public class JoshRestaurantAnimationPanel extends JPanel implements ActionListener {
 
 	//Get rid of the "magic numbers"
 	static final int TABLEX = 150;
@@ -24,7 +25,7 @@ public class JoshRestuarantAnimationPanel extends JPanel implements ActionListen
 
     private List<Gui> guis = new ArrayList<Gui>();
 
-    public JoshRestuarantAnimationPanel() {
+    public JoshRestaurantAnimationPanel() {
     	setSize(WINDOWX, WINDOWY);
         setVisible(true);
         
