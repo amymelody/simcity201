@@ -3,6 +3,7 @@ package simcity.joshrestaurant;
 import java.util.*;
 
 import simcity.role.JobRole;
+import simcity.PersonAgent;
 
 /**
  * Restaurant Host Agent
@@ -21,16 +22,21 @@ public class JoshHostRole extends JobRole {
 	public enum WaiterState
 	{OnTheJob, WantToGoOnBreak, AboutToGoOnBreak, OnBreak};
 
-	public JoshHostRole(String name) {
+	public JoshHostRole() {
 		super();
 
-		this.name = name;
+		name = person.getName();
 		working = false;
 		// make some tables
 		tables = Collections.synchronizedList(new ArrayList<Table>(NTABLES));
 		for (int ix = 1; ix <= NTABLES; ix++) {
 			tables.add(new Table(ix));//how you add to a collections
 		}
+	}
+	
+	public void setPerson(PersonAgent p) {
+		super.setPerson(p);
+		name = person.getName();
 	}
 
 	public String getMaitreDName() {

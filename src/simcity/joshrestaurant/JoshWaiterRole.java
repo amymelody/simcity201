@@ -5,6 +5,7 @@ import simcity.joshrestaurant.gui.JoshWaiterGui;
 import simcity.joshrestaurant.gui.JoshCookGui;
 import simcity.joshrestaurant.interfaces.JoshWaiter;
 import simcity.joshrestaurant.interfaces.JoshCustomer;
+import simcity.PersonAgent;
 
 import java.util.*;
 import java.util.concurrent.Semaphore;
@@ -41,9 +42,9 @@ public class JoshWaiterRole extends JobRole implements JoshWaiter {
 	public JoshWaiterGui waiterGui = null;
 	public JoshCookGui cookGui = null;
 
-	public JoshWaiterRole(String name) {
+	public JoshWaiterRole() {
 		super();
-		this.name = name;
+		name = person.getName();
 		working = false;
 		
 		prices.put("steak", 16);
@@ -58,9 +59,11 @@ public class JoshWaiterRole extends JobRole implements JoshWaiter {
 		menu.addItem("pizza", prices.get("pizza"));
 	}
 	
-	/**
-	 * hack to establish connection to Host agent.
-	 */
+	public void setPerson(PersonAgent p) {
+		super.setPerson(p);
+		name = person.getName();
+	}
+	
 	public void setHost(JoshHostRole host) {
 		this.host = host;
 	}

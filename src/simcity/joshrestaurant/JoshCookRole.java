@@ -4,6 +4,7 @@ import java.util.*;
 
 import simcity.role.JobRole;
 import simcity.joshrestaurant.gui.JoshCookGui;
+import simcity.PersonAgent;
 
 
 /**
@@ -35,9 +36,9 @@ public class JoshCookRole extends JobRole {
 	public enum FoodState
 	{Enough, MustBeOrdered, Ordered, WaitingForOrder, ReceivedOrder};
 
-	public JoshCookRole(String name) {
+	public JoshCookRole() {
 		super();
-		this.name = name;
+		name = person.getName();
 		working = false;
 		orderedItems = false;
 		
@@ -47,6 +48,10 @@ public class JoshCookRole extends JobRole {
 		foods.put("pizza", pizza);
 	}
 	
+	public void setPerson(PersonAgent p) {
+		super.setPerson(p);
+		name = person.getName();
+	}
 
 	public String getName() {
 		return name;

@@ -4,6 +4,7 @@ import simcity.agent.Agent;
 import simcity.joshrestaurant.gui.JoshCustomerGui;
 import simcity.joshrestaurant.interfaces.JoshCustomer;
 import simcity.RestCustomerRole;
+import simcity.PersonAgent;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -46,9 +47,9 @@ public class JoshCustomerRole extends RestCustomerRole implements JoshCustomer {
 	 * @param name name of the customer
 	 * @param gui  reference to the customergui so the customer can send it messages
 	 */
-	public JoshCustomerRole(String name){
+	public JoshCustomerRole(){
 		super();
-		this.name = name;
+		name = person.getName();
 		
 		//cash = 30;
 		cash = person.getMoney();
@@ -61,9 +62,12 @@ public class JoshCustomerRole extends RestCustomerRole implements JoshCustomer {
 		charge = 0;
 	}
 
-	/**
-	 * hack to establish connection to Host agent.
-	 */
+	public void setPerson(PersonAgent p) {
+		super.setPerson(p);
+		name = person.getName();
+		cash = person.getMoney();
+	}
+	
 	public void setHost(JoshHostRole host) {
 		this.host = host;
 	}

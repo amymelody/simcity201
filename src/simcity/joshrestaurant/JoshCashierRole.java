@@ -6,6 +6,7 @@ import simcity.joshrestaurant.interfaces.JoshWaiter;
 import simcity.joshrestaurant.interfaces.JoshCashier;
 import simcity.joshrestaurant.interfaces.JoshMarket;
 import simcity.mock.LoggedEvent;
+import simcity.PersonAgent;
 
 import java.util.*;
 
@@ -26,9 +27,9 @@ public class JoshCashierRole extends JobRole implements JoshCashier {
 	
 	public enum CheckState {Created, GivenToWaiter, Paid, Done};
 
-	public JoshCashierRole(String name) {
+	public JoshCashierRole() {
 		super();
-		this.name = name;
+		name = person.getName();
 		working = false;
 		cash = 200;
 		
@@ -38,6 +39,10 @@ public class JoshCashierRole extends JobRole implements JoshCashier {
 		prices.put("pizza", 9);
 	}
 	
+	public void setPerson(PersonAgent p) {
+		super.setPerson(p);
+		name = person.getName();
+	}
 
 	public String getName() {
 		return name;
