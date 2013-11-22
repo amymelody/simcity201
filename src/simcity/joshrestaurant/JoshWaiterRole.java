@@ -1,6 +1,6 @@
 package simcity.joshrestaurant;
 
-import simcity.role.JobRole;
+import simcity.RestWaiterRole;
 import simcity.joshrestaurant.gui.JoshWaiterGui;
 import simcity.joshrestaurant.gui.JoshCookGui;
 import simcity.joshrestaurant.interfaces.JoshWaiter;
@@ -13,7 +13,7 @@ import java.util.concurrent.Semaphore;
 /**
  * Restaurant Waiter Agent
  */
-public class JoshWaiterRole extends JobRole implements JoshWaiter {
+public class JoshWaiterRole extends RestWaiterRole implements JoshWaiter {
 	public List<MyCustomer> customers
 	= new ArrayList<MyCustomer>();
 	JoshHostRole host;

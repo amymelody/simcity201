@@ -1,15 +1,15 @@
 package simcity.joshrestaurant.test.mock;
 
+import simcity.interfaces.MarketDeliverer;
 import simcity.joshrestaurant.interfaces.JoshCashier;
-import simcity.joshrestaurant.interfaces.JoshMarket;
 import simcity.mock.LoggedEvent;
 import simcity.mock.Mock;
 
-public class MockJoshMarket extends Mock implements JoshMarket {
+public class MockMarketDeliverer extends Mock implements MarketDeliverer {
 	
 	public JoshCashier cashier;
 
-	public MockJoshMarket(String name) {
+	public MockMarketDeliverer(String name) {
 		super(name);
 	}
 	
