@@ -2,6 +2,7 @@ package simcity.gui;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Point;
 
 import simcity.PersonAgent;
 
@@ -10,6 +11,7 @@ public class PersonGui {
 
 	private int xPos = -20, yPos = -20;//default Person position
 	private int xDestination = -20, yDestination = -20;//default Person destination
+	private int buildingX, buildingY;
 
 	public PersonGui(PersonAgent p) {
 		agent = p;
@@ -26,10 +28,23 @@ public class PersonGui {
 			yPos++;
 		else if (yPos > yDestination)
 			yPos--;
+		
+		if (xPos == xDestination && yPos == yDestination) {
+        	if (xDestination == buildingX && yDestination == buildingY) {
+        		agent.msgAtDestination();
+        	}
+        }
 	}
 
 	public void draw(Graphics2D g) {
 		g.setColor(Color.BLUE);
+	}
+	
+	public void DoGoToDestination(Point p) {
+		buildingX = p.x;
+		buildingY = p.y;
+		xDestination = buildingX;
+		yDestination = buildingY;
 	}
 
 	public boolean isPresent() {
