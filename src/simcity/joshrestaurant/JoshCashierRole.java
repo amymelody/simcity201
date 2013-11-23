@@ -19,7 +19,7 @@ public class JoshCashierRole extends RestCashierRole implements JoshCashier {
 	public List<Check> checks = Collections.synchronizedList(new ArrayList<Check>());
 	public List<Bill> bills = Collections.synchronizedList(new ArrayList<Bill>());
 
-	private String name;
+	private String name = null;
 	private int cash;
 	private boolean working;
 	
@@ -29,7 +29,6 @@ public class JoshCashierRole extends RestCashierRole implements JoshCashier {
 
 	public JoshCashierRole() {
 		super();
-		name = person.getName();
 		working = false;
 		cash = 200;
 		
@@ -93,8 +92,8 @@ public class JoshCashierRole extends RestCashierRole implements JoshCashier {
 		stateChanged();
 	}
 	
-	public void msgChange(int change) {
-		log.add(new LoggedEvent("Received msgChange"));
+	public void msgThankYou(int change) {
+		log.add(new LoggedEvent("Received msgThankYou"));
 		cash += change;
 		stateChanged();
 	}

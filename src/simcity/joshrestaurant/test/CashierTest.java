@@ -1,5 +1,6 @@
 package simcity.joshrestaurant.test;
 
+import simcity.PersonAgent;
 import simcity.joshrestaurant.JoshCashierRole;
 import simcity.joshrestaurant.JoshCashierRole.CheckState;
 import simcity.joshrestaurant.test.mock.MockJoshCustomer;
@@ -10,6 +11,7 @@ import junit.framework.*;
 public class CashierTest extends TestCase
 {
 	//these are instantiated for each test separately via the setUp() method.
+	PersonAgent cashierP;
 	JoshCashierRole cashier;
 	MockJoshWaiter waiter;
 	MockJoshCustomer customer;
@@ -19,13 +21,16 @@ public class CashierTest extends TestCase
 	
 	public void setUp() throws Exception{
 		super.setUp();		
+		cashierP = new PersonAgent("cashier");
 		cashier = new JoshCashierRole();
-		cashier.setName("cashier");
+		cashier.setPerson(cashierP);
 		customer = new MockJoshCustomer("mockcustomer");
 		customer2 = new MockJoshCustomer("mockcustomer2");
 		waiter = new MockJoshWaiter("mockwaiter");
 		market = new MockMarketDeliverer("mockmarket");
 		market2 = new MockMarketDeliverer("mockmarket2");
+		
+		cashier.msgStartShift();
 	}	
 	
 	public void testOneNormalCustomerScenario()
