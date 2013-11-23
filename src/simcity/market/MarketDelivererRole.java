@@ -5,24 +5,23 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Semaphore;
 
-import role.Role;
+import simcity.role.Role;
 import simcity.ItemOrder;
-import simcity.market.MarketCashierRole.myDeliverer;
-import simcity.market.MarketCashierRole.myEmployee;
+import simcity.PersonAgent;
 import simcity.market.Order.OrderState;
 import simcity.market.gui.MarketDelivererGui;
 import simcity.market.interfaces.MarketCashier;
 import simcity.market.interfaces.MarketCustomer;
 import simcity.market.interfaces.MarketDeliverer;
-import simcity.market.interfaces.MarketEmployee;
+import simcity.role.JobRole;
 
-public class MarketDelivererRole extends Role implements MarketDeliverer {
+public class MarketDelivererRole extends JobRole implements MarketDeliverer {
 
 	/* Constructor */
 	String name;
 
-	public MarketDelivererRole(String n) {
-		name = n;
+	public MarketDelivererRole() {
+		super();
 	}
 	
 	public String getMaitreDName() {
@@ -30,6 +29,10 @@ public class MarketDelivererRole extends Role implements MarketDeliverer {
 	}
 	public String getName() {
 		return name;
+	}
+	public void setPerson(PersonAgent p) {
+		super.setPerson(p);
+		name = p.getName();
 	}
 	public void setCashier(MarketCashier ch) {
 		cashier = ch;
@@ -67,6 +70,16 @@ public class MarketDelivererRole extends Role implements MarketDeliverer {
 	
 	
 	/* Messages */
+	
+	// Start/End Shifts
+	public void msgStartShift() {
+		
+	}
+	public void msgEndShift() {
+		
+	}
+	
+	// Normative Scenarios
 	public void msgDeliverItems(Order o) {
 		orders.add(o);
 		stateChanged();
@@ -77,16 +90,6 @@ public class MarketDelivererRole extends Role implements MarketDeliverer {
 				if(o.customer.equals(c)) {
 					o.amountPaid = money;
 					o.oS = OrderState.paying;
-					stateChanged();
-				}
-			}
-		}
-	}
-	public void msgSignedInvoice(MarketCustomer c) {
-		synchronized(orders) {
-			for(Order o: orders) {
-				if(o.customer.equals(c)) {
-					o.oS = OrderState.done;
 					stateChanged();
 				}
 			}
@@ -136,14 +139,6 @@ public class MarketDelivererRole extends Role implements MarketDeliverer {
 		}
 		synchronized(orders) {
 			for(Order o: orders) {
-				if(o.equals(currentOrder) && o.oS == OrderState.done) {
-					goToMarket(o);
-					return true;
-				}
-			}
-		}	
-		synchronized(orders) {
-			for(Order o: orders) {
 				if(currentOrder.equals(o) && dS == DelivererState.arrivedBack) {
 					finishDelivery(o);
 					return true;
@@ -167,22 +162,15 @@ public class MarketDelivererRole extends Role implements MarketDeliverer {
 	
 	private void deliverOrder(Order o) {
 		o.oS = OrderState.ready;
-		o.customer.msgHereIsOrder(o.items, o.price, this);
+		o.cook.msgDelivery(o.items);
+		o.cashier.msgDelivery(o.price, this);
 	}
 	
 	private void takePayment(Order o) {
 		o.change = o.amountPaid - o.price;
 		o.oS = OrderState.paid;
 		o.customer.msgThankYou(o.change);
-	}
-	
-	private void goToMarket(Order o) {
-		DoGoBack(); // animation
-		try {
-			animation.acquire();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+		DoGoBack();
 	}
 	
 	private void finishDelivery(Order o) {

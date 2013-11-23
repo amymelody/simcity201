@@ -2,21 +2,21 @@ package simcity.joshrestaurant;
 
 import java.util.*;
 
-import simcity.role.JobRole;
 import simcity.PersonAgent;
+import simcity.RestHostRole;
 
 /**
  * Restaurant Host Agent
  */
 
-public class JoshHostRole extends JobRole {
+public class JoshHostRole extends RestHostRole {
 	static final int NTABLES = 3;
 	public List<MyCustomer> customers = Collections.synchronizedList(new ArrayList<MyCustomer>());
 	public List<MyWaiter> waiters = Collections.synchronizedList(new ArrayList<MyWaiter>());
 	public List<String> foods = Collections.synchronizedList(new ArrayList<String>());
 	public Collection<Table> tables;
 
-	private String name;
+	private String name = null;
 	private boolean working;
 	
 	public enum WaiterState
@@ -25,7 +25,6 @@ public class JoshHostRole extends JobRole {
 	public JoshHostRole() {
 		super();
 
-		name = person.getName();
 		working = false;
 		// make some tables
 		tables = Collections.synchronizedList(new ArrayList<Table>(NTABLES));

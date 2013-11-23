@@ -1,6 +1,6 @@
 package simcity.joshrestaurant;
 
-import simcity.role.JobRole;
+import simcity.RestWaiterRole;
 import simcity.joshrestaurant.gui.JoshWaiterGui;
 import simcity.joshrestaurant.gui.JoshCookGui;
 import simcity.joshrestaurant.interfaces.JoshWaiter;
@@ -13,14 +13,14 @@ import java.util.concurrent.Semaphore;
 /**
  * Restaurant Waiter Agent
  */
-public class JoshWaiterRole extends JobRole implements JoshWaiter {
+public class JoshWaiterRole extends RestWaiterRole implements JoshWaiter {
 	public List<MyCustomer> customers
 	= new ArrayList<MyCustomer>();
 	JoshHostRole host;
 	JoshCookRole cook;
 	JoshCashierRole cashier;
 
-	private String name;
+	private String name = null;
 	private Semaphore atHome = new Semaphore(0,true);
 	private Semaphore atCustomer = new Semaphore(0,true);
 	private Semaphore atTable = new Semaphore(0,true);
@@ -44,7 +44,6 @@ public class JoshWaiterRole extends JobRole implements JoshWaiter {
 
 	public JoshWaiterRole() {
 		super();
-		name = person.getName();
 		working = false;
 		
 		prices.put("steak", 16);

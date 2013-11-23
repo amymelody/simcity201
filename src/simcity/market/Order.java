@@ -7,6 +7,8 @@ import simcity.market.interfaces.MarketCustomer;
 
 public class Order {
 	MarketCustomer customer;
+	RestCashierRole cashier;
+	RestCookRole cook;
 	List<ItemOrder> items;
 	OrderState oS;
 	int price;
@@ -24,14 +26,20 @@ public class Order {
 		location = null;
 	}
 	
-	Order(MarketCustomer c, List<ItemOrder> i, String l) {
-		customer = c;
+	Order(RestCookRole ck, RestCashierRole ch, List<ItemOrder> i, String l) {
+		customer = null;
+		cashier = ch;
+		cook = ck;
 		items = i;
 		oS = OrderState.none;
 		price = 0;
 		amountPaid = 0;
 		change = 0;
 		location = l;
+	}
+	
+	public OrderState getOS() {
+		return oS;
 	}
 	
 	public enum OrderState {none, newDelivery, handing, getting, ready, paying, paid, done, delivered};

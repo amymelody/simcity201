@@ -1,8 +1,79 @@
 package simcity.market.gui;
 
-import javax.swing.JPanel;
+import javax.swing.*;
 
-public class MarketAnimationPanel extends JPanel 
-{
-	//Animation panel
+import simcity.gui.Gui;
+
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.HashMap;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.Random;
+
+public class MarketAnimationPanel extends JPanel implements ActionListener {
+	static final int TIMERINCR = 10;
+	private final int WINDOWX = 440;
+	private final int WINDOWY = 440;
+	private Image bufferImage;
+	private Dimension bufferSize;
+
+	private List<Gui> guis = new ArrayList<Gui>();
+
+	Image bg;
+	
+	public MarketAnimationPanel() {
+		setSize(WINDOWX, WINDOWY);
+		setVisible(true);
+		
+		ImageIcon bgIcon = new ImageIcon(this.getClass().getResource("simcity/images/market_floor.png"));
+		bg = bgIcon.getImage();
+		
+		bufferSize = this.getSize();
+
+		Timer timer = new Timer(TIMERINCR, this );
+		timer.start();
+	}
+
+	public void actionPerformed(ActionEvent e) {
+		repaint();  //Will have paintComponent called
+	}
+
+	public void paintComponent(Graphics g) {
+		Graphics2D g2 = (Graphics2D)g;
+
+		//background
+		g2.drawImage(bg, 0, 0, null);
+		
+		for(Gui gui : guis) {
+			if (gui.isPresent()) {
+				gui.updatePosition();
+			}
+		}
+
+		for(Gui gui : guis) {
+			if (gui.isPresent()) {
+				gui.draw(g2);
+			}
+		}
+	}
+
+	public void addGui(MarketCustomerGui gui) {
+		guis.add(gui);
+	}
+
+	public void addGui(MarketCashierGui gui) {
+		guis.add(gui);
+	}
+	
+	public void addGui(MarketEmployeeGui gui) {
+		guis.add(gui);
+	}
+	
+	public void addGui(MarketDelivererGui gui) {
+		guis.add(gui);
+	}
+	
 }

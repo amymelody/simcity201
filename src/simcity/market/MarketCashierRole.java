@@ -3,22 +3,27 @@ package simcity.market;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.Semaphore;
 
+import simcity.role.JobRole;
 import simcity.role.Role;
 import simcity.ItemOrder;
+import simcity.PersonAgent;
 import simcity.market.Order.OrderState;
+import simcity.market.gui.MarketCashierGui;
+import simcity.market.gui.MarketCustomerGui;
 import simcity.market.interfaces.MarketCashier;
 import simcity.market.interfaces.MarketCustomer;
 import simcity.market.interfaces.MarketDeliverer;
 import simcity.market.interfaces.MarketEmployee;
 
-public class MarketCashierRole extends Role implements MarketCashier {
+public class MarketCashierRole extends JobRole implements MarketCashier {
 
 	/* Constructor */
 	String name;
 
-	public MarketCashierRole(String n) {
-		name = n;
+	public MarketCashierRole() {
+		super();
 	}
 
 	public String getMaitreDName() {
@@ -26,6 +31,10 @@ public class MarketCashierRole extends Role implements MarketCashier {
 	}
 	public String getName() {
 		return name;
+	}
+	public void setPerson(PersonAgent p) {
+		super.setPerson(p);
+		name = p.getName();
 	}
 
 
@@ -51,6 +60,7 @@ public class MarketCashierRole extends Role implements MarketCashier {
 	public void setMarketState(boolean open) {
 		if(open) {
 			mS = MarketState.open;
+			working = true;
 		}
 		else {
 			mS = MarketState.closing;
@@ -69,6 +79,11 @@ public class MarketCashierRole extends Role implements MarketCashier {
 	}
 
 
+	/* Animation */
+	private Semaphore animation = new Semaphore(0, true);
+	MarketCashierGui gui;
+	
+	
 	/* Data */
 
 	// A list of orders
@@ -88,9 +103,18 @@ public class MarketCashierRole extends Role implements MarketCashier {
 
 	// Cashier Status Data
 	int salary;
+	boolean working = false;
 
 
 	/* Messages */
+	
+	// Start/End Shift
+	public void msgStartShift() {
+		working = true;
+	}
+	public void msgEndShift() {
+		working = false;
+	}
 
 	// Worker interactions (hiring, enter/exit shift, etc.)
 	public void msgHired(MarketEmployee e, int salary) {
@@ -137,7 +161,7 @@ public class MarketCashierRole extends Role implements MarketCashier {
 	}
 	public void msgDoneForTheDay() {
 		mS = MarketState.closing;
-		stateChanged();
+		//stateChanged();
 	}
 	// Inventory updated +10 every time market opens
 	public void msgWereOpen() {
@@ -150,6 +174,7 @@ public class MarketCashierRole extends Role implements MarketCashier {
 		orders.add(new Order(c, items));
 		stateChanged();
 	}
+	
 	public void msgHereAreItems(Order order, MarketEmployee e) {
 		synchronized(orders) {
 			for(Order o: orders) {
@@ -181,8 +206,8 @@ public class MarketCashierRole extends Role implements MarketCashier {
 	}
 
 	// Normative Scenario #2
-	public void msgIWantDelivery(MarketCustomer c, List<ItemOrder> i, String location) {
-		orders.add(new Order(c, i, location));
+	public void msgIWantDelivery(RestCookRole rCk, RestCashierRole rCh, List<ItemOrder> i, String location) {
+		orders.add(new Order(rCk, rCh, i, location));
 		stateChanged();
 	}
 	public void msgDelivered(Order order, MarketDeliverer d) {
@@ -206,7 +231,7 @@ public class MarketCashierRole extends Role implements MarketCashier {
 
 	/* Scheduler */
 	public boolean pickAndExecuteAnAction() {
-		if(mS != MarketState.closed) {
+		if(mS != MarketState.closed && working) {
 			synchronized(orders) {
 				for(Order o: orders) {
 					if(o.oS == OrderState.none) {
@@ -271,10 +296,10 @@ public class MarketCashierRole extends Role implements MarketCashier {
 			}
 		}
 		person.msgEndShift();
+		working = false;
 		marketMoney -= salary;
 		// Send a message to the bank to store money surplus
 		marketMoney = 100;
-		WereClosed(); // stub to let market GUI know
 	}
 
 	private void HandToEmployee(Order o) {
@@ -297,6 +322,7 @@ public class MarketCashierRole extends Role implements MarketCashier {
 			for(myDeliverer md: deliverers) {
 				if(md.unoccupied && md.working) {
 					md.deliverer.msgDeliverItems(o);
+					o.cook.msgHereIsWhatICanFulfill(o.items, HaveSomeItems(o.items)); // figure out how much he can fulfill
 					for(ItemOrder iO: o.items) {
 						inventory.updateAmount(iO.getFoodItem(), iO.getAmount(), false);
 					}
@@ -379,6 +405,14 @@ public class MarketCashierRole extends Role implements MarketCashier {
 	}
 	private void updateMarketMoney(Order o) {
 		marketMoney += o.price;
+	}
+	private boolean HaveSomeItems(List<ItemOrder> items) {
+		for(ItemOrder iO: items) {
+			if(inventory.getAmount(iO.getFoodItem()) == 0) {
+				return false;
+			}
+		}
+		return true;
 	}
 	
 }

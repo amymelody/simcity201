@@ -1,5 +1,6 @@
 package simcity.housing;
 
+import simcity.housing.interfaces.Resident;
 import simcity.role.JobRole;
 import java.awt.Point;
 import java.util.*;
@@ -9,12 +10,13 @@ public class LandlordRole extends JobRole
 {
 
 //Data
+	String name = "Landlord";
 	List<Renter> renters;
 	class Renter
 	{
-		ResidentRole resident;
+		Resident resident;
 		RenterState state = RenterState.away;
-		Renter(ResidentRole r)
+		Renter(Resident r)
 		{
 			resident = r;
 		}
@@ -39,13 +41,22 @@ public class LandlordRole extends JobRole
 	Semaphore atLocation = new Semaphore(0, true);
 //	ResidentGui gui;
 
+	public LandlordRole()
+	{
+		super();
+	}
+	
 //Messages
 	public void msgStartShift() //from Person
 	{
 		commands.add(Command.callRenters);
 		stateChanged();
 	}
-	public void msgDingDong(ResidentRole r) //from Resident
+	public void msgEndShift()
+	{
+		//dummy method unnecessary for landlord 
+	}
+	public void msgDingDong(Resident r) //from Resident
 	{
 		commands.add(Command.collectRent);
 		for(Renter renter : renters)
@@ -57,11 +68,12 @@ public class LandlordRole extends JobRole
 		}
 		stateChanged();
 	}
-	public void msgPayRent(ResidentRole r, int money) //from Resident
+	public void msgPayRent(Resident r, int money) //from Resident
 	{
 		moneyEarned += money;
 		for(Renter renter : renters)
 		{
+		
 			if(renter.resident == r)
 			{
 				renter.state = RenterState.paid;
@@ -78,45 +90,68 @@ public class LandlordRole extends JobRole
 //Scheduler
     public boolean pickAndExecuteAnAction()
     {
-//	+ If (there exists) Command c in commands (such that) c == Command.callRenters,
-//	then sendRentDue(c);
-//	+ If (there exists) Command c in commands (such that) c == Command.collectRent,
-//			then sendAmountOwed(c);
-//	+ If !(there exists) Renter r in renters (such that) r.state != RenterState.Paid,
-//			then sendEndShift();
-//	+ Else goToLocation(locations.get("TV"));
+    	for(Command c : commands)
+    	{
+    		if(c == Command.collectRent)
+    		{
+    			sendAmountOwed(c);
+    			return true;
+    		}
+    	}
+    	for(Command c : commands)
+    	{
+    		if(c == Command.callRenters)
+    		{
+    			sendRentDue(c);
+    			return true;
+    		}
+    	}
+    	boolean allRentCollected = true;
+    	for(Renter r : renters)
+    	{
+    		if(r.state != RenterState.paid)
+    		{
+    			allRentCollected = false;
+    		}
+    	}
+    	if(allRentCollected)
+    	{
+    		sendEndShift();
+    		return true;
+    	}
+    	goToLocation(locations.get("Sofa"));
     	return false;
     }
 
 //Actions
-	public void sendRentDue(Command c)
+	private void sendRentDue(Command c)
 	{
 		commands.remove(c);
 		for(Renter r : renters)
 		{
 			if(r.state == RenterState.away)
 			{
-				r.resident.msgRentDue();
 				r.state = RenterState.called;
+				r.resident.msgRentDue();
 			}
 		}
 		stateChanged();
 	}
-	public void sendAmountOwed(Command c)
+	private void sendAmountOwed(Command c)
 	{
 		commands.remove(c);
-		goToLocation(locations.get("Door"));
+		goToLocation(locations.get("Doorway"));
 		for(Renter r : renters)
 		{
 			if(r.state == RenterState.arrived)
 			{
-				r.resident.msgAmountOwed(rent);
 				r.state = RenterState.askedToPay;
+				r.resident.msgAmountOwed(rent);
 			}
 		}
 		stateChanged();
 	}
-	public void sendEndShift()
+	private void sendEndShift()
 	{
 		for(Renter r : renters)
 		{
@@ -127,7 +162,7 @@ public class LandlordRole extends JobRole
 //		person.endShift(temp);
 	}
 
-	public void goToLocation(Point p)
+	private void goToLocation(Point p)
 	{
 //		gui.doGoToLocation(p);
 		try
@@ -139,4 +174,10 @@ public class LandlordRole extends JobRole
 			e.printStackTrace();
 		}
 	}
+
+	public void addRenter(Resident r)
+	{
+		renters.add(new Renter(r));
+	}
+
 }

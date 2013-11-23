@@ -3,13 +3,15 @@ package simcity.market.gui;
 import java.awt.Color;
 import java.awt.Graphics2D;
 
+import simcity.gui.Gui;
 import simcity.market.MarketCashierRole;
 
-public class MarketCashierGui {
+public class MarketCashierGui implements Gui {
 	private MarketCashierRole role = null;
 
-	private int xPos = -20, yPos = -20;//default cashier position
-	private int xDestination = -20, yDestination = -20;//default cashier destination
+	private int xPos = -20, yPos = -20; // initial Cashier position
+	private int xDestination = -20, yDestination = -20;// initial Cashier destination
+	private int xHome = -20, yHome = -20; // Cashier home position
 
 	public MarketCashierGui(MarketCashierRole r) {
 		this.role = r;
@@ -43,4 +45,5 @@ public class MarketCashierGui {
 	public int getYPos() {
 		return yPos;
 	}
+	
 }
