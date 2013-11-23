@@ -1,7 +1,8 @@
-package simcity.JesusRestaurant.gui;
+package simcity.jesusrestaurant.gui;
 
-import simcity.JesusRestaurant.JesusWaiterRole;
-import simcity.JesusRestaurant.interfaces.JesusCustomer;
+import simcity.gui.Gui;
+import simcity.jesusrestaurant.JesusWaiterRole;
+import simcity.jesusrestaurant.interfaces.JesusCustomer;
 
 import java.awt.*;
 import java.util.HashMap;
@@ -9,7 +10,7 @@ import java.util.Map;
 
 import javax.swing.ImageIcon;
 
-public class JesusWaiterGui implements JesusGui {
+public class JesusWaiterGui implements Gui {
 
 	private JesusWaiterRole agent = null;
 

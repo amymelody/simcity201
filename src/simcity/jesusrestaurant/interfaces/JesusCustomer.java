@@ -1,6 +1,6 @@
-package simcity.JesusRestaurant.interfaces;
+package simcity.jesusrestaurant.interfaces;
 
-import simcity.JesusRestaurant.JesusMenu;
+import simcity.jesusrestaurant.JesusMenu;
 
 public interface JesusCustomer {
 	

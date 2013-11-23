@@ -1,18 +1,26 @@
-package simcity.JesusRestaurant;
+package simcity.jesusrestaurant;
 
-import simcity.role.Role;
-import simcity.JesusRestaurant.gui.JesusCashierGui;
-import simcity.JesusRestaurant.interfaces.JesusCashier;
-import simcity.JesusRestaurant.interfaces.JesusCustomer;
-import simcity.JesusRestaurant.interfaces.JesusMarket;
-import simcity.JesusRestaurant.interfaces.JesusWaiter;
+import simcity.PersonAgent;
+import simcity.role.JobRole;
+import simcity.jesusrestaurant.gui.JesusCashierGui;
+import simcity.jesusrestaurant.interfaces.JesusCashier;
+import simcity.jesusrestaurant.interfaces.JesusCustomer;
+import simcity.jesusrestaurant.interfaces.JesusMarket;
+import simcity.jesusrestaurant.interfaces.JesusWaiter;
 import simcity.mock.EventLog;
 import simcity.mock.LoggedEvent;
 
 import java.util.*;
 import java.util.concurrent.Semaphore;
 
-public class JesusCashierRole extends Role implements JesusCashier {
+/**
+ * simcity.jesusrestaurant Host Agent
+ */
+//We only have 2 types of agents in this prototype. A customer and an agent that
+//does all the rest. Rather than calling the other agent a waiter, we called him
+//the HostAgent. A Host is the manager of a simcity.jesusrestaurant who sees that all
+//is proceeded as he wishes.
+public class JesusCashierRole extends JobRole implements JesusCashier {
 	public List<Check> checks = Collections.synchronizedList(new ArrayList<Check>());
 	public List<Bill> bills = Collections.synchronizedList(new ArrayList<Bill>());
 	public double money = 400.00;
@@ -22,16 +30,14 @@ public class JesusCashierRole extends Role implements JesusCashier {
 
 	private String name;
 
-	public JesusCashierGui cashierGui = null;
+	public JesusCashierGui jesusCashierGui = null;
 
 	JesusMenu m = new JesusMenu();
 
 	public EventLog log = new EventLog();
 
-	public JesusCashierRole(String name) {
+	public JesusCashierRole() {
 		super();
-
-		this.name = name;
 	}
 
 	public String getMaitreDName() {
@@ -41,8 +47,24 @@ public class JesusCashierRole extends Role implements JesusCashier {
 	public String getName() {
 		return name;
 	}
+	
+	public void setPerson(PersonAgent p) {
+		super.setPerson(p);
+		name = p.getName();
+	}
 
 	// Messages
+	@Override
+	public void msgStartShift() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void msgEndShift() {
+		// TODO Auto-generated method stub
+		
+	}
 	public void msgComputeCheck(JesusWaiter w, JesusCustomer c, String foodItem, String name) {
 		synchronized(checks) {
 			for(Check ch: checks) {
@@ -167,11 +189,11 @@ public class JesusCashierRole extends Role implements JesusCashier {
 	//utilities
 
 	public void setGui(JesusCashierGui gui) {
-		cashierGui = gui;
+		jesusCashierGui = gui;
 	}
 
 	public JesusCashierGui getGui() {
-		return cashierGui;
+		return jesusCashierGui;
 	}
 
 	public class Check {
@@ -247,4 +269,5 @@ public class JesusCashierRole extends Role implements JesusCashier {
 		}
 		return null;
 	}
+	
 }

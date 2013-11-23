@@ -14,7 +14,7 @@ import java.util.concurrent.Semaphore;
  * Restaurant customer agent.
  */
 public class JoshCustomerRole extends RestCustomerRole implements JoshCustomer {
-	private String name;
+	private String name = null;
 	private int hungerLevel = 1;
 	Timer timer = new Timer();
 	private JoshCustomerGui customerGui;
@@ -49,7 +49,6 @@ public class JoshCustomerRole extends RestCustomerRole implements JoshCustomer {
 	 */
 	public JoshCustomerRole(){
 		super();
-		name = person.getName();
 		
 		//cash = 30;
 		cash = person.getMoney();

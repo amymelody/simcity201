@@ -8,6 +8,8 @@ import simcity.market.interfaces.MarketCashier;
 import simcity.market.interfaces.MarketCustomer;
 import simcity.market.interfaces.MarketDeliverer;
 import simcity.market.interfaces.MarketEmployee;
+import simcity.market.interfaces.RestCashierRole;
+import simcity.market.interfaces.RestCookRole;
 import simcity.mock.LoggedEvent;
 import simcity.mock.Mock;
 
@@ -29,81 +31,82 @@ public class MockMarketCashier extends Mock implements MarketCashier {
 
 	@Override
 	public void msgHired(MarketEmployee e, int salary) {
-		log.add(new LoggedEvent("Hiring employee."));
+		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void msgHired(MarketDeliverer d, int salary) {
-		log.add(new LoggedEvent("Hiring deliverer."));
+		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void msgOntheClock(MarketEmployee e) {
-		log.add(new LoggedEvent("Employee on the clock."));
+		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void msgOntheClock(MarketDeliverer d) {
-		log.add(new LoggedEvent("Deliverer on the clock."));
+		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void msgOfftheClock(MarketEmployee e) {
-		log.add(new LoggedEvent("Employee off the clock."));
+		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void msgOfftheClock(MarketDeliverer d) {
-		log.add(new LoggedEvent("Deliverer off the clock."));
+		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void msgDoneForTheDay() {
-		log.add(new LoggedEvent("Closing"));
+		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void msgWereOpen() {
-		log.add(new LoggedEvent("We're open."));
+		// TODO Auto-generated method stub
 		
 	}
-	
-	
+
 	@Override
-	public void msgIWantItems(MarketCustomer c, List<ItemOrder> items) {
-		log.add(new LoggedEvent("Received customer message for order."));
+	public void msgIWantItems(MarketCustomer c, List<ItemOrder> i) {
+		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void msgHereAreItems(Order order, MarketEmployee e) {
-		log.add(new LoggedEvent("Handed order to employee."));
+		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void msgPayment(MarketCustomer c, int money) {
-		log.add(new LoggedEvent("Customer paid."));
+		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void msgIWantDelivery(MarketCustomer c, List<ItemOrder> i, String location) {
-		log.add(new LoggedEvent("Received customer message for delivery."));
+	public void msgIWantDelivery(RestCookRole rCk, RestCashierRole rCh,
+			List<ItemOrder> i, String location) {
+		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void msgDelivered(Order order, MarketDeliverer d) {
-		log.add(new LoggedEvent("Customer paid for delivery."));
+		// TODO Auto-generated method stub
 		
 	}
+
 
 }

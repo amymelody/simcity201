@@ -1,6 +1,8 @@
-package simcity.JesusRestaurant.gui;
+package simcity.jesusrestaurant.gui;
 
 import javax.swing.*;
+
+import simcity.gui.Gui;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -11,14 +13,12 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.Random;
 
-public class JesusRestaurantAnimationPanel extends JPanel implements ActionListener {
+public class JesusAnimationPanel extends JPanel implements ActionListener {
 	static final int TIMERINCR = 10;
 	static final int TABLESIZE = 50;
 	private final int WINDOWX = 440;
 	private final int WINDOWY = 440;
 	static final int NTABLES = JesusHostGui.getNTab();
-	private Image bufferImage;
-	private Dimension bufferSize;
 
 	public static final Map<Integer, Point> tableLocations = new HashMap<Integer, Point>();
 	static {
@@ -28,15 +28,15 @@ public class JesusRestaurantAnimationPanel extends JPanel implements ActionListe
 		tableLocations.put(4, new Point(200, 320));
 	}
 	
-	private List<JesusGui> guis = new ArrayList<JesusGui>();
+	private List<Gui> guis = new ArrayList<Gui>();
 
 	Image bg, t1Image, t2Image, t3Image, t4Image, plateArea, cookArea, cashierArea;
 	
-	public JesusRestaurantAnimationPanel() {
+	public JesusAnimationPanel() {
 		setSize(WINDOWX, WINDOWY);
 		setVisible(true);
 		
-		ImageIcon bgIcon = new ImageIcon(this.getClass().getResource("simcity/images/jesus_floor.png"));
+		ImageIcon bgIcon = new ImageIcon(this.getClass().getResource("images/floor_texture.png"));
 		bg = bgIcon.getImage();
 
 		ImageIcon plateIcon = new ImageIcon(this.getClass().getResource("images/plate_area.png"));
@@ -54,8 +54,6 @@ public class JesusRestaurantAnimationPanel extends JPanel implements ActionListe
 		t3Image = t3Icon.getImage();
 		ImageIcon t4Icon = new ImageIcon(this.getClass().getResource("images/gtable.png"));
 		t4Image = t4Icon.getImage();
-		
-		bufferSize = this.getSize();
 
 		Timer timer = new Timer(TIMERINCR, this );
 		timer.start();
@@ -94,13 +92,13 @@ public class JesusRestaurantAnimationPanel extends JPanel implements ActionListe
 			tableCnt++;
 		}
 		
-		for(JesusGui gui : guis) {
+		for(Gui gui : guis) {
 			if (gui.isPresent()) {
 				gui.updatePosition();
 			}
 		}
 
-		for(JesusGui gui : guis) {
+		for(Gui gui : guis) {
 			if (gui.isPresent()) {
 				gui.draw(g2);
 			}

@@ -1,8 +1,8 @@
-package simcity.JesusRestaurant.gui;
+package simcity.jesusrestaurant.gui;
 
-import simcity.JesusRestaurant.JesusCustomerRole;
-import simcity.JesusRestaurant.JesusMarketRole;
-import simcity.JesusRestaurant.JesusWaiterRole;
+import simcity.jesusrestaurant.JesusCustomerRole;
+import simcity.jesusrestaurant.JesusMarketRole;
+import simcity.jesusrestaurant.JesusWaiterRole;
 
 import javax.swing.*;
 

@@ -1,8 +1,9 @@
-package simcity.JesusRestaurant.gui;
+package simcity.jesusrestaurant.gui;
 
 
-import simcity.JesusRestaurant.JesusCustomerRole;
-import simcity.JesusRestaurant.JesusCashierRole;
+import simcity.gui.Gui;
+import simcity.jesusrestaurant.JesusCustomerRole;
+import simcity.jesusrestaurant.JesusCashierRole;
 
 import java.awt.*;
 import java.util.HashMap;
@@ -10,9 +11,9 @@ import java.util.Map;
 
 import javax.swing.ImageIcon;
 
-public class JesusCashierGui implements JesusGui {
+public class JesusCashierGui implements Gui {
 
-	private JesusCashierRole role = null;
+	private JesusCashierRole agent = null;
 
 	private int xPos = 0, yPos = 80;//default host position
 	private int xDestination = 0, yDestination = 80;//default host destination
@@ -26,8 +27,8 @@ public class JesusCashierGui implements JesusGui {
 	}
 
 	Image hostImage;
-	public JesusCashierGui(JesusCashierRole role) {
-		this.role = role;
+	public JesusCashierGui(JesusCashierRole agent) {
+		this.agent = agent;
 
 		ImageIcon hostIcon = new ImageIcon(this.getClass().getResource("images/mario.png"));
 		hostImage = hostIcon.getImage();

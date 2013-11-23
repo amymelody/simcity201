@@ -1,15 +1,23 @@
-package simcity.JesusRestaurant;
+package simcity.jesusrestaurant;
 
-import simcity.role.Role;
-import simcity.JesusRestaurant.JesusMarketRole;
-import simcity.JesusRestaurant.gui.JesusCookGui;
+import simcity.PersonAgent;
+import simcity.role.JobRole;
+import simcity.jesusrestaurant.JesusCookRole;
+import simcity.jesusrestaurant.gui.JesusCookGui;
 
 import java.util.*;
 import java.util.concurrent.Semaphore;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class JesusCookRole extends Role {
+/**
+ * Restaurant Host Agent
+ */
+//We only have 2 types of agents in this prototype. A customer and an agent that
+//does all the rest. Rather than calling the other agent a waiter, we called him
+//the HostAgent. A Host is the manager of a restaurant who sees that all
+//is proceeded as he wishes.
+public class JesusCookRole extends JobRole {
 	private static final int steakTime = 7000;
 	private static final int saladTime = 4000;
 	private static final int pizzaTime = 2000;
@@ -31,12 +39,10 @@ public class JesusCookRole extends Role {
 
 	private String name;
 
-	public JesusCookGui cookGui = null;
+	public JesusCookGui jesusCookGui = null;
 
-	public JesusCookRole(String name) {
+	public JesusCookRole() {
 		super();
-
-		this.name = name;
 
 		foods.add(new Food("Pizza", init_inv, pizzaTime));
 		foods.add(new Food("Salad", init_inv, saladTime));
@@ -49,6 +55,11 @@ public class JesusCookRole extends Role {
 
 	public String getName() {
 		return name;
+	}
+	
+	public void setPerson(PersonAgent p) {
+		super.setPerson(p);
+		name = p.getName();
 	}
 
 	public void setHost(JesusHostRole h) {
@@ -137,7 +148,7 @@ public class JesusCookRole extends Role {
 	// Messages
 
 	public void msgGotPlate(String foodChoice) {
-		cookGui.GotFood(foodChoice);
+		jesusCookGui.GotFood(foodChoice);
 	}
 	
 	public void msgCheckInventory() {
@@ -217,7 +228,7 @@ public class JesusCookRole extends Role {
 	/**
 	 * Scheduler.  Determine what action is called for, and do it.
 	 */
-	protected boolean pickAndExecuteAnAction() {
+	public boolean pickAndExecuteAnAction() {
 		if(sState == stockState.checkFood) {
 			sState = stockState.none;
 			checkInventory();
@@ -323,14 +334,14 @@ public class JesusCookRole extends Role {
 			o.oState = orderState.preparing;
 			subtractInventory(o.name, 1);
 			Do("Preparing " + o.custName + "'s " + o.name);
-			cookGui.DoCookFood(o.name);
+			jesusCookGui.DoCookFood(o.name);
 			print(getInventory(o.name) + " " + o.name + "(s) left");
 			timer.schedule(new TimerTask() {
 				public void run() {
 					print("Order ready");
 					o.oState = orderState.ready;
 					stateChanged();
-					cookGui.DoPlateFood(o.name);
+					jesusCookGui.DoPlateFood(o.name);
 				}
 			},
 			getCookTime(o.name));
@@ -359,11 +370,11 @@ public class JesusCookRole extends Role {
 	//utilities
 
 	public void setGui(JesusCookGui gui) {
-		cookGui = gui;
+		jesusCookGui = gui;
 	}
 
 	public JesusCookGui getGui() {
-		return cookGui;
+		return jesusCookGui;
 	}
 
 	private class Order {
@@ -420,5 +431,17 @@ public class JesusCookRole extends Role {
 		updateInventory("Steak", stI);
 		updateInventory("Salad", sI);
 		updateInventory("Pizza", pI);
+	}
+
+	@Override
+	public void msgStartShift() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void msgEndShift() {
+		// TODO Auto-generated method stub
+		
 	}
 }

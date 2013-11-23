@@ -2,6 +2,7 @@ package simcity.joshrestaurant;
 
 import java.util.*;
 
+import simcity.mock.LoggedEvent;
 import simcity.ItemOrder;
 import simcity.RestCookRole;
 import simcity.joshrestaurant.gui.JoshCookGui;
@@ -20,7 +21,7 @@ public class JoshCookRole extends RestCookRole {
 	public List<ItemOrder> itemOrders = new ArrayList<ItemOrder>();
 
 	private JoshHostRole host;
-	private String name;
+	private String name = null;
 	private Timer timer = new Timer();
 	private boolean orderedItems;
 	private JoshCookGui cookGui;
@@ -32,7 +33,7 @@ public class JoshCookRole extends RestCookRole {
 	Food salad = new Food("salad", 5, 3, 2, 1);
 	Food pizza = new Food("pizza", 10, 3, 3, 1);
 	
-	Map<String, Food> foods = new HashMap<String, Food>();
+	public Map<String, Food> foods = new HashMap<String, Food>();
 	
 	public enum OrderState
 	{Pending, Cooking, Done, Finished};
@@ -41,7 +42,6 @@ public class JoshCookRole extends RestCookRole {
 
 	public JoshCookRole() {
 		super();
-		name = person.getName();
 		working = false;
 		orderedItems = false;
 		
@@ -58,6 +58,10 @@ public class JoshCookRole extends RestCookRole {
 
 	public String getName() {
 		return name;
+	}
+	
+	public void setName(String n) {
+		name = n;
 	}
 
 	public List getOrders() {
@@ -94,6 +98,7 @@ public class JoshCookRole extends RestCookRole {
 	}
 	
 	public void msgHereIsWhatICanFulfill(List<ItemOrder> orders, boolean canFulfill) {
+		log.add(new LoggedEvent("Received msgHereIsWhatICanFulfill"));
 		for (Food f : foods.values()) {
 			if (f.state == FoodState.Ordered) {
 				f.state = FoodState.MustBeOrdered;
@@ -106,6 +111,7 @@ public class JoshCookRole extends RestCookRole {
 	}
 	
 	public void msgDelivery(List<ItemOrder> orders) {
+		log.add(new LoggedEvent("Received msgDelivery"));
 		List<ItemOrder> temp = new ArrayList<ItemOrder>();
 		for (ItemOrder o : orders) {
 			temp.add(o);
@@ -291,7 +297,7 @@ public class JoshCookRole extends RestCookRole {
 		}
 	}
 	
-	private class Food {
+	public class Food {
 		String type;
 		int cookingTime;
 		int amount;
@@ -320,7 +326,7 @@ public class JoshCookRole extends RestCookRole {
 			amount = a;
 		}
 		
-		int getAmount() {
+		public int getAmount() {
 			return amount;
 		}
 		
@@ -332,7 +338,7 @@ public class JoshCookRole extends RestCookRole {
 			return capacity;
 		}
 		
-		FoodState getState() {
+		public FoodState getState() {
 			return state;
 		}
 		

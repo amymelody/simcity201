@@ -1,12 +1,19 @@
-package simcity.JesusRestaurant;
+package simcity.jesusrestaurant;
 
-import simcity.role.Role;
-import simcity.JesusRestaurant.gui.JesusHostGui;
+import simcity.role.JobRole;
+import simcity.jesusrestaurant.gui.JesusHostGui;
 
 import java.util.*;
 import java.util.concurrent.Semaphore;
 
-public class JesusHostRole extends Role {
+/**
+ * Restaurant Host Agent
+ */
+//We only have 2 types of agents in this prototype. A customer and an agent that
+//does all the rest. Rather than calling the other agent a waiter, we called him
+//the HostAgent. A Host is the manager of a restaurant who sees that all
+//is proceeded as he wishes.
+public class JesusHostRole extends JobRole {
 	static final int NTABLES = 4;//a global for the number of tables.
 	//Notice that we implement waitingCustomers using ArrayList, but type it
 	//with List semantics.
@@ -24,7 +31,7 @@ public class JesusHostRole extends Role {
 
 	private String name;
 	
-	public JesusHostGui hostGui = null;
+	public JesusHostGui jesusHostGui = null;
 
 	public JesusHostRole(String name) {
 		super();
@@ -127,7 +134,7 @@ public class JesusHostRole extends Role {
 	/**
 	 * Scheduler.  Determine what action is called for, and do it.
 	 */
-	protected boolean pickAndExecuteAnAction() {
+	public boolean pickAndExecuteAnAction() {
 		/* Think of this next rule as:
             Does there exist a table and customer,
             so that table is unoccupied and customer is waiting.
@@ -233,11 +240,11 @@ public class JesusHostRole extends Role {
 	//utilities
 
 	public void setGui(JesusHostGui gui) {
-		hostGui = gui;
+		jesusHostGui = gui;
 	}
 
 	public JesusHostGui getGui() {
-		return hostGui;
+		return jesusHostGui;
 	}
 
 	private class myWaiter {
@@ -312,5 +319,17 @@ public class JesusHostRole extends Role {
 		}
 		else
 			return "Sorry, We're Closed.";
+	}
+
+	@Override
+	public void msgStartShift() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void msgEndShift() {
+		// TODO Auto-generated method stub
+		
 	}
 }

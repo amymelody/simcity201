@@ -1,11 +1,11 @@
-package simcity.JesusRestaurant.gui;
+package simcity.jesusrestaurant.gui;
 
-import simcity.JesusRestaurant.JesusCashierRole;
-import simcity.JesusRestaurant.JesusCustomerRole;
-import simcity.JesusRestaurant.JesusHostRole;
-import simcity.JesusRestaurant.JesusMarketRole;
-import simcity.JesusRestaurant.JesusWaiterRole;
-import simcity.JesusRestaurant.JesusCookRole;
+import simcity.jesusrestaurant.JesusCashierRole;
+import simcity.jesusrestaurant.JesusCustomerRole;
+import simcity.jesusrestaurant.JesusHostRole;
+import simcity.jesusrestaurant.JesusMarketRole;
+import simcity.jesusrestaurant.JesusWaiterRole;
+import simcity.jesusrestaurant.JesusCookRole;
 
 import javax.swing.*;
 
@@ -39,13 +39,13 @@ public class JesusRestaurantPanel extends JPanel implements ActionListener, Mous
 	
     //Host, cook, waiters and customers
     private JesusHostRole host = new JesusHostRole("Jesus");
-    private JesusHostGui hostGui = new JesusHostGui(host);
+    private JesusHostGui jesusHostGui = new JesusHostGui(host);
     
-    private JesusCookRole cook = new JesusCookRole("Luis");
-    private JesusCookGui cookGui = new JesusCookGui(cook);
+    private JesusCookRole cook = new JesusCookRole();
+    private JesusCookGui jesusCookGui = new JesusCookGui(cook);
     
-    private JesusCashierRole cashier = new JesusCashierRole("Freddy");
-    private JesusCashierGui cashierGui = new JesusCashierGui(cashier);
+    private JesusCashierRole cashier = new JesusCashierRole();
+    private JesusCashierGui jesusCashierGui = new JesusCashierGui(cashier);
     
     private Vector<JesusCustomerRole> customers = new Vector<JesusCustomerRole>();
     private Vector<JesusWaiterRole> waiters = new Vector<JesusWaiterRole>();
@@ -65,10 +65,9 @@ public class JesusRestaurantPanel extends JPanel implements ActionListener, Mous
     private JesusListPanel waiterPanel = new JesusListPanel(this, "Waiter");
     private JesusListPanel marketPanel = new JesusListPanel(this, "Market");
     private JTabbedPane group = new JTabbedPane();
-    JesusRestaurantAnimationPanel animationPanel = new JesusRestaurantAnimationPanel();
+    JesusAnimationPanel jesusAnimationPanel = new JesusAnimationPanel();
     
     private JButton pauseB;
-    private boolean pause = false;
     
     private JButton updateInvB;//for cook
     
@@ -77,7 +76,7 @@ public class JesusRestaurantPanel extends JPanel implements ActionListener, Mous
 	public JesusRestaurantPanel(JesusRestaurantGui gui) {
         this.gui = gui;
         
-        //intialize the semaphore grid
+        //initialize the semaphore grid
         for (int i=0; i<gridX; i++)
             for (int j=0; j<gridY; j++)
                 grid[i][j] = new Semaphore(1,true);
@@ -100,9 +99,9 @@ public class JesusRestaurantPanel extends JPanel implements ActionListener, Mous
             System.out.println("Unexpected exception caught in during setup:"+ e);
         }
         
-        host.setGui(hostGui);
-        cook.setGui(cookGui);
-        cashier.setGui(cashierGui);
+        host.setGui(jesusHostGui);
+        cook.setGui(jesusCookGui);
+        cashier.setGui(jesusCashierGui);
         cook.setHost(host);
         
         pauseB = new JButton("Pause");
@@ -113,13 +112,10 @@ public class JesusRestaurantPanel extends JPanel implements ActionListener, Mous
         updateInvB.setPreferredSize(new Dimension(10, 30));
         updateInvB.addActionListener(this);
         
-        animationPanel.addGui(hostGui);
-        animationPanel.addGui(cookGui);
-        animationPanel.addGui(cashierGui);
-        /*host.startThread();
-        cook.startThread();
-        cashier.startThread();*/
-        
+        jesusAnimationPanel.addGui(jesusHostGui);
+        jesusAnimationPanel.addGui(jesusCookGui);
+        jesusAnimationPanel.addGui(jesusCashierGui);
+
         setLayout(new BorderLayout(LSPACE, LSPACE));
         //group.setLayout(new GridLayout(GROWS, GCOLUMNS, LSPACE, LSPACE));
         mainPanel.setLayout(new BorderLayout(LSPACE, LSPACE));
@@ -137,10 +133,10 @@ public class JesusRestaurantPanel extends JPanel implements ActionListener, Mous
         mainPanel.add(panel, BorderLayout.SOUTH);
         
         Dimension animationDim = new Dimension((int) (440), (int) (440));
-        animationPanel.setPreferredSize(animationDim);
-        animationPanel.setMinimumSize(animationDim);
-        animationPanel.setMaximumSize(animationDim);
-        add(animationPanel, BorderLayout.EAST); 
+        jesusAnimationPanel.setPreferredSize(animationDim);
+        jesusAnimationPanel.setMinimumSize(animationDim);
+        jesusAnimationPanel.setMaximumSize(animationDim);
+        add(jesusAnimationPanel, BorderLayout.EAST); 
         
         initRestLabel();
         addMouseMotionListener(this);
@@ -204,17 +200,6 @@ public class JesusRestaurantPanel extends JPanel implements ActionListener, Mous
 	 * Handles the event of the add button being pressed
 	 */
     public void actionPerformed(ActionEvent e) {
-		/*if (e.getSource() == pauseB) {
-			if(pause) {
-				pause = false;
-				System.out.println("Resumed...");
-			}
-			else {
-				pause = true;
-				System.out.println("Paused");
-			}
-			Agent.pausePressed(pause);
-		}*/
 		if (e.getSource() == updateInvB) {
 			JTextField steak = new JTextField();
 			JTextField salad = new JTextField();
@@ -274,13 +259,12 @@ public class JesusRestaurantPanel extends JPanel implements ActionListener, Mous
     		else
     			custxloc++;
 
-    		animationPanel.addGui(g);
+    		jesusAnimationPanel.addGui(g);
     		c.setHost(host);
     		c.setCashier(cashier);
     		c.setGui(g);
     		c.setHungerLevel(hungry);
     		customers.add(c);
-    		//c.startThread();
     	}
     	if (type.equals("Waiter")) {
     		JesusWaiterRole w = new JesusWaiterRole(name);
@@ -292,26 +276,24 @@ public class JesusRestaurantPanel extends JPanel implements ActionListener, Mous
     		else
     			waiteryloc++;
     		
-    		animationPanel.addGui(g);
+    		jesusAnimationPanel.addGui(g);
     		w.setHost(host);
     		w.setCook(cook);
     		w.setCashier(cashier);
     		w.setGui(g);
     		host.setWaiters(w);
     		waiters.add(w);
-    		//w.startThread();
     	}
     	if (type.equals("Market")) {
     		JesusMarketRole m = new JesusMarketRole(name);
     		JesusMarketGui g = new JesusMarketGui(m);
     		cook.addMarket(m);
     		
-    		animationPanel.addGui(g);
+    		jesusAnimationPanel.addGui(g);
     		m.setGui(g);
     		m.setCook(cook);
     		m.setCashier(cashier);
     		markets.add(m);
-    		//m.startThread();
     	}
     }
 

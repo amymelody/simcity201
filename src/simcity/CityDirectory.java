@@ -495,4 +495,8 @@ public class CityDirectory
 		if(role.equals(market)) //in progress
 		return 0;
 	}
+	
+	public Point getBuildingEntrance(String building) {
+		return buildingMap.get(building).loc;
+	}
 }

@@ -7,6 +7,7 @@ import java.util.concurrent.Semaphore;
 
 import simcity.role.Role;
 import simcity.ItemOrder;
+import simcity.PersonAgent;
 import simcity.market.Order.OrderState;
 import simcity.market.gui.MarketDelivererGui;
 import simcity.market.interfaces.MarketCashier;
@@ -19,8 +20,8 @@ public class MarketDelivererRole extends JobRole implements MarketDeliverer {
 	/* Constructor */
 	String name;
 
-	public MarketDelivererRole(String n) {
-		name = n;
+	public MarketDelivererRole() {
+		super();
 	}
 	
 	public String getMaitreDName() {
@@ -28,6 +29,10 @@ public class MarketDelivererRole extends JobRole implements MarketDeliverer {
 	}
 	public String getName() {
 		return name;
+	}
+	public void setPerson(PersonAgent p) {
+		super.setPerson(p);
+		name = p.getName();
 	}
 	public void setCashier(MarketCashier ch) {
 		cashier = ch;
@@ -90,16 +95,6 @@ public class MarketDelivererRole extends JobRole implements MarketDeliverer {
 			}
 		}
 	}
-	public void msgSignedInvoice(MarketCustomer c) {
-		synchronized(orders) {
-			for(Order o: orders) {
-				if(o.customer.equals(c)) {
-					o.oS = OrderState.done;
-					stateChanged();
-				}
-			}
-		}
-	}
 	public void msgPay() {
 		person.msgEndShift();
 	}
@@ -144,14 +139,6 @@ public class MarketDelivererRole extends JobRole implements MarketDeliverer {
 		}
 		synchronized(orders) {
 			for(Order o: orders) {
-				if(o.equals(currentOrder) && o.oS == OrderState.done) {
-					goToMarket(o);
-					return true;
-				}
-			}
-		}	
-		synchronized(orders) {
-			for(Order o: orders) {
 				if(currentOrder.equals(o) && dS == DelivererState.arrivedBack) {
 					finishDelivery(o);
 					return true;
@@ -175,22 +162,15 @@ public class MarketDelivererRole extends JobRole implements MarketDeliverer {
 	
 	private void deliverOrder(Order o) {
 		o.oS = OrderState.ready;
-		o.customer.msgHereIsOrder(o.items, o.price, this);
+		o.cook.msgDelivery(o.items);
+		o.cashier.msgDelivery(o.price, this);
 	}
 	
 	private void takePayment(Order o) {
 		o.change = o.amountPaid - o.price;
 		o.oS = OrderState.paid;
 		o.customer.msgThankYou(o.change);
-	}
-	
-	private void goToMarket(Order o) {
-		DoGoBack(); // animation
-		try {
-			animation.acquire();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+		DoGoBack();
 	}
 	
 	private void finishDelivery(Order o) {

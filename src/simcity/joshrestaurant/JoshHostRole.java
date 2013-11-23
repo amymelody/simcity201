@@ -16,7 +16,7 @@ public class JoshHostRole extends RestHostRole {
 	public List<String> foods = Collections.synchronizedList(new ArrayList<String>());
 	public Collection<Table> tables;
 
-	private String name;
+	private String name = null;
 	private boolean working;
 	
 	public enum WaiterState
@@ -25,7 +25,6 @@ public class JoshHostRole extends RestHostRole {
 	public JoshHostRole() {
 		super();
 
-		name = person.getName();
 		working = false;
 		// make some tables
 		tables = Collections.synchronizedList(new ArrayList<Table>(NTABLES));

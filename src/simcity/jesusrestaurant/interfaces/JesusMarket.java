@@ -1,6 +1,6 @@
-package simcity.JesusRestaurant.interfaces;
+package simcity.jesusrestaurant.interfaces;
 
-import simcity.JesusRestaurant.JesusCookRole;
+import simcity.jesusrestaurant.JesusCookRole;
 
 public interface JesusMarket {
 	

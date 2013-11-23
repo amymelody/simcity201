@@ -1,4 +1,4 @@
-package simcity.JesusRestaurant;
+package simcity.jesusrestaurant;
 
 import java.util.ArrayList;
 

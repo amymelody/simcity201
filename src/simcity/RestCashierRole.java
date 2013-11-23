@@ -11,5 +11,5 @@ public abstract class RestCashierRole extends JobRole {
 
 	public abstract void msgDelivery(int bill, MarketDeliverer deliverer);
 	
-	public abstract void msgChange(int change);
+	public abstract void msgThankYou(int change);
 }

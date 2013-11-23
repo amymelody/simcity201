@@ -1,25 +1,25 @@
-package simcity.JesusRestaurant;
+package simcity.jesusrestaurant;
 
+import simcity.jesusrestaurant.gui.JesusCustomerGui;
+import simcity.jesusrestaurant.interfaces.JesusCashier;
+import simcity.jesusrestaurant.interfaces.JesusCustomer;
+import simcity.jesusrestaurant.interfaces.JesusWaiter;
 import simcity.role.Role;
-import simcity.JesusRestaurant.gui.JesusCustomerGui;
-import simcity.JesusRestaurant.gui.JesusRestaurantGui;
-import simcity.JesusRestaurant.interfaces.JesusCashier;
-import simcity.JesusRestaurant.interfaces.JesusCustomer;
-import simcity.JesusRestaurant.interfaces.JesusWaiter;
-import simcity.JesusRestaurant.JesusMenu;
-import agent.Agent;
 
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
+/**
+ * Restaurant customer agent.
+ */
 public class JesusCustomerRole extends Role implements JesusCustomer {
 	private String name;
 	private int hungerLevel = 5; // determines length of meal
 	private double money = 20.00;
 	private double amountDue = 0.00;
 	Timer timer = new Timer();
-	private JesusCustomerGui customerGui;
+	private JesusCustomerGui jesusCustomerGui;
 
 	// agent correspondents
 	private JesusHostRole host;
@@ -172,7 +172,7 @@ public class JesusCustomerRole extends Role implements JesusCustomer {
 		/**
 		 * Scheduler.  Determine what action is called for, and do it.
 		 */
-		protected boolean pickAndExecuteAnAction() {
+		public boolean pickAndExecuteAnAction() {
 			//	CustomerAgent is a finite state machine
 
 			if (state == AgentState.DoingNothing && event == AgentEvent.gotHungry ){
@@ -232,7 +232,7 @@ public class JesusCustomerRole extends Role implements JesusCustomer {
 		private void goToRestaurant() {
 			Do("Going to restaurant");
 			host.msgIWantFood(this);//send our instance, so he can respond to us
-			customerGui.vait();
+			jesusCustomerGui.vait();
 		}
 
 		private void decideToWait() {
@@ -241,7 +241,7 @@ public class JesusCustomerRole extends Role implements JesusCustomer {
 				print("No thanks. I'll come back later.");
 				state = AgentState.DoingNothing;
 				event = AgentEvent.none;
-				customerGui.DoExitRestaurant();
+				jesusCustomerGui.DoExitRestaurant();
 			}
 			else {
 				host.msgWaiting(name);
@@ -252,7 +252,7 @@ public class JesusCustomerRole extends Role implements JesusCustomer {
 
 		private void goToTable(int tableN) {
 			Do("Being seated. Going to table");
-			customerGui.DoGoToSeat(tableN);
+			jesusCustomerGui.DoGoToSeat(tableN);
 			waiter.msgReadytoOrder(name);
 		}
 
@@ -260,7 +260,7 @@ public class JesusCustomerRole extends Role implements JesusCustomer {
 			if(menu.tooExpensive(money)) {
 				print("Everything is too expensive.");
 				waiter.msgLeavingTable(name);
-				customerGui.DoExitRestaurant();
+				jesusCustomerGui.DoExitRestaurant();
 			}
 			else {
 				if(name.equals("Salad") || name.equals("Steak") || name.equals("Pizza")) {
@@ -270,7 +270,7 @@ public class JesusCustomerRole extends Role implements JesusCustomer {
 					Random rnd = new Random();
 					foodChoice = menu.getMenuItemName(rnd.nextInt(3));
 				}
-				customerGui.DoOrder(tableNum, foodChoice);
+				jesusCustomerGui.DoOrder(tableNum, foodChoice);
 				print("Ordered " + foodChoice);
 				waiter.msgMyOrder(name, foodChoice);
 			}
@@ -281,7 +281,7 @@ public class JesusCustomerRole extends Role implements JesusCustomer {
 			if(menu.tooExpensive(money)) {
 				print("Everything is too expensive.");
 				waiter.msgLeavingTable(name);
-				customerGui.DoExitRestaurant();
+				jesusCustomerGui.DoExitRestaurant();
 			}
 			else {
 				Random rnd = new Random();
@@ -293,12 +293,12 @@ public class JesusCustomerRole extends Role implements JesusCustomer {
 				print("Ordered " + foodChoice);
 				waiter.msgMyOrder(name, foodChoice);
 				menu = null;
-				customerGui.DoOrder(tableNum, foodChoice);
+				jesusCustomerGui.DoOrder(tableNum, foodChoice);
 			}
 		}
 
 		private void eatFood(String choice) {
-			customerGui.DoReceivedOrder(tableNum, foodChoice);
+			jesusCustomerGui.DoReceivedOrder(tableNum, foodChoice);
 			Do("Eating Food");
 			//This next complicated line creates and starts a timer thread.
 			//We schedule a deadline of getHungerLevel()*1000 milliseconds.
@@ -321,7 +321,7 @@ public class JesusCustomerRole extends Role implements JesusCustomer {
 		}
 
 		private void goToCashier() {
-			customerGui.DoGoToCashier();
+			jesusCustomerGui.DoGoToCashier();
 		}
 		private void payCashier() {
 			Do("Paying Cashier");
@@ -331,7 +331,7 @@ public class JesusCustomerRole extends Role implements JesusCustomer {
 		private void leaveTable() {
 			Do("Leaving.");
 			waiter.msgLeavingTable(name);
-			customerGui.DoExitRestaurant();
+			jesusCustomerGui.DoExitRestaurant();
 
 		}
 
@@ -356,10 +356,11 @@ public class JesusCustomerRole extends Role implements JesusCustomer {
 		}
 
 		public void setGui(JesusCustomerGui g) {
-			customerGui = g;
+			jesusCustomerGui = g;
 		}
 
 		public JesusCustomerGui getGui() {
-			return customerGui;
+			return jesusCustomerGui;
 		}
+
 }

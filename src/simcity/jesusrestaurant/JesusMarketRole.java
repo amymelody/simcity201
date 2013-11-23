@@ -1,18 +1,25 @@
-package simcity.JesusRestaurant;
+package simcity.jesusrestaurant;
 
-import simcity.JesusRestaurant.JesusCookRole;
-import simcity.JesusRestaurant.JesusCashierRole.BillState;
-import simcity.JesusRestaurant.gui.JesusMarketGui;
-import simcity.JesusRestaurant.interfaces.JesusCashier;
-import simcity.JesusRestaurant.interfaces.JesusMarket;
-import simcity.role.Role;
+import simcity.role.JobRole;
+import simcity.jesusrestaurant.JesusCookRole;
+import simcity.jesusrestaurant.JesusCashierRole.BillState;
+import simcity.jesusrestaurant.gui.JesusMarketGui;
+import simcity.jesusrestaurant.interfaces.JesusCashier;
+import simcity.jesusrestaurant.interfaces.JesusMarket;
 
 import java.util.*;
 import java.util.concurrent.Semaphore;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class JesusMarketRole extends Role implements JesusMarket {
+/**
+ * Restaurant Host Agent
+ */
+//We only have 2 types of agents in this prototype. A customer and an agent that
+//does all the rest. Rather than calling the other agent a waiter, we called him
+//the HostAgent. A Host is the manager of a restaurant who sees that all
+//is proceeded as he wishes.
+public class JesusMarketRole extends JobRole implements JesusMarket{
 	private static final int prepareTime = 5000;
 	private static final int init_inv = 15;
 	private int id_cnt = 0;
@@ -32,7 +39,7 @@ public class JesusMarketRole extends Role implements JesusMarket {
 
 	private String name;
 
-	public JesusMarketGui marketGui = null;
+	public JesusMarketGui jesusMarketGui = null;
 
 	public JesusMarketRole(String name) {
 		super();
@@ -57,7 +64,7 @@ public class JesusMarketRole extends Role implements JesusMarket {
 		cook.msgCheckInventory();
 	}
 
-	public void setCashier(JesusCashierRole ch) {
+	public void setCashier(JesusCashier ch) {
 		cashier = ch;
 	}
 
@@ -146,7 +153,7 @@ public class JesusMarketRole extends Role implements JesusMarket {
 	/**
 	 * Scheduler.  Determine what action is called for, and do it.
 	 */
-	protected boolean pickAndExecuteAnAction() {
+	public boolean pickAndExecuteAnAction() {
 		synchronized(bills){
 			for(Bill b: bills){
 				if(b.bS == BillState.paying) {
@@ -272,11 +279,11 @@ public class JesusMarketRole extends Role implements JesusMarket {
 	//utilities
 
 	public void setGui(JesusMarketGui gui) {
-		marketGui = gui;
+		jesusMarketGui = gui;
 	}
 
 	public JesusMarketGui getGui() {
-		return marketGui;
+		return jesusMarketGui;
 	}
 
 	private class stockOrder {
@@ -336,5 +343,17 @@ public class JesusMarketRole extends Role implements JesusMarket {
 		updateInventory("Steak", stI);
 		updateInventory("Salad", sI);
 		updateInventory("Pizza", pI);
+	}
+
+	@Override
+	public void msgStartShift() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void msgEndShift() {
+		// TODO Auto-generated method stub
+		
 	}
 }

@@ -1,4 +1,4 @@
-package simcity.JesusRestaurant.interfaces;
+package simcity.jesusrestaurant.interfaces;
 
 public interface JesusCashier {
 	

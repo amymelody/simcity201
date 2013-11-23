@@ -1,7 +1,7 @@
-package simcity.JesusRestaurant.gui;
+package simcity.jesusrestaurant.gui;
 
-import simcity.JesusRestaurant.JesusCustomerRole;
-import simcity.JesusRestaurant.JesusHostRole;
+import simcity.gui.Gui;
+import simcity.jesusrestaurant.JesusCustomerRole;
 
 import java.awt.*;
 import java.util.HashMap;
@@ -11,11 +11,11 @@ import java.util.TimerTask;
 
 import javax.swing.ImageIcon;
 
-public class JesusCustomerGui implements JesusGui{
+public class JesusCustomerGui implements Gui {
 
 	Timer timer = new Timer();
 	
-	private JesusCustomerRole role = null;
+	private JesusCustomerRole agent = null;
 	private boolean isPresent = false;
 	private boolean isHungry = false;
 
@@ -51,7 +51,7 @@ public class JesusCustomerGui implements JesusGui{
 	Image customerImage;
 	
 	public JesusCustomerGui(JesusCustomerRole c, JesusRestaurantGui gui, int xW, int yW){
-		role = c;
+		agent = c;
 		xPos = -40;
 		yPos = -40;
 		xDestination = -40;
@@ -98,14 +98,14 @@ public class JesusCustomerGui implements JesusGui{
 			yPos--;
 
 		if (xPos == xDestination && yPos == yDestination) {
-			if (command==Command.GoToSeat) role.msgAnimationFinishedGoToSeat();
+			if (command==Command.GoToSeat) agent.msgAnimationFinishedGoToSeat();
 			else if (command==Command.LeaveRestaurant) {
-				role.msgAnimationFinishedLeaveRestaurant();
+				agent.msgAnimationFinishedLeaveRestaurant();
 				isHungry = false;
-				gui.setCustomerEnabled(role);
+				gui.setCustomerEnabled(agent);
 			}
 			else if(xPos == cashierxloc && yPos == cashieryloc) {
-				role.msgAnimationFinishedGoToCashier();
+				agent.msgAnimationFinishedGoToCashier();
 			}
 			command=Command.noCommand;
 		}
@@ -122,7 +122,7 @@ public class JesusCustomerGui implements JesusGui{
 	}
 	public void setHungry() {
 		isHungry = true;
-		role.gotHungry();
+		agent.gotHungry();
 		setPresent(true);
 		xDestination = xWait;
 		yDestination = yWait;
@@ -175,6 +175,6 @@ public class JesusCustomerGui implements JesusGui{
 	}
 	
 	public void updateMoney(Double m) {
-		role.updateMoney(m);
+		agent.updateMoney(m);
 	}
 }

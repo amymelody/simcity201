@@ -17,8 +17,13 @@ import simcity.interfaces.Car;
 import simcity.interfaces.BusStop;
 import simcity.mock.LoggedEvent;
 import simcity.role.Role;
+import simcity.housing.ResidentRole;
+import simcity.market.MarketCustomerRole;
+//import simcity.bank.BankDepositorRole;
+import simcity.role.JobRole;
 
 import java.util.*;
+import java.util.concurrent.Semaphore;
 
 public class PersonAgent extends Agent 
 {
@@ -33,6 +38,7 @@ public class PersonAgent extends Agent
 	private String destination;
 	private CityDirectory city;
 	private PersonGui gui;
+	private Semaphore atDestination = new Semaphore(0,true);
 	
 	public List<BusStop> busStops = Collections.synchronizedList(new ArrayList<BusStop>());
 	public List<ItemOrder> foodNeeded = Collections.synchronizedList(new ArrayList<ItemOrder>());
@@ -129,50 +135,6 @@ public class PersonAgent extends Agent
 		busStops.add(b);
 	}
 	
-	/*private RestCustomer RestCustomerFactory(String roleName) {
-		switch(roleName) {
-			case "joshCustomerRole":
-				return new JoshCustomerRole(name);
-			default:
-				break;
-		}
-		return null;
-	}
-	
-	private MarketCustomer MarketCustomerFactory(String roleName) {
-		switch(roleName) {
-			case "market1CustomerRole":
-				return new MarketCustomerRole(name);
-			case "market2CustomerRole":
-				return new MarketCustomerRole(name);
-			case "market3CustomerRole":
-				return new MarketCustomerRole(name);
-			default:
-				break;
-		}
-		return null;
-	}
-	
-	private Depositor DepositorFactory(String roleName) {
-		switch(roleName) {
-			case "bank1DepositorRole":
-				return new DepositorRole(name);
-			default:
-				break;
-		}
-		return null;
-	}
-	
-	private Resident ResidentFactory(String roleName) {
-		switch(roleName) {
-			case "residentRole":
-				return new ResidentRole(name);
-			default:
-				break;
-		}
-		return null;
-	}*/
-	
 	private boolean haventEatenOutInAWhile() {
 		return true;
 	}
@@ -262,6 +224,11 @@ public class PersonAgent extends Agent
 
 	//Messages
 
+	public void msgAtDestination() {
+		atDestination.release();
+		stateChanged();
+	}
+	
 	public void msgUpdateWatch(Day d, int h, int m) {
 		log.add(new LoggedEvent("Received msgUpdateWatch"));
 		time.day = d;
@@ -278,6 +245,8 @@ public class PersonAgent extends Agent
 	
 	public void msgYoureHired(String l, String r, int p, Map<Day,Time> startShifts, Map<Day,Time> endShifts) {
 		job = new Job(l, r, p, startShifts, endShifts);
+		JobRole j = city.JobFactory(r);
+		addRole(j, r);
 		stateChanged();
 	}
 
@@ -499,10 +468,10 @@ public class PersonAgent extends Agent
 		if (state.ls != LocationState.atDestination || (destination != null && !destination.equals(h.location))) {
 			goToDestination(h.location);
 		} else {
-			/*if (!findRole(h.residentRole)) {
-				ResidentRole r = (ResidentRole)(city.ResidentFactory(h.residentRole));
+			if (!findRole(h.residentRole)) {
+				ResidentRole r = city.ResidentFactory(h.residentRole);
 				addRole(r, h.residentRole);
-			}*/
+			}
 			synchronized(roles) {
 				for (MyRole mr : roles) {
 					if (mr.name.equals(h.residentRole)) {
@@ -566,10 +535,10 @@ public class PersonAgent extends Agent
 		if (state.ls != LocationState.atDestination || (destination != null && !destination.equals(h.location))) {
 			goToDestination(h.location);
 		} else {
-			/*if (!findRole(h.residentRole)) {
-				ResidentRole r = (ResidentRole)(city.ResidentFactory(h.residentRole));
+			if (!findRole(h.residentRole)) {
+				ResidentRole r = city.ResidentFactory(h.residentRole);
 				addRole(r, h.residentRole);
-			} */
+			} 
 			synchronized(roles) {
 				for (MyRole mr : roles) {
 					if (mr.name.equals(h.residentRole)) {
@@ -591,10 +560,10 @@ public class PersonAgent extends Agent
 		if (state.ls != LocationState.atDestination || (destination != null && !destination.equals(r.location))) {
 			goToDestination(r.location);
 		} else {
-			/*if (!findRole(r.customerRole)) {
-				RestCustomerRole c = (RestCustomerRole)(city.RestCustomerFactory(r.customerRole));
+			if (!findRole(r.customerRole)) {
+				RestCustomerRole c = city.RestCustomerFactory(r.customerRole);
 				addRole(c, r.customerRole);
-			} */
+			}
 			synchronized(roles) {
 				for (MyRole mr : roles) {
 					if (mr.name.equals(r.customerRole)) {
@@ -617,10 +586,10 @@ public class PersonAgent extends Agent
 		if (state.ls != LocationState.atDestination || (destination != null && !destination.equals(m.location))) {
 			goToDestination(m.location);
 		} else {
-			/*if (!findRole(m.customerRole)) {
-				MarketCustomerRole c = (MarketCustomerRole)(city.MarketCustomerFactory(m.customerRole));
+			if (!findRole(m.customerRole)) {
+				MarketCustomerRole c = city.MarketCustomerFactory(m.customerRole);
 				addRole(c, m.customerRole);
-			} */
+			} 
 			synchronized(roles) {
 				for (MyRole mr : roles) {
 					if (mr.name.equals(m.customerRole)) {
@@ -644,7 +613,7 @@ public class PersonAgent extends Agent
 			goToDestination(b.location);
 		} else {
 			/*if (!findRole(b.depositorRole)) {
-				BankDepositorRole d = (BankDepositorRole)(city.BankDepositorFactory(b.depositorRole));
+				BankDepositorRole d = city.BankDepositorFactory(b.depositorRole);
 				addRole(d, b.depositorRole);
 			} */
 			synchronized(roles) {
@@ -705,7 +674,13 @@ public class PersonAgent extends Agent
 			} else {
 				state.ts = TransportationState.walking;
 				destination = d;
-				//gui.DoGoToDestination(locations.get(d)); //just walk there
+				gui.DoGoToDestination(city.getBuildingEntrance(d)); //just walk there
+				try {
+					atDestination.acquire();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				state.ls = LocationState.atDestination;
 			}
 		}

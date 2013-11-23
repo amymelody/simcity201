@@ -1,12 +1,15 @@
-package simcity.JesusRestaurant.test.mock;
+package simcity.jesusrestaurant.test.mock;
 
+import simcity.jesusrestaurant.JesusCookRole;
+import simcity.jesusrestaurant.JesusMenu;
+import simcity.jesusrestaurant.interfaces.JesusCashier;
+import simcity.jesusrestaurant.interfaces.JesusCustomer;
+import simcity.jesusrestaurant.interfaces.JesusMarket;
+import simcity.jesusrestaurant.interfaces.JesusWaiter;
 import simcity.mock.EventLog;
 import simcity.mock.Mock;
-import simcity.JesusRestaurant.JesusCookRole;
-import simcity.JesusRestaurant.interfaces.JesusCashier;
-import simcity.JesusRestaurant.interfaces.JesusMarket;
 
-public class MockJesusMarket extends Mock implements JesusMarket {
+public class JesusMockMarket extends Mock implements JesusMarket {
 
 	/**
 	 * Reference to the Cashier under test that can be set by the unit test.
@@ -14,7 +17,7 @@ public class MockJesusMarket extends Mock implements JesusMarket {
 	public JesusCashier cashier;
 	public EventLog log = new EventLog();
 
-	public MockJesusMarket(String n) {
+	public JesusMockMarket(String n) {
 		super(n);
 	}
 

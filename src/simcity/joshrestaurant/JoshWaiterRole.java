@@ -20,7 +20,7 @@ public class JoshWaiterRole extends RestWaiterRole implements JoshWaiter {
 	JoshCookRole cook;
 	JoshCashierRole cashier;
 
-	private String name;
+	private String name = null;
 	private Semaphore atHome = new Semaphore(0,true);
 	private Semaphore atCustomer = new Semaphore(0,true);
 	private Semaphore atTable = new Semaphore(0,true);
@@ -44,7 +44,6 @@ public class JoshWaiterRole extends RestWaiterRole implements JoshWaiter {
 
 	public JoshWaiterRole() {
 		super();
-		name = person.getName();
 		working = false;
 		
 		prices.put("steak", 16);
