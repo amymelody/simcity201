@@ -14,7 +14,7 @@ import java.util.List;
 import simcity.role.JobRole;
 import simcity.role.Role;
 
-
+//
 public class BankTellerRole extends JobRole   {
 
 	private String name;
