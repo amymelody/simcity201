@@ -16,60 +16,61 @@ import simcity.role.Role;
 
 public class BankTellerRole extends Role   {
 
-	@Override
-	public boolean pickAndExecuteAnAction() {
-		// TODO Auto-generated method stub
-		return false;
+	private String name;
+	private class myCustomer{
+		BankCustomerRole c;
+		CustomerState cS;
+		String name;
+		double money;
+		
+		myCustomer(BankCustomerRole c, CustomerState state, int cashInBank){
+			this.c = c;
+			this.cS = state;
+			this.name = c.getName();
+			this.money = cashInBank;
+			
+		}
+		public CustomerState getCustomerState(){
+			return cS;
+		}
 	}
 	
-	/*Data*/
-	/*
-	Person manager;
-	Person customer;
+	public enum CustomerState{waitingForTeller, makingRequest, waiting, leaving}
 	
+	private BankManagerRole manager;
 	
-	// Normative Scenario #1
-		public void msgMakeTransaction(BankCustomerRole c){
-			if(findCustomer(c) == null){
-				customers.add(new myCustomer(c));
-				
-				
-			}
-			else {
-				//figuring out how to add transaction
-			}
+	List<myCustomer> customers = new ArrayList<myCustomer>();
+	
+	public BankTellerRole(String name){
+		this.name = name;
+	}
+	
+	public void setManager(BankManagerRole manager){
+		this.manager = manager;
+	}
+
+
+
+////MESSAGES/////
+public void msgHelpCustomer(BankCustomerRole c, double cash){
+	customers.add(new myCustomer(c, CustomerState.waitingForTeller, cash));
+	stateChanged();
+}
+
+///SCHEDULER
+public boolean pickAndExecuteAnAction(){
+	for(myCustomer c : customers){
+		if(c.getCustomerState() == CustomerState.waitingForTeller){
+			helpCustomer(this, c.c);
 		}
-		
-		public boolean pickAndExecuteAnAction() {
-			if(bS == BankState.closing) {
-				closeUp();
-				return true;
-			}
-			
-			
-			return false;
-		}
-		
-		*/
-		/* Actions */
-		/*
-		private void closeUp() {
-			
-		}
-		
-		private void workWithCustomer (myCustomer c) {
-			
-		}
-		
-		private void processTrasaction() {
-			
-		}
-		
-		private void transactionComplete() {
-			
-		}
-		
-		
-		*/
+	}
+	return false;
+}
+
+///ACTIONS////
+private void helpCustomer(BankTellerRole t, BankCustomerRole c){
+	c.msgMakeRequest(this);
+}
 	
 }
+

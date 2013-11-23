@@ -4,10 +4,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import simcity.role.Role;
+
+import simcity.role.JobRole;
 
 
-public class BankManagerRole extends Role   {
+public class BankManagerRole extends JobRole   {
 	
 	/* Data */
 	
@@ -16,9 +17,9 @@ public class BankManagerRole extends Role   {
 	// Lists of workers
 	public List<myTeller> tellers = Collections.synchronizedList(new ArrayList<myTeller>());
 	public List<myCustomer> customers = Collections.synchronizedList(new ArrayList<myCustomer>());
-	
+	public List<myCustomer> waitingCustomers = Collections.synchronizedList(new ArrayList<myCustomer>());
 	// BankState Status Data
-	
+	int tellerSelection = 0;
 	enum BankState {open, closing, closed};
 	BankState bS;
 	
@@ -33,47 +34,48 @@ public class BankManagerRole extends Role   {
 		addTeller(t);
 	}
 
-	public void msgStartShift(BankTellerRole t) {
+	public void msgStartShift() {
 		synchronized(tellers){
 			for(myTeller tr : tellers) {
-				if(tr.teller == t) {
+			
 					tr.tS = TellerState.working;
 				}
 				stateChanged();
 			}
 		}
-	}
 	
-	public void msgEndShift(BankTellerRole t) {
+	
+	public void msgEndShift() {
 		synchronized(tellers){
 			for(myTeller tr: tellers) {
-				if(tr.teller == t) {
 					tr.tS = TellerState.doingNothing;
 				}
 				stateChanged();
 			}
 		}
-	}
+	
 
 	public void msgDoneForTheDay() {
 		bS = BankState.closing;
 	}
 
 	// Normative Scenario #1
-	public void msgMakeTransaction(BankCustomerRole c){
+	public void msgMakeTransaction(BankCustomerRole c, int transaction){
+		
 		if(findCustomer(c) == null){
-			customers.add(new myCustomer(c, c.getName()));
+			customers.add(new myCustomer(c, c.getName(), transaction));
 		}
 			findCustomer(c).cS = CustomerState.arrived;
-			
+			waitingCustomers.add(findCustomer(c));
 		stateChanged();
 	}
 	
 	public boolean pickAndExecuteAnAction() {
 		synchronized(customers){
 			for(myCustomer c : customers){
-				if(c.cS == CustomerState.arrived){
-					FindTeller(c);
+				if(c.cS == CustomerState.arrived && !tellers.isEmpty()){
+					
+					helpCustomer(waitingCustomers.get(0), findTeller(),);
 					return true;
 				}
 			}
@@ -95,8 +97,20 @@ public class BankManagerRole extends Role   {
 		
 	}
 	
-	private void findTeller (myCustomer c) {
+	private BankTellerRole findTeller () {
+		BankTellerRole t = tellers.get(tellerSelection%tellers.size()).t;
+		tellerSelection++;
+
+		if(findTeller(t).tS == TellerState.doingNothing){
+			return t;
+		}
 		
+	return null;
+	}	
+	
+	private void helpCustomer(BankCustomerRole c, BankTellerRole t){
+		waitingCustomers.remove(c);
+		t.msgHelpCustomer(c, findCustomer(c).cashInBank);
 	}
 	
 	private void processTrasaction() {
@@ -119,10 +133,12 @@ public class BankManagerRole extends Role   {
 		double cashInBank;
 		String name;
 		CustomerState cS;
-		
-		myCustomer(BankCustomerRole c, String n){
+		int request;
+	// 0 means deposit, 1 means withdrawal
+		myCustomer(BankCustomerRole c, String n, int r){
 			cashInBank = 0.0;
 			name = n;
+			request = r;
 			
 		}
 		
@@ -139,12 +155,20 @@ public class BankManagerRole extends Role   {
 		}
 		return null;
 	}
+	private myTeller findTeller(BankTellerRole t){
+		for(myTeller mt : tellers){
+			if(mt.t == t){
+				return mt;
+			}
+		}
+		return null;
+	}
 	private class myTeller{
-		BankTellerRole teller;
+		BankTellerRole t;
 		TellerState tS;
 		
-		myTeller(BankTellerRole t, TellerState ts){
-			teller = t;
+		myTeller(BankTellerRole teller, TellerState ts){
+			t = teller;
 			tS = ts;
 		}
 	
@@ -158,6 +182,9 @@ public class BankManagerRole extends Role   {
 	public void addTeller(BankTellerRole t){
 		tellers.add(new myTeller(t, TellerState.doingNothing));
 	}
+
+	
+	
 
 
 	
