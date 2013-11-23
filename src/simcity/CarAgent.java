@@ -38,7 +38,8 @@ public class CarAgent extends Agent{
 		}
 		if (state ==  AgentState.GoingToDestination && event == AgentEvent.gotDestination){
 			state = AgentState.DoingNothing;
-			person.msgGotDestination();
+			atDestination();
+			//person.msgGotDestination();
 			return true;
 		}
 		return false;
@@ -59,5 +60,9 @@ public class CarAgent extends Agent{
 
 	public void msgGoToDestination(String d) {
 		destinationString = d;		
+	}
+	
+	private void atDestination(){
+		person.msgAtDestination(destinationString);
 	}
 }
