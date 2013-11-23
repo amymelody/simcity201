@@ -11,19 +11,20 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import simcity.role.JobRole;
 import simcity.role.Role;
 
 
-public class BankTellerRole extends Role   {
+public class BankTellerRole extends JobRole   {
 
 	private String name;
 	private class myCustomer{
-		BankCustomerRole c;
+		BankDepositorRole c;
 		CustomerState cS;
 		String name;
 		double money;
 		
-		myCustomer(BankCustomerRole c, CustomerState state, int cashInBank){
+		myCustomer(BankDepositorRole c, CustomerState state, double cashInBank){
 			this.c = c;
 			this.cS = state;
 			this.name = c.getName();
@@ -52,7 +53,7 @@ public class BankTellerRole extends Role   {
 
 
 ////MESSAGES/////
-public void msgHelpCustomer(BankCustomerRole c, double cash){
+public void msgHelpCustomer(BankDepositorRole c, double cash){
 	customers.add(new myCustomer(c, CustomerState.waitingForTeller, cash));
 	stateChanged();
 }
@@ -68,8 +69,20 @@ public boolean pickAndExecuteAnAction(){
 }
 
 ///ACTIONS////
-private void helpCustomer(BankTellerRole t, BankCustomerRole c){
+private void helpCustomer(BankTellerRole t, BankDepositorRole c){
 	c.msgMakeRequest(this);
+}
+
+@Override
+public void msgStartShift() {
+	// TODO Auto-generated method stub
+	
+}
+
+@Override
+public void msgEndShift() {
+	// TODO Auto-generated method stub
+	
 }
 	
 }

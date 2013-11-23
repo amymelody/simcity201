@@ -11,15 +11,15 @@ import simcity.role.Role;
 import simcity.ItemOrder;
 import simcity.PersonAgent;
 
-public class BankCustomerRole extends Role {
+public class BankDepositorRole extends Role {
 	
 	/* Constructors */
 	String name;
 
-	public BankCustomerRole(){
+	public BankDepositorRole(){
 		super();
 	}
-	public BankCustomerRole(String n) {
+	public BankDepositorRole(String n) {
 		name = n;
 	}
 
