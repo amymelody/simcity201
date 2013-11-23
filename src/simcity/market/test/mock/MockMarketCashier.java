@@ -8,8 +8,8 @@ import simcity.market.interfaces.MarketCashier;
 import simcity.market.interfaces.MarketCustomer;
 import simcity.market.interfaces.MarketDeliverer;
 import simcity.market.interfaces.MarketEmployee;
-import simcity.market.interfaces.RestCashierRole;
-import simcity.market.interfaces.RestCookRole;
+import simcity.RestCashierRole;
+import simcity.RestCookRole;
 import simcity.mock.LoggedEvent;
 import simcity.mock.Mock;
 
@@ -105,7 +105,7 @@ public class MockMarketCashier extends Mock implements MarketCashier {
 	@Override
 	public void msgDelivered(Order order, MarketDeliverer d) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 

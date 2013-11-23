@@ -37,22 +37,12 @@ public class MockMarketCustomer extends Mock implements MarketCustomer {
 	@Override
 	public void msgHereAreItemsandPrice(List<ItemOrder> i, int price) {
 		if(items.equals(i)) {
-			log.add(new LoggedEvent("Received correct items and payment."));
+			log.add(new LoggedEvent("Received correct items and payment"));
 		}
 		else {
 			log.add(new LoggedEvent("Did not receive correct items."));
 		}
 		
-	}
-
-	@Override
-	public void msgHereIsOrder(List<ItemOrder> i, int price, MarketDeliverer del) {
-		if(items.equals(i)) {
-			log.add(new LoggedEvent("Received correct items and payment."));
-		}
-		else {
-			log.add(new LoggedEvent("Did not receive correct items."));
-		}
 	}
 
 	@Override

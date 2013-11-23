@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.ArrayList;
 
 import simcity.ItemOrder;
+import simcity.RestCashierRole;
+import simcity.RestCookRole;
 import simcity.market.Order;
 
 public interface MarketCashier {

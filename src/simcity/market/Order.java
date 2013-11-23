@@ -3,6 +3,8 @@ package simcity.market;
 import java.util.List;
 
 import simcity.ItemOrder;
+import simcity.RestCashierRole;
+import simcity.RestCookRole;
 import simcity.market.interfaces.MarketCustomer;
 
 public class Order {
@@ -11,9 +13,9 @@ public class Order {
 	RestCookRole cook;
 	List<ItemOrder> items;
 	OrderState oS;
-	int price;
-	int amountPaid;
-	int change;
+	public int price;
+	public int amountPaid;
+	public int change;
 	String location;
 	
 	Order(MarketCustomer c, List<ItemOrder> i) {

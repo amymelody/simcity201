@@ -9,6 +9,8 @@ import simcity.role.JobRole;
 import simcity.role.Role;
 import simcity.ItemOrder;
 import simcity.PersonAgent;
+import simcity.RestCashierRole;
+import simcity.RestCookRole;
 import simcity.market.Order.OrderState;
 import simcity.market.gui.MarketCashierGui;
 import simcity.market.gui.MarketCustomerGui;
@@ -66,6 +68,12 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 			mS = MarketState.closing;
 		}
 	}
+	public void setMarketMoney(int mM) {
+		marketMoney = mM;
+	}
+	public int viewMarketMoney() {
+		return marketMoney;
+	}
 
 	/* Accessors */
 	public List getEmployees() {
@@ -111,9 +119,11 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 	// Start/End Shift
 	public void msgStartShift() {
 		working = true;
+		//stateChanged();
 	}
 	public void msgEndShift() {
 		working = false;
+		//stateChanged();
 	}
 
 	// Worker interactions (hiring, enter/exit shift, etc.)
@@ -172,7 +182,7 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 	// Normative Scenario #1
 	public void msgIWantItems(MarketCustomer c, List<ItemOrder> items) {
 		orders.add(new Order(c, items));
-		stateChanged();
+		//stateChanged();
 	}
 	
 	public void msgHereAreItems(Order order, MarketEmployee e) {
@@ -191,7 +201,7 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 				}
 			}
 		}
-		stateChanged();
+		//stateChanged();
 	}
 	public void msgPayment(MarketCustomer c, int money) {
 		synchronized(orders) {
@@ -208,7 +218,7 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 	// Normative Scenario #2
 	public void msgIWantDelivery(RestCookRole rCk, RestCashierRole rCh, List<ItemOrder> i, String location) {
 		orders.add(new Order(rCk, rCh, i, location));
-		stateChanged();
+		//stateChanged();
 	}
 	public void msgDelivered(Order order, MarketDeliverer d) {
 		synchronized(orders) {
@@ -226,11 +236,15 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 				}
 			}
 		}
-		stateChanged();
+		//stateChanged();
 	}
 
 	/* Scheduler */
 	public boolean pickAndExecuteAnAction() {
+		if(!working) {
+			leaveMarket();
+			return true;
+		}
 		if(mS != MarketState.closed && working) {
 			synchronized(orders) {
 				for(Order o: orders) {
@@ -282,6 +296,9 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 
 
 	/* Actions */
+	private void leaveMarket() {
+		gui.leave();
+	}
 	private void closeUp() {
 		synchronized(employees) {
 			for(myEmployee me: employees) {
@@ -397,11 +414,11 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 	/* Calculation functions by Cashier */
 	private void calculatePrice(Order o) {
 		for(ItemOrder iO: o.items) {
-			o.price += inventory.getPrice(iO.getFoodItem());
+			o.price += inventory.getPrice(iO.getFoodItem())*iO.getAmount();
 		}
 	}
 	private void transaction(Order o) {
-		o.change = o.price - o.amountPaid;
+		o.change = o.amountPaid - o.price;
 	}
 	private void updateMarketMoney(Order o) {
 		marketMoney += o.price;

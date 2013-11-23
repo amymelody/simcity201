@@ -86,7 +86,7 @@ public class MarketCustomerRole extends Role implements MarketCustomer {
 		delivery = d;
 		location = l;
 		cS = CustomerState.arrived;
-		stateChanged();
+		//stateChanged();
 	}
 
 	public void msgHereAreItemsandPrice(List<ItemOrder> i, int price) {
@@ -94,13 +94,13 @@ public class MarketCustomerRole extends Role implements MarketCustomer {
 		person.msgReceivedItems(i);
 		cost = price;
 		cS = CustomerState.getting;
-		stateChanged();
+		//stateChanged();
 	}
 
 	public void msgThankYou(int change) {
 		person.msgIncome(change);
 		cS = CustomerState.leaving;
-		stateChanged();
+		//stateChanged();
 	}
 
 
@@ -108,17 +108,17 @@ public class MarketCustomerRole extends Role implements MarketCustomer {
 	public void msgAtCashier() {
 		animation.release();
 		cS = CustomerState.atCashier;
-		stateChanged();
+		//stateChanged();
 	}
 
 	public void msgAtWaitingArea() {
 		animation.release();
-		stateChanged();
+		//stateChanged();
 	}
 
 	public void msgLeft() {
 		animation.release();
-		stateChanged();
+		//stateChanged();
 	}
 
 
