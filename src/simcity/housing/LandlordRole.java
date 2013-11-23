@@ -1,5 +1,6 @@
 package simcity.housing;
 
+import simcity.housing.interfaces.Resident;
 import simcity.role.JobRole;
 import java.awt.Point;
 import java.util.*;
@@ -9,12 +10,13 @@ public class LandlordRole extends JobRole
 {
 
 //Data
+	String name = "Landlord";
 	List<Renter> renters;
 	class Renter
 	{
-		ResidentRole resident;
+		Resident resident;
 		RenterState state = RenterState.away;
-		Renter(ResidentRole r)
+		Renter(Resident r)
 		{
 			resident = r;
 		}
@@ -39,6 +41,11 @@ public class LandlordRole extends JobRole
 	Semaphore atLocation = new Semaphore(0, true);
 //	ResidentGui gui;
 
+	public LandlordRole()
+	{
+		super();
+	}
+	
 //Messages
 	public void msgStartShift() //from Person
 	{
@@ -49,7 +56,7 @@ public class LandlordRole extends JobRole
 	{
 		//dummy method unnecessary for landlord 
 	}
-	public void msgDingDong(ResidentRole r) //from Resident
+	public void msgDingDong(Resident r) //from Resident
 	{
 		commands.add(Command.collectRent);
 		for(Renter renter : renters)
@@ -61,11 +68,12 @@ public class LandlordRole extends JobRole
 		}
 		stateChanged();
 	}
-	public void msgPayRent(ResidentRole r, int money) //from Resident
+	public void msgPayRent(Resident r, int money) //from Resident
 	{
 		moneyEarned += money;
 		for(Renter renter : renters)
 		{
+		
 			if(renter.resident == r)
 			{
 				renter.state = RenterState.paid;
@@ -116,7 +124,7 @@ public class LandlordRole extends JobRole
     }
 
 //Actions
-	public void sendRentDue(Command c)
+	private void sendRentDue(Command c)
 	{
 		commands.remove(c);
 		for(Renter r : renters)
@@ -129,7 +137,7 @@ public class LandlordRole extends JobRole
 		}
 		stateChanged();
 	}
-	public void sendAmountOwed(Command c)
+	private void sendAmountOwed(Command c)
 	{
 		commands.remove(c);
 		goToLocation(locations.get("Doorway"));
@@ -143,7 +151,7 @@ public class LandlordRole extends JobRole
 		}
 		stateChanged();
 	}
-	public void sendEndShift()
+	private void sendEndShift()
 	{
 		for(Renter r : renters)
 		{
@@ -154,7 +162,7 @@ public class LandlordRole extends JobRole
 //		person.endShift(temp);
 	}
 
-	public void goToLocation(Point p)
+	private void goToLocation(Point p)
 	{
 //		gui.doGoToLocation(p);
 		try
@@ -166,4 +174,10 @@ public class LandlordRole extends JobRole
 			e.printStackTrace();
 		}
 	}
+
+	public void addRenter(Resident r)
+	{
+		renters.add(new Renter(r));
+	}
+
 }

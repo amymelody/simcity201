@@ -1,5 +1,6 @@
 package simcity.housing;
 
+import simcity.housing.interfaces.Landlord;
 import simcity.interfaces.Resident;
 import simcity.role.Role;
 import simcity.ItemOrder;
@@ -11,7 +12,9 @@ public class ResidentRole extends Role implements Resident
 {
 
 //Data
-	LandlordRole landlord;
+	String name = "Resident";
+	
+	Landlord landlord = null;
 
 	private enum ResidentState
 	{
@@ -40,6 +43,16 @@ public class ResidentRole extends Role implements Resident
 	private Timer timer = new Timer();
 //	private ResidentGui gui;
 
+	public ResidentRole()
+	{
+		super();
+	}
+	
+	public void setLandlord(Landlord l)
+	{
+		landlord = l;
+	}
+	
 //Messages
 	public void msgRentDue() //from Landlord
 	{
@@ -155,13 +168,13 @@ public class ResidentRole extends Role implements Resident
 	private void sendDingDong(Command c)
 	{
 		commands.remove(c);
-		landlord.msgDingDong(this);
+		landlord.msgDingDong((simcity.housing.interfaces.Resident)this);
 		stateChanged();
 	}
 	private void sendPayRent(Command c)
 	{
 		commands.remove(c);
-		landlord.msgPayRent(this, rent);
+		landlord.msgPayRent((simcity.housing.interfaces.Resident) this, rent);
 		person.msgExpense(rent);
 		rent = -1;
 		stateChanged();

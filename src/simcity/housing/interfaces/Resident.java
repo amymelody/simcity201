@@ -3,12 +3,9 @@ package simcity.housing.interfaces;
 import java.util.List;
 
 import simcity.ItemOrder;
-import simcity.mock.EventLog;
 
 public interface Resident
 {
-	public EventLog log = new EventLog();
-
 	public abstract void msgRentDue(); //from Landlord
 	public abstract void msgAtLandlord(); //from Person
 	public abstract void msgAmountOwed(int r); //from Landlord
