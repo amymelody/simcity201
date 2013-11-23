@@ -60,7 +60,7 @@ public class BankManagerRole extends JobRole   {
 	}
 
 	// Normative Scenario #1
-	public void msgMakeTransaction(BankCustomerRole c, int transaction){
+	public void msgMakeTransaction(BankDepositorRole c, int transaction){
 		
 		if(findCustomer(c) == null){
 			customers.add(new myCustomer(c, c.getName(), transaction));
@@ -108,7 +108,7 @@ public class BankManagerRole extends JobRole   {
 	return null;
 	}	
 	
-	private void helpCustomer(BankCustomerRole c, BankTellerRole t){
+	private void helpCustomer(BankDepositorRole c, BankTellerRole t){
 		waitingCustomers.remove(c);
 		t.msgHelpCustomer(c, findCustomer(c).cashInBank);
 	}
@@ -129,13 +129,13 @@ public class BankManagerRole extends JobRole   {
 	
 	//Customer class
 	private class myCustomer{
-		BankCustomerRole customer;
+		BankDepositorRole customer;
 		double cashInBank;
 		String name;
 		CustomerState cS;
 		int request;
 	// 0 means deposit, 1 means withdrawal
-		myCustomer(BankCustomerRole c, String n, int r){
+		myCustomer(BankDepositorRole c, String n, int r){
 			cashInBank = 0.0;
 			name = n;
 			request = r;
@@ -146,7 +146,7 @@ public class BankManagerRole extends JobRole   {
 	public enum CustomerState{arrived, beingHelped, leaving};
 
 	
-	private myCustomer findCustomer(BankCustomerRole c){
+	private myCustomer findCustomer(BankDepositorRole c){
 	
 		for(myCustomer mc : customers){
 			if(mc.customer == c){
