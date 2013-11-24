@@ -279,6 +279,7 @@ public class PersonAgent extends Agent
 		time.day = d;
 		time.hour = h;
 		time.minute = m;
+		System.out.println(time.getDay().toString() + ", " + time.getHour() + ":" + time.getMinute());
 		stateChanged();
 	}
 

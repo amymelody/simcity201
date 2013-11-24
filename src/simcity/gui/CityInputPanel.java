@@ -7,6 +7,7 @@ import simcity.Time;
 import simcity.CityDirectory;
 
 import javax.swing.*;
+import javax.swing.Timer;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -15,6 +16,8 @@ import java.util.List;
 
 public class CityInputPanel extends JPanel implements ActionListener
 {
+	static final int TIMERINCR = 1100;
+	
 	private Vector<PersonAgent> people = new Vector<PersonAgent>();
 	private Vector<CarAgent> cars = new Vector<CarAgent>();
 	
@@ -22,6 +25,8 @@ public class CityInputPanel extends JPanel implements ActionListener
     private JScrollPane personPane = new JScrollPane(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
     private JPanel view = new JPanel();
     private List<JButton> personList = new ArrayList<JButton>();
+    private Timer timer;
+    private Time time;
 
     private CityGui gui;
     private CityCreationPanel creationPanel = new CityCreationPanel(this, cityDirectory);
@@ -44,6 +49,11 @@ public class CityInputPanel extends JPanel implements ActionListener
         add(new JLabel("Citizens:"));
         personPane.setViewportView(view);
         add(personPane);
+        
+        time = new Time(Day.Sun, 0, 0);
+        timer = new Timer(TIMERINCR, this );
+    	timer.start();
+        
         final CityInputPanel me = this;
         (new Thread(new Runnable(){
         	@Override
@@ -59,6 +69,10 @@ public class CityInputPanel extends JPanel implements ActionListener
 
     public void actionPerformed(ActionEvent e)
     {
+    	time = time.plus(30);
+    	for (PersonAgent p : people) {
+    		p.msgUpdateWatch(time.getDay(), time.getHour(), time.getMinute());
+    	}
     	for (JButton b : personList)
     	{
             if (e.getSource() == b)

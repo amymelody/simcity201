@@ -36,7 +36,7 @@ public class Time
 		this.day = day;
 	}
 	
-	Time plus(int minutes) {
+	public Time plus(int minutes) {
 		Day d = day;
 		int h = hour;
 		int m = minute;
@@ -53,7 +53,7 @@ public class Time
 		return new Time(d, h, m);
 	}
 	
-	boolean greaterThanOrEqualTo(Time t) {
+	public boolean greaterThanOrEqualTo(Time t) {
 		if (hour >= t.hour) {
 			return true;
 		}
