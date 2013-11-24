@@ -1,9 +1,9 @@
 package simcity.test.mock;
 
+import simcity.interfaces.MarketDeliverer;
 import simcity.interfaces.RestCashier;
 import simcity.joshrestaurant.interfaces.JoshCustomer;
 import simcity.joshrestaurant.interfaces.JoshWaiter;
-import simcity.market.interfaces.MarketDeliverer;
 import simcity.mock.LoggedEvent;
 import simcity.mock.Mock;
 

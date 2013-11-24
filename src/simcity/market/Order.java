@@ -3,9 +3,9 @@ package simcity.market;
 import java.util.List;
 
 import simcity.ItemOrder;
+import simcity.interfaces.MarketCustomer;
 import simcity.interfaces.RestCashier;
 import simcity.interfaces.RestCook;
-import simcity.market.interfaces.MarketCustomer;
 
 public class Order {
 	MarketCustomer customer;

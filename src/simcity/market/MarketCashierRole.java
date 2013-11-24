@@ -9,14 +9,14 @@ import simcity.role.JobRole;
 import simcity.ItemOrder;
 import simcity.PersonAgent;
 import simcity.bank.BankManagerRole;
+import simcity.interfaces.MarketCashier;
+import simcity.interfaces.MarketCustomer;
+import simcity.interfaces.MarketDeliverer;
+import simcity.interfaces.MarketEmployee;
 import simcity.interfaces.RestCashier;
 import simcity.interfaces.RestCook;
 import simcity.market.Order.OrderState;
 import simcity.market.gui.MarketCashierGui;
-import simcity.market.interfaces.MarketCashier;
-import simcity.market.interfaces.MarketCustomer;
-import simcity.market.interfaces.MarketDeliverer;
-import simcity.market.interfaces.MarketEmployee;
 
 public class MarketCashierRole extends JobRole implements MarketCashier {
 

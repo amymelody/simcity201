@@ -3,9 +3,9 @@ package simcity.test.mock;
 import java.util.List;
 
 import simcity.ItemOrder;
-import simcity.market.interfaces.MarketCashier;
-import simcity.market.interfaces.MarketCustomer;
-import simcity.market.interfaces.MarketDeliverer;
+import simcity.interfaces.MarketCashier;
+import simcity.interfaces.MarketCustomer;
+import simcity.interfaces.MarketDeliverer;
 import simcity.mock.LoggedEvent;
 import simcity.mock.Mock;
 

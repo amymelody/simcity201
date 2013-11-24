@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import simcity.interfaces.MarketCashier;
+import simcity.interfaces.MarketCustomer;
+import simcity.interfaces.MarketDeliverer;
 import simcity.market.Order;
-import simcity.market.interfaces.MarketCashier;
-import simcity.market.interfaces.MarketCustomer;
-import simcity.market.interfaces.MarketDeliverer;
 import simcity.mock.LoggedEvent;
 import simcity.mock.Mock;
 

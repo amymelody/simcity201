@@ -5,9 +5,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import simcity.interfaces.MarketCashier;
+import simcity.interfaces.MarketEmployee;
 import simcity.market.Order;
-import simcity.market.interfaces.MarketCashier;
-import simcity.market.interfaces.MarketEmployee;
 import simcity.mock.LoggedEvent;
 import simcity.mock.Mock;
 

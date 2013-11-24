@@ -6,9 +6,9 @@ import java.util.concurrent.Semaphore;
 import simcity.role.Role;
 import simcity.ItemOrder;
 import simcity.PersonAgent;
+import simcity.interfaces.MarketCashier;
+import simcity.interfaces.MarketCustomer;
 import simcity.market.gui.MarketCustomerGui;
-import simcity.market.interfaces.MarketCashier;
-import simcity.market.interfaces.MarketCustomer;
 
 public class MarketCustomerRole extends Role implements MarketCustomer {
 

@@ -5,8 +5,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Semaphore;
 
-import simcity.market.interfaces.MarketCashier;
-import simcity.market.interfaces.MarketDeliverer;
+import simcity.interfaces.MarketCashier;
+import simcity.interfaces.MarketDeliverer;
 import simcity.role.Role;
 import simcity.ItemOrder;
 import simcity.PersonAgent;

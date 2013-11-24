@@ -3,13 +3,13 @@ package simcity.test.mock;
 import java.util.List;
 
 import simcity.ItemOrder;
+import simcity.interfaces.MarketCashier;
+import simcity.interfaces.MarketCustomer;
+import simcity.interfaces.MarketDeliverer;
+import simcity.interfaces.MarketEmployee;
 import simcity.interfaces.RestCashier;
 import simcity.interfaces.RestCook;
 import simcity.market.Order;
-import simcity.market.interfaces.MarketCashier;
-import simcity.market.interfaces.MarketCustomer;
-import simcity.market.interfaces.MarketDeliverer;
-import simcity.market.interfaces.MarketEmployee;
 import simcity.RestCashierRole;
 import simcity.RestCookRole;
 import simcity.mock.LoggedEvent;

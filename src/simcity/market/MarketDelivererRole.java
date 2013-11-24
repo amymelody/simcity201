@@ -8,11 +8,11 @@ import java.util.concurrent.Semaphore;
 import simcity.role.Role;
 import simcity.ItemOrder;
 import simcity.PersonAgent;
+import simcity.interfaces.MarketCashier;
+import simcity.interfaces.MarketCustomer;
+import simcity.interfaces.MarketDeliverer;
 import simcity.market.Order.OrderState;
 import simcity.market.gui.MarketDelivererGui;
-import simcity.market.interfaces.MarketCashier;
-import simcity.market.interfaces.MarketCustomer;
-import simcity.market.interfaces.MarketDeliverer;
 import simcity.role.JobRole;
 
 public class MarketDelivererRole extends JobRole implements MarketDeliverer {
