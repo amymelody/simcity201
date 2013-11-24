@@ -3,7 +3,7 @@ package simcity.market.test.mock;
 import java.util.List;
 
 import simcity.ItemOrder;
-import simcity.interfaces.MarketCashier;
+import simcity.market.interfaces.MarketCashier;
 import simcity.interfaces.RestCook;
 import simcity.joshrestaurant.JoshWaiterRole;
 import simcity.market.interfaces.MarketDeliverer;
