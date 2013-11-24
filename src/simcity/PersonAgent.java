@@ -294,6 +294,11 @@ public class PersonAgent extends Agent
 		job = new Job(j.getJobLocation(), role, payrate, startShifts, endShifts);
 		stateChanged();
 	}
+	
+	public void msgYoureHired(String jobLocation, String role, int payrate, Map<Day,Time> startShifts, Map<Day,Time> endShifts) {
+		job = new Job(jobLocation, role, payrate, startShifts, endShifts);
+		stateChanged();
+	}
 
 	public void msgLeftDestination(Role r) {
 		log.add(new LoggedEvent("Received msgLeftDestination"));
@@ -719,13 +724,13 @@ public class PersonAgent extends Agent
 			} else {
 				state.ts = TransportationState.walking;
 				destination = d;
-				gui.DoGoToDestination(city.getBuildingEntrance(d)); //just walk there
+				/*gui.DoGoToDestination(city.getBuildingEntrance(d)); //just walk there
 				try {
 					atDestination.acquire();
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-				}
+				}*/
 				state.ls = LocationState.atDestination;
 			}
 		}
