@@ -6,7 +6,7 @@ import simcity.ItemOrder;
 
 public interface MarketCustomer {
 	
-	public abstract void msgOrderItems(List<ItemOrder> i, boolean d, String l);
+	public abstract void msgOrderItems(List<ItemOrder> i);
 	
 	public abstract void msgHereIsWhatICanFulfill(List<ItemOrder> orders, boolean canFulfill);
 	

@@ -1,4 +1,4 @@
-package simcity.market.test.mock;
+package simcity.test.mock;
 
 import simcity.interfaces.RestCashier;
 import simcity.joshrestaurant.interfaces.JoshCustomer;

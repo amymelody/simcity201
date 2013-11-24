@@ -1,4 +1,4 @@
-package simcity.market.test.mock;
+package simcity.test.mock;
 
 import java.util.ArrayList;
 import java.util.Collections;

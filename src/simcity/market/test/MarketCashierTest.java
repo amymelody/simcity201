@@ -3,18 +3,15 @@ package simcity.market.test;
 import java.util.ArrayList;
 import java.util.List;
 
-import simcity.interfaces.MarketCashier;
 import simcity.market.MarketCashierRole;
 import simcity.market.MarketCashierRole.MarketState;
 import simcity.market.Order.OrderState;
-import simcity.market.test.mock.MockMarketCustomer;
-import simcity.market.test.mock.MockMarketDeliverer;
-import simcity.market.test.mock.MockMarketEmployee;
-import simcity.market.test.mock.MockRestCashier;
-import simcity.market.test.mock.MockRestCook;
+import simcity.test.mock.MockMarketCustomer;
+import simcity.test.mock.MockMarketDeliverer;
+import simcity.test.mock.MockMarketEmployee;
+import simcity.test.mock.MockRestCashier;
+import simcity.test.mock.MockRestCook;
 import simcity.ItemOrder;
-import simcity.RestCashierRole;
-import simcity.RestCookRole;
 import junit.framework.*;
 
 public class MarketCashierTest extends TestCase
@@ -70,7 +67,7 @@ public class MarketCashierTest extends TestCase
 
 		// Check preconditions for Step 1a
 		assertEquals("Cashier should have no orders in List orders. It doesn't.", cashier.orders.size(), 0);		
-		assertEquals("CashierAgent should have an empty event log before msgIWantItems(...) is called. Instead, the Cashier's event log reads: "
+		assertEquals("CashierRole should have an empty event log before msgIWantItems(...) is called. Instead, the Cashier's event log reads: "
 				+ cashier.log.toString(), 0, cashier.log.size());
 
 		// Step 1a - Receiving an order (Message)
@@ -148,7 +145,7 @@ public class MarketCashierTest extends TestCase
 
 		// Check preconditions for Step 1a
 		assertEquals("Cashier should have no orders in List orders. It doesn't.", cashier.orders.size(), 0);		
-		assertEquals("CashierAgent should have an empty event log before msgIWantDelivery(...) is called. Instead, the Cashier's event log reads: "
+		assertEquals("CashierRole should have an empty event log before msgIWantDelivery(...) is called. Instead, the Cashier's event log reads: "
 				+ cashier.log.toString(), 0, cashier.log.size());
 
 		// Step 1a - Receiving a delivery order (Message)
@@ -217,7 +214,7 @@ public class MarketCashierTest extends TestCase
 
 		// Check preconditions for Step 1a
 		assertEquals("Cashier should have no orders in List orders. It doesn't.", cashier.orders.size(), 0);		
-		assertEquals("CashierAgent should have an empty event log before msgIWantItems(...) is called. Instead, the Cashier's event log reads: "
+		assertEquals("CashierRole should have an empty event log before msgIWantItems(...) is called. Instead, the Cashier's event log reads: "
 				+ cashier.log.toString(), 0, cashier.log.size());
 
 		// Step 1a - Receiving an order from first customer (Message)
@@ -353,7 +350,7 @@ public class MarketCashierTest extends TestCase
 
 		// Check preconditions for Step 1a
 		assertEquals("Cashier should have no orders in List orders. It doesn't.", cashier.orders.size(), 0);		
-		assertEquals("CashierAgent should have an empty event log before msgIWantDelivery(...) is called. Instead, the Cashier's event log reads: "
+		assertEquals("CashierRole should have an empty event log before msgIWantDelivery(...) is called. Instead, the Cashier's event log reads: "
 				+ cashier.log.toString(), 0, cashier.log.size());
 
 		// Step 1a - Receiving first delivery order (Message)
@@ -457,7 +454,7 @@ public class MarketCashierTest extends TestCase
 
 		// Check preconditions for Step 1a
 		assertEquals("Cashier should have no orders in List orders. It doesn't.", cashier.orders.size(), 0);		
-		assertEquals("CashierAgent should have an empty event log before msgIWantItems(...) is called. Instead, the Cashier's event log reads: "
+		assertEquals("CashierRole should have an empty event log before msgIWantItems(...) is called. Instead, the Cashier's event log reads: "
 				+ cashier.log.toString(), 0, cashier.log.size());
 
 		// Step 1a - Receiving an order from first customer (Message)
@@ -584,30 +581,30 @@ public class MarketCashierTest extends TestCase
 		cashier.inventory.setAmount("Chicken", 10);
 		cashier.inventory.setAmount("Ribs", 10);
 		cashier.inventory.setAmount("Burger", 10);
-		List<ItemOrder> test4Orders1 = new ArrayList<ItemOrder>(); // orders Pizza and Chicken
-		List<ItemOrder> test4Orders2 = new ArrayList<ItemOrder>(); // orders Ribs and Burgers
-		test4Orders1.add(new ItemOrder("Pizza", 10));
-		test4Orders1.add(new ItemOrder("Chicken", 1));
-		test4Orders2.add(new ItemOrder("Ribs", 7));
-		test4Orders2.add(new ItemOrder("Burger", 5));
-		rCook1.items = test4Orders1;
-		rCook2.items = test4Orders2;
+		List<ItemOrder> test6Orders1 = new ArrayList<ItemOrder>(); // orders Pizza and Chicken
+		List<ItemOrder> test6Orders2 = new ArrayList<ItemOrder>(); // orders Ribs and Burgers
+		test6Orders1.add(new ItemOrder("Pizza", 10));
+		test6Orders1.add(new ItemOrder("Chicken", 1));
+		test6Orders2.add(new ItemOrder("Ribs", 7));
+		test6Orders2.add(new ItemOrder("Burger", 5));
+		rCook1.items = test6Orders1;
+		rCook2.items = test6Orders2;
 
 
 		// Check preconditions for Step 1a
 		assertEquals("Cashier should have no orders in List orders. It doesn't.", cashier.orders.size(), 0);		
-		assertEquals("CashierAgent should have an empty event log before msgIWantDelivery(...) is called. Instead, the Cashier's event log reads: "
+		assertEquals("CashierRole should have an empty event log before msgIWantDelivery(...) is called. Instead, the Cashier's event log reads: "
 				+ cashier.log.toString(), 0, cashier.log.size());
 
 		// Step 1a - Receiving first delivery order (Message)
-		cashier.msgIWantDelivery(rCook1, rCashier1, test4Orders1, "Restaurant1");
+		cashier.msgIWantDelivery(rCook1, rCashier1, test6Orders1, "Restaurant1");
 
 		// Check postconditions for Step 1a
 		assertEquals("Cashier should have one order in List orders. It doesn't.", cashier.orders.size(), 1);
 		assertFalse("Cashier should have one order in List orders for delivery. It doesn't", cashier.orders.get(0).location == null);
 
 		// Step 1b - Receiving second delivery order (Message)
-		cashier.msgIWantDelivery(rCook2, rCashier2, test4Orders2, "Restaurant2");
+		cashier.msgIWantDelivery(rCook2, rCashier2, test6Orders2, "Restaurant2");
 
 		// Check postconditions for Step 1b
 		assertEquals("Cashier should have two orders in List orders. It doesn't.", cashier.orders.size(), 2);
@@ -687,18 +684,18 @@ public class MarketCashierTest extends TestCase
 		cashier.setMarketMoney(50);
 		cashier.inventory.setAmount("Lasagna", 3);
 		cashier.inventory.setAmount("Horchata", 3);
-		List<ItemOrder> test1Orders = new ArrayList<ItemOrder>(); // orders Lasagna and Horchata
-		test1Orders.add(new ItemOrder("Lasagna", 2));
-		test1Orders.add(new ItemOrder("Horchata", 5));
-		customer1.items = test1Orders;
+		List<ItemOrder> test7Orders = new ArrayList<ItemOrder>(); // orders Lasagna and Horchata
+		test7Orders.add(new ItemOrder("Lasagna", 2));
+		test7Orders.add(new ItemOrder("Horchata", 5));
+		customer1.items = test7Orders;
 
 		// Check preconditions for Step 1a
 		assertEquals("Cashier should have no orders in List orders. It doesn't.", cashier.orders.size(), 0);		
-		assertEquals("CashierAgent should have an empty event log before msgIWantItems(...) is called. Instead, the Cashier's event log reads: "
+		assertEquals("CashierRole should have an empty event log before msgIWantItems(...) is called. Instead, the Cashier's event log reads: "
 				+ cashier.log.toString(), 0, cashier.log.size());
 
 		// Step 1a - Receiving an order (Message)
-		cashier.msgIWantItems(customer1, test1Orders);
+		cashier.msgIWantItems(customer1, test7Orders);
 
 		// Check postconditions for Step 1a
 		assertEquals("Cashier should have one order in List orders. It doesn't.", cashier.orders.size(), 1);
@@ -763,18 +760,18 @@ public class MarketCashierTest extends TestCase
 		cashier.setMarketMoney(50);
 		cashier.inventory.setAmount("Pizza", 5);
 		cashier.inventory.setAmount("Burger", 5);
-		List<ItemOrder> test2Orders = new ArrayList<ItemOrder>(); // orders Pizza and Burgers
-		test2Orders.add(new ItemOrder("Pizza", 10));
-		test2Orders.add(new ItemOrder("Burger", 1));
-		rCook1.items = test2Orders;
+		List<ItemOrder> test8Orders = new ArrayList<ItemOrder>(); // orders Pizza and Burgers
+		test8Orders.add(new ItemOrder("Pizza", 10));
+		test8Orders.add(new ItemOrder("Burger", 1));
+		rCook1.items = test8Orders;
 
 		// Check preconditions for Step 1a
 		assertEquals("Cashier should have no orders in List orders. It doesn't.", cashier.orders.size(), 0);		
-		assertEquals("CashierAgent should have an empty event log before msgIWantDelivery(...) is called. Instead, the Cashier's event log reads: "
+		assertEquals("CashierRole should have an empty event log before msgIWantDelivery(...) is called. Instead, the Cashier's event log reads: "
 				+ cashier.log.toString(), 0, cashier.log.size());
 
 		// Step 1a - Receiving a delivery order (Message)
-		cashier.msgIWantDelivery(rCook1, rCashier1, test2Orders, "Josh's Restaurant");
+		cashier.msgIWantDelivery(rCook1, rCashier1, test8Orders, "Josh's Restaurant");
 
 		// Check postconditions for Step 1a
 		assertEquals("Cashier should have one order in List orders. It doesn't.", cashier.orders.size(), 1);
@@ -825,18 +822,18 @@ public class MarketCashierTest extends TestCase
 		cashier.setMarketMoney(50);
 		cashier.inventory.setAmount("Lasagna", 0);
 		cashier.inventory.setAmount("Horchata", 0);
-		List<ItemOrder> test1Orders = new ArrayList<ItemOrder>(); // orders Lasagna and Horchata
-		test1Orders.add(new ItemOrder("Lasagna", 2));
-		test1Orders.add(new ItemOrder("Horchata", 5));
-		customer1.items = test1Orders;
+		List<ItemOrder> test9Orders = new ArrayList<ItemOrder>(); // orders Lasagna and Horchata
+		test9Orders.add(new ItemOrder("Lasagna", 2));
+		test9Orders.add(new ItemOrder("Horchata", 5));
+		customer1.items = test9Orders;
 
 		// Check preconditions for Step 1a
 		assertEquals("Cashier should have no orders in List orders. It doesn't.", cashier.orders.size(), 0);		
-		assertEquals("CashierAgent should have an empty event log before msgIWantItems(...) is called. Instead, the Cashier's event log reads: "
+		assertEquals("CashierRole should have an empty event log before msgIWantItems(...) is called. Instead, the Cashier's event log reads: "
 				+ cashier.log.toString(), 0, cashier.log.size());
 
 		// Step 1a - Receiving an order (Message)
-		cashier.msgIWantItems(customer1, test1Orders);
+		cashier.msgIWantItems(customer1, test9Orders);
 
 		// Check postconditions for Step 1a
 		assertEquals("Cashier should have one order in List orders. It doesn't.", cashier.orders.size(), 1);
@@ -870,18 +867,18 @@ public class MarketCashierTest extends TestCase
 		cashier.setMarketMoney(50);
 		cashier.inventory.setAmount("Pizza", 0);
 		cashier.inventory.setAmount("Burger", 0);
-		List<ItemOrder> test2Orders = new ArrayList<ItemOrder>(); // orders Pizza and Burgers
-		test2Orders.add(new ItemOrder("Pizza", 10));
-		test2Orders.add(new ItemOrder("Burger", 1));
-		rCook1.items = test2Orders;
+		List<ItemOrder> test10Orders = new ArrayList<ItemOrder>(); // orders Pizza and Burgers
+		test10Orders.add(new ItemOrder("Pizza", 10));
+		test10Orders.add(new ItemOrder("Burger", 1));
+		rCook1.items = test10Orders;
 
 		// Check preconditions for Step 1a
 		assertEquals("Cashier should have no orders in List orders. It doesn't.", cashier.orders.size(), 0);		
-		assertEquals("CashierAgent should have an empty event log before msgIWantDelivery(...) is called. Instead, the Cashier's event log reads: "
+		assertEquals("CashierRole should have an empty event log before msgIWantDelivery(...) is called. Instead, the Cashier's event log reads: "
 				+ cashier.log.toString(), 0, cashier.log.size());
 
 		// Step 1a - Receiving a delivery order (Message)
-		cashier.msgIWantDelivery(rCook1, rCashier1, test2Orders, "Josh's Restaurant");
+		cashier.msgIWantDelivery(rCook1, rCashier1, test10Orders, "Josh's Restaurant");
 
 		// Check postconditions for Step 1a
 		assertEquals("Cashier should have one order in List orders. It doesn't.", cashier.orders.size(), 1);
@@ -926,7 +923,7 @@ public class MarketCashierTest extends TestCase
 		customer1.items = test11Orders;
 
 		// Check preconditions for Step 1a
-		assertEquals("CashierAgent should have an empty event log before msgIWantDelivery(...) is called. Instead, the Cashier's event log reads: "
+		assertEquals("CashierRole should have an empty event log before msgIWantDelivery(...) is called. Instead, the Cashier's event log reads: "
 				+ cashier.log.toString(), 0, cashier.log.size());
 		assertEquals("Employee1 is working. Employee1 isn't.", cashier.getEmployee(employee1).working, true);
 		assertEquals("Employee1 is working. Employee1 isn't.", cashier.getEmployee(employee2).working, true);

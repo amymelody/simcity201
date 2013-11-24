@@ -1,7 +1,5 @@
 package simcity.market;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Semaphore;
 
@@ -11,8 +9,6 @@ import simcity.PersonAgent;
 import simcity.market.gui.MarketCustomerGui;
 import simcity.market.interfaces.MarketCashier;
 import simcity.market.interfaces.MarketCustomer;
-import simcity.market.interfaces.MarketDeliverer;
-import simcity.mock.LoggedEvent;
 
 public class MarketCustomerRole extends Role implements MarketCustomer {
 
@@ -48,9 +44,6 @@ public class MarketCustomerRole extends Role implements MarketCustomer {
 	public void setCashier(MarketCashier ch) {
 		cashier = ch;
 	}
-	public void setDeliverer(MarketDeliverer d) {
-		deliverer = d;
-	}
 	public void setItems(List<ItemOrder> i) {
 		items = i;
 	}
@@ -73,19 +66,16 @@ public class MarketCustomerRole extends Role implements MarketCustomer {
 
 	// References to other roles
 	MarketCashier cashier;
-	MarketDeliverer deliverer;
 
 	// Customer Status Data
-	enum CustomerState {arrived, atCashier, confirming, waiting, getting, paying, leaving, done, walking};
-	CustomerState cS;
+	public enum CustomerState {nothing, arrived, atCashier, confirming, waiting, getting, paying, leaving, done, walking};
+	public CustomerState cS = CustomerState.nothing;
 	String location;
 
 
 	/* Messages */
-	public void msgOrderItems(List<ItemOrder> i, boolean d, String l) {
+	public void msgOrderItems(List<ItemOrder> i) {
 		items = i;
-		delivery = d;
-		location = l;
 		cS = CustomerState.arrived;
 		//stateChanged();
 	}

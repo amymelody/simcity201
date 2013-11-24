@@ -1,4 +1,4 @@
-package simcity.market.test.mock;
+package simcity.test.mock;
 
 import java.util.List;
 
@@ -30,7 +30,7 @@ public class MockMarketCustomer extends Mock implements MarketCustomer {
 	}
 
 	@Override
-	public void msgOrderItems(List<ItemOrder> i, boolean d, String l) {
+	public void msgOrderItems(List<ItemOrder> i) {
 		
 	}
 	

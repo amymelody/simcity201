@@ -1,4 +1,4 @@
-package simcity.market.test.mock;
+package simcity.test.mock;
 
 import java.util.List;
 
@@ -82,7 +82,7 @@ public class MockMarketCashier extends Mock implements MarketCashier {
 	@Override
 	public void msgIWantItems(MarketCustomer c, List<ItemOrder> i) {
 		// TODO Auto-generated method stub
-		
+		log.add(new LoggedEvent("Received order"));
 	}
 
 	@Override
