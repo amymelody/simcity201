@@ -8,7 +8,11 @@ import simcity.market.Order.OrderState;
 import simcity.market.test.mock.MockMarketCustomer;
 import simcity.market.test.mock.MockMarketDeliverer;
 import simcity.market.test.mock.MockMarketEmployee;
+import simcity.market.test.mock.MockRestCashier;
+import simcity.market.test.mock.MockRestCook;
 import simcity.ItemOrder;
+import simcity.RestCashierRole;
+import simcity.RestCookRole;
 import junit.framework.*;
 
 public class MarketCashierTest extends TestCase
@@ -18,6 +22,8 @@ public class MarketCashierTest extends TestCase
 	MockMarketDeliverer deliverer1, deliverer2;
 	MockMarketEmployee employee1, employee2;
 	MockMarketCustomer customer1, customer2;
+	MockRestCashier rCashier1;
+	MockRestCook rCook1;
 
 	
 	/**
@@ -28,7 +34,7 @@ public class MarketCashierTest extends TestCase
 		super.setUp();		
 		cashier = new MarketCashierRole();
 		customer1 = new MockMarketCustomer("MockCustomer");
-		customer1 = new MockMarketCustomer("MockCustomer");
+		customer2 = new MockMarketCustomer("MockCustomer");
 		deliverer1 = new MockMarketDeliverer("MockDeliverer1");
 		deliverer2 = new MockMarketDeliverer("MockDeliverer1");
 		employee1 = new MockMarketEmployee("MockEmployee1");
@@ -115,7 +121,7 @@ public class MarketCashierTest extends TestCase
 	/**
 	 * This tests the second normal scenario (Delivery order from cook)
 	 */
-	public void testOneNormalCustomerScenario2()
+	public void testTwoNormalCustomerScenario2()
 	{
 		// Set up
 		customer1.cashier = cashier;
