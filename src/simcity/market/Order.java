@@ -12,6 +12,7 @@ public class Order {
 	RestCashier cashier;
 	RestCook cook;
 	List<ItemOrder> items;
+	List<ItemOrder> fulfilling;
 	OrderState oS;
 	public int price;
 	public int amountPaid;

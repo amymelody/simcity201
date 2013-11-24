@@ -177,7 +177,6 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 			for(Order o: orders) {
 				if(o.equals(order)) {
 					o.oS = OrderState.ready;
-					calculatePrice(o);
 				}
 			}
 		}
@@ -312,16 +311,21 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 				}
 			}
 		}
-		assignedEmployee.employee.msgGetItems(o);
-		assignedEmployee.numOfCust++;
-		o.oS = OrderState.handing;
-		for(ItemOrder iO: o.items) {
-			inventory.updateAmount(iO.getFoodItem(), iO.getAmount(), false);
+		checkingInventorytoConfirmOrder(o);
+		if(o.fulfilling.size() != 0) {
+			assignedEmployee.employee.msgGetItems(o);
+			assignedEmployee.numOfCust++;
+			o.oS = OrderState.handing;
+			for(ItemOrder iO: o.fulfilling) {
+				inventory.updateAmount(iO.getFoodItem(), iO.getAmount(), false);
+			}
+		}
+		else {
+			orders.remove(o);
 		}
 	}
 
 	private void HandToDeliverer(Order o) {
-		calculatePrice(o);
 		myDeliverer assignedDeliverer = deliverers.get(0);
 		int min = deliverers.get(0).numOfCust;
 		synchronized(deliverers){
@@ -332,12 +336,17 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 				}
 			}
 		}
-		assignedDeliverer.deliverer.msgDeliverItems(o);
-		assignedDeliverer.numOfCust++;
-		o.oS = OrderState.handing;
-		o.cook.msgHereIsWhatICanFulfill(o.items, HaveSomeItems(o.items)); // figure out how much he can fulfill
-		for(ItemOrder iO: o.items) {
-			inventory.updateAmount(iO.getFoodItem(), iO.getAmount(), false);
+		checkingInventorytoConfirmOrder(o);
+		if(o.fulfilling.size() != 0) {
+			assignedDeliverer.deliverer.msgDeliverItems(o);
+			assignedDeliverer.numOfCust++;
+			o.oS = OrderState.handing;
+			for(ItemOrder iO: o.fulfilling) {
+				inventory.updateAmount(iO.getFoodItem(), iO.getAmount(), false);
+			}
+		}
+		else {
+			orders.remove(o);
 		}
 	}
 
@@ -407,7 +416,7 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 
 	/* Calculation functions by Cashier */
 	private void calculatePrice(Order o) {
-		for(ItemOrder iO: o.items) {
+		for(ItemOrder iO: o.fulfilling) {
 			o.price += inventory.getPrice(iO.getFoodItem())*iO.getAmount();
 		}
 	}
@@ -419,11 +428,28 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 	}
 	private boolean HaveSomeItems(List<ItemOrder> items) {
 		for(ItemOrder iO: items) {
-			if(inventory.getAmount(iO.getFoodItem()) == 0) {
-				return false;
+			if(inventory.getAmount(iO.getFoodItem()) != 0) {
+				return true;
 			}
 		}
-		return true;
+		return false;
 	}
-	
+	private void checkingInventorytoConfirmOrder(Order o) {
+		o.fulfilling = new ArrayList<ItemOrder>();
+		synchronized(o.items) {
+			for(ItemOrder iO: o.items) {
+				if(iO.getAmount() < inventory.getAmount(iO.getFoodItem())) {
+					o.fulfilling.add(iO);
+				}
+				else if(inventory.getAmount(iO.getFoodItem()) != 0) {
+					o.fulfilling.add(new ItemOrder(iO.getFoodItem(), inventory.getAmount(iO.getFoodItem())));
+				}
+			}
+		}
+		calculatePrice(o);
+		if(o.location != null)
+			o.cook.msgHereIsWhatICanFulfill(o.fulfilling, HaveSomeItems(o.fulfilling));
+		else
+			o.customer.msgHereIsWhatICanFulfill(o.fulfilling, HaveSomeItems(o.fulfilling));
+	}
 }
