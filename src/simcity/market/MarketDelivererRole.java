@@ -188,6 +188,7 @@ public class MarketDelivererRole extends JobRole implements MarketDeliverer {
 	private void finishDelivery(Order o) {
 		cashier.msgDelivered(currentOrder, this);
 		currentOrder = null;
+		orders.remove(o);
 	}
 
 

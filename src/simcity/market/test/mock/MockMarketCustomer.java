@@ -33,6 +33,15 @@ public class MockMarketCustomer extends Mock implements MarketCustomer {
 	public void msgOrderItems(List<ItemOrder> i, boolean d, String l) {
 		
 	}
+	
+	@Override
+	public void msgHereIsWhatICanFulfill(List<ItemOrder> orders, boolean canFulfill) {
+		// TODO Auto-generated method stub
+		if(canFulfill)
+			log.add(new LoggedEvent("Confirmation of (at least partial) delivery"));
+		else
+			log.add(new LoggedEvent("Doesn't have items requested"));
+	}
 
 	@Override
 	public void msgHereAreItemsandPrice(List<ItemOrder> i, int price) {
@@ -40,7 +49,7 @@ public class MockMarketCustomer extends Mock implements MarketCustomer {
 			log.add(new LoggedEvent("Received correct items and payment"));
 		}
 		else {
-			log.add(new LoggedEvent("Did not receive correct items."));
+			log.add(new LoggedEvent("Did not receive correct items"));
 		}
 		
 	}

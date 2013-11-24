@@ -12,6 +12,7 @@ import simcity.market.gui.MarketCustomerGui;
 import simcity.market.interfaces.MarketCashier;
 import simcity.market.interfaces.MarketCustomer;
 import simcity.market.interfaces.MarketDeliverer;
+import simcity.mock.LoggedEvent;
 
 public class MarketCustomerRole extends Role implements MarketCustomer {
 
@@ -75,7 +76,7 @@ public class MarketCustomerRole extends Role implements MarketCustomer {
 	MarketDeliverer deliverer;
 
 	// Customer Status Data
-	enum CustomerState {arrived, atCashier, waiting, getting, paying, leaving, done, walking};
+	enum CustomerState {arrived, atCashier, confirming, waiting, getting, paying, leaving, done, walking};
 	CustomerState cS;
 	String location;
 
@@ -89,6 +90,13 @@ public class MarketCustomerRole extends Role implements MarketCustomer {
 		//stateChanged();
 	}
 
+	public void msgHereIsWhatICanFulfill(List<ItemOrder> orders, boolean canFulfill) {
+		if(canFulfill)
+			cS = CustomerState.waiting;
+		else
+			cS = CustomerState.leaving;
+	}
+	
 	public void msgHereAreItemsandPrice(List<ItemOrder> i, int price) {
 		person.msgExpense(price);
 		person.msgReceivedItems(i);
@@ -131,6 +139,9 @@ public class MarketCustomerRole extends Role implements MarketCustomer {
 		if(cS == CustomerState.atCashier) {
 			GiveOrder();
 		}
+		if(cS == CustomerState.waiting) {
+			WillWait();
+		}
 		if(cS == CustomerState.getting) {
 			GetItems();
 			return true;
@@ -149,14 +160,17 @@ public class MarketCustomerRole extends Role implements MarketCustomer {
 		cS = CustomerState.walking;
 	}
 	private void GiveOrder() {
-		DoGiveOrder(); // animation
+		cashier.msgIWantItems(this, items);
+		cS = CustomerState.confirming;
+	}
+	private void WillWait() {
+		DoWillWait(); // animation
 		try {
 			animation.acquire();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		cashier.msgIWantItems(this, items);
-		cS = CustomerState.waiting;
+		cS = CustomerState.walking;
 	}
 
 	private void GetItems() {
@@ -188,7 +202,7 @@ public class MarketCustomerRole extends Role implements MarketCustomer {
 		gui.GoToCashier();
 	}
 
-	private void DoGiveOrder() {
+	private void DoWillWait() {
 		gui.GoToWaitingArea();
 	}
 

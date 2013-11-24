@@ -3,11 +3,10 @@ package simcity.market.test.mock;
 import java.util.List;
 
 import simcity.ItemOrder;
+import simcity.market.interfaces.MarketCashier;
 import simcity.interfaces.RestCook;
 import simcity.joshrestaurant.JoshWaiterRole;
-import simcity.market.interfaces.MarketCustomer;
 import simcity.market.interfaces.MarketDeliverer;
-import simcity.market.interfaces.MarketEmployee;
 import simcity.mock.LoggedEvent;
 import simcity.mock.Mock;
 
@@ -16,9 +15,9 @@ public class MockRestCook extends Mock implements RestCook {
 	/**
 	 * References for unit testing
 	 */
-	public MarketCustomer customer;
+	public MarketCashier cashier;
 	public MarketDeliverer deliverer;
-	public MarketEmployee employee;
+	public List<ItemOrder> items;
 	public String name;
 
 	public MockRestCook(String n) {
@@ -27,6 +26,10 @@ public class MockRestCook extends Mock implements RestCook {
 		name = n;
 	}
 
+	public void setItems(List<ItemOrder> i) {
+		items = i;
+	}
+	
 	@Override
 	public void msgStartShift() {
 		// TODO Auto-generated method stub
@@ -55,13 +58,16 @@ public class MockRestCook extends Mock implements RestCook {
 	public void msgHereIsWhatICanFulfill(List<ItemOrder> orders,
 			boolean canFulfill) {
 		// TODO Auto-generated method stub
-		
+		if(canFulfill)
+			log.add(new LoggedEvent("Confirmation of (at least partial) delivery"));
+		else
+			log.add(new LoggedEvent("Doesn't have items requested"));
 	}
 
 	@Override
 	public void msgDelivery(List<ItemOrder> orders) {
 		// TODO Auto-generated method stub
-		
+		log.add(new LoggedEvent("Received delivery"));
 	}
 
 }

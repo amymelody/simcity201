@@ -1,5 +1,9 @@
 package simcity.market.test.mock;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import simcity.market.Order;
 import simcity.market.interfaces.MarketCashier;
 import simcity.market.interfaces.MarketCustomer;
@@ -14,6 +18,7 @@ public class MockMarketDeliverer extends Mock implements MarketDeliverer {
 	 */
 	public MarketCashier cashier;
 	public MarketCustomer customer;
+	public List<Order> orders =  Collections.synchronizedList(new ArrayList<Order>());
 	public String name;
 
 	public MockMarketDeliverer(String n) {
@@ -24,13 +29,13 @@ public class MockMarketDeliverer extends Mock implements MarketDeliverer {
 
 	@Override
 	public void msgDeliverItems(Order o) {
-		log.add(new LoggedEvent("Received order."));
-		
+		orders.add(o);
+		log.add(new LoggedEvent("Received order"));
 	}
 
 	@Override
 	public void msgPayment(MarketCustomer c, int money) {
-		log.add(new LoggedEvent("Received payment."));
+		log.add(new LoggedEvent("Received payment"));
 	}
 
 	@Override

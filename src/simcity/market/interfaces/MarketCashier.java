@@ -1,11 +1,10 @@
 package simcity.market.interfaces;
 
 import java.util.List;
-import java.util.ArrayList;
 
 import simcity.ItemOrder;
-import simcity.RestCashierRole;
-import simcity.RestCookRole;
+import simcity.interfaces.RestCashier;
+import simcity.interfaces.RestCook;
 import simcity.market.Order;
 
 public interface MarketCashier {
@@ -32,7 +31,7 @@ public interface MarketCashier {
 	
 	public abstract void msgPayment(MarketCustomer c, int money);
 	
-	public abstract void msgIWantDelivery(RestCookRole rCk, RestCashierRole rCh, List<ItemOrder> i, String location);
+	public abstract void msgIWantDelivery(RestCook rCk, RestCashier rCh, List<ItemOrder> i, String location);
 	
 	public abstract void msgDelivered(Order order, MarketDeliverer d);
 	

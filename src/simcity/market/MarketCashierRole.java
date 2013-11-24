@@ -6,14 +6,12 @@ import java.util.List;
 import java.util.concurrent.Semaphore;
 
 import simcity.role.JobRole;
-import simcity.role.Role;
 import simcity.ItemOrder;
 import simcity.PersonAgent;
-import simcity.RestCashierRole;
-import simcity.RestCookRole;
+import simcity.interfaces.RestCashier;
+import simcity.interfaces.RestCook;
 import simcity.market.Order.OrderState;
 import simcity.market.gui.MarketCashierGui;
-import simcity.market.gui.MarketCustomerGui;
 import simcity.market.interfaces.MarketCashier;
 import simcity.market.interfaces.MarketCustomer;
 import simcity.market.interfaces.MarketDeliverer;
@@ -44,14 +42,14 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 	public void setEmployees(MarketEmployee e, int s) {
 		employees.add(new myEmployee(e, s));
 	}
-	public void setEmployees(MarketEmployee e, int s, boolean u, boolean w) {
-		employees.add(new myEmployee(e, s, u, w));
+	public void setEmployees(MarketEmployee e, int s, boolean w) {
+		employees.add(new myEmployee(e, s, w));
 	}
 	public void setDeliverers(MarketDeliverer d, int s) {
 		deliverers.add(new myDeliverer(d, s));
 	}
-	public void setDeliverers(MarketDeliverer d, int s, boolean u, boolean w) {
-		deliverers.add(new myDeliverer(d, s, u, w));
+	public void setDeliverers(MarketDeliverer d, int s, boolean w) {
+		deliverers.add(new myDeliverer(d, s, w));
 	}
 	public void setOrder(MarketCustomer c, List<ItemOrder> i) {
 		orders.add(new Order(c, i));
@@ -73,17 +71,6 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 	}
 	public int viewMarketMoney() {
 		return marketMoney;
-	}
-
-	/* Accessors */
-	public List getEmployees() {
-		return employees;
-	}
-	public List getDeliverers() {
-		return deliverers;
-	}
-	public List getOrders() {
-		return orders;
 	}
 
 
@@ -190,14 +177,13 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 			for(Order o: orders) {
 				if(o.equals(order)) {
 					o.oS = OrderState.ready;
-					calculatePrice(o);
 				}
 			}
 		}
 		synchronized(employees) {
 			for(myEmployee me: employees) {
 				if(me.employee.equals(e)) {
-					me.unoccupied = true;
+					me.numOfCust--;
 				}
 			}
 		}
@@ -216,7 +202,7 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 	}
 
 	// Normative Scenario #2
-	public void msgIWantDelivery(RestCookRole rCk, RestCashierRole rCh, List<ItemOrder> i, String location) {
+	public void msgIWantDelivery(RestCook rCk, RestCashier rCh, List<ItemOrder> i, String location) {
 		orders.add(new Order(rCk, rCh, i, location));
 		//stateChanged();
 	}
@@ -225,14 +211,13 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 			for(Order o: orders) {
 				if(o.equals(order)) {
 					o.oS = OrderState.delivered;
-					transaction(o);
 				}
 			}
 		}
 		synchronized(deliverers) {
 			for(myDeliverer md: deliverers) {
 				if(md.deliverer.equals(d)) {
-					md.unoccupied = true;
+					md.numOfCust--;
 				}
 			}
 		}
@@ -268,10 +253,6 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 						HandToCustomer(o);
 						return true;
 					}
-				}
-			}
-			synchronized(orders) {
-				for(Order o: orders) {
 					if(o.oS == OrderState.done) {
 						FinishOrder(o);
 						return true;
@@ -320,31 +301,52 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 	}
 
 	private void HandToEmployee(Order o) {
-		o.oS = OrderState.handing;
-		synchronized(employees) {
-			for(myEmployee me: employees) {
-				if(me.unoccupied && me.working) {
-					me.employee.msgGetItems(o);
-					for(ItemOrder iO: o.items) {
-						inventory.updateAmount(iO.getFoodItem(), iO.getAmount(), false);
-					}
+		myEmployee assignedEmployee = employees.get(0);
+		int min = employees.get(0).numOfCust;
+		synchronized(employees){
+			for (myEmployee me : employees) {
+				if(me.numOfCust < min && me.working) {
+					min = me.numOfCust;
+					assignedEmployee = me;
 				}
 			}
+		}
+		checkingInventorytoConfirmOrder(o);
+		if(o.fulfilling.size() != 0) {
+			assignedEmployee.employee.msgGetItems(o);
+			assignedEmployee.numOfCust++;
+			o.oS = OrderState.handing;
+			for(ItemOrder iO: o.fulfilling) {
+				inventory.updateAmount(iO.getFoodItem(), iO.getAmount(), false);
+			}
+		}
+		else {
+			orders.remove(o);
 		}
 	}
 
 	private void HandToDeliverer(Order o) {
-		o.oS = OrderState.handing;
-		synchronized(deliverers) {
-			for(myDeliverer md: deliverers) {
-				if(md.unoccupied && md.working) {
-					md.deliverer.msgDeliverItems(o);
-					o.cook.msgHereIsWhatICanFulfill(o.items, HaveSomeItems(o.items)); // figure out how much he can fulfill
-					for(ItemOrder iO: o.items) {
-						inventory.updateAmount(iO.getFoodItem(), iO.getAmount(), false);
-					}
+		myDeliverer assignedDeliverer = deliverers.get(0);
+		int min = deliverers.get(0).numOfCust;
+		synchronized(deliverers){
+			for (myDeliverer md : deliverers) {
+				if(md.numOfCust < min && md.working) {
+					min = md.numOfCust;
+					assignedDeliverer = md;
 				}
 			}
+		}
+		checkingInventorytoConfirmOrder(o);
+		if(o.fulfilling.size() != 0) {
+			assignedDeliverer.deliverer.msgDeliverItems(o);
+			assignedDeliverer.numOfCust++;
+			o.oS = OrderState.handing;
+			for(ItemOrder iO: o.fulfilling) {
+				inventory.updateAmount(iO.getFoodItem(), iO.getAmount(), false);
+			}
+		}
+		else {
+			orders.remove(o);
 		}
 	}
 
@@ -368,52 +370,53 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 	/* Classes used by Cashier Role */
 
 	// Employee class (Cashier's view of employees)
-	class myEmployee {
+	public class myEmployee {
 		MarketEmployee employee;
-		boolean unoccupied;
 		boolean working;
 		int salary;
+		int numOfCust;
 
 		myEmployee(MarketEmployee e, int s) {
 			employee = e;
-			unoccupied = true;
 			working = false;
 			salary = s;
+			numOfCust = 0;
 		}
 		
-		myEmployee(MarketEmployee e, int s, boolean u, boolean w) {
+		myEmployee(MarketEmployee e, int s, boolean w) {
 			employee = e;
-			unoccupied = u;
 			working = w;
 			salary = s;
+			numOfCust = 0;
 		}
+
 	}
 
 	// Deliverer class (Cashier's view of deliverers)
-	class myDeliverer {
+	public class myDeliverer {
 		MarketDeliverer deliverer;
-		boolean unoccupied;
 		boolean working;
 		int salary;
+		int numOfCust;
 
 		myDeliverer(MarketDeliverer d, int s) {
 			deliverer = d;
-			unoccupied = true;
 			working = false;
 			salary = s;
+			numOfCust = 0;
 		}
 		
-		myDeliverer(MarketDeliverer d, int s, boolean u, boolean w) {
+		myDeliverer(MarketDeliverer d, int s, boolean w) {
 			deliverer = d;
-			unoccupied = u;
 			working = w;
 			salary = s;
+			numOfCust = 0;
 		}
 	}
 
 	/* Calculation functions by Cashier */
 	private void calculatePrice(Order o) {
-		for(ItemOrder iO: o.items) {
+		for(ItemOrder iO: o.fulfilling) {
 			o.price += inventory.getPrice(iO.getFoodItem())*iO.getAmount();
 		}
 	}
@@ -425,11 +428,28 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 	}
 	private boolean HaveSomeItems(List<ItemOrder> items) {
 		for(ItemOrder iO: items) {
-			if(inventory.getAmount(iO.getFoodItem()) == 0) {
-				return false;
+			if(inventory.getAmount(iO.getFoodItem()) != 0) {
+				return true;
 			}
 		}
-		return true;
+		return false;
 	}
-	
+	private void checkingInventorytoConfirmOrder(Order o) {
+		o.fulfilling = new ArrayList<ItemOrder>();
+		synchronized(o.items) {
+			for(ItemOrder iO: o.items) {
+				if(iO.getAmount() < inventory.getAmount(iO.getFoodItem())) {
+					o.fulfilling.add(iO);
+				}
+				else if(inventory.getAmount(iO.getFoodItem()) != 0) {
+					o.fulfilling.add(new ItemOrder(iO.getFoodItem(), inventory.getAmount(iO.getFoodItem())));
+				}
+			}
+		}
+		calculatePrice(o);
+		if(o.location != null)
+			o.cook.msgHereIsWhatICanFulfill(o.fulfilling, HaveSomeItems(o.fulfilling));
+		else
+			o.customer.msgHereIsWhatICanFulfill(o.fulfilling, HaveSomeItems(o.fulfilling));
+	}
 }

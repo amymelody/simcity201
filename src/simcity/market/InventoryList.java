@@ -44,7 +44,7 @@ public class InventoryList {
 		inventory.put("Lasagna", new MarketItem("Lasagna", 10, 0));
 		inventory.put("Garlic Bread", new MarketItem("Garlic Bread", 5, 0));
 		inventory.put("Ribs", new MarketItem("Ribs", 10, 0));
-		inventory.put("Burgers", new MarketItem("Burgers", 8, 0));
+		inventory.put("Burger", new MarketItem("Burger", 8, 0));
 		inventory.put("Enchiladas", new MarketItem("Enchiladas", 10, 0));
 		inventory.put("Tacos", new MarketItem("Tacos", 5, 0));
 		inventory.put("Pozole", new MarketItem("Pozole", 8, 0));

@@ -3,6 +3,8 @@ package simcity.market.test.mock;
 import java.util.List;
 
 import simcity.ItemOrder;
+import simcity.interfaces.RestCashier;
+import simcity.interfaces.RestCook;
 import simcity.market.Order;
 import simcity.market.interfaces.MarketCashier;
 import simcity.market.interfaces.MarketCustomer;
@@ -96,7 +98,7 @@ public class MockMarketCashier extends Mock implements MarketCashier {
 	}
 
 	@Override
-	public void msgIWantDelivery(RestCookRole rCk, RestCashierRole rCh,
+	public void msgIWantDelivery(RestCook rCk, RestCashier rCh,
 			List<ItemOrder> i, String location) {
 		// TODO Auto-generated method stub
 		
@@ -107,6 +109,5 @@ public class MockMarketCashier extends Mock implements MarketCashier {
 		// TODO Auto-generated method stub
 
 	}
-
 
 }
