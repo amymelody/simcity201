@@ -6,14 +6,12 @@ import java.util.List;
 import java.util.concurrent.Semaphore;
 
 import simcity.role.JobRole;
-import simcity.role.Role;
 import simcity.ItemOrder;
 import simcity.PersonAgent;
 import simcity.interfaces.RestCashier;
 import simcity.interfaces.RestCook;
 import simcity.market.Order.OrderState;
 import simcity.market.gui.MarketCashierGui;
-import simcity.market.gui.MarketCustomerGui;
 import simcity.market.interfaces.MarketCashier;
 import simcity.market.interfaces.MarketCustomer;
 import simcity.market.interfaces.MarketDeliverer;
@@ -45,13 +43,13 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 		employees.add(new myEmployee(e, s));
 	}
 	public void setEmployees(MarketEmployee e, int s, boolean u, boolean w) {
-		employees.add(new myEmployee(e, s, u, w));
+		employees.add(new myEmployee(e, s, w));
 	}
 	public void setDeliverers(MarketDeliverer d, int s) {
 		deliverers.add(new myDeliverer(d, s));
 	}
 	public void setDeliverers(MarketDeliverer d, int s, boolean u, boolean w) {
-		deliverers.add(new myDeliverer(d, s, u, w));
+		deliverers.add(new myDeliverer(d, s, w));
 	}
 	public void setOrder(MarketCustomer c, List<ItemOrder> i) {
 		orders.add(new Order(c, i));
@@ -183,13 +181,6 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 				}
 			}
 		}
-		synchronized(employees) {
-			for(myEmployee me: employees) {
-				if(me.employee.equals(e)) {
-					me.unoccupied = true;
-				}
-			}
-		}
 		//stateChanged();
 	}
 	public void msgPayment(MarketCustomer c, int money) {
@@ -214,13 +205,6 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 			for(Order o: orders) {
 				if(o.equals(order)) {
 					o.oS = OrderState.delivered;
-				}
-			}
-		}
-		synchronized(deliverers) {
-			for(myDeliverer md: deliverers) {
-				if(md.deliverer.equals(d)) {
-					md.unoccupied = true;
 				}
 			}
 		}
@@ -256,10 +240,6 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 						HandToCustomer(o);
 						return true;
 					}
-				}
-			}
-			synchronized(orders) {
-				for(Order o: orders) {
 					if(o.oS == OrderState.done) {
 						FinishOrder(o);
 						return true;
@@ -308,12 +288,11 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 	}
 
 	private void HandToEmployee(Order o) {
-		o.oS = OrderState.handing;
 		synchronized(employees) {
 			for(myEmployee me: employees) {
-				if(me.unoccupied && me.working) {
+				if(me.working) {
 					me.employee.msgGetItems(o);
-					me.unoccupied = false;
+					o.oS = OrderState.handing;
 					for(ItemOrder iO: o.items) {
 						inventory.updateAmount(iO.getFoodItem(), iO.getAmount(), false);
 					}
@@ -323,13 +302,12 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 	}
 
 	private void HandToDeliverer(Order o) {
-		o.oS = OrderState.handing;
 		calculatePrice(o);
 		synchronized(deliverers) {
 			for(myDeliverer md: deliverers) {
-				if(md.unoccupied && md.working) {
+				if(md.working) {
 					md.deliverer.msgDeliverItems(o);
-					md.unoccupied = false;
+					o.oS = OrderState.handing;
 					o.cook.msgHereIsWhatICanFulfill(o.items, HaveSomeItems(o.items)); // figure out how much he can fulfill
 					for(ItemOrder iO: o.items) {
 						inventory.updateAmount(iO.getFoodItem(), iO.getAmount(), false);
@@ -361,20 +339,17 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 	// Employee class (Cashier's view of employees)
 	public class myEmployee {
 		MarketEmployee employee;
-		public boolean unoccupied;
 		boolean working;
 		int salary;
 
 		myEmployee(MarketEmployee e, int s) {
 			employee = e;
-			unoccupied = true;
 			working = false;
 			salary = s;
 		}
 		
-		myEmployee(MarketEmployee e, int s, boolean u, boolean w) {
+		myEmployee(MarketEmployee e, int s, boolean w) {
 			employee = e;
-			unoccupied = u;
 			working = w;
 			salary = s;
 		}
@@ -384,20 +359,17 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 	// Deliverer class (Cashier's view of deliverers)
 	public class myDeliverer {
 		MarketDeliverer deliverer;
-		public boolean unoccupied;
 		boolean working;
 		int salary;
 
 		myDeliverer(MarketDeliverer d, int s) {
 			deliverer = d;
-			unoccupied = true;
 			working = false;
 			salary = s;
 		}
 		
-		myDeliverer(MarketDeliverer d, int s, boolean u, boolean w) {
+		myDeliverer(MarketDeliverer d, int s, boolean w) {
 			deliverer = d;
-			unoccupied = u;
 			working = w;
 			salary = s;
 		}
