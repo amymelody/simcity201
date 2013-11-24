@@ -9,8 +9,8 @@ import simcity.role.JobRole;
 import simcity.role.Role;
 import simcity.ItemOrder;
 import simcity.PersonAgent;
-import simcity.RestCashierRole;
-import simcity.RestCookRole;
+import simcity.interfaces.RestCashier;
+import simcity.interfaces.RestCook;
 import simcity.market.Order.OrderState;
 import simcity.market.gui.MarketCashierGui;
 import simcity.market.gui.MarketCustomerGui;
@@ -73,17 +73,6 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 	}
 	public int viewMarketMoney() {
 		return marketMoney;
-	}
-
-	/* Accessors */
-	public List getEmployees() {
-		return employees;
-	}
-	public List getDeliverers() {
-		return deliverers;
-	}
-	public List getOrders() {
-		return orders;
 	}
 
 
@@ -216,7 +205,7 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 	}
 
 	// Normative Scenario #2
-	public void msgIWantDelivery(RestCookRole rCk, RestCashierRole rCh, List<ItemOrder> i, String location) {
+	public void msgIWantDelivery(RestCook rCk, RestCashier rCh, List<ItemOrder> i, String location) {
 		orders.add(new Order(rCk, rCh, i, location));
 		//stateChanged();
 	}
@@ -225,7 +214,6 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 			for(Order o: orders) {
 				if(o.equals(order)) {
 					o.oS = OrderState.delivered;
-					transaction(o);
 				}
 			}
 		}
@@ -325,6 +313,7 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 			for(myEmployee me: employees) {
 				if(me.unoccupied && me.working) {
 					me.employee.msgGetItems(o);
+					me.unoccupied = false;
 					for(ItemOrder iO: o.items) {
 						inventory.updateAmount(iO.getFoodItem(), iO.getAmount(), false);
 					}
@@ -335,10 +324,12 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 
 	private void HandToDeliverer(Order o) {
 		o.oS = OrderState.handing;
+		calculatePrice(o);
 		synchronized(deliverers) {
 			for(myDeliverer md: deliverers) {
 				if(md.unoccupied && md.working) {
 					md.deliverer.msgDeliverItems(o);
+					md.unoccupied = false;
 					o.cook.msgHereIsWhatICanFulfill(o.items, HaveSomeItems(o.items)); // figure out how much he can fulfill
 					for(ItemOrder iO: o.items) {
 						inventory.updateAmount(iO.getFoodItem(), iO.getAmount(), false);
@@ -368,9 +359,9 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 	/* Classes used by Cashier Role */
 
 	// Employee class (Cashier's view of employees)
-	class myEmployee {
+	public class myEmployee {
 		MarketEmployee employee;
-		boolean unoccupied;
+		public boolean unoccupied;
 		boolean working;
 		int salary;
 
@@ -387,12 +378,13 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 			working = w;
 			salary = s;
 		}
+
 	}
 
 	// Deliverer class (Cashier's view of deliverers)
-	class myDeliverer {
+	public class myDeliverer {
 		MarketDeliverer deliverer;
-		boolean unoccupied;
+		public boolean unoccupied;
 		boolean working;
 		int salary;
 

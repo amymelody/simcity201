@@ -40,7 +40,7 @@ public class MockMarketCustomer extends Mock implements MarketCustomer {
 			log.add(new LoggedEvent("Received correct items and payment"));
 		}
 		else {
-			log.add(new LoggedEvent("Did not receive correct items."));
+			log.add(new LoggedEvent("Did not receive correct items"));
 		}
 		
 	}
