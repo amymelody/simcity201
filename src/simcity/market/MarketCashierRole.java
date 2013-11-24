@@ -8,6 +8,7 @@ import java.util.concurrent.Semaphore;
 import simcity.role.JobRole;
 import simcity.ItemOrder;
 import simcity.PersonAgent;
+import simcity.bank.BankManagerRole;
 import simcity.interfaces.RestCashier;
 import simcity.interfaces.RestCook;
 import simcity.market.Order.OrderState;
@@ -69,10 +70,36 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 	public void setMarketMoney(int mM) {
 		marketMoney = mM;
 	}
+	
+	
+	/* Accessors */
 	public int viewMarketMoney() {
 		return marketMoney;
 	}
-
+	public int viewMarketMoneySurplus() {
+		return marketMoneySurplus;
+	}
+	public myEmployee getEmployee(MarketEmployee e) {
+		synchronized(employees) {
+			for(myEmployee me: employees) {
+				if(me.employee.equals(e)) {
+					return me;
+				}
+			}
+		}
+		return null;
+	}
+	public myDeliverer getDeliverer(MarketDeliverer d) {
+		synchronized(deliverers) {
+			for(myDeliverer md: deliverers) {
+				if(md.deliverer.equals(d)) {
+					return md;
+				}
+			}
+		}
+		return null;
+	}
+	
 
 	/* Animation */
 	private Semaphore animation = new Semaphore(0, true);
@@ -92,9 +119,10 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 	public List<myDeliverer> deliverers = Collections.synchronizedList(new ArrayList<myDeliverer>());
 
 	// Market Status Data
-	int marketMoney;
-	enum MarketState {open, closing, closed};
-	MarketState mS;
+	int marketMoney, marketMoneySurplus;
+	public enum MarketState {open, closing, closed};
+	public MarketState mS;
+	public BankManagerRole manager;
 
 	// Cashier Status Data
 	int salary;
@@ -163,7 +191,9 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 	// Inventory updated +10 every time market opens
 	public void msgWereOpen() {
 		mS = MarketState.open;
+		marketMoneySurplus = 0;
 		inventory.opening();
+		//stateChanged();
 	}
 
 	// Normative Scenario #1
@@ -267,10 +297,10 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 					}
 				}
 			}
-		}
-		else if(mS == MarketState.closing) {
-			closeUp();
-			return true;
+			if(mS == MarketState.closing && orders.size() == 0) {
+				closeUp();
+				return true;
+			}
 		}
 		return false;
 	}
@@ -293,11 +323,11 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 				marketMoney -= md.salary;
 			}
 		}
-		person.msgEndShift();
-		working = false;
 		marketMoney -= salary;
+		marketMoneySurplus = marketMoney - 100;
 		// Send a message to the bank to store money surplus
 		marketMoney = 100;
+		msgEndShift();
 	}
 
 	private void HandToEmployee(Order o) {
@@ -312,7 +342,7 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 			}
 		}
 		checkingInventorytoConfirmOrder(o);
-		if(o.fulfilling.size() != 0) {
+		if(o.fulfilling.size() > 0) {
 			assignedEmployee.employee.msgGetItems(o);
 			assignedEmployee.numOfCust++;
 			o.oS = OrderState.handing;
@@ -321,7 +351,7 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 			}
 		}
 		else {
-			orders.remove(o);
+			removeOrder(o);
 		}
 	}
 
@@ -337,7 +367,7 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 			}
 		}
 		checkingInventorytoConfirmOrder(o);
-		if(o.fulfilling.size() != 0) {
+		if(o.fulfilling.size() > 0) {
 			assignedDeliverer.deliverer.msgDeliverItems(o);
 			assignedDeliverer.numOfCust++;
 			o.oS = OrderState.handing;
@@ -346,7 +376,7 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 			}
 		}
 		else {
-			orders.remove(o);
+			removeOrder(o);
 		}
 	}
 
@@ -358,12 +388,12 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 	private void FinishOrder(Order o) {
 		o.customer.msgThankYou(o.change);
 		updateMarketMoney(o);
-		orders.remove(o);
+		removeOrder(o);
 	}
 
 	private void FinishDelivery(Order o) {
 		updateMarketMoney(o);
-		orders.remove(o);
+		removeOrder(o);
 	}
 
 
@@ -372,7 +402,7 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 	// Employee class (Cashier's view of employees)
 	public class myEmployee {
 		MarketEmployee employee;
-		boolean working;
+		public boolean working;
 		int salary;
 		int numOfCust;
 
@@ -395,7 +425,7 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 	// Deliverer class (Cashier's view of deliverers)
 	public class myDeliverer {
 		MarketDeliverer deliverer;
-		boolean working;
+		public boolean working;
 		int salary;
 		int numOfCust;
 
@@ -451,5 +481,10 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 			o.cook.msgHereIsWhatICanFulfill(o.fulfilling, HaveSomeItems(o.fulfilling));
 		else
 			o.customer.msgHereIsWhatICanFulfill(o.fulfilling, HaveSomeItems(o.fulfilling));
+	}
+	//stateChanged() in case MarketState == closing
+	private void removeOrder(Order o) {
+		orders.remove(o);
+		//stateChanged();
 	}
 }

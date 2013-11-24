@@ -5,6 +5,7 @@ import java.util.List;
 
 import simcity.interfaces.MarketCashier;
 import simcity.market.MarketCashierRole;
+import simcity.market.MarketCashierRole.MarketState;
 import simcity.market.Order.OrderState;
 import simcity.market.test.mock.MockMarketCustomer;
 import simcity.market.test.mock.MockMarketDeliverer;
@@ -822,8 +823,8 @@ public class MarketCashierTest extends TestCase
 		cashier.setMarketState(true);
 		cashier.setSalary(10);
 		cashier.setMarketMoney(50);
-		cashier.inventory.setAmount("Lasagna", 3);
-		cashier.inventory.setAmount("Horchata", 3);
+		cashier.inventory.setAmount("Lasagna", 0);
+		cashier.inventory.setAmount("Horchata", 0);
 		List<ItemOrder> test1Orders = new ArrayList<ItemOrder>(); // orders Lasagna and Horchata
 		test1Orders.add(new ItemOrder("Lasagna", 2));
 		test1Orders.add(new ItemOrder("Horchata", 5));
@@ -900,67 +901,77 @@ public class MarketCashierTest extends TestCase
 		assertEquals("marketMoney should total up to $50. It doesn't", cashier.viewMarketMoney(), 50);
 
 	} // End of Test 10
-	
+
 	/**
 	 * This tests closing the store
 	 */
-	public void testNineClosingUpShop()
+	public void testElevenClosingUpShop()
 	{
 		// Set up
-		rCook1.cashier = cashier;
 		deliverer1.cashier = cashier;
-		cashier.setDeliverers(deliverer1, 10, true);
-		cashier.setDeliverers(deliverer2, 10, false);
+		employee1.cashier = cashier;
+		deliverer2.cashier = cashier;
+		employee2.cashier = cashier;
+		customer1.cashier = cashier;
+		cashier.setDeliverers(deliverer1, 8, true);
+		cashier.setDeliverers(deliverer2, 12, true);
+		cashier.setEmployees(employee1, 10, true);
+		cashier.setEmployees(employee2, 15, true);
 		cashier.setMarketState(true);
-		cashier.setSalary(10);
-		cashier.setMarketMoney(50);
-		cashier.inventory.setAmount("Pizza", 10);
-		cashier.inventory.setAmount("Burger", 10);
-		List<ItemOrder> test2Orders = new ArrayList<ItemOrder>(); // orders Pizza and Burgers
-		test2Orders.add(new ItemOrder("Pizza", 10));
-		test2Orders.add(new ItemOrder("Burger", 1));
-		rCook1.items = test2Orders;
+		cashier.setSalary(20);
+		cashier.setMarketMoney(258);
+		cashier.inventory.setAmount("Horchata", 0);
+		List<ItemOrder> test11Orders = new ArrayList<ItemOrder>(); // orders Horchata
+		test11Orders.add(new ItemOrder("Horchata", 2));
+		customer1.items = test11Orders;
 
 		// Check preconditions for Step 1a
-		assertEquals("Cashier should have no orders in List orders. It doesn't.", cashier.orders.size(), 0);		
 		assertEquals("CashierAgent should have an empty event log before msgIWantDelivery(...) is called. Instead, the Cashier's event log reads: "
 				+ cashier.log.toString(), 0, cashier.log.size());
+		assertEquals("Employee1 is working. Employee1 isn't.", cashier.getEmployee(employee1).working, true);
+		assertEquals("Employee1 is working. Employee1 isn't.", cashier.getEmployee(employee2).working, true);
+		assertEquals("Employee1 is working. Employee1 isn't.", cashier.getDeliverer(deliverer1).working, true);
+		assertEquals("Employee1 is working. Employee1 isn't.", cashier.getDeliverer(deliverer2).working, true);
 
-		// Step 1a - Receiving a delivery order (Message)
-		cashier.msgIWantDelivery(rCook1, rCashier1, test2Orders, "Josh's Restaurant");
-
+		// Step 1a - Receiving an order (Message)
+		cashier.msgIWantItems(customer1, test11Orders);
+		
 		// Check postconditions for Step 1a
 		assertEquals("Cashier should have one order in List orders. It doesn't.", cashier.orders.size(), 1);
-		assertFalse("Cashier should have one order in List orders for delivery. It doesn't", cashier.orders.get(0).location == null);
+		
+		// Step 2a - Closing up (Message)
+		cashier.msgDoneForTheDay();
 
+		// Check postconditions for Step 1a
+		assertTrue("MarketState should equal MarketState.closing. It isn't.", cashier.mS == MarketState.closing);
+		
 		// Check preconditions for Step 1b
-		assertEquals("MockDeliverer should have an empty log befor the scheduler is called. Instead the MockDeliverer's event log reads: " + deliverer1.log.toString(), 0, deliverer1.log.size());
-		assertEquals("RCook1 should have an empty log befor the scheduler is called. Instead the rCook1 event log reads: " + rCook1.log.toString(), 0, rCook1.log.size());
-
-		// Step 1b - Confirming order to a restaurant cook/Sending the order to a deliverer (Scheduler/Action)
+		assertEquals("Employee1 should have an empty log befor the scheduler is called. Instead Employee1's event log reads: " + employee1.log.toString(), 0, employee1.log.size());
+		assertEquals("Employee2 should have an empty log befor the scheduler is called. Instead Employee2's event log reads: " + employee2.log.toString(), 0, employee2.log.size());
+		assertEquals("Deliverer1 should have an empty log befor the scheduler is called. Instead Deliverer1's event log reads: " + deliverer1.log.toString(), 0, deliverer1.log.size());
+		assertEquals("Deliverer2 should have an empty log befor the scheduler is called. Instead Deliverer2's event log reads: " + deliverer2.log.toString(), 0, deliverer2.log.size());
+		
+		// Step 1b - Confirming order to a restaurant cook/Sending the order to a deliverer/Cannot close yet (Scheduler/Action)
 		assertTrue("Cashier's scheduler should have returned true, but didn't.", cashier.pickAndExecuteAnAction());
 
 		// Check postconditions for Step 1b
-		assertTrue("Cashier should have an order in List orders in which OrderState == handing. It doesn't.", cashier.orders.get(0).getOS() == OrderState.handing);
-		assertTrue("Cashier should have sent order to deliverer1. Deliverer1 should have a log that reads: Received order. Instead it reads: " + deliverer1.log.toString(), deliverer1.log.getLastLoggedEvent().getMessage() == "Received order");
-		assertTrue("Cashier should have sent confirmation to rCook1. RCook1 should have a log that reads: Confirmation of (at least partial) delivery. Instead it reads: " + rCook1.log.toString(), rCook1.log.getLastLoggedEvent().getMessage() == "Confirmation of (at least partial) delivery");
-		assertEquals("Pizza inventory goes down by 10. Inventory amount should be 0. It isn't.", cashier.inventory.getAmount("Pizza"), (Integer) 0);
-		assertEquals("Burger inventory goes down by 1. Inventory amount should be 9. It isn't.", cashier.inventory.getAmount("Burger"), (Integer) 9);
-		assertEquals("Cashier should have an order in List orders in which price == $58. It doesn't.", cashier.orders.get(0).price, 58);
-
-		// Step 2a - Receiving money from Deliverer to confirm order (Message)
-		cashier.msgDelivered(deliverer1.orders.get(0), deliverer1);
-
-		// Check postconditions for Step 2a
-		assertTrue("Cashier should have one order in List orders in which OrderState == delivered. It doesn't.", cashier.orders.get(0).getOS() == OrderState.delivered);
-
-		// Step 2b - Updating MarketMoney (Scheduler/Action)
+		assertTrue("Cashier should have NOT sent payment to employee1. Employee1 should have an empty log. It isn't.", employee1.log.size() == 0);
+		assertTrue("Cashier should have NOT sent payment to employee2. Employee2 should have an empty log. It isn't.", employee2.log.size() == 0);
+		assertTrue("Cashier should have NOT sent payment to deliverer1. Deliverer1 should have an empty log. It isn't.", deliverer1.log.size() == 0);
+		assertTrue("Cashier should have NOT sent payment to deliverer2. Deliverer2 should have an empty log. It isn't.", deliverer2.log.size() == 0);
+		assertEquals("Cashier should have no orders in List orders. It doesn't.", cashier.orders.size(), 0);
+		
+		// Step 2b - Closing (since there are no more pending orders)
 		assertTrue("Cashier's scheduler should have returned true, but didn't.", cashier.pickAndExecuteAnAction());
 
 		// Check postconditions for Step 2b
-		assertEquals("Cashier should have no orders in List orders. It doesn't.", cashier.orders.size(), 0);
-		assertEquals("marketMoney should total up to $108. It doesn't", cashier.viewMarketMoney(), 108);
+		assertTrue("Cashier should have sent payment to employee1. Employee1 should have a log that reads: Paid. Instead it reads: " + employee1.log.toString(), employee1.log.getLastLoggedEvent().getMessage() == "Paid");
+		assertTrue("Cashier should have sent payment to employee2. Employee2 should have a log that reads: Paid. Instead it reads: " + employee2.log.toString(), employee2.log.getLastLoggedEvent().getMessage() == "Paid");
+		assertTrue("Cashier should have sent payment to deliverer1. Deliverer1 should have a log that reads: Paid. Instead it reads: " + deliverer1.log.toString(), deliverer1.log.getLastLoggedEvent().getMessage() == "Paid");
+		assertTrue("Cashier should have sent payment to deliverer2. Deliverer2 should have a log that reads: Paid. Instead it reads: " + deliverer2.log.toString(), deliverer2.log.getLastLoggedEvent().getMessage() == "Paid");
+		assertEquals("marketMoney should total up to $100. It doesn't", cashier.viewMarketMoney(), 100);
+		assertEquals("marketMoneySurplus should total up to $93. It doesn't", cashier.viewMarketMoneySurplus(), 93);
 
-	} // End of Test 9
-	
+	} // End of Test 11
+
 }

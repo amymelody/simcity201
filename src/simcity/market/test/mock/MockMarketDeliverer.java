@@ -40,8 +40,7 @@ public class MockMarketDeliverer extends Mock implements MarketDeliverer {
 
 	@Override
 	public void msgPay() {
-		// TODO Auto-generated method stub
-		
+		log.add(new LoggedEvent("Paid"));
 	}
 
 }
