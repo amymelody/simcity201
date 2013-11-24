@@ -1,7 +1,10 @@
 package simcity.gui;
 
 import simcity.CarAgent;
+import simcity.Day;
 import simcity.PersonAgent;
+import simcity.Time;
+import simcity.CityDirectory;
 
 import javax.swing.*;
 
@@ -12,20 +15,21 @@ import java.util.List;
 
 public class CityInputPanel extends JPanel implements ActionListener
 {
-	private CityCreationPanel creationPanel = new CityCreationPanel(this);
+	private Vector<PersonAgent> people = new Vector<PersonAgent>();
+	private Vector<CarAgent> cars = new Vector<CarAgent>();
+	
+	private CityDirectory cityDirectory = new CityDirectory();
     private JScrollPane personPane = new JScrollPane(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
     private JPanel view = new JPanel();
     private List<JButton> personList = new ArrayList<JButton>();
 
-	private Vector<PersonAgent> people = new Vector<PersonAgent>();
-	private Vector<CarAgent> cars = new Vector<CarAgent>();
-
-    private CityGui gui; //reference to main GUI
+    private CityGui gui;
+    private CityCreationPanel creationPanel = new CityCreationPanel(this, cityDirectory);
     
     @Override
     public void paint(Graphics g){
     	super.paint(g);
-    	System.out.println(this.getSize().width + "," + this.getSize().height);
+    	//System.out.println(this.getSize().width + "," + this.getSize().height);
     	Graphics2D g2d  = (Graphics2D) g;
     	g2d.setColor(Color.black);
     	g2d.fillRect(0, 0, this.getSize().width, this.getSize().height);
@@ -46,7 +50,7 @@ public class CityInputPanel extends JPanel implements ActionListener
         	public void run(){
         		while(true){
         			me.repaint();
-        			System.out.println("please work");
+        			//System.out.println("please work");
         			
         		}
         	}
@@ -71,13 +75,34 @@ public class CityInputPanel extends JPanel implements ActionListener
     	
     }
     
-    public void addPerson(String name, String job, int money, boolean car) //walk me through how to add all the variables to the person--job, $, car
+    public void addPerson(String name, String job, int pay, int startShift, int endShift, String eco, String physical, boolean car, CityDirectory c) 
     {
 		PersonAgent p = new PersonAgent(name);
-//		PersonGui g = new PersonGui(p, gui);
-//		gui.animationPanel.addGui(g);
-//		p.msgYoureHired(String nameOfBuilding (location), String nameOfRole (variable name style string), int salary); ************************
-		p.msgIncome(money);
+		PersonGui g = new PersonGui(p, gui);
+		p.setCityDirectory(c);
+		//gui.addGui(g);
+		
+		Map<Day, Time> startShifts = new HashMap<Day, Time>();
+		startShifts.put(Day.Sun, new Time(Day.Sun, startShift, 0));
+		startShifts.put(Day.Mon, new Time(Day.Mon, startShift, 0));
+		startShifts.put(Day.Tue, new Time(Day.Tue, startShift, 0));
+		startShifts.put(Day.Wed, new Time(Day.Wed, startShift, 0));
+		startShifts.put(Day.Thu, new Time(Day.Thu, startShift, 0));
+		startShifts.put(Day.Fri, new Time(Day.Fri, startShift, 0));
+		startShifts.put(Day.Sat, new Time(Day.Sat, startShift, 0));
+		
+		Map<Day, Time> endShifts = new HashMap<Day, Time>();
+		endShifts.put(Day.Sun, new Time(Day.Sun, endShift, 0));
+		endShifts.put(Day.Mon, new Time(Day.Mon, endShift, 0));
+		endShifts.put(Day.Tue, new Time(Day.Tue, endShift, 0));
+		endShifts.put(Day.Wed, new Time(Day.Wed, endShift, 0));
+		endShifts.put(Day.Thu, new Time(Day.Thu, endShift, 0));
+		endShifts.put(Day.Fri, new Time(Day.Fri, endShift, 0));
+		endShifts.put(Day.Sat, new Time(Day.Sat, endShift, 0));
+		
+		p.msgYoureHired(job, pay, startShifts, endShifts);
+		p.setEState(eco);
+		p.setPState(physical);
 		if(car)
 		{
 //			CarAgent tempCar = new CarAgent(p)

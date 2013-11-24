@@ -44,4 +44,7 @@ public class CityGui extends JFrame
 		add(animationPanel, frameLayout.CENTER);
 	}
 	
+	public void addGui(PersonGui g) {
+		animationPanel.addGui(g);
+	}
 }

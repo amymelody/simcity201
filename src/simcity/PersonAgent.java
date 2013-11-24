@@ -97,6 +97,9 @@ public class PersonAgent extends Agent
 		banks.add(new Bank("bank1", "bank1DepositorRole"));
 	}
 	
+	public void setCityDirectory(CityDirectory c) {
+		city = c;
+	}
 	
 	public String getName() {
 		return name;
@@ -124,6 +127,48 @@ public class PersonAgent extends Agent
 	
 	public void setLState(LocationState ls) {
 		state.ls = ls;
+	}
+	
+	public void setEState(String es) {
+		switch(es) {
+		case "poor":
+			money = 50;
+			minBalance = 10;
+			maxBalance = 800;
+			break;
+		case "middle":
+			money = 250;
+			minBalance = 100;
+			maxBalance = 1000;
+			break;
+		case "rich":
+			money = 500;
+			minBalance = 200;
+			maxBalance = 1000;
+			break;
+		default:
+			money = 250;
+			minBalance = 100;
+			maxBalance = 1000;
+			break;
+		}
+	}
+	
+	public void setPState(String ps) {
+		switch(ps) {
+		case "lazy":
+			state.ps = PhysicalState.lazy;
+			break;
+		case "average":
+			state.ps = PhysicalState.average;
+			break;
+		case "fit":
+			state.ps = PhysicalState.fit;
+			break;
+		default:
+			state.ps = PhysicalState.average;
+			break;
+		}
 	}
 	
 	public void addRole(Role r, String n) {
@@ -243,10 +288,10 @@ public class PersonAgent extends Agent
 		stateChanged();
 	}
 	
-	public void msgYoureHired(String l, String r, int p, Map<Day,Time> startShifts, Map<Day,Time> endShifts) {
-		job = new Job(l, r, p, startShifts, endShifts);
-		JobRole j = city.JobFactory(r);
-		addRole(j, r);
+	public void msgYoureHired(String role, int payrate, Map<Day,Time> startShifts, Map<Day,Time> endShifts) {
+		JobRole j = city.JobFactory(role);
+		addRole(j, role);
+		job = new Job(j.getJobLocation(), role, payrate, startShifts, endShifts);
 		stateChanged();
 	}
 
