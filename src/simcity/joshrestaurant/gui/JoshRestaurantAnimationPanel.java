@@ -17,8 +17,8 @@ public class JoshRestaurantAnimationPanel extends JPanel implements ActionListen
 	static final int TABLEWIDTH = 50;
 	static final int TABLEHEIGHT = 50;
 	
-    private final int WINDOWX = 450;
-    private final int WINDOWY = 400;
+    private final int WINDOWX = 500;
+    private final int WINDOWY = 500;
     private Image bufferImage;
     private Dimension bufferSize;
     private Timer timer;

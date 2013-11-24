@@ -2,6 +2,7 @@ package simcity.gui;
 
 import javax.swing.*;
 import java.awt.*;
+import simcity.CityDirectory;
 
 /**
  * Main GUI class.
@@ -11,7 +12,7 @@ public class CityGui extends JFrame
 {
 	private JFrame animationFrame = new JFrame("City Animation");
 	private CityAnimationPanel animationPanel = new CityAnimationPanel();
-	private CityInputPanel inputPanel = new CityInputPanel(this);
+	private CityInputPanel inputPanel;
 
 	private int windowX = 650;
 	private int windowY = 500;
@@ -21,8 +22,10 @@ public class CityGui extends JFrame
 	/**
 	 * Constructor
 	 */
-	public CityGui()
+	public CityGui(CityDirectory cd)
 	{
+		inputPanel = new CityInputPanel(this, cd);
+		
 		setBounds(bufferFromSideOfScreen, bufferFromTopOfScreen, windowX, windowY);
 		BorderLayout frameLayout = new BorderLayout();
 		setLayout(frameLayout);

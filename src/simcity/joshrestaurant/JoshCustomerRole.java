@@ -50,14 +50,13 @@ public class JoshCustomerRole extends RestCustomerRole implements JoshCustomer {
 	public JoshCustomerRole(){
 		super();
 		
-		//cash = 30;
-		cash = person.getMoney();
-		if (name.equals("cheapskate") || name.equals("poor")) {
+		cash = 30;
+		/*if (name.equals("cheapskate") || name.equals("poor")) {
 			cash = 5;
 		}
 		if (name.equals("enoughforsalad")) {
 			cash = 7;
-		}
+		}*/
 		charge = 0;
 	}
 

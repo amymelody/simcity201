@@ -11,6 +11,7 @@ import simcity.anjalirestaurant.gui.*;
 import simcity.cherysrestaurant.gui.*;
 import simcity.jesusrestaurant.gui.*;
 import simcity.joshrestaurant.gui.*;
+import simcity.CityDirectory;
 
 import java.awt.*;
 
@@ -20,12 +21,13 @@ import java.awt.*;
  */
 public class BuildingGui extends JFrame
 {
+	private CityDirectory cityDirectory;
 	private JFrame animationFrame = new JFrame("City Animation");
 	private BankAnimationPanel bankAnimationPanel = new BankAnimationPanel();
 	private BankInputPanel bankInputPanel = new BankInputPanel(this);
 	private HousingAnimationPanel housingAnimationPanel = new HousingAnimationPanel();
 	private HousingInputPanel housingInputPanel = new HousingInputPanel(this);
-	private MarketAnimationPanel marketAnimationPanel = new MarketAnimationPanel();
+	//private MarketAnimationPanel marketAnimationPanel = new MarketAnimationPanel();
 	private MarketInputPanel marketInputPanel = new MarketInputPanel(this);
 //	private AlfredRestaurantAnimationPanel alfredRestaurantAnimationPanel = new AlfredRestaurantAnimationPanel();
 //	private AlfredRestaurantInputPanel alfredRestaurantInputPanel = new AlfredRestaurantInputPanel(this);
@@ -35,7 +37,8 @@ public class BuildingGui extends JFrame
 //	private CherysRestaurantInputPanel cherysRestaurantInputPanel = new CherysRestaurantInputPanel(this);
 //	private JesusRestaurantAnimationPanel jesusRestaurantAnimationPanel = new JesusRestaurantAnimationPanel();
 //	private JesusRestaurantInputPanel jesusRestaurantInputPanel = new JesusRestaurantInputPanel(this);
-//	private JoshRestaurantAnimationPanel joshRestaurantAnimationPanel = new JoshRestaurantAnimationPanel();
+	private JoshRestaurantAnimationPanel joshRestaurantAnimationPanel = new JoshRestaurantAnimationPanel();
+//	private JoshRestaurantInputPanel joshRestaurantInputPanel = new JoshRestaurantInputPanel(this);
 //	private AlfredRestaurantInputPanel joshRestaurantInputPanel = new AlfredRestaurantInputPanel(this);
 
 	private int windowX = 650;
@@ -46,8 +49,10 @@ public class BuildingGui extends JFrame
 	/**
 	 * Constructor
 	 */
-	public BuildingGui()
+	public BuildingGui(CityDirectory cd)
 	{
+		cityDirectory = cd;
+		
 		setBounds(bufferFromSideOfScreen, bufferFromTopOfScreen, windowX, windowY);
 		BorderLayout frameLayout = new BorderLayout();
 		setLayout(frameLayout);
@@ -90,11 +95,11 @@ public class BuildingGui extends JFrame
 //		jesusRestaurantInputPanel.setMaximumSize(inputDim);
 //		jesusRestaurantInputPanel.setVisible(false);
 //		add(jesusRestaurantInputPanel, frameLayout.WEST);
-//		joshRestaurantInputPanel.setPreferredSize(inputDim);
-//		joshRestaurantInputPanel.setMinimumSize(inputDim);
-//		joshRestaurantInputPanel.setMaximumSize(inputDim);
-//		joshRestaurantInputPanel.setVisible(false);
-//		add(joshRestaurantInputPanel, frameLayout.WEST);
+	/*	joshRestaurantInputPanel.setPreferredSize(inputDim);
+		joshRestaurantInputPanel.setMinimumSize(inputDim);
+		joshRestaurantInputPanel.setMaximumSize(inputDim);
+		joshRestaurantInputPanel.setVisible(false);
+		add(joshRestaurantInputPanel, frameLayout.WEST);*/
 
 		//animation panel
 		double animationFractionOfWindow = .6;
@@ -107,10 +112,10 @@ public class BuildingGui extends JFrame
 		housingAnimationPanel.setMinimumSize(animDim);
 		housingAnimationPanel.setMaximumSize(animDim);
 		add(housingAnimationPanel, frameLayout.CENTER);
-		marketAnimationPanel.setPreferredSize(animDim);
-		marketAnimationPanel.setMinimumSize(animDim);
-		marketAnimationPanel.setMaximumSize(animDim);
-		add(marketAnimationPanel, frameLayout.CENTER);
+		//marketAnimationPanel.setPreferredSize(animDim);
+		//marketAnimationPanel.setMinimumSize(animDim);
+		//marketAnimationPanel.setMaximumSize(animDim);
+		//add(marketAnimationPanel, frameLayout.CENTER);
 //		alfredRestaurantAnimationPanel.setPreferredSize(animDim);
 //		alfredRestaurantAnimationPanel.setMinimumSize(animDim);
 //		alfredRestaurantAnimationPanel.setMaximumSize(animDim);
@@ -127,9 +132,10 @@ public class BuildingGui extends JFrame
 //		jesusRestaurantAnimationPanel.setMinimumSize(animDim);
 //		jesusRestaurantAnimationPanel.setMaximumSize(animDim);
 //		add(jesusRestaurantAnimationPanel, frameLayout.CENTER);
-//		joshRestaurantAnimationPanel.setPreferredSize(animDim);
-//		joshRestaurantAnimationPanel.setMinimumSize(animDim);
-//		joshRestaurantAnimationPanel.setMaximumSize(animDim);
-//		add(joshRestaurantAnimationPanel, frameLayout.CENTER);
+		joshRestaurantAnimationPanel.setPreferredSize(animDim);
+		joshRestaurantAnimationPanel.setMinimumSize(animDim);
+		joshRestaurantAnimationPanel.setMaximumSize(animDim);
+		//joshRestaurantAnimationPanel.setVisible(false);
+		add(joshRestaurantAnimationPanel, frameLayout.CENTER);
 	}
 }

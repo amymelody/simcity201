@@ -49,8 +49,6 @@ public class PersonAgent extends Agent
 	public List<Market> markets = Collections.synchronizedList(new ArrayList<Market>());
 	public List<Bank> banks = Collections.synchronizedList(new ArrayList<Bank>());
 	public List<Housing> houses = Collections.synchronizedList(new ArrayList<Housing>());
-	public Map<String, List> places;
-	public Map<String, Point> locations;
 
 	private Job job;
 	private Time time = new Time(Day.Sun, 0, 0);
@@ -58,7 +56,7 @@ public class PersonAgent extends Agent
 	public enum NourishmentState {unknown, normal, gotHungry, hungry, full};
 	public enum LocationState {unknown, outside, leavingHouse, home, ownerHouse, restaurant, market, bank, atDestination};
 	public enum WorkingState {unknown, notWorking, working};
-	public enum FinancialState {unknown, poor, middleClass, rich};
+	public enum EconomicState {unknown, poor, middle, rich};
 	public enum TransportationState {unknown, waitingForBus, ridingBus, inCar, walking, walkingFromVehicle};
 	public enum PhysicalState {unknown, fit, average, lazy};
 
@@ -132,21 +130,25 @@ public class PersonAgent extends Agent
 	public void setEState(String es) {
 		switch(es) {
 		case "poor":
+			state.es = EconomicState.poor;
 			money = 50;
 			minBalance = 10;
 			maxBalance = 800;
 			break;
 		case "middle":
+			state.es = EconomicState.middle;
 			money = 250;
 			minBalance = 100;
 			maxBalance = 1000;
 			break;
 		case "rich":
+			state.es = EconomicState.rich;
 			money = 500;
 			minBalance = 200;
 			maxBalance = 1000;
 			break;
 		default:
+			state.es = EconomicState.middle;
 			money = 250;
 			minBalance = 100;
 			maxBalance = 1000;
@@ -193,7 +195,7 @@ public class PersonAgent extends Agent
 	}
 	
 	private boolean takeBus(String destination) {
-		if (job != null && destination.equals(job.location) && (time.plus(15)).greaterThanOrEqualTo(job.startShifts.get(time.getDay()))) {
+		if (job != null && destination.equals(job.location) && (time.plus(30)).greaterThanOrEqualTo(job.startShifts.get(time.getDay()))) {
 			return true;
 		}
 		/*if (nearDestination(destination)) {
@@ -279,7 +281,10 @@ public class PersonAgent extends Agent
 		time.day = d;
 		time.hour = h;
 		time.minute = m;
-		System.out.println(time.getDay().toString() + ", " + time.getHour() + ":" + time.getMinute());
+		print(time.getDay().toString() + ", " + time.getHour() + ":" + time.getMinute());
+		if (time.getHour() == 9) {
+			state.ns = NourishmentState.gotHungry;
+		}
 		stateChanged();
 	}
 
@@ -377,13 +382,13 @@ public class PersonAgent extends Agent
 	
 	public boolean pickAndExecuteAnAction() {
 		if (state.ts == TransportationState.walking || state.ts == TransportationState.walkingFromVehicle) { 
-			if (job != null && state.ws == WorkingState.notWorking && job.startShifts.get(time.getDay()) != job.endShifts.get(time.getDay()) && (time.plus(30)).greaterThanOrEqualTo(job.startShifts.get(time.getDay())) && !time.greaterThanOrEqualTo(job.endShifts.get(time.getDay()))) { //if half an hour before your shift starts
+			if (job != null && state.ws == WorkingState.notWorking && job.startShifts.get(time.getDay()) != job.endShifts.get(time.getDay()) && (time.plus(60)).greaterThanOrEqualTo(job.startShifts.get(time.getDay())) && !time.greaterThanOrEqualTo(job.endShifts.get(time.getDay()))) { //if an hour before your shift starts
 				if (state.ls == LocationState.home) {
 					leaveHouse();
 					return true;
 				} else if (state.ls == LocationState.outside || state.ls == LocationState.atDestination) {
-					goToWork();
 					print("goToWork");
+					goToWork();
 					return true;
 				}
 			}
@@ -393,7 +398,7 @@ public class PersonAgent extends Agent
 				return true;
 			} 
 			if (state.ws == WorkingState.notWorking) {
-				if (money <= minBalance) {
+				if (money <= minBalance && haveBankAccount) {
 					if (state.ls == LocationState.home) {
 						leaveHouse();
 						return true;
@@ -761,7 +766,7 @@ public class PersonAgent extends Agent
 		LocationState ls;
 		WorkingState ws;
 		TransportationState ts;
-		FinancialState fs;
+		EconomicState es;
 		PhysicalState ps;
 		
 		PersonState() {
@@ -780,8 +785,8 @@ public class PersonAgent extends Agent
 		public TransportationState getTState() {
 			return ts;
 		}
-		public FinancialState getFState() {
-			return fs;
+		public EconomicState getEState() {
+			return es;
 		}
 		public PhysicalState getPState() {
 			return ps;

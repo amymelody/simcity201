@@ -21,7 +21,7 @@ public class CityInputPanel extends JPanel implements ActionListener
 	private Vector<PersonAgent> people = new Vector<PersonAgent>();
 	private Vector<CarAgent> cars = new Vector<CarAgent>();
 	
-	private CityDirectory cityDirectory = new CityDirectory();
+	private CityDirectory cityDirectory;
     private JScrollPane personPane = new JScrollPane(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
     private JPanel view = new JPanel();
     private List<JButton> personList = new ArrayList<JButton>();
@@ -29,7 +29,7 @@ public class CityInputPanel extends JPanel implements ActionListener
     private Time time;
 
     private CityGui gui;
-    private CityCreationPanel creationPanel = new CityCreationPanel(this, cityDirectory);
+    private CityCreationPanel creationPanel;
     
     @Override
     public void paint(Graphics g){
@@ -39,8 +39,10 @@ public class CityInputPanel extends JPanel implements ActionListener
     	g2d.setColor(Color.black);
     	g2d.fillRect(0, 0, this.getSize().width, this.getSize().height);
     }
-	public CityInputPanel(CityGui g)
+	public CityInputPanel(CityGui g, CityDirectory cd)
 	{
+		cityDirectory = cd;
+		creationPanel = new CityCreationPanel(this, cityDirectory);
 		gui = g;
 		System.out.println("lol im here");
         setLayout(new BoxLayout(this, 0));
@@ -50,7 +52,7 @@ public class CityInputPanel extends JPanel implements ActionListener
         personPane.setViewportView(view);
         add(personPane);
         
-        time = new Time(Day.Sun, 0, 0);
+        time = new Time(Day.Sun, 5, 0);
         timer = new Timer(TIMERINCR, this );
     	timer.start();
         

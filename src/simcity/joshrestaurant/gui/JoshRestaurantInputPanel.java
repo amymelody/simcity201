@@ -2,11 +2,11 @@ package simcity.joshrestaurant.gui;
 
 import simcity.joshrestaurant.JoshCustomerRole;
 import simcity.joshrestaurant.JoshHostRole;
-import simcity.joshrestaurant.JoshMarketRole;
 import simcity.joshrestaurant.JoshWaiterRole;
 import simcity.joshrestaurant.JoshCookRole;
 import simcity.joshrestaurant.JoshCashierRole;
 import simcity.joshrestaurant.JoshWaiterRole.CustomerState;
+import simcity.market.MarketCashierRole;
 
 import javax.swing.*;
 
@@ -26,7 +26,7 @@ public class JoshRestaurantInputPanel extends JPanel
     private JoshCashierRole cashier = new JoshCashierRole("Jake");
     private Vector<MyCustomer> customers = new Vector<MyCustomer>();
     private Vector<JoshWaiterRole> waiters = new Vector<JoshWaiterRole>();
-    private Vector<JoshMarketRole> markets = new Vector<JoshMarketRole>();
+    private Vector<MarketCashierRole> markets = new Vector<MarketCashierRole>();
     private int numCustomers = 0;
 
     private JPanel restLabel = new JPanel();
@@ -38,13 +38,9 @@ public class JoshRestaurantInputPanel extends JPanel
     private JoshRestaurantGui restGui; //reference to main gui
     private JoshCookGui cookGui;
 
-    public JoshRestaurantInputPanel(BuildingGui g, JoshRestaurantGui gui) {
+    public JoshRestaurantInputPanel(BuildingGui g) {
         restGui = gui;
         this.gui = g;
-        
-        markets.add(new JoshMarketRole("Market 1", cook, cashier, 0, 10, 10, 10));
-		markets.add(new JoshMarketRole("Market 2", cook, cashier, 1, 1, 1, 1));
-		markets.add(new JoshMarketRole("Market 3", cook, cashier, 10, 2, 2, 2));
 		
 		cook.addMarket(markets.get(0));
 		cook.addMarket(markets.get(1));
@@ -54,14 +50,7 @@ public class JoshRestaurantInputPanel extends JPanel
 		cookGui = new JoshCookGui(cook, gui);
 		gui.animationPanel.addGui(cookGui);
 		cook.setGui(cookGui);
-		
-        host.startThread();
-        cook.startThread();
-        cashier.startThread();
-        for (JoshMarketRole market : markets) {
-        	market.startThread();
-        }
-
+	
         setLayout(new GridLayout(1, 2, 20, 20));
         group.setLayout(new GridLayout(1, 3, 10, 10));
 
@@ -113,7 +102,7 @@ public class JoshRestaurantInputPanel extends JPanel
     	return total;
     }
     
-    public void pauseAgents() {
+    /*public void pauseAgents() {
     	host.pause();
     	cook.pause();
     	cashier.pause();
@@ -140,7 +129,7 @@ public class JoshRestaurantInputPanel extends JPanel
     	for (JoshMarketRole m : markets) {
     		m.resume();
     	}
-    }
+    }*/
 
     /**
      * Sets up the restaurant label that includes the menu,

@@ -28,9 +28,9 @@ public class JoshCookRole extends RestCookRole {
 	private boolean working;
 	private String location = "joshRestaurant";
 	
-	Food steak = new Food("steak", 15, 3, 1, 1);
-	Food chicken = new Food("chicken", 20, 3, 1, 1);
-	Food salad = new Food("salad", 5, 3, 2, 1);
+	Food steak = new Food("steak", 15, 3, 3, 1);
+	Food chicken = new Food("chicken", 20, 3, 3, 1);
+	Food salad = new Food("salad", 5, 3, 3, 1);
 	Food pizza = new Food("pizza", 10, 3, 3, 1);
 	
 	public Map<String, Food> foods = new HashMap<String, Food>();
@@ -76,6 +76,10 @@ public class JoshCookRole extends RestCookRole {
 		cookGui = g;
 	}
 	
+	public void addMarket(MarketCashier m) {
+		markets.add(new MyMarket(m));
+	}
+	
 	// Messages
 
 	public void msgStartShift() {
@@ -86,10 +90,6 @@ public class JoshCookRole extends RestCookRole {
 	public void msgEndShift() {
 		working = false;
 		stateChanged();
-	}
-	
-	public void addMarket(MarketCashier m) {
-		markets.add(new MyMarket(m));
 	}
 	
 	public void msgHereIsOrder(JoshWaiterRole waiter, String choice, int table) {
@@ -133,11 +133,11 @@ public class JoshCookRole extends RestCookRole {
 				leaveRestaurant();
 				return true;
 			}
-			if (orderedItems == false) {
+			/*if (orderedItems == false) {
 				orderedItems = true;
 				orderFoodFromMarket();
 				return true;
-			}
+			}*/
 			for (Food food : foods.values()) {
 				if (food.getState() == FoodState.ReceivedOrder) {
 					addFood(food);
