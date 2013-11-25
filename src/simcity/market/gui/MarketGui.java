@@ -3,6 +3,7 @@ package simcity.market.gui;
 import javax.swing.*;
 
 import simcity.gui.BuildingGui;
+import simcity.gui.CityGui;
 
 import java.awt.*;
 
@@ -12,7 +13,6 @@ import java.awt.*;
  */
 public class MarketGui extends JFrame
 {
-	private JFrame animationFrame = new JFrame("Market Animation");
 	private MarketAnimationPanel animationPanel = new MarketAnimationPanel();
 	private MarketInputPanel inputPanel;
 	private BuildingGui buildingGui;
@@ -50,15 +50,12 @@ public class MarketGui extends JFrame
 		add(animationPanel, frameLayout.CENTER);
 	}
 	
-	/**
-     * Main routine to get gui started
-     */
-    public static void main(String[] args) {
-            MarketGui gui = new MarketGui();
-            gui.setTitle("SimCity201: Market");
-            gui.setVisible(false);
-            gui.setResizable(false);
-            gui.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    }
+	public void insideMarket() {
+		setVisible(true);
+	}
+	
+	public void outsideMarket() {
+		setVisible(false);
+	}
 	
 }
