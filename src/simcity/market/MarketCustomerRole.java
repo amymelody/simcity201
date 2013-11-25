@@ -64,7 +64,7 @@ public class MarketCustomerRole extends Role implements MarketCustomer {
 
 	// Order items information
 	public List<ItemOrder> items;
-	int cost;
+	public int cost;
 	boolean delivery;
 
 	// References to other roles
@@ -112,16 +112,6 @@ public class MarketCustomerRole extends Role implements MarketCustomer {
 		//stateChanged();
 	}
 
-	public void msgAtWaitingArea() {
-		animation.release();
-		//stateChanged();
-	}
-
-	public void msgLeft() {
-		animation.release();
-		//stateChanged();
-	}
-
 
 	/* Scheduler */
 	public boolean pickAndExecuteAnAction() {
@@ -131,9 +121,11 @@ public class MarketCustomerRole extends Role implements MarketCustomer {
 		}
 		if(cS == CustomerState.atCashier) {
 			GiveOrder();
+			return true;
 		}
 		if(cS == CustomerState.waiting) {
 			WillWait();
+			return true;
 		}
 		if(cS == CustomerState.getting) {
 			GetItems();
@@ -164,11 +156,6 @@ public class MarketCustomerRole extends Role implements MarketCustomer {
 	private void WillWait() {
 		cS = CustomerState.walking;
 		DoWillWait(); // animation
-		try {
-			animation.acquire();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
 	}
 
 	private void GetItems() {
@@ -186,11 +173,6 @@ public class MarketCustomerRole extends Role implements MarketCustomer {
 	private void GetOut() {
 		cS = CustomerState.done;
 		DoGetOut(); // animation
-		try {
-			animation.acquire();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
 	}
 
 

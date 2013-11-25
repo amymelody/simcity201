@@ -5,6 +5,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,7 +16,7 @@ import simcity.market.gui.MarketGui;
  * Main GUI class.
  * Contains the outer city animation and input panel
  */
-public class CityGui extends JFrame implements MouseListener
+public class CityGui extends JFrame implements MouseListener, MouseMotionListener
 {
 	private JFrame animationFrame = new JFrame("City Animation");
 	private CityAnimationPanel animationPanel;
@@ -66,15 +67,14 @@ public class CityGui extends JFrame implements MouseListener
 		buildings.add(market3);
 		
 		addMouseListener(this);
+		addMouseMotionListener(this);
 	}
 	
 	public void addGui(PersonGui g) {
 		animationPanel.addGui(g);
 	}
 	
-	@Override
 	public void mouseClicked(MouseEvent event) {
-		// TODO Auto-generated method stub
 		int x = event.getX();
 		int y = event.getY();
 
@@ -87,7 +87,8 @@ public class CityGui extends JFrame implements MouseListener
 							animationPanel.setVisible(false);
 							inputPanel.setVisible(false);
 							bG.setVisible(true);
-							currentBG = bG;						}
+							currentBG = bG;
+						}
 					}
 				}
 			}
@@ -112,7 +113,8 @@ public class CityGui extends JFrame implements MouseListener
 							animationPanel.setVisible(false);
 							inputPanel.setVisible(false);
 							bG.setVisible(true);
-							currentBG = bG;						}
+							currentBG = bG;
+						}
 					}
 				}
 			}
@@ -269,28 +271,90 @@ public class CityGui extends JFrame implements MouseListener
 		}
 	}
 
-	@Override
 	public void mouseEntered(MouseEvent event) {
-		// TODO Auto-generated method stub
 
 	}
 
-	@Override
 	public void mouseExited(MouseEvent event) {
-		// TODO Auto-generated method stub
 
 	}
 
-	@Override
 	public void mousePressed(MouseEvent event) {
-		// TODO Auto-generated method stub
-		
+
 	}
 
-	@Override
 	public void mouseReleased(MouseEvent event) {
-		// TODO Auto-generated method stub
+	
+	}
+	public void mouseDragged(MouseEvent arg0) {
 		
+	}
+	public void mouseMoved(MouseEvent event) {
+		int x = event.getX();
+		int y = event.getY();
+		
+		if(animationPanel.isVisible()) {
+			if(x > 80 && x < 144 && y > 145 && y < 209) {
+				//House 1
+				setCursor(new Cursor(Cursor.HAND_CURSOR));
+			}
+			else if(x > 80 && x < 144 && y > 80 && y < 144) {
+				//House 2
+				setCursor(new Cursor(Cursor.HAND_CURSOR));
+			}
+			else if(x > 145 && x < 209 && y > 80 && y < 144) {
+				//House 3
+				setCursor(new Cursor(Cursor.HAND_CURSOR));
+			}
+			else if(x > 145 && x < 209 && y > 145 && y < 209) {
+				//Bank
+				setCursor(new Cursor(Cursor.HAND_CURSOR));
+			}
+			else if(x > 290 && x < 354 && y > 80 && y < 209) {
+				// Apartment 1
+				setCursor(new Cursor(Cursor.HAND_CURSOR));
+			}
+			else if(x > 355 && x < 419 && y > 80 && y < 209) {
+				// Apartment 2
+				setCursor(new Cursor(Cursor.HAND_CURSOR));
+			}
+			else if(x > 290 && x < 354 && y > 290 && y < 354) {
+				// Market 1
+				setCursor(new Cursor(Cursor.HAND_CURSOR));
+				
+			}
+			else if(x > 145 && x < 209 && y > 290 && y < 354) {
+				// Market 2
+				setCursor(new Cursor(Cursor.HAND_CURSOR));
+			}
+			else if(x > 80 && x < 144 && y > 355 && y < 419) {
+				// Market 3
+				setCursor(new Cursor(Cursor.HAND_CURSOR));
+			}
+			else if(x > 355 && x < 419 && y > 290 && y < 354) {
+				// Josh's Restaurant
+				setCursor(new Cursor(Cursor.HAND_CURSOR));
+			}
+			else if(x > 290 && x < 354 && y > 355 && y < 419) {
+				// Cherys's Restaurant
+				setCursor(new Cursor(Cursor.HAND_CURSOR));
+			}
+			else if(x > 80 && x < 144 && y > 290 && y < 354) {
+				// Anjali's Restaurant
+				setCursor(new Cursor(Cursor.HAND_CURSOR));
+			}
+			else if(x > 145 && x < 209 && y > 355 && y < 419) {
+				// Alfred's Restaurant
+				setCursor(new Cursor(Cursor.HAND_CURSOR));
+			}
+			else if(x > 355 && x < 419 && y > 355 && y < 419) {
+				// Jesus's Restaurant
+				setCursor(new Cursor(Cursor.HAND_CURSOR));
+			}
+			else {
+	            setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+	        }
+		}
 	}
 	
 	/**

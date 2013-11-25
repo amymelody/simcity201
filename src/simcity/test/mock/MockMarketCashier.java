@@ -88,26 +88,26 @@ public class MockMarketCashier extends Mock implements MarketCashier {
 	@Override
 	public void msgHereAreItems(Order order, MarketEmployee e) {
 		// TODO Auto-generated method stub
-		
+		log.add(new LoggedEvent("Received items"));
 	}
 
 	@Override
 	public void msgPayment(MarketCustomer c, int money) {
 		// TODO Auto-generated method stub
-		
+		log.add(new LoggedEvent("Received payment"));
 	}
 
 	@Override
 	public void msgIWantDelivery(RestCook rCk, RestCashier rCh,
 			List<ItemOrder> i, String location) {
 		// TODO Auto-generated method stub
-		
+		log.add(new LoggedEvent("Received delivery order"));
 	}
 
 	@Override
 	public void msgDelivered(Order order, MarketDeliverer d) {
 		// TODO Auto-generated method stub
-
+		log.add(new LoggedEvent("Received deliver order to finish"));
 	}
 
 }
