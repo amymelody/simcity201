@@ -2,6 +2,7 @@ package simcity.market.gui;
 
 import javax.swing.*;
 
+import simcity.CityDirectory;
 import simcity.gui.BuildingGui;
 import simcity.gui.CityGui;
 
@@ -11,11 +12,10 @@ import java.awt.*;
  * Main GUI class.
  * Contains the outer city animation and input panel
  */
-public class MarketGui extends JFrame
+public class MarketGui extends BuildingGui
 {
-	private MarketAnimationPanel animationPanel = new MarketAnimationPanel();
+	private MarketAnimationPanel animationPanel;
 	private MarketInputPanel inputPanel;
-	private BuildingGui buildingGui;
 	
 	private final int WINDOWX = 650;
 	private final int WINDOWY = 500;
@@ -25,13 +25,12 @@ public class MarketGui extends JFrame
 	/**
 	 * Constructor
 	 */
-	public MarketGui()
+	public MarketGui(String n, CityGui cG, CityDirectory cD)
 	{
-		inputPanel = new MarketInputPanel(buildingGui);
+		super(n, cG, cD);
 		
-		setBounds(BUFFERSIDE, BUFFERTOP, WINDOWX, WINDOWY);
-		BorderLayout frameLayout = new BorderLayout();
-		setLayout(frameLayout);
+		animationPanel = new MarketAnimationPanel(cG);
+		inputPanel = new MarketInputPanel(n);
 
 		//input panel
 		double inputFractionOfWindow = 150 / 650;
@@ -39,7 +38,8 @@ public class MarketGui extends JFrame
 		inputPanel.setPreferredSize(inputDim);
 		inputPanel.setMinimumSize(inputDim);
 		inputPanel.setMaximumSize(inputDim);
-		add(inputPanel, frameLayout.WEST);
+		inputPanel.setVisible(false);
+		cG.add(inputPanel);
 
 		//animation panel
 		double animationFractionOfWindow = 500 / 650;
@@ -47,15 +47,19 @@ public class MarketGui extends JFrame
 		animationPanel.setPreferredSize(animDim);
 		animationPanel.setMinimumSize(animDim);
 		animationPanel.setMaximumSize(animDim);
-		add(animationPanel, frameLayout.CENTER);
+		animationPanel.setVisible(false);
+		cG.add(animationPanel);
 	}
 	
-	public void insideMarket() {
-		setVisible(true);
-	}
-	
-	public void outsideMarket() {
-		setVisible(false);
+	public void setVisible(boolean visible) {
+		if(visible) {
+			animationPanel.setVisible(true);
+			inputPanel.setVisible(true);
+		}
+		else {
+			animationPanel.setVisible(false);
+			inputPanel.setVisible(false);
+		}
 	}
 	
 }

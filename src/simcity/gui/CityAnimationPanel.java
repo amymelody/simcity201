@@ -22,11 +22,11 @@ public class CityAnimationPanel extends JPanel implements ActionListener
 
 	Image bg;
 	
-	public CityAnimationPanel() {
+	public CityAnimationPanel(CityGui cG) {
 		setSize(WINDOWX, WINDOWY);
 		setVisible(true);
 		
-		ImageIcon bgIcon = new ImageIcon(this.getClass().getResource("images/simcity.png"));
+		ImageIcon bgIcon = new ImageIcon(cG.getClass().getResource("images/simcity.png"));
 		bg = bgIcon.getImage();
 		
 		bufferSize = this.getSize();

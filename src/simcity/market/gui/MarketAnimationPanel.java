@@ -2,16 +2,14 @@ package simcity.market.gui;
 
 import javax.swing.*;
 
+import simcity.gui.CityGui;
 import simcity.gui.Gui;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Map;
-import java.util.Random;
 
 public class MarketAnimationPanel extends JPanel implements ActionListener {
 	static final int TIMERINCR = 10;
@@ -24,11 +22,11 @@ public class MarketAnimationPanel extends JPanel implements ActionListener {
 
 	Image bg;
 	
-	public MarketAnimationPanel() {
+	public MarketAnimationPanel(CityGui cG) {
 		setSize(WINDOWX, WINDOWY);
 		setVisible(true);
 		
-		ImageIcon bgIcon = new ImageIcon(this.getClass().getResource("simcity/images/market_floor.png"));
+		ImageIcon bgIcon = new ImageIcon(cG.getClass().getResource("images/market_floor.png"));
 		bg = bgIcon.getImage();
 		
 		bufferSize = this.getSize();
