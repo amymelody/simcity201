@@ -31,7 +31,7 @@ public class CityAnimationPanel extends JPanel implements ActionListener, MouseL
 		
 		cityGui = cG;
 		
-		ImageIcon bgIcon = new ImageIcon(cG.getClass().getResource("images/simcity.png"));
+		ImageIcon bgIcon = new ImageIcon(this.getClass().getResource("images/simcity.png"));
 		bg = bgIcon.getImage();
 		
 		bufferSize = this.getSize();
@@ -79,7 +79,7 @@ public class CityAnimationPanel extends JPanel implements ActionListener, MouseL
 		int x = event.getX();
 		int y = event.getY();
 
-		if(cityGui.animationPanel.isVisible()) {
+		if(isVisible()) {
 			if(x > 80 && x < 144 && y > 145 && y < 209) {
 				//House 1
 				synchronized(buildings) {
@@ -418,11 +418,6 @@ public class CityAnimationPanel extends JPanel implements ActionListener, MouseL
 				}
 			}
 		}
-		else {
-			currentBG.setVisible(false);
-			currentBG = null;
-			cityGui.changeView();
-		}
 	}
 
 	public void mouseEntered(MouseEvent event) {
@@ -444,127 +439,7 @@ public class CityAnimationPanel extends JPanel implements ActionListener, MouseL
 		
 	}
 	public void mouseMoved(MouseEvent event) {
-		int x = event.getX();
-		int y = event.getY();
-		
-		if(cityGui.animationPanel.isVisible()) {
-			if(x > 80 && x < 144 && y > 145 && y < 209) {
-				//House 1
-				setCursor(new Cursor(Cursor.HAND_CURSOR));
-			}
-			else if(x > 80 && x < 144 && y > 80 && y < 144) {
-				//House 2
-				setCursor(new Cursor(Cursor.HAND_CURSOR));
-			}
-			else if(x > 145 && x < 209 && y > 80 && y < 144) {
-				//House 3
-				setCursor(new Cursor(Cursor.HAND_CURSOR));
-			}
-			else if(x > 145 && x < 209 && y > 145 && y < 209) {
-				//Bank
-				setCursor(new Cursor(Cursor.HAND_CURSOR));
-			}
-			if(x > 300 && x < 310 && y > 110 && y < 120) {
-				// Apartment 1-1
-				setCursor(new Cursor(Cursor.HAND_CURSOR));
-			}
-			if(x > 320 && x < 330 && y > 110 && y < 120) {
-				// Apartment 1-2
-				setCursor(new Cursor(Cursor.HAND_CURSOR));
-			}
-			if(x > 300 && x < 310 && y > 130 && y < 140) {
-				// Apartment 1-3
-				setCursor(new Cursor(Cursor.HAND_CURSOR));
-			}
-			if(x > 320 && x < 330 && y > 130 && y < 140) {
-				// Apartment 1-4
-				setCursor(new Cursor(Cursor.HAND_CURSOR));
-			}
-			if(x > 300 && x < 310 && y > 150 && y < 160) {
-				// Apartment 1-5
-				setCursor(new Cursor(Cursor.HAND_CURSOR));
-			}
-			if(x > 320 && x < 330 && y > 150 && y < 160) {
-				// Apartment 1-6
-				setCursor(new Cursor(Cursor.HAND_CURSOR));
-			}
-			if(x > 300 && x < 310 && y > 170 && y < 180) {
-				// Apartment 1-7
-				setCursor(new Cursor(Cursor.HAND_CURSOR));
-			}
-			if(x > 320 && x < 330 && y > 170 && y < 180) {
-				// Apartment 1-8
-				setCursor(new Cursor(Cursor.HAND_CURSOR));
-			}
-			if(x > 380 && x < 390 && y > 110 && y < 120) {
-				// Apartment 2-1
-				setCursor(new Cursor(Cursor.HAND_CURSOR));
-			}
-			if(x > 400 && x < 410 && y > 110 && y < 120) {
-				// Apartment 2-2
-				setCursor(new Cursor(Cursor.HAND_CURSOR));
-			}
-			if(x > 380 && x < 390 && y > 130 && y < 140) {
-				// Apartment 2-3
-				setCursor(new Cursor(Cursor.HAND_CURSOR));
-			}
-			if(x > 400 && x < 410 && y > 130 && y < 140) {
-				// Apartment 2-4
-				setCursor(new Cursor(Cursor.HAND_CURSOR));
-			}
-			if(x > 380 && x < 390 && y > 150 && y < 160) {
-				// Apartment 2-5
-				setCursor(new Cursor(Cursor.HAND_CURSOR));
-			}
-			if(x > 400 && x < 410 && y > 150 && y < 160) {
-				// Apartment 2-6
-				setCursor(new Cursor(Cursor.HAND_CURSOR));
-			}
-			if(x > 380 && x < 390 && y > 170 && y < 180) {
-				// Apartment 2-7
-				setCursor(new Cursor(Cursor.HAND_CURSOR));
-			}
-			if(x > 400 && x < 410 && y > 170 && y < 180) {
-				// Apartment 2-8
-				setCursor(new Cursor(Cursor.HAND_CURSOR));
-			}
-			else if(x > 290 && x < 354 && y > 290 && y < 354) {
-				// Market 1
-				setCursor(new Cursor(Cursor.HAND_CURSOR));
-				
-			}
-			else if(x > 145 && x < 209 && y > 290 && y < 354) {
-				// Market 2
-				setCursor(new Cursor(Cursor.HAND_CURSOR));
-			}
-			else if(x > 80 && x < 144 && y > 355 && y < 419) {
-				// Market 3
-				setCursor(new Cursor(Cursor.HAND_CURSOR));
-			}
-			else if(x > 355 && x < 419 && y > 290 && y < 354) {
-				// Josh's Restaurant
-				setCursor(new Cursor(Cursor.HAND_CURSOR));
-			}
-			else if(x > 290 && x < 354 && y > 355 && y < 419) {
-				// Cherys's Restaurant
-				setCursor(new Cursor(Cursor.HAND_CURSOR));
-			}
-			else if(x > 80 && x < 144 && y > 290 && y < 354) {
-				// Anjali's Restaurant
-				setCursor(new Cursor(Cursor.HAND_CURSOR));
-			}
-			else if(x > 145 && x < 209 && y > 355 && y < 419) {
-				// Alfred's Restaurant
-				setCursor(new Cursor(Cursor.HAND_CURSOR));
-			}
-			else if(x > 355 && x < 419 && y > 355 && y < 419) {
-				// Jesus's Restaurant
-				setCursor(new Cursor(Cursor.HAND_CURSOR));
-			}
-			else {
-	            setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-	        }
-		}
+
 	}
     
 }

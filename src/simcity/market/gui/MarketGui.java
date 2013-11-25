@@ -14,9 +14,6 @@ import java.awt.*;
  */
 public class MarketGui extends BuildingGui
 {
-	private MarketAnimationPanel animationPanel;
-	private MarketInputPanel inputPanel;
-	
 	private final int WINDOWX = 650;
 	private final int WINDOWY = 500;
 	private final int BUFFERTOP = 50;
@@ -30,7 +27,7 @@ public class MarketGui extends BuildingGui
 		super(n, cG, cD);
 		
 		animationPanel = new MarketAnimationPanel();
-		inputPanel = new MarketInputPanel(n);
+		inputPanel = new MarketInputPanel(this, n);
 
 		//input panel
 		double inputFractionOfWindow = 150 / 650;
@@ -49,17 +46,6 @@ public class MarketGui extends BuildingGui
 		animationPanel.setMaximumSize(animDim);
 		animationPanel.setVisible(false);
 		cG.add(animationPanel);
-	}
-	
-	public void setVisible(boolean visible) {
-		if(visible) {
-			animationPanel.setVisible(true);
-			inputPanel.setVisible(true);
-		}
-		else {
-			animationPanel.setVisible(false);
-			inputPanel.setVisible(false);
-		}
 	}
 	
 }
