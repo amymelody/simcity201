@@ -1,7 +1,11 @@
 package simcity.gui;
 
 import javax.swing.*;
+
 import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+
 import simcity.CityDirectory;
 
 /**
@@ -51,6 +55,10 @@ public class CityGui extends JFrame
 	
 	public void addGui(PersonGui g) {
 		animationPanel.addGui(g);
+	}
+	
+	public void addGui(BuildingGui g) {
+		
 	}
 	
 	/**
