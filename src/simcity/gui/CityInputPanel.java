@@ -22,6 +22,7 @@ public class CityInputPanel extends JPanel implements ActionListener
 	private Vector<CarAgent> cars = new Vector<CarAgent>();
 	
 	private CityDirectory cityDirectory;
+	private BuildingGui buildingGui;
     private JScrollPane personPane = new JScrollPane(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
     private JPanel view = new JPanel();
     private List<JButton> personList = new ArrayList<JButton>();
@@ -39,9 +40,10 @@ public class CityInputPanel extends JPanel implements ActionListener
     	g2d.setColor(Color.black);
     	g2d.fillRect(0, 0, this.getSize().width, this.getSize().height);
     }
-	public CityInputPanel(CityGui g, CityDirectory cd)
+	public CityInputPanel(CityGui g, CityDirectory cd, BuildingGui bg)
 	{
 		cityDirectory = cd;
+		buildingGui = bg;
 		creationPanel = new CityCreationPanel(this, cityDirectory);
 		gui = g;
 		System.out.println("lol im here");
@@ -96,6 +98,7 @@ public class CityInputPanel extends JPanel implements ActionListener
 		PersonAgent p = new PersonAgent(name);
 		PersonGui g = new PersonGui(p, gui);
 		p.setCityDirectory(c);
+		p.setBuildingGui(buildingGui);
 		//gui.addGui(g);
 		
 		Map<Day, Time> startShifts = new HashMap<Day, Time>();

@@ -8,11 +8,11 @@ import java.util.*;
 
 public class JoshCustomerGui implements Gui{
 
-	private JoshCustomerRole agent = null;
+	private JoshCustomerRole role = null;
 	private boolean isPresent = false;
 	private boolean isHungry = false;
 
-	JoshRestaurantGui gui;
+	JoshRestaurantInputPanel iP;
 
 	private int xPos, yPos;
 	private int xDestination, yDestination;
@@ -35,13 +35,13 @@ public class JoshCustomerGui implements Gui{
 	Map<Integer, Point> tablePositions = new HashMap<Integer, Point>();
 	Map<String, String> foodSymbols = new HashMap<String, String>();
 
-	public JoshCustomerGui(JoshCustomerRole c, JoshRestaurantGui gui) {
-		agent = c;
+	public JoshCustomerGui(JoshCustomerRole c, JoshRestaurantInputPanel iP) {
+		role = c;
 		xPos = -CUSTWIDTH;
 		yPos = -CUSTWIDTH;
 		xDestination = -CUSTWIDTH;
 		yDestination = -CUSTWIDTH;
-		this.gui = gui;
+		this.iP = iP;
 		
 		tablePositions.put(1, new Point(xTable, yTable));
 		tablePositions.put(2, new Point(xTable + 2*tableWidth, yTable));
@@ -65,18 +65,18 @@ public class JoshCustomerGui implements Gui{
 			yPos--;
 
 		if (xPos == xDestination && yPos == yDestination) {
-			if (command==Command.GoToSeat) agent.msgAnimationFinishedGoToSeat();
+			if (command==Command.GoToSeat) role.msgAnimationFinishedGoToSeat();
 			else if (command==Command.LeaveRestaurant) {
-				agent.msgAnimationFinishedLeaveRestaurant();
-				System.out.println("about to call gui.setCustomerEnabled(agent);");
+				role.msgAnimationFinishedLeaveRestaurant();
+				System.out.println("about to call gui.setCustomerEnabled(role);");
 				isHungry = false;
-				gui.setCustomerEnabled(agent);
+				//gui.setCustomerEnabled(role);
 			}
 			else if (command==Command.GoToRestaurant) {
-				agent.msgAnimationFinishedEnterRestaurant();
+				role.msgAnimationFinishedEnterRestaurant();
 			}
 			else if (command==Command.GoToCashier) {
-				agent.msgAtCashier();
+				role.msgAtCashier();
 			}
 			command=Command.noCommand;
 		}
@@ -90,14 +90,14 @@ public class JoshCustomerGui implements Gui{
 			g.setColor(Color.WHITE);
 			g.fillRect(xPos-CUSTWIDTH, yPos-CUSTHEIGHT, CUSTWIDTH, CUSTHEIGHT);
 			g.setColor(Color.BLACK);
-			g.drawString(foodSymbols.get(agent.getChoice()) + "?", xPos-CUSTWIDTH, yPos-CUSTHEIGHT/2);
+			g.drawString(foodSymbols.get(role.getChoice()) + "?", xPos-CUSTWIDTH, yPos-CUSTHEIGHT/2);
 		}
 		
-		if (agent.isEating()) { 
+		if (role.isEating()) { 
 			g.setColor(Color.WHITE);
 			g.fillRect(xPos+CUSTWIDTH, yPos, CUSTWIDTH, CUSTHEIGHT);
 			g.setColor(Color.BLACK);
-			g.drawString(foodSymbols.get(agent.getChoice()), xPos+CUSTWIDTH+CUSTWIDTH/4, yPos+CUSTHEIGHT/2);
+			g.drawString(foodSymbols.get(role.getChoice()), xPos+CUSTWIDTH+CUSTWIDTH/4, yPos+CUSTHEIGHT/2);
 		}
 	}
 
@@ -105,12 +105,14 @@ public class JoshCustomerGui implements Gui{
 		return isPresent;
 	}
 	
-	public void setHungry(int numCustomers) {
+	public void setHungry() {
+		int numCustomers = iP.getNumCustomers();
+		iP.addCustomer(role);
 		isHungry = true;
 		xDestination = (numCustomers%6)*30;
 		yDestination = 30*((numCustomers - numCustomers%6)/6);
 		command = Command.GoToRestaurant;
-		agent.gotHungry();
+		role.gotHungry();
 		setPresent(true);
 	}
 	
@@ -132,7 +134,7 @@ public class JoshCustomerGui implements Gui{
 		timer.schedule(new TimerTask() {
 			public void run() {
 				ordering = false;
-				agent.msgDoneOrdering();
+				role.msgDoneOrdering();
 			}
 		},
 		1000);
@@ -141,7 +143,7 @@ public class JoshCustomerGui implements Gui{
 	public void DoGoToSeat(int seatnumber) {
 		xDestination = (int)tablePositions.get(seatnumber).getX();
 		yDestination = (int)tablePositions.get(seatnumber).getY();
-		gui.removeWaitingCustomer(agent);
+		iP.removeWaitingCustomer(role);
 		command = Command.GoToSeat;
 	}
 	
@@ -154,7 +156,7 @@ public class JoshCustomerGui implements Gui{
 	public void DoExitRestaurant() {
 		xDestination = -2*CUSTWIDTH;
 		yDestination = -2*CUSTWIDTH;
-		gui.removeWaitingCustomer(agent);
+		iP.removeWaitingCustomer(role);
 		command = Command.LeaveRestaurant;
 	}
 }

@@ -7,6 +7,7 @@ import java.awt.Point;
 import simcity.agent.Agent;
 import simcity.gui.PersonGui;
 import simcity.CityDirectory;
+import simcity.gui.BuildingGui;
 import simcity.interfaces.RestCustomer;
 import simcity.interfaces.MarketCustomer;
 import simcity.interfaces.Resident;
@@ -36,7 +37,10 @@ public class PersonAgent extends Agent
 	private Car car;
 	private Bus bus;
 	private String destination;
+	
 	private CityDirectory city;
+	private BuildingGui buildingGui;
+	
 	private PersonGui gui;
 	private Semaphore atDestination = new Semaphore(0,true);
 	
@@ -97,6 +101,10 @@ public class PersonAgent extends Agent
 	
 	public void setCityDirectory(CityDirectory c) {
 		city = c;
+	}
+	
+	public void setBuildingGui(BuildingGui g) {
+		buildingGui = g;
 	}
 	
 	public String getName() {
@@ -282,7 +290,7 @@ public class PersonAgent extends Agent
 		time.hour = h;
 		time.minute = m;
 		print(time.getDay().toString() + ", " + time.getHour() + ":" + time.getMinute());
-		if (time.getHour() == 9) {
+		if (time.getHour() == 8) {
 			state.ns = NourishmentState.gotHungry;
 		}
 		stateChanged();
@@ -298,6 +306,12 @@ public class PersonAgent extends Agent
 		JobRole j = city.JobFactory(role);
 		addRole(j, role);
 		job = new Job(j.getJobLocation(), role, payrate, startShifts, endShifts);
+		if (role.equals("restWaiterRole")) {
+			if (j instanceof RestWaiterRole) {
+				RestWaiterRole rW = (RestWaiterRole)j;
+				buildingGui.addRestWaiter(rW);
+			}
+		}
 		stateChanged();
 	}
 	
@@ -619,6 +633,7 @@ public class PersonAgent extends Agent
 			if (!findRole(r.customerRole)) {
 				RestCustomerRole c = city.RestCustomerFactory(r.customerRole);
 				addRole(c, r.customerRole);
+				buildingGui.addRestCustomer(c);
 			}
 			synchronized(roles) {
 				for (MyRole mr : roles) {

@@ -54,9 +54,9 @@ public class CityDirectory
 	private Vector<MarketDelivererRole> market3Deliverers = new Vector<MarketDelivererRole>();
 	private Vector<BankTellerRole> bank1Tellers = new Vector<BankTellerRole>();
 	private Vector<LandlordRole> landlords = new Vector<LandlordRole>();
-	private MarketCashierRole market1Cashier = new MarketCashierRole();
+	/*private MarketCashierRole market1Cashier = new MarketCashierRole();
 	private MarketCashierRole market2Cashier = new MarketCashierRole();
-	private MarketCashierRole market3Cashier = new MarketCashierRole();
+	private MarketCashierRole market3Cashier = new MarketCashierRole();*/
 	//private BankManagerRole bank1Manager = new BankManagerRole();
 	private JoshCashierRole joshCashier = new JoshCashierRole();
 	private JoshCookRole joshCook = new JoshCookRole();
@@ -170,6 +170,30 @@ public class CityDirectory
 	List<Integer> apartment1ResIDs;
 	List<Integer> apartment2ResIDs;
 	
+	/*public ArrayList<MarketCashierRole> getMarketCashiers() {
+		ArrayList<MarketCashierRole> cashiers = new ArrayList<MarketCashierRole>();
+		cashiers.add(market1Cashier);
+		cashiers.add(market2Cashier);
+		cashiers.add(market3Cashier);
+		return cashiers;
+	}*/
+	
+	/*public BankManagerRole  getBankManager() {
+		return bank1Manager;
+	}*/
+	
+	public JoshCashierRole getJoshCashier() {
+		return joshCashier;
+	}
+	
+	public JoshCookRole getJoshCook() {
+		return joshCook;
+	}
+	
+	public JoshHostRole getJoshHost() {
+		return joshHost;
+	}
+	
 	public CityDirectory()
 	{
 		personMap = new HashMap<Integer, PersonInfo>();
@@ -177,9 +201,9 @@ public class CityDirectory
 		apartment1ResIDs = new ArrayList<Integer>();
 		apartment2ResIDs = new ArrayList<Integer>();
 		
-		market1Cashier.setJobLocation("market1");
+		/*market1Cashier.setJobLocation("market1");
 		market2Cashier.setJobLocation("market2");
-		market3Cashier.setJobLocation("market3");
+		market3Cashier.setJobLocation("market3");*/
 		//bank1Manager.setJobLocation("bank1");
 		joshCashier.setJobLocation("joshRestaurant");
 		joshCook.setJobLocation("joshRestaurant");
@@ -241,8 +265,8 @@ public class CityDirectory
 			l.setJobLocation("home");
 			landlords.add(l);
 			return l;
-		case "marketCashierRole":
-			return pickMarketCashier();
+		//case "marketCashierRole":
+			//return pickMarketCashier();
 		case "marketDelivererRole":
 			MarketDelivererRole d = new MarketDelivererRole();
 			addMarketDeliverer(d);
@@ -274,30 +298,25 @@ public class CityDirectory
 	}
 	
 	public void addMarketDeliverer(MarketDelivererRole d) {
-		int num = getNumPeople("marketDelivererRole","market1");
-		if (num > getNumPeople("marketDelivererRole","market2")) {
-			num = getNumPeople("marketDelivererRole","market2");
+		int num1 = getNumPeople("marketDelivererRole","market1");
+		int num2 = getNumPeople("marketDelivererRole","market2");
+		int num3 = getNumPeople("marketDelivererRole","market3");
+		int num = num1;
+		if (num > num2) {
+			num = num2;
 		}
-		if (num > getNumPeople("marketDelivererRole","market3")) {
-			num = getNumPeople("marketDelivererRole","market3");
+		if (num > num3) {
+			num = num3;
 		}
-		switch(num) {
-		case getNumPeople("marketDelivererRole","market1"):
+		if (num == num1) {
 			d.setJobLocation("market1");
 			market1Deliverers.add(d);
-			break;
-		case getNumPeople("marketDelivererRole","market2"):
+		} else if (num == num2) {
 			d.setJobLocation("market2");
 			market2Deliverers.add(d);
-			break;
-		case getNumPeople("marketDelivererRole","market3"):
+		} else {
 			d.setJobLocation("market3");
 			market3Deliverers.add(d);
-			break;
-		default:
-			d.setJobLocation("market1");
-			market1Deliverers.add(d);
-			break;
 		}
 	}
 	
@@ -372,7 +391,7 @@ public class CityDirectory
 		}*/
 	}
 	
-	public MarketCashierRole pickMarketCashier() {
+	/*public MarketCashierRole pickMarketCashier() {
 		int num1 = getNumPeople("marketCashierRole","market1");
 		int num2 = getNumPeople("marketCashierRole","market2");
 		int num3 = getNumPeople("marketCashierRole","market3");
@@ -390,7 +409,7 @@ public class CityDirectory
 		} else {
 			return market3Cashier;
 		}
-	}
+	}*/
 	
 	/*public BankManagerRole pickBankManager() {
 		return bank1Manager;

@@ -10,6 +10,7 @@ import simcity.market.MarketCashierRole;
 
 import javax.swing.*;
 
+import java.util.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.Vector;
@@ -21,14 +22,15 @@ public class JoshRestaurantInputPanel extends JPanel
 	//Super container for all gui panels other than animation--closest to the restaurant panel
 
     //Host, cook, waiters and customers
-    private JoshHostRole host = new JoshHostRole("Sarah");
-    private JoshCookRole cook = new JoshCookRole("John");
-    private JoshCashierRole cashier = new JoshCashierRole("Jake");
+    private JoshHostRole host;
+    private JoshCookRole cook;
+    private JoshCashierRole cashier;
     private Vector<MyCustomer> customers = new Vector<MyCustomer>();
     private Vector<JoshWaiterRole> waiters = new Vector<JoshWaiterRole>();
     private Vector<MarketCashierRole> markets = new Vector<MarketCashierRole>();
     private int numCustomers = 0;
 
+    private JoshRestaurantAnimationPanel animationPanel;
     private JPanel restLabel = new JPanel();
     private ListPanel customerPanel = new ListPanel(this, "Customers");
     private ListPanel waiterPanel = new ListPanel(this, "Waiters");
@@ -38,17 +40,23 @@ public class JoshRestaurantInputPanel extends JPanel
     private JoshRestaurantGui restGui; //reference to main gui
     private JoshCookGui cookGui;
 
-    public JoshRestaurantInputPanel(BuildingGui g) {
-        restGui = gui;
-        this.gui = g;
+    public JoshRestaurantInputPanel(BuildingGui g, JoshRestaurantAnimationPanel a, JoshCashierRole ca, JoshCookRole co, JoshHostRole h) {
+    	gui = g;
+    	animationPanel = a;
+    	host = h;
+    	cashier = ca;
+    	cook = co;
+    	/*for (MarketCashierRole c : cashiers) {
+    		markets.add(c);
+    	}
 		
 		cook.addMarket(markets.get(0));
 		cook.addMarket(markets.get(1));
-		cook.addMarket(markets.get(2));
+		cook.addMarket(markets.get(2));*/
 		cook.setHost(host);
         
-		cookGui = new JoshCookGui(cook, gui);
-		gui.animationPanel.addGui(cookGui);
+		cookGui = new JoshCookGui(cook);
+		animationPanel.addGui(cookGui);
 		cook.setGui(cookGui);
 	
         setLayout(new GridLayout(1, 2, 20, 20));
@@ -69,7 +77,44 @@ public class JoshRestaurantInputPanel extends JPanel
     	return restGui.getInfoLabelText();
     }
     
+    public void addMarketCashier(MarketCashierRole c) {
+    	markets.add(c);
+    }
+    
+    public void setCashier(JoshCashierRole c) {
+    	cashier = c;
+    }
+    
+    public void setCook(JoshCookRole c) {
+    	cook = c;
+    }
+    
+    public void setHost(JoshHostRole h) {
+    	host = h;
+    }
+    
     public void addCustomer(JoshCustomerRole c) {
+    	JoshCustomerGui g = new JoshCustomerGui(c, this);
+		animationPanel.addGui(g);
+		c.setHost(host);
+		c.setCashier(cashier);
+		c.setGui(g);
+		customers.add(new MyCustomer(c));
+    }
+    
+    public void addWaiter(JoshWaiterRole w) {	
+		JoshWaiterGui g = new JoshWaiterGui(w, this, waiters.size()+1);
+		animationPanel.addGui(g);
+ 		w.setHost(host);
+ 		w.setCashier(cashier);
+ 		w.setCook(cook);
+ 		w.setGui(g);
+ 		w.setGui(cookGui);
+ 		waiters.add(w);
+ 		host.addWaiter(w);
+    }
+    
+    public void addWaitingCustomer(JoshCustomerRole c) {
     	for (MyCustomer mc : customers) {
     		if (mc.cust == c) {
     			mc.waiting = true;
@@ -77,7 +122,7 @@ public class JoshRestaurantInputPanel extends JPanel
     	}
     }
     
-    public void removeCustomer(JoshCustomerRole c) {
+    public void removeWaitingCustomer(JoshCustomerRole c) {
     	for (MyCustomer mc : customers) {
     		if (mc.cust == c) {
     			mc.waiting = false;
@@ -174,41 +219,6 @@ public class JoshRestaurantInputPanel extends JPanel
                     restGui.updateInfoPanel(temp);
             }
         }
-    }
-
-    /**
-     * Adds a customer or waiter to the appropriate list
-     *
-     * @param type indicates whether the person is a customer or waiter (later)
-     * @param name name of person
-     */
-    public void addPerson(String type, String name) {
-
-    	if (type.equals("Customers")) {
-    		JoshCustomerRole c = new JoshCustomerRole(name);	
-    		JoshCustomerGui g = new JoshCustomerGui(c, restGui);
-
-    		restGui.animationPanel.addGui(g);
-    		c.setHost(host);
-    		c.setCashier(cashier);
-    		c.setGui(g);
-    		customers.add(new MyCustomer(c));
-    		c.startThread();
-    	}
-    	if (type.equals("Waiters")) {
-    		JoshWaiterRole w = new JoshWaiterRole(name);	
-    		JoshWaiterGui g = new JoshWaiterGui(w, restGui, waiters.size()+1);
-
-    		restGui.animationPanel.addGui(g);
-     		w.setHost(host);
-     		w.setCashier(cashier);
-     		w.setCook(cook);
-     		w.setGui(g);
-     		w.setGui(cookGui);
-     		waiters.add(w);
-     		w.startThread();
-     		host.addWaiter(w);
-    	}
     }
 
     private class MyCustomer {

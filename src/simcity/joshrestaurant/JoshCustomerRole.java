@@ -208,6 +208,7 @@ public class JoshCustomerRole extends RestCustomerRole implements JoshCustomer {
 
 		if (state == AgentState.DoingNothing && event == AgentEvent.gotHungry){
 			state = AgentState.GoingToRestaurant;
+			goToRestaurant();
 			return true;
 		}
 		if (state == AgentState.GoingToRestaurant && event == AgentEvent.arrivedAtRestaurant) {
@@ -285,6 +286,10 @@ public class JoshCustomerRole extends RestCustomerRole implements JoshCustomer {
 	}
 
 	// Actions
+	
+	private void goToRestaurant() {
+		customerGui.setHungry();
+	}
 
 	private void requestSeat() {
 		Do("Table for 1");

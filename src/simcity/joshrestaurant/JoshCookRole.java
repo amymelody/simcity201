@@ -21,6 +21,7 @@ public class JoshCookRole extends RestCookRole {
 	public List<ItemOrder> itemOrders = new ArrayList<ItemOrder>();
 
 	private JoshHostRole host;
+	private JoshCashierRole cashier;
 	private String name = null;
 	private Timer timer = new Timer();
 	private boolean orderedItems;
@@ -70,6 +71,10 @@ public class JoshCookRole extends RestCookRole {
 	
 	public void setHost(JoshHostRole h) {
 		host = h;
+	}
+	
+	public void setCashier(JoshCashierRole c) {
+		cashier = c;
 	}
 	
 	public void setGui(JoshCookGui g) {
@@ -228,7 +233,7 @@ public class JoshCookRole extends RestCookRole {
 		for (ItemOrder io : itemOrders) {
 			print("I need " + io.getAmount() + " " + io.getFoodItem() + "s");
 		}
-		markets.get(index).market.msgIWantDelivery(this, itemOrders, location);
+		markets.get(index).market.msgIWantDelivery(this, cashier, itemOrders, location);
 		markets.get(index).incrementOrderedFrom();
 		itemOrders.clear();
 	}

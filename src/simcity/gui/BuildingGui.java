@@ -4,14 +4,18 @@ import javax.swing.*;
 
 import simcity.bank.gui.*;
 import simcity.housing.gui.*;
+import simcity.interfaces.RestCustomer;
 import simcity.market.gui.*;
 import simcity.alfredrestaurant.gui.*;
-import simcity.alfredrestaurant.gui.AlfredRestaurantAnimationPanel;
 import simcity.anjalirestaurant.gui.*;
 import simcity.cherysrestaurant.gui.*;
 import simcity.jesusrestaurant.gui.*;
 import simcity.joshrestaurant.gui.*;
 import simcity.CityDirectory;
+import simcity.RestCustomerRole;
+import simcity.RestWaiterRole;
+import simcity.joshrestaurant.JoshCustomerRole;
+import simcity.joshrestaurant.JoshWaiterRole;
 
 import java.awt.*;
 
@@ -38,7 +42,7 @@ public class BuildingGui extends JFrame
 //	private JesusRestaurantAnimationPanel jesusRestaurantAnimationPanel = new JesusRestaurantAnimationPanel();
 //	private JesusRestaurantInputPanel jesusRestaurantInputPanel = new JesusRestaurantInputPanel(this);
 	private JoshRestaurantAnimationPanel joshRestaurantAnimationPanel = new JoshRestaurantAnimationPanel();
-//	private JoshRestaurantInputPanel joshRestaurantInputPanel = new JoshRestaurantInputPanel(this);
+	private JoshRestaurantInputPanel joshRestaurantInputPanel;
 //	private AlfredRestaurantInputPanel joshRestaurantInputPanel = new AlfredRestaurantInputPanel(this);
 
 	private int windowX = 650;
@@ -53,6 +57,8 @@ public class BuildingGui extends JFrame
 	{
 		cityDirectory = cd;
 		
+		joshRestaurantInputPanel = new JoshRestaurantInputPanel(this, joshRestaurantAnimationPanel, cd.getJoshCashier(), cd.getJoshCook(), cd.getJoshHost());
+	
 		setBounds(bufferFromSideOfScreen, bufferFromTopOfScreen, windowX, windowY);
 		BorderLayout frameLayout = new BorderLayout();
 		setLayout(frameLayout);
@@ -95,11 +101,11 @@ public class BuildingGui extends JFrame
 //		jesusRestaurantInputPanel.setMaximumSize(inputDim);
 //		jesusRestaurantInputPanel.setVisible(false);
 //		add(jesusRestaurantInputPanel, frameLayout.WEST);
-	/*	joshRestaurantInputPanel.setPreferredSize(inputDim);
+		joshRestaurantInputPanel.setPreferredSize(inputDim);
 		joshRestaurantInputPanel.setMinimumSize(inputDim);
 		joshRestaurantInputPanel.setMaximumSize(inputDim);
 		joshRestaurantInputPanel.setVisible(false);
-		add(joshRestaurantInputPanel, frameLayout.WEST);*/
+		add(joshRestaurantInputPanel, frameLayout.WEST);
 
 		//animation panel
 		double animationFractionOfWindow = .6;
@@ -137,5 +143,19 @@ public class BuildingGui extends JFrame
 		joshRestaurantAnimationPanel.setMaximumSize(animDim);
 		//joshRestaurantAnimationPanel.setVisible(false);
 		add(joshRestaurantAnimationPanel, frameLayout.CENTER);
+	}
+	
+	public void addRestCustomer(RestCustomerRole c) {
+		if (c instanceof JoshCustomerRole) {
+			JoshCustomerRole jC = (JoshCustomerRole)(c);
+			joshRestaurantInputPanel.addCustomer(jC);
+		}
+	}
+	
+	public void addRestWaiter(RestWaiterRole w) {
+		if (w instanceof JoshWaiterRole) {
+			JoshWaiterRole jW = (JoshWaiterRole)(w);
+			joshRestaurantInputPanel.addWaiter(jW);
+		}
 	}
 }

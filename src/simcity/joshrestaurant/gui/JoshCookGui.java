@@ -9,7 +9,6 @@ import java.util.*;
 public class JoshCookGui implements Gui{
 	
 	private JoshCookRole agent = null;
-	JoshRestaurantGui gui;
 	private Timer timer = new Timer();
 	public ArrayList<Order> orders = new ArrayList<Order>();
 	
@@ -26,8 +25,7 @@ public class JoshCookGui implements Gui{
 
 	Map<String, String> foodSymbols = new HashMap<String, String>();
 
-	public JoshCookGui(JoshCookRole c, JoshRestaurantGui gui){
-		this.gui = gui;
+	public JoshCookGui(JoshCookRole c){
 		
 		foodSymbols.put("steak", "St");
 		foodSymbols.put("chicken", "C");

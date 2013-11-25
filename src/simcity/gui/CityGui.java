@@ -22,9 +22,9 @@ public class CityGui extends JFrame
 	/**
 	 * Constructor
 	 */
-	public CityGui(CityDirectory cd)
+	public CityGui(CityDirectory cd, BuildingGui bg)
 	{
-		inputPanel = new CityInputPanel(this, cd);
+		inputPanel = new CityInputPanel(this, cd, bg);
 		
 		setBounds(bufferFromSideOfScreen, bufferFromTopOfScreen, windowX, windowY);
 		BorderLayout frameLayout = new BorderLayout();
