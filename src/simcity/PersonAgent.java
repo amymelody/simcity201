@@ -7,6 +7,7 @@ import java.awt.Point;
 import simcity.agent.Agent;
 import simcity.gui.PersonGui;
 import simcity.CityDirectory;
+import simcity.gui.BuildingGui;
 import simcity.interfaces.RestCustomer;
 import simcity.interfaces.MarketCustomer;
 import simcity.interfaces.Resident;
@@ -36,7 +37,10 @@ public class PersonAgent extends Agent
 	private Car car;
 	private Bus bus;
 	private String destination;
+	
 	private CityDirectory city;
+	private BuildingGui buildingGui;
+	
 	private PersonGui gui;
 	private Semaphore atDestination = new Semaphore(0,true);
 	
@@ -49,8 +53,6 @@ public class PersonAgent extends Agent
 	public List<Market> markets = Collections.synchronizedList(new ArrayList<Market>());
 	public List<Bank> banks = Collections.synchronizedList(new ArrayList<Bank>());
 	public List<Housing> houses = Collections.synchronizedList(new ArrayList<Housing>());
-	public Map<String, List> places;
-	public Map<String, Point> locations;
 
 	private Job job;
 	private Time time = new Time(Day.Sun, 0, 0);
@@ -58,7 +60,7 @@ public class PersonAgent extends Agent
 	public enum NourishmentState {unknown, normal, gotHungry, hungry, full};
 	public enum LocationState {unknown, outside, leavingHouse, home, ownerHouse, restaurant, market, bank, atDestination};
 	public enum WorkingState {unknown, notWorking, working};
-	public enum FinancialState {unknown, poor, middleClass, rich};
+	public enum EconomicState {unknown, poor, middle, rich};
 	public enum TransportationState {unknown, waitingForBus, ridingBus, inCar, walking, walkingFromVehicle};
 	public enum PhysicalState {unknown, fit, average, lazy};
 
@@ -97,6 +99,13 @@ public class PersonAgent extends Agent
 		banks.add(new Bank("bank1", "bank1DepositorRole"));
 	}
 	
+	public void setCityDirectory(CityDirectory c) {
+		city = c;
+	}
+	
+	public void setBuildingGui(BuildingGui g) {
+		buildingGui = g;
+	}
 	
 	public String getName() {
 		return name;
@@ -126,6 +135,52 @@ public class PersonAgent extends Agent
 		state.ls = ls;
 	}
 	
+	public void setEState(String es) {
+		switch(es) {
+		case "poor":
+			state.es = EconomicState.poor;
+			money = 50;
+			minBalance = 10;
+			maxBalance = 800;
+			break;
+		case "middle":
+			state.es = EconomicState.middle;
+			money = 250;
+			minBalance = 100;
+			maxBalance = 1000;
+			break;
+		case "rich":
+			state.es = EconomicState.rich;
+			money = 500;
+			minBalance = 200;
+			maxBalance = 1000;
+			break;
+		default:
+			state.es = EconomicState.middle;
+			money = 250;
+			minBalance = 100;
+			maxBalance = 1000;
+			break;
+		}
+	}
+	
+	public void setPState(String ps) {
+		switch(ps) {
+		case "lazy":
+			state.ps = PhysicalState.lazy;
+			break;
+		case "average":
+			state.ps = PhysicalState.average;
+			break;
+		case "fit":
+			state.ps = PhysicalState.fit;
+			break;
+		default:
+			state.ps = PhysicalState.average;
+			break;
+		}
+	}
+	
 	public void addRole(Role r, String n) {
 		r.setPerson(this);
 		roles.add(new MyRole(r, n));
@@ -148,7 +203,7 @@ public class PersonAgent extends Agent
 	}
 	
 	private boolean takeBus(String destination) {
-		if (job != null && destination.equals(job.location) && (time.plus(15)).greaterThanOrEqualTo(job.startShifts.get(time.getDay()))) {
+		if (job != null && destination.equals(job.location) && (time.plus(30)).greaterThanOrEqualTo(job.startShifts.get(time.getDay())) && !time.greaterThanOrEqualTo(job.endShifts.get(time.getDay()))) {
 			return true;
 		}
 		/*if (nearDestination(destination)) {
@@ -234,6 +289,10 @@ public class PersonAgent extends Agent
 		time.day = d;
 		time.hour = h;
 		time.minute = m;
+		//print(time.getDay().toString() + ", " + time.getHour() + ":" + time.getMinute());
+		if (time.getHour() == 8) {
+			state.ns = NourishmentState.gotHungry;
+		}
 		stateChanged();
 	}
 
@@ -243,10 +302,21 @@ public class PersonAgent extends Agent
 		stateChanged();
 	}
 	
-	public void msgYoureHired(String l, String r, int p, Map<Day,Time> startShifts, Map<Day,Time> endShifts) {
-		job = new Job(l, r, p, startShifts, endShifts);
-		JobRole j = city.JobFactory(r);
-		addRole(j, r);
+	public void msgYoureHired(String role, int payrate, Map<Day,Time> startShifts, Map<Day,Time> endShifts) {
+		JobRole j = city.JobFactory(role);
+		addRole(j, role);
+		job = new Job(j.getJobLocation(), role, payrate, startShifts, endShifts);
+		if (role.equals("restWaiter1Role") || role.equals("restWaiter2Role")) {
+			if (j instanceof RestWaiterRole) {
+				RestWaiterRole rW = (RestWaiterRole)j;
+				buildingGui.addRestWaiter(rW);
+			}
+		}
+		stateChanged();
+	}
+	
+	public void msgYoureHired(String jobLocation, String role, int payrate, Map<Day,Time> startShifts, Map<Day,Time> endShifts) {
+		job = new Job(jobLocation, role, payrate, startShifts, endShifts);
 		stateChanged();
 	}
 
@@ -326,13 +396,13 @@ public class PersonAgent extends Agent
 	
 	public boolean pickAndExecuteAnAction() {
 		if (state.ts == TransportationState.walking || state.ts == TransportationState.walkingFromVehicle) { 
-			if (job != null && state.ws == WorkingState.notWorking && job.startShifts.get(time.getDay()) != job.endShifts.get(time.getDay()) && (time.plus(30)).greaterThanOrEqualTo(job.startShifts.get(time.getDay())) && !time.greaterThanOrEqualTo(job.endShifts.get(time.getDay()))) { //if half an hour before your shift starts
+			if (job != null && state.ws == WorkingState.notWorking && job.startShifts.get(time.getDay()) != job.endShifts.get(time.getDay()) && (time.plus(60)).greaterThanOrEqualTo(job.startShifts.get(time.getDay())) && !time.greaterThanOrEqualTo(job.endShifts.get(time.getDay()))) { //if an hour before your shift starts
 				if (state.ls == LocationState.home) {
 					leaveHouse();
 					return true;
 				} else if (state.ls == LocationState.outside || state.ls == LocationState.atDestination) {
-					goToWork();
 					print("goToWork");
+					goToWork();
 					return true;
 				}
 			}
@@ -342,7 +412,7 @@ public class PersonAgent extends Agent
 				return true;
 			} 
 			if (state.ws == WorkingState.notWorking) {
-				if (money <= minBalance) {
+				if (money <= minBalance && haveBankAccount) {
 					if (state.ls == LocationState.home) {
 						leaveHouse();
 						return true;
@@ -425,7 +495,7 @@ public class PersonAgent extends Agent
 			for (MyRole mr : roles) {
 				if (mr.active) {
 					anytrue = mr.r.pickAndExecuteAnAction();
-					print("roleScheduler");
+					//print("roleScheduler");
 					return anytrue;
 				}
 			}
@@ -563,6 +633,7 @@ public class PersonAgent extends Agent
 			if (!findRole(r.customerRole)) {
 				RestCustomerRole c = city.RestCustomerFactory(r.customerRole);
 				addRole(c, r.customerRole);
+				buildingGui.addRestCustomer(c);
 			}
 			synchronized(roles) {
 				for (MyRole mr : roles) {
@@ -674,13 +745,13 @@ public class PersonAgent extends Agent
 			} else {
 				state.ts = TransportationState.walking;
 				destination = d;
-				gui.DoGoToDestination(city.getBuildingEntrance(d)); //just walk there
+				/*gui.DoGoToDestination(city.getBuildingEntrance(d)); //just walk there
 				try {
 					atDestination.acquire();
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-				}
+				}*/
 				state.ls = LocationState.atDestination;
 			}
 		}
@@ -710,7 +781,7 @@ public class PersonAgent extends Agent
 		LocationState ls;
 		WorkingState ws;
 		TransportationState ts;
-		FinancialState fs;
+		EconomicState es;
 		PhysicalState ps;
 		
 		PersonState() {
@@ -729,8 +800,8 @@ public class PersonAgent extends Agent
 		public TransportationState getTState() {
 			return ts;
 		}
-		public FinancialState getFState() {
-			return fs;
+		public EconomicState getEState() {
+			return es;
 		}
 		public PhysicalState getPState() {
 			return ps;

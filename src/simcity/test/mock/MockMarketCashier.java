@@ -1,15 +1,17 @@
-package simcity.market.test.mock;
+package simcity.test.mock;
 
 import java.util.List;
 
 import simcity.ItemOrder;
+import simcity.interfaces.MarketCashier;
+import simcity.interfaces.MarketCustomer;
+import simcity.interfaces.MarketDeliverer;
+import simcity.interfaces.MarketEmployee;
+import simcity.interfaces.RestCashier;
+import simcity.interfaces.RestCook;
 import simcity.market.Order;
-import simcity.market.interfaces.MarketCashier;
-import simcity.market.interfaces.MarketCustomer;
-import simcity.market.interfaces.MarketDeliverer;
-import simcity.market.interfaces.MarketEmployee;
-import simcity.market.interfaces.RestCashierRole;
-import simcity.market.interfaces.RestCookRole;
+import simcity.RestCashierRole;
+import simcity.RestCookRole;
 import simcity.mock.LoggedEvent;
 import simcity.mock.Mock;
 
@@ -80,7 +82,7 @@ public class MockMarketCashier extends Mock implements MarketCashier {
 	@Override
 	public void msgIWantItems(MarketCustomer c, List<ItemOrder> i) {
 		// TODO Auto-generated method stub
-		
+		log.add(new LoggedEvent("Received order"));
 	}
 
 	@Override
@@ -96,7 +98,7 @@ public class MockMarketCashier extends Mock implements MarketCashier {
 	}
 
 	@Override
-	public void msgIWantDelivery(RestCookRole rCk, RestCashierRole rCh,
+	public void msgIWantDelivery(RestCook rCk, RestCashier rCh,
 			List<ItemOrder> i, String location) {
 		// TODO Auto-generated method stub
 		
@@ -105,8 +107,7 @@ public class MockMarketCashier extends Mock implements MarketCashier {
 	@Override
 	public void msgDelivered(Order order, MarketDeliverer d) {
 		// TODO Auto-generated method stub
-		
-	}
 
+	}
 
 }

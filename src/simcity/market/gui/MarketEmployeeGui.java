@@ -56,4 +56,7 @@ public class MarketEmployeeGui implements Gui {
 	public void GoToCashier() {
 		
 	}
+	public void leave() {
+		
+	}
 }

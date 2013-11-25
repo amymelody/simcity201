@@ -46,4 +46,8 @@ public class MarketCashierGui implements Gui {
 		return yPos;
 	}
 	
+	/* Role Functions */
+	public void leave() {
+		
+	}
 }

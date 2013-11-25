@@ -1,9 +1,13 @@
-package simcity.market.test.mock;
+package simcity.test.mock;
 
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import simcity.interfaces.MarketCashier;
+import simcity.interfaces.MarketEmployee;
 import simcity.market.Order;
-import simcity.market.interfaces.MarketCashier;
-import simcity.market.interfaces.MarketEmployee;
 import simcity.mock.LoggedEvent;
 import simcity.mock.Mock;
 
@@ -14,8 +18,8 @@ public class MockMarketEmployee extends Mock implements MarketEmployee {
 	 */
 	public MarketCashier cashier;
 	public String name;
-	public Order testOrder;
-
+	public List<Order> orders =  Collections.synchronizedList(new ArrayList<Order>());
+	
 	public MockMarketEmployee(String n) {
 		super(n);
 
@@ -24,14 +28,13 @@ public class MockMarketEmployee extends Mock implements MarketEmployee {
 
 	@Override
 	public void msgGetItems(Order o) {
-		log.add(new LoggedEvent("Received order."));
-		testOrder = o;
+		log.add(new LoggedEvent("Received order"));
+		orders.add(o);
 	}
 
 	@Override
 	public void msgPay() {
-		// TODO Auto-generated method stub
-		
+		log.add(new LoggedEvent("Paid"));
 	}
 	
 }

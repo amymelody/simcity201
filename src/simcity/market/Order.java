@@ -3,18 +3,21 @@ package simcity.market;
 import java.util.List;
 
 import simcity.ItemOrder;
-import simcity.market.interfaces.MarketCustomer;
+import simcity.interfaces.MarketCustomer;
+import simcity.interfaces.RestCashier;
+import simcity.interfaces.RestCook;
 
 public class Order {
 	MarketCustomer customer;
-	RestCashierRole cashier;
-	RestCookRole cook;
+	RestCashier cashier;
+	RestCook cook;
 	List<ItemOrder> items;
+	List<ItemOrder> fulfilling;
 	OrderState oS;
-	int price;
-	int amountPaid;
-	int change;
-	String location;
+	public int price;
+	public int amountPaid;
+	public int change;
+	public String location;
 	
 	Order(MarketCustomer c, List<ItemOrder> i) {
 		customer = c;
@@ -26,12 +29,12 @@ public class Order {
 		location = null;
 	}
 	
-	Order(RestCookRole ck, RestCashierRole ch, List<ItemOrder> i, String l) {
+	Order(RestCook ck, RestCashier ch, List<ItemOrder> i, String l) {
 		customer = null;
 		cashier = ch;
 		cook = ck;
 		items = i;
-		oS = OrderState.none;
+		oS = OrderState.newDelivery;
 		price = 0;
 		amountPaid = 0;
 		change = 0;

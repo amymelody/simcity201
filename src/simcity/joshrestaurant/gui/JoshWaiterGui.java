@@ -9,9 +9,9 @@ import java.util.*;
 
 public class JoshWaiterGui implements Gui {
 
-    private JoshWaiterRole agent = null;
+    private JoshWaiterRole role = null;
     
-    JoshRestaurantGui gui;
+    JoshRestaurantInputPanel iP;
 
     private int xPos, yPos;
     private int xDestination, yDestination;
@@ -38,15 +38,15 @@ public class JoshWaiterGui implements Gui {
     Map<String, String> foodSymbols = new HashMap<String, String>();
     ArrayList<String> orders = new ArrayList<String>();
 
-    public JoshWaiterGui(JoshWaiterRole agent, JoshRestaurantGui gui, int waiterNum) {
-        this.agent = agent;
-        this.gui = gui;
+    public JoshWaiterGui(JoshWaiterRole role, JoshRestaurantInputPanel iP, int waiterNum) {
+        this.role = role;
+        this.iP = iP;
         HOMEX = 30*((waiterNum + 6-((waiterNum-1)%7))/7 - 1);
         HOMEY = ((waiterNum-1)%7)*30 + 160;
-        xPos = HOMEX;
-        yPos = HOMEY;
-        xDestination = HOMEX;
-        yDestination = HOMEY;
+        xPos = -WAITERWIDTH;
+        yPos = -WAITERHEIGHT;
+        xDestination = xPos;
+        yDestination = yPos;
         
         tablePositions.put(1, new Point(xTable + WAITERWIDTH, yTable - WAITERWIDTH));
 		tablePositions.put(2, new Point(xTable + 2*tableWidth + WAITERWIDTH, yTable - WAITERWIDTH));
@@ -72,7 +72,7 @@ public class JoshWaiterGui implements Gui {
         if (xPos == xDestination && yPos == yDestination) {
         	if ((xDestination >= xTable + WAITERWIDTH) && (yDestination == yTable - WAITERWIDTH)) {
         		if (!atTable) {
-        			agent.msgAtTable();
+        			role.msgAtTable();
         			atTable = true;
 	        		if (!orders.isEmpty()) {
 	        			orders.remove(0);
@@ -80,13 +80,16 @@ public class JoshWaiterGui implements Gui {
         		}
         	}
         	if (xDestination == HOMEX && yDestination == HOMEY) {
-        		agent.msgAtHome();
+        		role.msgAtHome();
         	}
         	if (xDestination == CUSTX && yDestination == CUSTY) {
-        		agent.msgAtCustomer();
+        		role.msgAtCustomer();
         	}
         	if ((xDestination == COOKX && yDestination == COOKY) || (xDestination == PLATINGX && yDestination == PLATINGY)) {
-        		agent.msgAtCook();
+        		role.msgAtCook();
+        	}
+        	if (xDestination == -WAITERWIDTH && yDestination == -WAITERHEIGHT) {
+        		role.msgLeftRestaurant();
         	}
         }
     }
@@ -108,7 +111,12 @@ public class JoshWaiterGui implements Gui {
     }
     
     public void setCBEnabled() {
-    	gui.setWaiterEnabled(agent);
+    	//iP.setWaiterEnabled(role);
+    }
+    
+    public void DoLeaveRestaurant() {
+    	xDestination = -WAITERWIDTH;
+    	yDestination = -WAITERHEIGHT;
     }
 
     public void DoGoToTable(int tableNumber) {

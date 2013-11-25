@@ -56,4 +56,7 @@ public class MarketDelivererGui implements Gui {
 	public void GoToCashier() {
 		
 	}
+	public void leave() {
+		
+	}
 }

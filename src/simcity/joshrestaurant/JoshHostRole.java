@@ -58,6 +58,10 @@ public class JoshHostRole extends RestHostRole {
 		return getName();
 	}
 	
+	public void addWaiter(JoshWaiterRole waiter) {
+		waiters.add(new MyWaiter(waiter));
+	}
+	
 	public boolean restaurantFull() {
 		synchronized(tables) {
 			for (Table table : tables) {
@@ -89,11 +93,6 @@ public class JoshHostRole extends RestHostRole {
 	
 	public void msgEndShift() {
 		working = false;
-		stateChanged();
-	}
-	
-	public void addWaiter(JoshWaiterRole waiter) {
-		waiters.add(new MyWaiter(waiter));
 		stateChanged();
 	}
 

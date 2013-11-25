@@ -1,17 +1,14 @@
 package simcity.market;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Semaphore;
 
 import simcity.role.Role;
 import simcity.ItemOrder;
 import simcity.PersonAgent;
+import simcity.interfaces.MarketCashier;
+import simcity.interfaces.MarketCustomer;
 import simcity.market.gui.MarketCustomerGui;
-import simcity.market.interfaces.MarketCashier;
-import simcity.market.interfaces.MarketCustomer;
-import simcity.market.interfaces.MarketDeliverer;
 
 public class MarketCustomerRole extends Role implements MarketCustomer {
 
@@ -47,9 +44,6 @@ public class MarketCustomerRole extends Role implements MarketCustomer {
 	public void setCashier(MarketCashier ch) {
 		cashier = ch;
 	}
-	public void setDeliverer(MarketDeliverer d) {
-		deliverer = d;
-	}
 	public void setItems(List<ItemOrder> i) {
 		items = i;
 	}
@@ -61,7 +55,10 @@ public class MarketCustomerRole extends Role implements MarketCustomer {
 	/* Animation */
 	private Semaphore animation = new Semaphore(0, true);
 	MarketCustomerGui gui;
-
+	public void setGui(MarketCustomerGui g){
+		gui = g;
+	}
+	
 
 	/* Data */
 
@@ -72,35 +69,39 @@ public class MarketCustomerRole extends Role implements MarketCustomer {
 
 	// References to other roles
 	MarketCashier cashier;
-	MarketDeliverer deliverer;
 
 	// Customer Status Data
-	enum CustomerState {arrived, atCashier, waiting, getting, paying, leaving, done, walking};
-	CustomerState cS;
+	public enum CustomerState {nothing, arrived, atCashier, confirming, waiting, getting, paying, leaving, done, walking};
+	public CustomerState cS = CustomerState.nothing;
 	String location;
 
 
 	/* Messages */
-	public void msgOrderItems(List<ItemOrder> i, boolean d, String l) {
+	public void msgOrderItems(List<ItemOrder> i) {
 		items = i;
-		delivery = d;
-		location = l;
 		cS = CustomerState.arrived;
-		stateChanged();
+		//stateChanged();
 	}
 
+	public void msgHereIsWhatICanFulfill(List<ItemOrder> orders, boolean canFulfill) {
+		if(canFulfill)
+			cS = CustomerState.waiting;
+		else
+			cS = CustomerState.leaving;
+	}
+	
 	public void msgHereAreItemsandPrice(List<ItemOrder> i, int price) {
 		person.msgExpense(price);
 		person.msgReceivedItems(i);
 		cost = price;
 		cS = CustomerState.getting;
-		stateChanged();
+		//stateChanged();
 	}
 
 	public void msgThankYou(int change) {
 		person.msgIncome(change);
 		cS = CustomerState.leaving;
-		stateChanged();
+		//stateChanged();
 	}
 
 
@@ -108,17 +109,17 @@ public class MarketCustomerRole extends Role implements MarketCustomer {
 	public void msgAtCashier() {
 		animation.release();
 		cS = CustomerState.atCashier;
-		stateChanged();
+		//stateChanged();
 	}
 
 	public void msgAtWaitingArea() {
 		animation.release();
-		stateChanged();
+		//stateChanged();
 	}
 
 	public void msgLeft() {
 		animation.release();
-		stateChanged();
+		//stateChanged();
 	}
 
 
@@ -130,6 +131,9 @@ public class MarketCustomerRole extends Role implements MarketCustomer {
 		}
 		if(cS == CustomerState.atCashier) {
 			GiveOrder();
+		}
+		if(cS == CustomerState.waiting) {
+			WillWait();
 		}
 		if(cS == CustomerState.getting) {
 			GetItems();
@@ -145,40 +149,48 @@ public class MarketCustomerRole extends Role implements MarketCustomer {
 
 	/* Actions */
 	private void GoToCashier() {
-		DoGoToCashier(); // animation
 		cS = CustomerState.walking;
-	}
-	private void GiveOrder() {
-		DoGiveOrder(); // animation
+		DoGoToCashier(); // animation
 		try {
 			animation.acquire();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+	}
+	private void GiveOrder() {
 		cashier.msgIWantItems(this, items);
-		cS = CustomerState.waiting;
+		cS = CustomerState.confirming;
+	}
+	private void WillWait() {
+		cS = CustomerState.walking;
+		DoWillWait(); // animation
+		try {
+			animation.acquire();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 
 	private void GetItems() {
+		cashier.msgPayment(this, cost);
+		cS = CustomerState.paying;
+		cost = 0;
 		DoGetItems(); // animation
 		try {
 			animation.acquire();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		cashier.msgPayment(this, cost);
-		cS = CustomerState.paying;
-		cost = 0;
 	}
 
 	private void GetOut() {
+		cS = CustomerState.done;
 		DoGetOut(); // animation
 		try {
 			animation.acquire();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		cS = CustomerState.done;
 	}
 
 
@@ -188,7 +200,7 @@ public class MarketCustomerRole extends Role implements MarketCustomer {
 		gui.GoToCashier();
 	}
 
-	private void DoGiveOrder() {
+	private void DoWillWait() {
 		gui.GoToWaitingArea();
 	}
 

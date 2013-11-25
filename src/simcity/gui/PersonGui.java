@@ -6,16 +6,17 @@ import java.awt.Point;
 
 import simcity.PersonAgent;
 
-public class PersonGui {
+public class PersonGui implements Gui {
 	private PersonAgent agent = null;
+	private CityGui gui;
 
 	private int xPos = -20, yPos = -20;//default Person position
 	private int xDestination = -20, yDestination = -20;//default Person destination
 	private int buildingX, buildingY;
 
-	public PersonGui(PersonAgent p) {
+	public PersonGui(PersonAgent p, CityGui g) {
 		agent = p;
-
+		gui = g;
 	}
 
 	public void updatePosition() {

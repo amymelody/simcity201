@@ -1,4 +1,4 @@
-package simcity.market.interfaces;
+package simcity.interfaces;
 
 import simcity.market.Order;
 

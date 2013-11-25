@@ -160,7 +160,7 @@ public class JoshCashierRole extends RestCashierRole implements JoshCashier {
 	private void payBill(Bill bill) {
 		cash -= bill.charge;
 		print("Paying bill. Cash = $" + cash);
-		bill.deliverer.msgPayment(bill.charge);
+		bill.deliverer.msgPayment(this, bill.charge);
 		bills.remove(bill);
 	}
 

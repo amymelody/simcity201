@@ -21,22 +21,23 @@ public class JoshCookRole extends RestCookRole {
 	public List<ItemOrder> itemOrders = new ArrayList<ItemOrder>();
 
 	private JoshHostRole host;
+	private JoshCashierRole cashier;
 	private String name = null;
 	private Timer timer = new Timer();
 	private boolean orderedItems;
 	private JoshCookGui cookGui;
+	private RevolvingStandMonitor stand;
+	
 	private boolean working;
 	private String location = "joshRestaurant";
 	
-	Food steak = new Food("steak", 15, 3, 1, 1);
-	Food chicken = new Food("chicken", 20, 3, 1, 1);
-	Food salad = new Food("salad", 5, 3, 2, 1);
+	Food steak = new Food("steak", 15, 3, 3, 1);
+	Food chicken = new Food("chicken", 20, 3, 3, 1);
+	Food salad = new Food("salad", 5, 3, 3, 1);
 	Food pizza = new Food("pizza", 10, 3, 3, 1);
 	
 	public Map<String, Food> foods = new HashMap<String, Food>();
-	
-	public enum OrderState
-	{Pending, Cooking, Done, Finished};
+
 	public enum FoodState
 	{Enough, MustBeOrdered, Ordered, WaitingForOrder, ReceivedOrder};
 
@@ -72,8 +73,20 @@ public class JoshCookRole extends RestCookRole {
 		host = h;
 	}
 	
+	public void setStand(RevolvingStandMonitor s) {
+		stand = s;
+	}
+	
+	public void setCashier(JoshCashierRole c) {
+		cashier = c;
+	}
+	
 	public void setGui(JoshCookGui g) {
 		cookGui = g;
+	}
+	
+	public void addMarket(MarketCashier m) {
+		markets.add(new MyMarket(m));
 	}
 	
 	// Messages
@@ -86,10 +99,6 @@ public class JoshCookRole extends RestCookRole {
 	public void msgEndShift() {
 		working = false;
 		stateChanged();
-	}
-	
-	public void addMarket(MarketCashier m) {
-		markets.add(new MyMarket(m));
 	}
 	
 	public void msgHereIsOrder(JoshWaiterRole waiter, String choice, int table) {
@@ -133,11 +142,11 @@ public class JoshCookRole extends RestCookRole {
 				leaveRestaurant();
 				return true;
 			}
-			if (orderedItems == false) {
+			/*if (orderedItems == false) {
 				orderedItems = true;
 				orderFoodFromMarket();
 				return true;
-			}
+			}*/
 			for (Food food : foods.values()) {
 				if (food.getState() == FoodState.ReceivedOrder) {
 					addFood(food);
@@ -166,16 +175,22 @@ public class JoshCookRole extends RestCookRole {
 			return false;
 		}
 
+		retrieveOrderFromStand();
 		return false;
-		//we have tried all our rules and found
-		//nothing to do. So return false to main loop of abstract agent
-		//and wait.
 	}
 
 	// Actions
 	
 	private void leaveRestaurant() {
 		person.msgLeftDestination(this);
+	}
+	
+	private void retrieveOrderFromStand() {
+		Order order = stand.remove();
+		if (order != null) {
+			print("Picking up order from stand");
+			orders.add(order);
+		}
 	}
 
 	private void cookIt(Order o) {
@@ -228,7 +243,7 @@ public class JoshCookRole extends RestCookRole {
 		for (ItemOrder io : itemOrders) {
 			print("I need " + io.getAmount() + " " + io.getFoodItem() + "s");
 		}
-		markets.get(index).market.msgIWantDelivery(this, itemOrders, location);
+		markets.get(index).market.msgIWantDelivery(this, cashier, itemOrders, location);
 		markets.get(index).incrementOrderedFrom();
 		itemOrders.clear();
 	}
@@ -256,44 +271,6 @@ public class JoshCookRole extends RestCookRole {
 		
 		public void incrementOrderedFrom() {
 			orderedFrom++;
-		}
-	}
-
-	private class Order {
-		JoshWaiterRole waiter;
-		int table;
-		private OrderState state;
-		String choice;
-
-		Order(JoshWaiterRole w, String c, int t, OrderState s) {
-			waiter = w;
-			choice = c;
-			table = t;
-			state = s;
-		}
-
-		JoshWaiterRole getWaiter() {
-			return waiter;
-		}
-		
-		public int getTable() {
-			return table;
-		}
-		
-		OrderState getState() {
-			return state;
-		}
-		
-		void setState(OrderState s) {
-			state = s;
-		}
-		
-		String getChoice() {
-			return choice;
-		}
-		
-		void setChoice(String c) {
-			choice = c;
 		}
 	}
 	
