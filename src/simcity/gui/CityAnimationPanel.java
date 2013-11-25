@@ -84,7 +84,7 @@ public class CityAnimationPanel extends JPanel implements ActionListener, MouseL
 				//House 1
 				synchronized(buildings) {
 					for(BuildingGui bG: buildings) {
-						if(bG.getName().equals("House 2")) {
+						if(bG.getName().equals("House 1")) {
 							cityGui.changeView();
 							bG.setVisible(true);
 							currentBG = bG;

@@ -30,17 +30,9 @@ public abstract class BuildingGui
 	public String getName() {
 		return name;
 	}
-	public void setVisible(boolean visible) {
-		changeCityView();
-		if(visible) {
-			animationPanel.setVisible(true);
-			inputPanel.setVisible(true);
-		}
-		else {
-			animationPanel.setVisible(false);
-			inputPanel.setVisible(false);
-		}
-	}
+	
+	public abstract void setVisible(boolean visible);
+	
 	public void changeCityView() {
 		cityGui.changeView();
 	}
