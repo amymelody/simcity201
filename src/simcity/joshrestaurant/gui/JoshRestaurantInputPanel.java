@@ -40,19 +40,19 @@ public class JoshRestaurantInputPanel extends JPanel
     private JoshRestaurantGui restGui; //reference to main gui
     private JoshCookGui cookGui;
 
-    public JoshRestaurantInputPanel(BuildingGui g, JoshRestaurantAnimationPanel a, JoshCashierRole ca, JoshCookRole co, JoshHostRole h) {
+    public JoshRestaurantInputPanel(BuildingGui g, JoshRestaurantAnimationPanel a, JoshCashierRole ca, JoshCookRole co, JoshHostRole h, ArrayList<MarketCashierRole> cashiers) {
     	gui = g;
     	animationPanel = a;
     	host = h;
     	cashier = ca;
     	cook = co;
-    	/*for (MarketCashierRole c : cashiers) {
+    	for (MarketCashierRole c : cashiers) {
     		markets.add(c);
     	}
 		
 		cook.addMarket(markets.get(0));
 		cook.addMarket(markets.get(1));
-		cook.addMarket(markets.get(2));*/
+		cook.addMarket(markets.get(2));
 		cook.setHost(host);
         
 		cookGui = new JoshCookGui(cook);

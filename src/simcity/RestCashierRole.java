@@ -2,8 +2,9 @@ package simcity;
 
 import simcity.role.JobRole;
 import simcity.interfaces.MarketDeliverer;
+import simcity.interfaces.RestCashier;
 
-public abstract class RestCashierRole extends JobRole {
+public abstract class RestCashierRole extends JobRole implements RestCashier {
 
 	public RestCashierRole() {
 		// TODO Auto-generated constructor stub

@@ -54,9 +54,9 @@ public class CityDirectory
 	private Vector<MarketDelivererRole> market3Deliverers = new Vector<MarketDelivererRole>();
 	private Vector<BankTellerRole> bank1Tellers = new Vector<BankTellerRole>();
 	private Vector<LandlordRole> landlords = new Vector<LandlordRole>();
-	/*private MarketCashierRole market1Cashier = new MarketCashierRole();
+	private MarketCashierRole market1Cashier = new MarketCashierRole();
 	private MarketCashierRole market2Cashier = new MarketCashierRole();
-	private MarketCashierRole market3Cashier = new MarketCashierRole();*/
+	private MarketCashierRole market3Cashier = new MarketCashierRole();
 	//private BankManagerRole bank1Manager = new BankManagerRole();
 	private JoshCashierRole joshCashier = new JoshCashierRole();
 	private JoshCookRole joshCook = new JoshCookRole();
@@ -170,13 +170,13 @@ public class CityDirectory
 	List<Integer> apartment1ResIDs;
 	List<Integer> apartment2ResIDs;
 	
-	/*public ArrayList<MarketCashierRole> getMarketCashiers() {
+	public ArrayList<MarketCashierRole> getMarketCashiers() {
 		ArrayList<MarketCashierRole> cashiers = new ArrayList<MarketCashierRole>();
 		cashiers.add(market1Cashier);
 		cashiers.add(market2Cashier);
 		cashiers.add(market3Cashier);
 		return cashiers;
-	}*/
+	}
 	
 	/*public BankManagerRole  getBankManager() {
 		return bank1Manager;
@@ -201,9 +201,9 @@ public class CityDirectory
 		apartment1ResIDs = new ArrayList<Integer>();
 		apartment2ResIDs = new ArrayList<Integer>();
 		
-		/*market1Cashier.setJobLocation("market1");
+		market1Cashier.setJobLocation("market1");
 		market2Cashier.setJobLocation("market2");
-		market3Cashier.setJobLocation("market3");*/
+		market3Cashier.setJobLocation("market3");
 		//bank1Manager.setJobLocation("bank1");
 		joshCashier.setJobLocation("joshRestaurant");
 		joshCook.setJobLocation("joshRestaurant");
@@ -265,8 +265,8 @@ public class CityDirectory
 			l.setJobLocation("home");
 			landlords.add(l);
 			return l;
-		//case "marketCashierRole":
-			//return pickMarketCashier();
+		case "marketCashierRole":
+			return pickMarketCashier();
 		case "marketDelivererRole":
 			MarketDelivererRole d = new MarketDelivererRole();
 			addMarketDeliverer(d);
@@ -391,7 +391,7 @@ public class CityDirectory
 		}*/
 	}
 	
-	/*public MarketCashierRole pickMarketCashier() {
+	public MarketCashierRole pickMarketCashier() {
 		int num1 = getNumPeople("marketCashierRole","market1");
 		int num2 = getNumPeople("marketCashierRole","market2");
 		int num3 = getNumPeople("marketCashierRole","market3");
@@ -409,7 +409,7 @@ public class CityDirectory
 		} else {
 			return market3Cashier;
 		}
-	}*/
+	}
 	
 	/*public BankManagerRole pickBankManager() {
 		return bank1Manager;

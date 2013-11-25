@@ -65,7 +65,9 @@ public class JoshCustomerGui implements Gui{
 			yPos--;
 
 		if (xPos == xDestination && yPos == yDestination) {
-			if (command==Command.GoToSeat) role.msgAnimationFinishedGoToSeat();
+			if (command==Command.GoToSeat) {
+				role.msgAnimationFinishedGoToSeat();
+			}
 			else if (command==Command.LeaveRestaurant) {
 				role.msgAnimationFinishedLeaveRestaurant();
 				System.out.println("about to call gui.setCustomerEnabled(role);");
@@ -107,7 +109,7 @@ public class JoshCustomerGui implements Gui{
 	
 	public void setHungry() {
 		int numCustomers = iP.getNumCustomers();
-		iP.addCustomer(role);
+		iP.addWaitingCustomer(role);
 		isHungry = true;
 		xDestination = (numCustomers%6)*30;
 		yDestination = 30*((numCustomers - numCustomers%6)/6);

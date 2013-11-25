@@ -57,7 +57,7 @@ public class BuildingGui extends JFrame
 	{
 		cityDirectory = cd;
 		
-		joshRestaurantInputPanel = new JoshRestaurantInputPanel(this, joshRestaurantAnimationPanel, cd.getJoshCashier(), cd.getJoshCook(), cd.getJoshHost());
+		joshRestaurantInputPanel = new JoshRestaurantInputPanel(this, joshRestaurantAnimationPanel, cd.getJoshCashier(), cd.getJoshCook(), cd.getJoshHost(), cd.getMarketCashiers());
 	
 		setBounds(bufferFromSideOfScreen, bufferFromTopOfScreen, windowX, windowY);
 		BorderLayout frameLayout = new BorderLayout();

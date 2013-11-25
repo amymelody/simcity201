@@ -203,7 +203,7 @@ public class PersonAgent extends Agent
 	}
 	
 	private boolean takeBus(String destination) {
-		if (job != null && destination.equals(job.location) && (time.plus(30)).greaterThanOrEqualTo(job.startShifts.get(time.getDay()))) {
+		if (job != null && destination.equals(job.location) && (time.plus(30)).greaterThanOrEqualTo(job.startShifts.get(time.getDay())) && !time.greaterThanOrEqualTo(job.endShifts.get(time.getDay()))) {
 			return true;
 		}
 		/*if (nearDestination(destination)) {
@@ -289,7 +289,7 @@ public class PersonAgent extends Agent
 		time.day = d;
 		time.hour = h;
 		time.minute = m;
-		print(time.getDay().toString() + ", " + time.getHour() + ":" + time.getMinute());
+		//print(time.getDay().toString() + ", " + time.getHour() + ":" + time.getMinute());
 		if (time.getHour() == 8) {
 			state.ns = NourishmentState.gotHungry;
 		}
@@ -495,7 +495,7 @@ public class PersonAgent extends Agent
 			for (MyRole mr : roles) {
 				if (mr.active) {
 					anytrue = mr.r.pickAndExecuteAnAction();
-					print("roleScheduler");
+					//print("roleScheduler");
 					return anytrue;
 				}
 			}

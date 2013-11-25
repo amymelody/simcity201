@@ -25,6 +25,7 @@ public class JoshWaiterRole extends RestWaiterRole implements JoshWaiter {
 	private Semaphore atCustomer = new Semaphore(0,true);
 	private Semaphore atTable = new Semaphore(0,true);
 	private Semaphore atCook = new Semaphore(0,true);
+	private Semaphore leftRestaurant = new Semaphore(0,true);
 	private boolean returningHome = false;
 	private boolean working;
 	private JoshMenu menu;
@@ -36,8 +37,8 @@ public class JoshWaiterRole extends RestWaiterRole implements JoshWaiter {
 	{DoingNothing, Waiting, Seated, AskedToOrder, Asked, Ordered, MustReorder, WaitingForFood, OrderDone, ReadyToEat, Eating, WaitingForCheck, Leaving};
 
 	public enum WaiterState
-	{OnTheJob, WantToGoOnBreak, AboutToGoOnBreak, OnBreak, GoingOffBreak};
-	private WaiterState state = WaiterState.OnTheJob;
+	{GoingToWork, OnTheJob, WantToGoOnBreak, AboutToGoOnBreak, OnBreak, GoingOffBreak};
+	private WaiterState state = WaiterState.GoingToWork;
 	
 	public JoshWaiterGui waiterGui = null;
 	public JoshCookGui cookGui = null;
@@ -252,12 +253,21 @@ public class JoshWaiterRole extends RestWaiterRole implements JoshWaiter {
 		atCook.release();// = true;
 		stateChanged();
 	}
+	
+	public void msgLeftRestaurant() {//from animation
+		leftRestaurant.release();// = true;
+		stateChanged();
+	}
 
 	/**
 	 * Scheduler.  Determine what action is called for, and do it.
 	 */
 	public boolean pickAndExecuteAnAction() {
 		try {
+			if (working && state == WaiterState.GoingToWork){
+				goToWork();
+				return true;
+			}
 			if (!working && doneServingCustomers()) {
 				leaveRestaurant();
 				return true;
@@ -336,8 +346,26 @@ public class JoshWaiterRole extends RestWaiterRole implements JoshWaiter {
 
 	// Actions
 	
+	private void goToWork() {
+		returningHome = true;
+		waiterGui.DoReturnHome();
+		try {
+			atHome.acquire();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		state = WaiterState.OnTheJob;
+	}
+	
 	private void leaveRestaurant() {
-		//waiterGui.DoLeaveRestaurant();
+		waiterGui.DoLeaveRestaurant();
+		try {
+			leftRestaurant.acquire();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		person.msgLeftDestination(this);
 	}
 	

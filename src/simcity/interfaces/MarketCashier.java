@@ -7,6 +7,8 @@ import simcity.market.Order;
 
 public interface MarketCashier {
 	
+	public abstract String getName();
+	
 	public abstract void msgHired(MarketEmployee e, int salary);
 	
 	public abstract void msgHired(MarketDeliverer d, int salary);

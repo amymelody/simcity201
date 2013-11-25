@@ -43,10 +43,10 @@ public class JoshWaiterGui implements Gui {
         this.iP = iP;
         HOMEX = 30*((waiterNum + 6-((waiterNum-1)%7))/7 - 1);
         HOMEY = ((waiterNum-1)%7)*30 + 160;
-        xPos = HOMEX;
-        yPos = HOMEY;
-        xDestination = HOMEX;
-        yDestination = HOMEY;
+        xPos = -WAITERWIDTH;
+        yPos = -WAITERHEIGHT;
+        xDestination = xPos;
+        yDestination = yPos;
         
         tablePositions.put(1, new Point(xTable + WAITERWIDTH, yTable - WAITERWIDTH));
 		tablePositions.put(2, new Point(xTable + 2*tableWidth + WAITERWIDTH, yTable - WAITERWIDTH));
@@ -88,6 +88,9 @@ public class JoshWaiterGui implements Gui {
         	if ((xDestination == COOKX && yDestination == COOKY) || (xDestination == PLATINGX && yDestination == PLATINGY)) {
         		role.msgAtCook();
         	}
+        	if (xDestination == -WAITERWIDTH && yDestination == -WAITERHEIGHT) {
+        		role.msgLeftRestaurant();
+        	}
         }
     }
 
@@ -109,6 +112,11 @@ public class JoshWaiterGui implements Gui {
     
     public void setCBEnabled() {
     	//iP.setWaiterEnabled(role);
+    }
+    
+    public void DoLeaveRestaurant() {
+    	xDestination = -WAITERWIDTH;
+    	yDestination = -WAITERHEIGHT;
     }
 
     public void DoGoToTable(int tableNumber) {

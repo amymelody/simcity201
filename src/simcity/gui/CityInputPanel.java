@@ -16,7 +16,7 @@ import java.util.List;
 
 public class CityInputPanel extends JPanel implements ActionListener
 {
-	static final int TIMERINCR = 1100;
+	static final int TIMERINCR = 3000;
 	
 	private Vector<PersonAgent> people = new Vector<PersonAgent>();
 	private Vector<CarAgent> cars = new Vector<CarAgent>();
@@ -54,7 +54,7 @@ public class CityInputPanel extends JPanel implements ActionListener
         personPane.setViewportView(view);
         add(personPane);
         
-        time = new Time(Day.Sun, 5, 0);
+        time = new Time(Day.Sun, 6, 0);
         timer = new Timer(TIMERINCR, this );
     	timer.start();
         
