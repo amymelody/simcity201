@@ -22,11 +22,11 @@ public class MarketAnimationPanel extends JPanel implements ActionListener {
 
 	Image bg;
 	
-	public MarketAnimationPanel(CityGui cG) {
+	public MarketAnimationPanel() {
 		setSize(WINDOWX, WINDOWY);
 		setVisible(true);
 		
-		ImageIcon bgIcon = new ImageIcon(cG.getClass().getResource("images/market_floor.png"));
+		ImageIcon bgIcon = new ImageIcon("simcity/images/market_floor.png");
 		bg = bgIcon.getImage();
 		
 		bufferSize = this.getSize();
