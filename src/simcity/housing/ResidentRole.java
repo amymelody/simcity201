@@ -1,7 +1,10 @@
 package simcity.housing;
 
 import simcity.housing.interfaces.Landlord;
-import simcity.interfaces.Resident;
+import simcity.housing.test.mock.MockPerson;
+import simcity.housing.interfaces.Resident;
+import simcity.mock.EventLog;
+import simcity.mock.LoggedEvent;
 import simcity.role.Role;
 import simcity.ItemOrder;
 import java.awt.Point;
@@ -11,19 +14,18 @@ import java.util.concurrent.Semaphore;
 public class ResidentRole extends Role implements Resident
 {
 
-//Data
-	String name = "Resident";
-	
+//Data	
+	MockPerson mockPerson;
 	Landlord landlord = null;
 
-	private enum ResidentState
+	public enum ResidentState
 	{
 		atHome,
 		atLandlord,
 		away;
 	}
-	private ResidentState state = ResidentState.away;
-	private enum Command
+	public ResidentState state = ResidentState.away;
+	public enum Command
 	{
 		talkToLandlord,
 		payLandlord,
@@ -32,62 +34,81 @@ public class ResidentRole extends Role implements Resident
 		putAwayGroceries,
 		leave;
 	}
-	private List<Command> commands;
-	private List<ItemOrder> foodInFridge;
-	private List<ItemOrder> groceries;
-	private int rent;
-	private Map<String, Point> locations;
+	public List<Command> commands = Collections.synchronizedList(new ArrayList<Command>());
+	public List<ItemOrder> foodInFridge = Collections.synchronizedList(new ArrayList<ItemOrder>());
+	public List<ItemOrder> groceries = Collections.synchronizedList(new ArrayList<ItemOrder>());
+	public int rent;
+	private Map<String, Point> locations = new HashMap<String, Point>();
 	private Random random = new Random();
-	private int maintenanceSchedule = 3;
+	public int maintenanceSchedule = 3;
 	private Semaphore atLocation = new Semaphore(0, true);
 	private Timer timer = new Timer();
+	public EventLog log = new EventLog();
+	public boolean unitTesting = false;
 //	private ResidentGui gui;
 
 	public ResidentRole()
 	{
 		super();
+		foodInFridge.add(new ItemOrder("Salad", 5));
+		foodInFridge.add(new ItemOrder("Pizza", 5));
+		foodInFridge.add(new ItemOrder("Chicken", 5));
+		foodInFridge.add(new ItemOrder("Steak", 5));
 	}
 	
 	public void setLandlord(Landlord l)
 	{
 		landlord = l;
 	}
+	public void setMockPerson(MockPerson p)
+	{
+		mockPerson = p;
+	}
 	
 //Messages
 	public void msgRentDue() //from Landlord
 	{
+		log.add(new LoggedEvent("Received msgRentDue from Landlord. Setting person.rentDue and maintenanceSchedule--"));
+		maintenanceSchedule--;
+		mockPerson.rentDue = true;
 		person.setRentDue(true);
 	}
 	public void msgAtLandlord() //from Person
 	{
+		log.add(new LoggedEvent("Received msgAtLandlord from Person. State.atLandlord, Command.talkToLandlord"));
 		state = ResidentState.atLandlord;
 		commands.add(Command.talkToLandlord);
 		stateChanged();
 	}
 	public void msgAmountOwed(int r) //from Landlord
 	{
+		log.add(new LoggedEvent("Received msgAmountOwed from Landlord. Rent = $" + r + ", Command.payLandlord"));
 		commands.add(Command.payLandlord);
 		rent = r;
 		stateChanged();
 	}
 	public void msgEat() //from Person
 	{
+		log.add(new LoggedEvent("Received msgEat from Person. Command.eat"));
 		commands.add(Command.eat);
 		stateChanged();
 	}
 	public void msgGroceries(List<ItemOrder> g) //from Person
 	{
+		log.add(new LoggedEvent("Received msgGroceries from Person. Number of grocery items = " + g.size() + ", Command.putAwayGroceries"));
 		commands.add(Command.putAwayGroceries);
 		groceries = g;
 		stateChanged();
 	}
 	public void msgLeave() //from Person
 	{
+		log.add(new LoggedEvent("Received msgLeave from Person. Command.leave"));
 		commands.add(Command.leave);
 		stateChanged();
 	}
 	public void msgImHome() //from Person
 	{
+		log.add(new LoggedEvent("Received msgImHome from Person. State.atHome"));
 		state = ResidentState.atHome;
 		stateChanged();
 	}
@@ -114,7 +135,7 @@ public class ResidentRole extends Role implements Resident
     		{
     			if(c == Command.eat)
     			{
-    				eat(c);
+    				prepareFood(c);
         	    	return true;
     			}
     		}
@@ -168,13 +189,14 @@ public class ResidentRole extends Role implements Resident
 	private void sendDingDong(Command c)
 	{
 		commands.remove(c);
-		landlord.msgDingDong((simcity.housing.interfaces.Resident)this);
+		landlord.msgDingDong(this);
 		stateChanged();
 	}
 	private void sendPayRent(Command c)
 	{
 		commands.remove(c);
-		landlord.msgPayRent((simcity.housing.interfaces.Resident) this, rent);
+		landlord.msgPayRent(this, rent);
+		mockPerson.msgExpense(rent);
 		person.msgExpense(rent);
 		rent = -1;
 		stateChanged();
@@ -197,64 +219,138 @@ public class ResidentRole extends Role implements Resident
 		groceries.clear();
 		stateChanged();
 	}
-	private void eat(Command c)
+	private void prepareFood(Command c)
 	{
 		commands.remove(c);
 		goToLocation(locations.get("Fridge"));
-		String food = foodInFridge.get(random.nextInt(4)).getFoodItem(); //assuming that the max number of types of food is 4
-		foodInFridge.remove(food); //*
+		ItemOrder food = foodInFridge.get(random.nextInt(foodInFridge.size()));
+		final List<ItemOrder> groceryList = new ArrayList<ItemOrder>();
+		for(ItemOrder i : foodInFridge)
+		{
+			if(i == food)
+			{
+				i.setAmount(i.getAmount() - 1);
+				if(i.getAmount() == 0)
+				{
+					for(ItemOrder j : foodInFridge)
+					{
+						if(j.getAmount() <= 2)
+						{
+							ItemOrder temp = new ItemOrder(j.getFoodItem(), 5 - j.getAmount());
+							groceryList.add(temp);
+						}
+					}
+				}
+			}
+		}
 		goToLocation(locations.get("Stove"));
-		timer.schedule(new TimerTask() 
+		if(unitTesting)
 		{
-			public void run()
-			{
-				goToLocation(locations.get("Table"));
-			}
-		}, 2000);
-		timer.schedule(new TimerTask() 
+			eat(groceryList);
+		}
+		else
 		{
-			public void run()
-			{
-				person.msgDoneEating();
-			}
-		}, 10000);
+			timer.schedule(new TimerTask() 
+				{
+					public void run()
+					{
+						eat(groceryList);
+					}
+				}, 10000);
+		}
+	}
+	public void eat(final List<ItemOrder> gList)
+	{
+		goToLocation(locations.get("Table"));
+		if(unitTesting)
+		{
+			groceryCheck(gList);
+		}
+		else
+		{
+			timer.schedule(new TimerTask() 
+				{
+					public void run()
+					{
+						groceryCheck(gList);
+					}
+				}, 5000);
+		}
+	}
+	public void groceryCheck(List<ItemOrder> gList)
+	{
+		mockPerson.msgDoneEating();
+		person.msgDoneEating();
+		if(gList.size() > 0)
+		{
+			mockPerson.msgFoodLow(gList);
+			person.msgFoodLow(gList);
+		}
 		stateChanged();
 	}
 	private void clean()
 	{
 		goToLocation(locations.get("Fridge"));
 		Do("Cleaning Fridge");
-		timer.schedule(new TimerTask() 
+		if(unitTesting)
 		{
-			public void run()
-			{
-				goToLocation(locations.get("Stove"));
-			}
-		}, 1000);
+			goToLocation(locations.get("Stove"));
+		}
+		else
+		{
+			timer.schedule(new TimerTask() 
+				{
+					public void run()
+					{
+						goToLocation(locations.get("Stove"));
+					}
+				}, 1000);
+		}
 		Do("Cleaning Stove");
-		timer.schedule(new TimerTask() 
+		if(unitTesting)
 		{
-			public void run()
-			{
-				goToLocation(locations.get("Table"));
-			}
-		}, 1000);
+			goToLocation(locations.get("Table"));
+		}
+		else
+		{
+			timer.schedule(new TimerTask() 
+				{
+					public void run()
+					{
+						goToLocation(locations.get("Table"));
+					}
+				}, 1000);
+		}
 		Do("Cleaning Table");
-		timer.schedule(new TimerTask() 
+		if(unitTesting)
 		{
-			public void run()
-			{
-				goToLocation(locations.get("Sofa"));
-			}
-		}, 1000);
+			goToLocation(locations.get("Sofa"));
+		}
+		else
+		{
+			timer.schedule(new TimerTask() 
+				{
+					public void run()
+					{
+						goToLocation(locations.get("Sofa"));
+					}
+				}, 1000);
+		}
 		Do("Cleaning Sofa");
-		timer.schedule(new TimerTask() 
+		if(unitTesting)
 		{
-			public void run()
-			{
-				goToLocation(locations.get("Doorway"));
-			}
-		}, 1000);
+			goToLocation(locations.get("Doorway"));
+		}
+		else
+		{
+			timer.schedule(new TimerTask() 
+				{
+					public void run()
+					{
+						goToLocation(locations.get("Doorway"));
+					}
+				}, 1000);
+		}
 		Do("Cleaning Door");
 		maintenanceSchedule = 3;
 		stateChanged();
@@ -264,20 +360,21 @@ public class ResidentRole extends Role implements Resident
 		commands.remove(c);
 		goToLocation(locations.get("Outside"));
 		state = ResidentState.away;
+		mockPerson.msgLeftDestination(this);
 		person.msgLeftDestination(this);
 		stateChanged();
 	}
 
 	private void goToLocation(Point p)
 	{
-		//gui.doGoToLocation(p);
-		try
-		{
-			atLocation.acquire();
-		}
-		catch (InterruptedException e)
-		{
-			e.printStackTrace();
-		}
+//		gui.doGoToLocation(p);
+//		try
+//		{
+//			atLocation.acquire();
+//		}
+//		catch (InterruptedException e)
+//		{
+//			e.printStackTrace();
+//		}
 	}
 }

@@ -1,6 +1,9 @@
 package simcity.housing;
 
 import simcity.housing.interfaces.Resident;
+import simcity.housing.test.mock.MockPerson;
+import simcity.mock.EventLog;
+import simcity.mock.LoggedEvent;
 import simcity.role.JobRole;
 import java.awt.Point;
 import java.util.*;
@@ -10,18 +13,19 @@ public class LandlordRole extends JobRole
 {
 
 //Data
-	String name = "Landlord";
-	List<Renter> renters;
-	class Renter
+	MockPerson mockPerson;
+	public boolean unitTesting = false;
+	public List<Renter> renters = Collections.synchronizedList(new ArrayList<Renter>());
+	public class Renter
 	{
 		Resident resident;
-		RenterState state = RenterState.away;
+		public RenterState state = RenterState.away;
 		Renter(Resident r)
 		{
 			resident = r;
 		}
 	}
-	enum RenterState
+	public enum RenterState
 	{
 		called,
 		arrived,
@@ -29,16 +33,17 @@ public class LandlordRole extends JobRole
 		paid,
 		away;
 	}
-	enum Command
+	public enum Command
 	{
 		callRenters,
 		collectRent;
 	}
-	List<Command> commands;
+	public List<Command> commands = Collections.synchronizedList(new ArrayList<Command>());
 	int rent = 50;
-	int moneyEarned = 0;
-	Map<String, Point> locations;
+	public int moneyEarned = 0;
+	Map<String, Point> locations = new HashMap<String, Point>();
 	Semaphore atLocation = new Semaphore(0, true);
+	public EventLog log = new EventLog();
 //	ResidentGui gui;
 
 	public LandlordRole()
@@ -46,9 +51,15 @@ public class LandlordRole extends JobRole
 		super();
 	}
 	
+	public void setMockPerson(MockPerson p)
+	{
+		mockPerson = p;
+	}
+	
 //Messages
 	public void msgStartShift() //from Person
 	{
+		log.add(new LoggedEvent("Received msgStartShift from Person. Command.callRenters"));
 		commands.add(Command.callRenters);
 		stateChanged();
 	}
@@ -58,6 +69,7 @@ public class LandlordRole extends JobRole
 	}
 	public void msgDingDong(Resident r) //from Resident
 	{
+		log.add(new LoggedEvent("Received msgDingDong from Resident. State.arrived, Command.collectRent"));
 		commands.add(Command.collectRent);
 		for(Renter renter : renters)
 		{
@@ -70,6 +82,7 @@ public class LandlordRole extends JobRole
 	}
 	public void msgPayRent(Resident r, int money) //from Resident
 	{
+		log.add(new LoggedEvent("Received msgPayRent from Resident. State.paid. Payment = $" + money));
 		moneyEarned += money;
 		for(Renter renter : renters)
 		{
@@ -157,22 +170,27 @@ public class LandlordRole extends JobRole
 		{
 			r.state = RenterState.away;
 		}
-		int temp = moneyEarned;
+		mockPerson.msgIncome(moneyEarned);
+		person.msgIncome(moneyEarned);
 		moneyEarned = 0;
-//		person.endShift(temp);
+		mockPerson.msgEndShift();
+		if(!unitTesting)
+		{
+			person.msgEndShift();
+		}
 	}
 
 	private void goToLocation(Point p)
 	{
 //		gui.doGoToLocation(p);
-		try
-		{
-			atLocation.acquire();
-		}
-		catch (InterruptedException e)
-		{
-			e.printStackTrace();
-		}
+//		try
+//		{
+//			atLocation.acquire();
+//		}
+//		catch (InterruptedException e)
+//		{
+//			e.printStackTrace();
+//		}
 	}
 
 	public void addRenter(Resident r)
