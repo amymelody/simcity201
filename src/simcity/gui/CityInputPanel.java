@@ -42,13 +42,14 @@ public class CityInputPanel extends JPanel implements ActionListener
     }
 	public CityInputPanel(CityGui g, CityDirectory cd, BuildingGui bg)
 	{
+		gui = g;
 		cityDirectory = cd;
 		buildingGui = bg;
-		//creationPanel = new CityCreationPanel(this, cityDirectory);
+		creationPanel = new CityCreationPanel(this, cityDirectory);
 		gui = g;
 		System.out.println("lol im here");
         setLayout(new BoxLayout(this, 0));
-        //add(creationPanel);
+        add(creationPanel);
         add(new JLabel(""));
         add(new JLabel("Citizens:"));
         personPane.setViewportView(view);
@@ -98,8 +99,8 @@ public class CityInputPanel extends JPanel implements ActionListener
 		PersonAgent p = new PersonAgent(name);
 		PersonGui g = new PersonGui(p, gui);
 		p.setCityDirectory(c);
-		p.setBuildingGui(buildingGui);
-		//gui.addGui(g);
+		p.setCityGui(gui);
+		gui.addGui(g);
 		
 		Map<Day, Time> startShifts = new HashMap<Day, Time>();
 		startShifts.put(Day.Sun, new Time(Day.Sun, startShift, 0));

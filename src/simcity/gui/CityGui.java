@@ -10,6 +10,13 @@ import java.util.List;
 
 import simcity.CityDirectory;
 import simcity.market.gui.MarketGui;
+import simcity.joshrestaurant.gui.JoshRestaurantGui;
+import simcity.joshrestaurant.JoshCustomerRole;
+import simcity.joshrestaurant.JoshWaiterRole;
+import simcity.joshrestaurant.JoshNormalWaiterRole;
+import simcity.joshrestaurant.JoshSharedDataWaiterRole;
+import simcity.RestWaiterRole;
+import simcity.RestCustomerRole;
 
 /**
  * Main GUI class.
@@ -34,8 +41,18 @@ public class CityGui extends JFrame implements MouseListener
 	 */
 	public CityGui(CityDirectory cd)
 	{
-		inputPanel = new CityInputPanel(this, cd, null);
+		// creation of buildings
+		MarketGui market1 = new MarketGui("Market 1", this, cd);
+		buildings.add(market1);
+		MarketGui market2 = new MarketGui("Market 2", this, cd);
+		buildings.add(market2);
+		MarketGui market3 = new MarketGui("Market 3", this, cd);
+		buildings.add(market3);
+		JoshRestaurantGui joshRestaurant = new JoshRestaurantGui("Josh's Restaurant", this, cd);
+		buildings.add(joshRestaurant);
+		
 		animationPanel = new CityAnimationPanel(this);
+		inputPanel = new CityInputPanel(this, cd, null);
 		
 		setBounds(BUFFERSIDE, BUFFERTOP, WINDOWX, WINDOWY);
 		BorderLayout frameLayout = new BorderLayout();
@@ -57,19 +74,43 @@ public class CityGui extends JFrame implements MouseListener
 		animationPanel.setMaximumSize(animDim);
 		add(animationPanel, frameLayout.CENTER);
 		
-		// creation of buildings
-		MarketGui market1 = new MarketGui("Market 1", this, cd);
-		buildings.add(market1);
-		MarketGui market2 = new MarketGui("Market 2", this, cd);
-		buildings.add(market2);
-		MarketGui market3 = new MarketGui("Market 3", this, cd);
-		buildings.add(market3);
-		
 		addMouseListener(this);
 	}
 	
 	public void addGui(PersonGui g) {
 		animationPanel.addGui(g);
+	}
+	
+	public void addRestCustomer(RestCustomerRole c) {
+		synchronized(buildings) {
+			for(BuildingGui bG: buildings) {
+				if(bG.getName().equals("Josh's Restaurant")) {
+					JoshRestaurantGui g = (JoshRestaurantGui)bG;
+					if (c instanceof JoshCustomerRole) {
+						JoshCustomerRole jC = (JoshCustomerRole)(c);
+						g.addCustomer(jC);
+					}
+				}
+			}
+		}
+	}
+	
+	public void addRestWaiter(RestWaiterRole w) {
+		synchronized(buildings) {
+			for(BuildingGui bG: buildings) {
+				if(bG.getName().equals("Josh's Restaurant")) {
+					JoshRestaurantGui g = (JoshRestaurantGui)bG;
+					if (w instanceof JoshNormalWaiterRole) {
+						JoshNormalWaiterRole jW = (JoshNormalWaiterRole)(w);
+						g.addWaiter(jW);
+					}
+					if (w instanceof JoshSharedDataWaiterRole) {
+						JoshSharedDataWaiterRole jW = (JoshSharedDataWaiterRole)(w);
+						g.addWaiter(jW);
+					}
+				}
+			}
+		}
 	}
 	
 	@Override

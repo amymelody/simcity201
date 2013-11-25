@@ -1,7 +1,10 @@
 package simcity.joshrestaurant.gui;
 
+import simcity.CityDirectory;
 import simcity.joshrestaurant.JoshCustomerRole;
 import simcity.joshrestaurant.JoshWaiterRole;
+import simcity.gui.BuildingGui;
+import simcity.gui.CityGui;
 
 import javax.swing.*;
 
@@ -11,7 +14,7 @@ import java.awt.event.*;
  * Main GUI class.
  * Contains the main frame and subsequent panels
  */
-public class JoshRestaurantGui extends JFrame implements ActionListener {
+public class JoshRestaurantGui extends BuildingGui implements ActionListener {
 	
 	JoshRestaurantAnimationPanel animationPanel = new JoshRestaurantAnimationPanel();
 	private JPanel controlPanel = new JPanel();
@@ -21,7 +24,7 @@ public class JoshRestaurantGui extends JFrame implements ActionListener {
      *    in RestaurantPanel()
      * 2) the infoPanel about the clicked Customer (created just below)
      */    
-    private RestaurantPanel restPanel = new RestaurantPanel(this);
+    private JoshRestaurantInputPanel restPanel;
     
     /* infoPanel holds information about the clicked customer, if there is one*/
     private JPanel infoPanel;
@@ -41,13 +44,16 @@ public class JoshRestaurantGui extends JFrame implements ActionListener {
      * Constructor for RestaurantGui class.
      * Sets up all the gui components.
      */
-    public JoshRestaurantGui() {
+    public JoshRestaurantGui(String n, CityGui cG, CityDirectory cD) {
+    	super(n, cG, cD);
+    	restPanel = new JoshRestaurantInputPanel(this, cD.getJoshCashier(), cD.getJoshCook(), cD.getJoshHost(), cD.getMarketCashiers());
+    	
         int WINDOWX = 450;
         int WINDOWY = 400;
     	
-    	setBounds(50, 50, WINDOWX*2, WINDOWY);
+    	cG.setBounds(50, 50, WINDOWX*2, WINDOWY);
 
-    	setLayout(new GridLayout(1, 2, 10, 0));
+    	cG.setLayout(new GridLayout(1, 2, 10, 0));
         controlPanel.setLayout(new BorderLayout());
         controlPanel.setSize(WINDOWX,WINDOWY);
 
@@ -110,8 +116,11 @@ public class JoshRestaurantGui extends JFrame implements ActionListener {
         
         controlPanel.add(idPanel, BorderLayout.SOUTH);
         
-        add(controlPanel);
-        add(animationPanel);
+        cG.add(controlPanel);
+        cG.add(animationPanel);
+        
+        controlPanel.setVisible(false);
+        animationPanel.setVisible(false);
     }
     
     /**
@@ -197,8 +206,16 @@ public class JoshRestaurantGui extends JFrame implements ActionListener {
         }
     }
     
+    public void addCustomer(JoshCustomerRole c) {
+    	restPanel.addCustomer(c);
+    }
+    
+    public void addWaiter(JoshWaiterRole w) {
+    	restPanel.addWaiter(w);
+    }
+    
     public void removeWaitingCustomer(JoshCustomerRole c) {
-    	restPanel.removeCustomer(c);
+    	restPanel.removeWaitingCustomer(c);
     }
     
     public void setWaiterEnabled(JoshWaiterRole w) {
@@ -214,14 +231,15 @@ public class JoshRestaurantGui extends JFrame implements ActionListener {
             }
         }
     }
-    /**
-     * Main routine to get gui started
-     */
-    public static void main(String[] args) {
-        JoshRestaurantGui gui = new JoshRestaurantGui();
-        gui.setTitle("csci201 Restaurant");
-        gui.setVisible(true);
-        gui.setResizable(false);
-        gui.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    }
+    
+    public void setVisible(boolean visible) {
+		if(visible) {
+			controlPanel.setVisible(true);
+			animationPanel.setVisible(true);
+		}
+		else {
+			animationPanel.setVisible(false);
+			controlPanel.setVisible(false);
+		}
+	}
 }
