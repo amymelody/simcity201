@@ -12,6 +12,7 @@ import simcity.interfaces.MarketCashier;
 import simcity.interfaces.MarketCustomer;
 import simcity.interfaces.MarketDeliverer;
 import simcity.market.Order.OrderState;
+import simcity.market.gui.MarketCustomerGui;
 import simcity.market.gui.MarketDelivererGui;
 import simcity.role.JobRole;
 
@@ -53,7 +54,10 @@ public class MarketDelivererRole extends JobRole implements MarketDeliverer {
 	/* Animation */
 	private Semaphore animation = new Semaphore(0, true);
 	MarketDelivererGui gui;
-
+	public void setGui(MarketDelivererGui g){
+		gui = g;
+	}
+	
 
 	/* Data */
 

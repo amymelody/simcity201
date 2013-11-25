@@ -15,8 +15,8 @@ import java.util.Random;
 
 public class MarketAnimationPanel extends JPanel implements ActionListener {
 	static final int TIMERINCR = 10;
-	private final int WINDOWX = 440;
-	private final int WINDOWY = 440;
+	private final int WINDOWX = 500;
+	private final int WINDOWY = 500;
 	private Image bufferImage;
 	private Dimension bufferSize;
 

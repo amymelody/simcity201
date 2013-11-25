@@ -13,7 +13,9 @@ public class CityGui extends JFrame
 	private JFrame animationFrame = new JFrame("City Animation");
 	private CityAnimationPanel animationPanel = new CityAnimationPanel();
 	private CityInputPanel inputPanel;
-
+	private static CityDirectory cityDirectory;
+	private static BuildingGui buildingGui;
+	
 	private int windowX = 650;
 	private int windowY = 500;
 	private int bufferFromTopOfScreen = 50;
@@ -31,7 +33,7 @@ public class CityGui extends JFrame
 		setLayout(frameLayout);
 
 		//input panel
-		double inputFractionOfWindow = .3;
+		double inputFractionOfWindow = 150 / 650;
 		Dimension inputDim = new Dimension((int)(windowX * inputFractionOfWindow), windowY);
 		inputPanel.setPreferredSize(inputDim);
 		inputPanel.setMinimumSize(inputDim);
@@ -39,7 +41,7 @@ public class CityGui extends JFrame
 		add(inputPanel, frameLayout.WEST);
 
 		//animation panel
-		double animationFractionOfWindow = .6;
+		double animationFractionOfWindow = 500 / 650;
 		Dimension animDim = new Dimension((int)(windowX * animationFractionOfWindow), windowY);
 		animationPanel.setPreferredSize(animDim);
 		animationPanel.setMinimumSize(animDim);
@@ -50,4 +52,16 @@ public class CityGui extends JFrame
 	public void addGui(PersonGui g) {
 		animationPanel.addGui(g);
 	}
+	
+	/**
+     * Main routine to get gui started
+     */
+    public static void main(String[] args) {
+            CityGui gui = new CityGui(cityDirectory, buildingGui);
+            gui.setTitle("SimCity201: City of the Blind");
+            gui.setVisible(true);
+            gui.setResizable(false);
+            gui.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+	
 }

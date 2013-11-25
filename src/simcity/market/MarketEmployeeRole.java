@@ -12,6 +12,7 @@ import simcity.interfaces.MarketCashier;
 import simcity.interfaces.MarketCustomer;
 import simcity.interfaces.MarketEmployee;
 import simcity.market.Order.OrderState;
+import simcity.market.gui.MarketCustomerGui;
 import simcity.market.gui.MarketEmployeeGui;
 
 public class MarketEmployeeRole extends JobRole implements MarketEmployee {
@@ -49,7 +50,10 @@ public class MarketEmployeeRole extends JobRole implements MarketEmployee {
 	/* Animation */
 	private Semaphore animation = new Semaphore(0, true);
 	MarketEmployeeGui gui;
-
+	public void setGui(MarketEmployeeGui g){
+		gui = g;
+	}
+	
 
 	/* Data */
 

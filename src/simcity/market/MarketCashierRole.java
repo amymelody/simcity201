@@ -17,6 +17,7 @@ import simcity.interfaces.RestCashier;
 import simcity.interfaces.RestCook;
 import simcity.market.Order.OrderState;
 import simcity.market.gui.MarketCashierGui;
+import simcity.market.gui.MarketCustomerGui;
 
 public class MarketCashierRole extends JobRole implements MarketCashier {
 
@@ -104,6 +105,9 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 	/* Animation */
 	private Semaphore animation = new Semaphore(0, true);
 	MarketCashierGui gui;
+	public void setGui(MarketCashierGui g){
+		gui = g;
+	}
 	
 	
 	/* Data */

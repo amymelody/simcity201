@@ -55,7 +55,10 @@ public class MarketCustomerRole extends Role implements MarketCustomer {
 	/* Animation */
 	private Semaphore animation = new Semaphore(0, true);
 	MarketCustomerGui gui;
-
+	public void setGui(MarketCustomerGui g){
+		gui = g;
+	}
+	
 
 	/* Data */
 
@@ -146,43 +149,48 @@ public class MarketCustomerRole extends Role implements MarketCustomer {
 
 	/* Actions */
 	private void GoToCashier() {
-		DoGoToCashier(); // animation
 		cS = CustomerState.walking;
+		DoGoToCashier(); // animation
+		try {
+			animation.acquire();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 	private void GiveOrder() {
 		cashier.msgIWantItems(this, items);
 		cS = CustomerState.confirming;
 	}
 	private void WillWait() {
+		cS = CustomerState.walking;
 		DoWillWait(); // animation
 		try {
 			animation.acquire();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		cS = CustomerState.walking;
 	}
 
 	private void GetItems() {
+		cashier.msgPayment(this, cost);
+		cS = CustomerState.paying;
+		cost = 0;
 		DoGetItems(); // animation
 		try {
 			animation.acquire();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		cashier.msgPayment(this, cost);
-		cS = CustomerState.paying;
-		cost = 0;
 	}
 
 	private void GetOut() {
+		cS = CustomerState.done;
 		DoGetOut(); // animation
 		try {
 			animation.acquire();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		cS = CustomerState.done;
 	}
 
 
