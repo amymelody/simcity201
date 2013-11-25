@@ -16,6 +16,8 @@ import simcity.RestCustomerRole;
 import simcity.RestWaiterRole;
 import simcity.joshrestaurant.JoshCustomerRole;
 import simcity.joshrestaurant.JoshWaiterRole;
+import simcity.joshrestaurant.JoshNormalWaiterRole;
+import simcity.joshrestaurant.JoshSharedDataWaiterRole;
 
 import java.awt.*;
 
@@ -153,8 +155,12 @@ public class BuildingGui extends JFrame
 	}
 	
 	public void addRestWaiter(RestWaiterRole w) {
-		if (w instanceof JoshWaiterRole) {
-			JoshWaiterRole jW = (JoshWaiterRole)(w);
+		if (w instanceof JoshNormalWaiterRole) {
+			JoshNormalWaiterRole jW = (JoshNormalWaiterRole)(w);
+			joshRestaurantInputPanel.addWaiter(jW);
+		}
+		if (w instanceof JoshSharedDataWaiterRole) {
+			JoshSharedDataWaiterRole jW = (JoshSharedDataWaiterRole)(w);
 			joshRestaurantInputPanel.addWaiter(jW);
 		}
 	}

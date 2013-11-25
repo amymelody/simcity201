@@ -306,7 +306,7 @@ public class PersonAgent extends Agent
 		JobRole j = city.JobFactory(role);
 		addRole(j, role);
 		job = new Job(j.getJobLocation(), role, payrate, startShifts, endShifts);
-		if (role.equals("restWaiterRole")) {
+		if (role.equals("restWaiter1Role") || role.equals("restWaiter2Role")) {
 			if (j instanceof RestWaiterRole) {
 				RestWaiterRole rW = (RestWaiterRole)j;
 				buildingGui.addRestWaiter(rW);

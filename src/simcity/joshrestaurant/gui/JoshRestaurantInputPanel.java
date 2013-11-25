@@ -1,11 +1,12 @@
 package simcity.joshrestaurant.gui;
 
+import simcity.joshrestaurant.JoshSharedDataWaiterRole;
+import simcity.joshrestaurant.RevolvingStandMonitor;
 import simcity.joshrestaurant.JoshCustomerRole;
 import simcity.joshrestaurant.JoshHostRole;
 import simcity.joshrestaurant.JoshWaiterRole;
 import simcity.joshrestaurant.JoshCookRole;
 import simcity.joshrestaurant.JoshCashierRole;
-import simcity.joshrestaurant.JoshWaiterRole.CustomerState;
 import simcity.market.MarketCashierRole;
 
 import javax.swing.*;
@@ -25,6 +26,7 @@ public class JoshRestaurantInputPanel extends JPanel
     private JoshHostRole host;
     private JoshCookRole cook;
     private JoshCashierRole cashier;
+    private RevolvingStandMonitor stand = new RevolvingStandMonitor();
     private Vector<MyCustomer> customers = new Vector<MyCustomer>();
     private Vector<JoshWaiterRole> waiters = new Vector<JoshWaiterRole>();
     private Vector<MarketCashierRole> markets = new Vector<MarketCashierRole>();
@@ -54,6 +56,7 @@ public class JoshRestaurantInputPanel extends JPanel
 		cook.addMarket(markets.get(1));
 		cook.addMarket(markets.get(2));
 		cook.setHost(host);
+		cook.setStand(stand);
         
 		cookGui = new JoshCookGui(cook);
 		animationPanel.addGui(cookGui);
@@ -102,7 +105,12 @@ public class JoshRestaurantInputPanel extends JPanel
 		customers.add(new MyCustomer(c));
     }
     
-    public void addWaiter(JoshWaiterRole w) {	
+    public void addWaiter(JoshWaiterRole w) {
+    	if (w instanceof JoshSharedDataWaiterRole) {
+    		JoshSharedDataWaiterRole waiter = (JoshSharedDataWaiterRole)w;
+    		waiter.setStand(stand);
+    	}
+    	
 		JoshWaiterGui g = new JoshWaiterGui(w, this, waiters.size()+1);
 		animationPanel.addGui(g);
  		w.setHost(host);

@@ -26,6 +26,8 @@ public class JoshCookRole extends RestCookRole {
 	private Timer timer = new Timer();
 	private boolean orderedItems;
 	private JoshCookGui cookGui;
+	private RevolvingStandMonitor stand;
+	
 	private boolean working;
 	private String location = "joshRestaurant";
 	
@@ -35,9 +37,7 @@ public class JoshCookRole extends RestCookRole {
 	Food pizza = new Food("pizza", 10, 3, 3, 1);
 	
 	public Map<String, Food> foods = new HashMap<String, Food>();
-	
-	public enum OrderState
-	{Pending, Cooking, Done, Finished};
+
 	public enum FoodState
 	{Enough, MustBeOrdered, Ordered, WaitingForOrder, ReceivedOrder};
 
@@ -71,6 +71,10 @@ public class JoshCookRole extends RestCookRole {
 	
 	public void setHost(JoshHostRole h) {
 		host = h;
+	}
+	
+	public void setStand(RevolvingStandMonitor s) {
+		stand = s;
 	}
 	
 	public void setCashier(JoshCashierRole c) {
@@ -171,16 +175,22 @@ public class JoshCookRole extends RestCookRole {
 			return false;
 		}
 
+		retrieveOrderFromStand();
 		return false;
-		//we have tried all our rules and found
-		//nothing to do. So return false to main loop of abstract agent
-		//and wait.
 	}
 
 	// Actions
 	
 	private void leaveRestaurant() {
 		person.msgLeftDestination(this);
+	}
+	
+	private void retrieveOrderFromStand() {
+		Order order = stand.remove();
+		if (order != null) {
+			print("Picking up order from stand");
+			orders.add(order);
+		}
 	}
 
 	private void cookIt(Order o) {
@@ -261,44 +271,6 @@ public class JoshCookRole extends RestCookRole {
 		
 		public void incrementOrderedFrom() {
 			orderedFrom++;
-		}
-	}
-
-	private class Order {
-		JoshWaiterRole waiter;
-		int table;
-		private OrderState state;
-		String choice;
-
-		Order(JoshWaiterRole w, String c, int t, OrderState s) {
-			waiter = w;
-			choice = c;
-			table = t;
-			state = s;
-		}
-
-		JoshWaiterRole getWaiter() {
-			return waiter;
-		}
-		
-		public int getTable() {
-			return table;
-		}
-		
-		OrderState getState() {
-			return state;
-		}
-		
-		void setState(OrderState s) {
-			state = s;
-		}
-		
-		String getChoice() {
-			return choice;
-		}
-		
-		void setChoice(String c) {
-			choice = c;
 		}
 	}
 	

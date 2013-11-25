@@ -19,6 +19,8 @@ import simcity.joshrestaurant.JoshHostRole;
 import simcity.joshrestaurant.JoshCustomerRole;
 import simcity.joshrestaurant.JoshCookRole;
 import simcity.joshrestaurant.JoshWaiterRole;
+import simcity.joshrestaurant.JoshNormalWaiterRole;
+import simcity.joshrestaurant.JoshSharedDataWaiterRole;
 /*import simcity.anjalirestaurant.AnjaliCashierRole;
 import simcity.anjalirestaurant.AnjaliHostRole;
 import simcity.anjalirestaurant.AnjaliCustomerRole;
@@ -287,8 +289,8 @@ public class CityDirectory
 			return pickRestCook();
 		case "restHostRole":
 			return pickRestHost();
-		case "restWaiterRole":
-			return addRestWaiter();
+		case "restWaiter1Role": case "restWaiter2Role":
+			return addRestWaiter(role);
 		default:
 			LandlordRole la = new LandlordRole();
 			la.setJobLocation("home");
@@ -348,7 +350,7 @@ public class CityDirectory
 		bank1Tellers.add(t);
 	}
 	
-	public RestWaiterRole addRestWaiter() {
+	public RestWaiterRole addRestWaiter(String role) {
 		/*int num1 = getNumPeople("restWaiterRole","joshRestaurant");
 		int num2 = getNumPeople("restWaiterRole","cherysRestaurant");
 		int num3 = getNumPeople("restWaiterRole","anjaliRestaurant");
@@ -368,10 +370,17 @@ public class CityDirectory
 			num = num5;
 		}*/
 		//if (num == num1) {
-			JoshWaiterRole w = new JoshWaiterRole();
-			w.setJobLocation("joshRestaurant");
-			joshWaiters.add(w);
-			return w;
+			if (role.equals("restWaiter1Role")) {
+				JoshNormalWaiterRole w = new JoshNormalWaiterRole();
+				w.setJobLocation("joshRestaurant");
+				joshWaiters.add(w);
+				return w;
+			} else {
+				JoshSharedDataWaiterRole w = new JoshSharedDataWaiterRole();
+				w.setJobLocation("joshRestaurant");
+				joshWaiters.add(w);
+				return w;
+			}
 		/*} else if (num == num2) {
 			CherysWaiterRole w = new CherysWaiterRole();
 			cherysWaiters.add(w);
