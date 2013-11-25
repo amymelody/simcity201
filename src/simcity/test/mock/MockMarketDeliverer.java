@@ -5,8 +5,9 @@ import java.util.Collections;
 import java.util.List;
 
 import simcity.interfaces.MarketCashier;
-import simcity.interfaces.MarketCustomer;
 import simcity.interfaces.MarketDeliverer;
+import simcity.interfaces.RestCashier;
+import simcity.interfaces.RestCook;
 import simcity.market.Order;
 import simcity.mock.LoggedEvent;
 import simcity.mock.Mock;
@@ -17,7 +18,8 @@ public class MockMarketDeliverer extends Mock implements MarketDeliverer {
 	 * References for unit testing
 	 */
 	public MarketCashier cashier;
-	public MarketCustomer customer;
+	public RestCashier rCashier;
+	public RestCook rCook;
 	public List<Order> orders =  Collections.synchronizedList(new ArrayList<Order>());
 	public String name;
 
@@ -34,7 +36,7 @@ public class MockMarketDeliverer extends Mock implements MarketDeliverer {
 	}
 
 	@Override
-	public void msgPayment(MarketCustomer c, int money) {
+	public void msgPayment(RestCashier c, int money) {
 		log.add(new LoggedEvent("Received payment"));
 	}
 

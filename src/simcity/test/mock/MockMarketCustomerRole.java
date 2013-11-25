@@ -3,7 +3,9 @@ package simcity.test.mock;
 import simcity.interfaces.MarketCustomer;
 import simcity.mock.LoggedEvent;
 import simcity.role.Role;
+
 import java.util.*;
+
 import simcity.ItemOrder;
 
 public class MockMarketCustomerRole extends Role implements MarketCustomer {
@@ -37,6 +39,25 @@ public class MockMarketCustomerRole extends Role implements MarketCustomer {
 	
 	public String toString() {
 		return "customer " + getName();
+	}
+
+	@Override
+	public void msgHereIsWhatICanFulfill(List<ItemOrder> orders,
+			boolean canFulfill) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void msgHereAreItemsandPrice(List<ItemOrder> i, int price) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void msgThankYou(int change) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

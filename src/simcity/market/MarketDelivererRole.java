@@ -5,14 +5,13 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Semaphore;
 
-import simcity.role.Role;
 import simcity.ItemOrder;
 import simcity.PersonAgent;
 import simcity.interfaces.MarketCashier;
 import simcity.interfaces.MarketCustomer;
 import simcity.interfaces.MarketDeliverer;
+import simcity.interfaces.RestCashier;
 import simcity.market.Order.OrderState;
-import simcity.market.gui.MarketCustomerGui;
 import simcity.market.gui.MarketDelivererGui;
 import simcity.role.JobRole;
 
@@ -91,7 +90,7 @@ public class MarketDelivererRole extends JobRole implements MarketDeliverer {
 		orders.add(o);
 		//stateChanged();
 	}
-	public void msgPayment(MarketCustomer c, int money) {
+	public void msgPayment(RestCashier c, int money) {
 		synchronized(orders) {
 			for(Order o: orders) {
 				if(o.customer.equals(c)) {
