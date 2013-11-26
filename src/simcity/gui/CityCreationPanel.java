@@ -249,7 +249,7 @@ public class CityCreationPanel extends JPanel implements ActionListener
 			System.out.println(pI.physical);
 			System.out.println(pI.housing);
 			System.out.println(pI.car);*/
-			inputPanel.addPerson(pI.name, pI.job, money, pI.start, pI.end, pI.eco, pI.physical, car, cityDirectory);
+			inputPanel.addPerson(pI.name, pI.job, money, pI.start, pI.end, pI.eco, pI.physical, pI.housing, car, cityDirectory);
 		}
 	}
 

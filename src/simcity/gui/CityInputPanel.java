@@ -94,7 +94,7 @@ public class CityInputPanel extends JPanel implements ActionListener
     	
     }
     
-    public void addPerson(String name, String job, int pay, int startShift, int endShift, String eco, String physical, boolean car, CityDirectory c) 
+    public void addPerson(String name, String job, int pay, int startShift, int endShift, String eco, String physical, String housing, boolean car, CityDirectory c) 
     {
 		PersonAgent p = new PersonAgent(name);
 		PersonGui g = new PersonGui(p, gui);
@@ -131,6 +131,7 @@ public class CityInputPanel extends JPanel implements ActionListener
 //			p.msgBoughtCar(tempCar);
 		}
 		people.add(p);
+		cityDirectory.addPerson(p, p.getJobLocation(), housing);
 		p.startThread();
 				
         JButton temp = new JButton(name);

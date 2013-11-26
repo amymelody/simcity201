@@ -43,8 +43,7 @@ public class CityGui extends JFrame
 	public CityGui(CityDirectory cd)
 	{		
 		animationPanel = new CityAnimationPanel(this);
-		inputPanel = new CityInputPanel(this, cd, null);
-
+		
 		// creation of buildings
 		MarketGui market1 = new MarketGui("Market 1", this, cd);
 		animationPanel.addBuilding(market1);
@@ -92,8 +91,8 @@ public class CityGui extends JFrame
 		animationPanel.addBuilding(apartment27);
 		HousingGui apartment28 = new HousingGui("Apartment 2-8", this, cd);
 		animationPanel.addBuilding(apartment28);
-		//JoshRestaurantGui joshRestaurant = new JoshRestaurantGui("Josh's Restaurant", this, cd);
-		//animationPanel.addBuilding(joshRestaurant);
+		JoshRestaurantGui joshRestaurant = new JoshRestaurantGui("Josh's Restaurant", this, cd);
+		animationPanel.addBuilding(joshRestaurant);
 		//CherysRestaurantGui cherysRestaurant = new CherysRestaurantGui("Cherys's Restaurant", this, cd);
 		//animationPanel.addBuilding(cherysRestaurant);
 		//AnjaliRestaurantGui anjaliRestaurant = new AnjaliRestaurantGui("Anjali's Restaurant", this, cd);
@@ -102,6 +101,8 @@ public class CityGui extends JFrame
 		//animationPanel.addBuilding(alfredRestaurant);
 		//JesusRestaurantGui jesusRestaurant = new JesusRestaurantGui("Jesus's Restaurant", this, cd);
 		//animationPanel.addBuilding(jesusRestaurant);
+		
+		inputPanel = new CityInputPanel(this, cd, null);
 
 		setBounds(BUFFERSIDE, BUFFERTOP, WINDOWX, WINDOWY);
 		BorderLayout frameLayout = new BorderLayout();
@@ -128,37 +129,13 @@ public class CityGui extends JFrame
 		animationPanel.addGui(g);
 	}
 
-	/*public void addRestCustomer(RestCustomerRole c) {
-		synchronized(buildings) {
-			for(BuildingGui bG: buildings) {
-				if(bG.getName().equals("Josh's Restaurant")) {
-					JoshRestaurantGui g = (JoshRestaurantGui)bG;
-					if (c instanceof JoshCustomerRole) {
-						JoshCustomerRole jC = (JoshCustomerRole)(c);
-						g.addCustomer(jC);
-					}
-				}
-			}
-		}
+	public void addRestCustomer(RestCustomerRole c) {
+		animationPanel.addRestCustomer(c);
 	}
 
 	public void addRestWaiter(RestWaiterRole w) {
-		synchronized(buildings) {
-			for(BuildingGui bG: buildings) {
-				if(bG.getName().equals("Josh's Restaurant")) {
-					JoshRestaurantGui g = (JoshRestaurantGui)bG;
-					if (w instanceof JoshNormalWaiterRole) {
-						JoshNormalWaiterRole jW = (JoshNormalWaiterRole)(w);
-						g.addWaiter(jW);
-					}
-					if (w instanceof JoshSharedDataWaiterRole) {
-						JoshSharedDataWaiterRole jW = (JoshSharedDataWaiterRole)(w);
-						g.addWaiter(jW);
-					}
-				}
-			}
-		}
-	}*/
+		animationPanel.addRestWaiter(w);
+	}
 
 	public void changeView() {
 		if(animationPanel.isVisible()) {

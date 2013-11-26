@@ -44,8 +44,8 @@ import simcity.alfredrestaurant.AlfredWaiterRole;*/
 
 public class CityDirectory
 {
-	Map<Integer, PersonInfo> personMap;
-	Map<String, BuildingInfo> buildingMap;
+	Map<Integer, PersonInfo> personMap = new HashMap<Integer, PersonInfo>();
+	Map<String, BuildingInfo> buildingMap = new HashMap<String, BuildingInfo>();
 	private List<TrafficNode> trafficNodes = new ArrayList<TrafficNode>();
 	
 	//All job roles in the city
@@ -66,8 +66,26 @@ public class CityDirectory
 	private JoshCookRole joshCook = new JoshCookRole();
 	private JoshHostRole joshHost = new JoshHostRole();
 	
-	private static final int joshRestaurantX = 355;
-	private static final int joshRestaurantY = 290;
+	private static final int house1X = 70;
+	private static final int house1Y = 180;
+	private static final int house2X = 100;
+	private static final int house2Y = 70;
+	private static final int house3X = 210;
+	private static final int house3Y = 100;
+	private static final int market1X = 280;
+	private static final int market1Y = 280;
+	private static final int market2X = 210;
+	private static final int market2Y = 280;
+	private static final int market3X = 70;
+	private static final int market3Y = 420;
+	private static final int bankX = 190;
+	private static final int bankY = 210;
+	private static final int apartment1X = 300;
+	private static final int apartment1Y = 70;
+	private static final int apartment2X = 400;
+	private static final int apartment2Y = 70;
+	private static final int joshRestaurantX = 420;
+	private static final int joshRestaurantY = 280;
 	
 	class PersonInfo
 	{
@@ -141,12 +159,12 @@ public class CityDirectory
 				type = "housing";
 				residential = new HousingInfo("house", 6);
 			}
-			else if(n == "apartment10" || n == "apartment11" || n == "apartment12" || n == "apartment13" || n == "apartment14" || n == "apartment15")
+			else if(n == "apartment1" || n == "apartment10" || n == "apartment11" || n == "apartment12" || n == "apartment13" || n == "apartment14" || n == "apartment15")
 			{
 				type = "housing";
 				residential = new HousingInfo("apartment", 1);
 			}
-			else if(n == "apartment20" || n == "apartment21" || n == "apartment22" || n == "apartment23" || n == "apartment24" || n == "apartment25")
+			else if(n == "apartment2" || n == "apartment20" || n == "apartment21" || n == "apartment22" || n == "apartment23" || n == "apartment24" || n == "apartment25")
 			{
 				type = "housing";
 				residential = new HousingInfo("apartment", 2);
@@ -167,7 +185,7 @@ public class CityDirectory
 		String type;
 		int number;
 		int landlordID = -1;
-		int residentID;
+		int residentID = -1;
 		HousingInfo(String t, int n)
 		{
 			type = t;
@@ -203,8 +221,6 @@ public class CityDirectory
 	
 	public CityDirectory()
 	{
-		personMap = new HashMap<Integer, PersonInfo>();
-		buildingMap = new HashMap<String, BuildingInfo>();
 		apartment1ResIDs = new ArrayList<Integer>();
 		apartment2ResIDs = new ArrayList<Integer>();
 		
@@ -216,8 +232,31 @@ public class CityDirectory
 		joshCook.setJobLocation("joshRestaurant");
 		joshHost.setJobLocation("joshRestaurant");
 		
-		buildingMap.put("joshRestaurant", new BuildingInfo("joshRestaurant", "horizontal", new Point(joshRestaurantX, joshRestaurantY)));
+		//add Buildings
+		addBuilding("house1", "vertical", new Point(house1X, house1Y));
+		addBuilding("house2", "horizontal", new Point(house2X, house2Y));
+		addBuilding("house3", "vertical", new Point(house3X, house3Y));
+		addBuilding("market1", "vertical", new Point(market1X, market1Y));
+		addBuilding("market2", "vertical", new Point(market2X, market2Y));
+		addBuilding("market3", "vertical", new Point(market3X, market3Y));
+		addBuilding("apartment1", "horizontal", new Point(apartment1X, apartment1Y));
+		addBuilding("apartment10", "horizontal", new Point(apartment1X, apartment1Y));
+		addBuilding("apartment11", "horizontal", new Point(apartment1X, apartment1Y));
+		addBuilding("apartment12", "horizontal", new Point(apartment1X, apartment1Y));
+		addBuilding("apartment13", "horizontal", new Point(apartment1X, apartment1Y));
+		addBuilding("apartment14", "horizontal", new Point(apartment1X, apartment1Y));
+		addBuilding("apartment15", "horizontal", new Point(apartment1X, apartment1Y));
+		addBuilding("apartment2", "horizontal", new Point(apartment2X, apartment2Y));
+		addBuilding("apartment20", "horizontal", new Point(apartment2X, apartment2Y));
+		addBuilding("apartment21", "horizontal", new Point(apartment2X, apartment2Y));
+		addBuilding("apartment22", "horizontal", new Point(apartment2X, apartment2Y));
+		addBuilding("apartment23", "horizontal", new Point(apartment2X, apartment2Y));
+		addBuilding("apartment24", "horizontal", new Point(apartment2X, apartment2Y));
+		addBuilding("apartment25", "horizontal", new Point(apartment2X, apartment2Y));
+		addBuilding("bank", "horizontal", new Point(bankX, bankY));
+		addBuilding("joshRestaurant", "horizontal", new Point(joshRestaurantX, joshRestaurantY));
 	
+		//add Traffic Nodes
 		trafficNodes.add(new TrafficNode(0,0));
 		trafficNodes.add(new TrafficNode(70,0));
 		trafficNodes.add(new TrafficNode(210,0));
@@ -581,7 +620,113 @@ public class CityDirectory
 	}
 	public void addPerson(PersonAgent p, String jobB, String homeB)
 	{
-		personMap.put(personMap.size(), new PersonInfo(personMap.size(), p, jobB, homeB));
+		String housing;
+		if (homeB.equals("owner")) {
+			int num1 = getNumPeople("residentRole", "house1");
+			int num2 = getNumPeople("residentRole", "house2");
+			int num3 = getNumPeople("residentRole", "house3");
+			int num = num1;
+			if (num > num2) {
+				num = num2;
+			}
+			if (num > num3) {
+				num = num3;
+			}
+			if (num == num1) {
+				housing = "house1";
+			}
+			if (num == num1) {
+				housing = "house2";
+			}
+			else {
+				housing = "house3";
+			}
+		} else {
+			int num1 = getNumPeople("residentRole", "apartment10");
+			int num2 = getNumPeople("residentRole", "apartment11");
+			int num3 = getNumPeople("residentRole", "apartment12");
+			int num4 = getNumPeople("residentRole", "apartment13");
+			int num5 = getNumPeople("residentRole", "apartment14");
+			int num6 = getNumPeople("residentRole", "apartment15");
+			int num7 = getNumPeople("residentRole", "apartment20");
+			int num8 = getNumPeople("residentRole", "apartment21");
+			int num9 = getNumPeople("residentRole", "apartment22");
+			int num10 = getNumPeople("residentRole", "apartment23");
+			int num11 = getNumPeople("residentRole", "apartment24");
+			int num12 = getNumPeople("residentRole", "apartment25");
+			int num = num1;
+			if (num > num2) {
+				num = num2;
+			}
+			if (num > num3) {
+				num = num3;
+			}
+			if (num > num4) {
+				num = num4;
+			}
+			if (num > num5) {
+				num = num5;
+			}
+			if (num > num6) {
+				num = num6;
+			}
+			if (num > num7) {
+				num = num7;
+			}
+			if (num > num8) {
+				num = num8;
+			}
+			if (num > num9) {
+				num = num9;
+			}
+			if (num > num10) {
+				num = num10;
+			}
+			if (num > num11) {
+				num = num11;
+			}
+			if (num > num12) {
+				num = num12;
+			}
+			if (num == num1) {
+				housing = "apartment10";
+			}
+			if (num == num2) {
+				housing = "apartment11";
+			}
+			if (num == num3) {
+				housing = "apartment12";
+			}
+			if (num == num4) {
+				housing = "apartment13";
+			}
+			if (num == num5) {
+				housing = "apartment14";
+			}
+			if (num == num6) {
+				housing = "apartment15";
+			}
+			if (num == num7) {
+				housing = "apartment20";
+			}
+			if (num == num8) {
+				housing = "apartment21";
+			}
+			if (num == num9) {
+				housing = "apartment22";
+			}
+			if (num == num10) {
+				housing = "apartment23";
+			}
+			if (num == num11) {
+				housing = "apartment24";
+			}
+			else {
+				housing = "apartment25";
+			}
+		}
+		p.setHome(housing);
+		personMap.put(personMap.size(), new PersonInfo(personMap.size(), p, jobB, housing));
 	}
 	
 	public int getNumPeople(String role, String building)
@@ -590,17 +735,28 @@ public class CityDirectory
 		{
 			if(buildingMap.get(building).residential.type.equals("apartment"))
 			{
-				if(buildingMap.get(building).residential.number == 1)
+				if(building.equals("apartment1"))
 				{
 					return apartment1ResIDs.size();
 				}
-				if(buildingMap.get(building).residential.number == 2)
+				if(building.equals("apartment2"))
 				{
 					return apartment2ResIDs.size();
 				}
+				if (buildingMap.get(building).residential.residentID == -1) {
+					return 0;
+				}
+				return 1;
+			}
+			if(buildingMap.get(building).residential.type.equals("housing"))
+			{
+				if (buildingMap.get(building).residential.residentID == -1) {
+					return 0;
+				}
+				return 1;
 			}
 		}
-		if(role.equals(market)) //in progress
+		//if(role.equals(market)) //in progress
 		return 0;
 	}
 	

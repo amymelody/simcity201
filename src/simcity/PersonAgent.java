@@ -112,8 +112,20 @@ public class PersonAgent extends Agent implements Person
 		gui = g;
 	}
 	
+	public void setHome(String home) {
+		houses.get(0).location = home;
+	}
+	
+	public void setOwnerHome(String home) {
+		houses.get(1).location = home;
+	}
+	
 	public String getName() {
 		return name;
+	}
+	
+	public String getJobLocation() {
+		return job.location;
 	}
 	
 	public int getMoney() {
@@ -844,7 +856,7 @@ public class PersonAgent extends Agent implements Person
 				case "ownerHouse":
 					jobLocation = LocationState.ownerHouse;
 					break;
-				case "bank":
+				case "bank1":
 					jobLocation = LocationState.bank;
 					break;
 				default:
@@ -852,16 +864,6 @@ public class PersonAgent extends Agent implements Person
 			}
 			this.startShifts = startShifts;
 			this.endShifts = endShifts;
-			/*Day tempDay = Day.Sun;
-			for (Time t : startShifts.values()) {
-				this.startShifts.put(tempDay, t);
-				tempDay = tempDay.next();
-			}
-			tempDay = Day.Sun;
-			for (Time t : endShifts.values()) {
-				this.endShifts.put(tempDay, t);
-				tempDay = tempDay.next();
-			}*/
 		}
 		String role;
 		LocationState jobLocation;

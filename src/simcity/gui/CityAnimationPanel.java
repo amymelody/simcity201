@@ -3,7 +3,14 @@ package simcity.gui;
 import javax.swing.*;
 import javax.swing.Timer;
 
+import simcity.PersonAgent;
+import simcity.RestCustomerRole;
+import simcity.joshrestaurant.JoshCustomerRole;
 import simcity.market.gui.MarketCustomerGui;
+import simcity.joshrestaurant.gui.JoshRestaurantGui;
+import simcity.RestWaiterRole;
+import simcity.joshrestaurant.JoshNormalWaiterRole;
+import simcity.joshrestaurant.JoshSharedDataWaiterRole;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -72,6 +79,38 @@ public class CityAnimationPanel extends JPanel implements ActionListener, MouseL
 	
 	public void addBuilding(BuildingGui bG) {
 		buildings.add(bG);
+	}
+	
+	public void addRestCustomer(RestCustomerRole c) {
+		synchronized(buildings) {
+			for(BuildingGui bG: buildings) {
+				if(bG.getName().equals("Josh's Restaurant")) {
+					JoshRestaurantGui g = (JoshRestaurantGui)bG;
+					if (c instanceof JoshCustomerRole) {
+						JoshCustomerRole jC = (JoshCustomerRole)(c);
+						g.addCustomer(jC);
+					}
+				}
+			}
+		}
+	}
+	
+	public void addRestWaiter(RestWaiterRole w) {
+		synchronized(buildings) {
+			for(BuildingGui bG: buildings) {
+				if(bG.getName().equals("Josh's Restaurant")) {
+					JoshRestaurantGui g = (JoshRestaurantGui)bG;
+					if (w instanceof JoshNormalWaiterRole) {
+						JoshNormalWaiterRole jW = (JoshNormalWaiterRole)(w);
+						g.addWaiter(jW);
+					}
+					if (w instanceof JoshSharedDataWaiterRole) {
+						JoshSharedDataWaiterRole jW = (JoshSharedDataWaiterRole)(w);
+						g.addWaiter(jW);
+					}
+				}
+			}
+		}
 	}
 	
 	@Override
