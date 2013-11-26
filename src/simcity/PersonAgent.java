@@ -8,6 +8,7 @@ import simcity.agent.Agent;
 import simcity.gui.PersonGui;
 import simcity.CityDirectory;
 import simcity.gui.CityGui;
+import simcity.interfaces.Person;
 import simcity.interfaces.RestCustomer;
 import simcity.interfaces.MarketCustomer;
 import simcity.interfaces.Resident;
@@ -26,7 +27,7 @@ import simcity.role.JobRole;
 import java.util.*;
 import java.util.concurrent.Semaphore;
 
-public class PersonAgent extends Agent 
+public class PersonAgent extends Agent implements Person
 {
 	private int money;
 	private int maxBalance;
@@ -195,7 +196,7 @@ public class PersonAgent extends Agent
 	}
 	
 	private boolean wantToGoToRestaurant() {
-		if (state.ps == PhysicalState.fit) {
+		/*if (state.ps == PhysicalState.fit) {
 			return false;
 		}
 		if (state.ps == PhysicalState.average){
@@ -204,7 +205,7 @@ public class PersonAgent extends Agent
 				return true;
 			}
 			return false;
-		}
+		}*/
 		return true;
 	}
 	
@@ -765,13 +766,13 @@ public class PersonAgent extends Agent
 			} else {*/
 				state.ts = TransportationState.walking;
 				destination = d;
-				/*gui.DoGoToDestination(city.getBuildingEntrance(d)); //just walk there
+				gui.DoGoToDestination(city.getBuildingEntrance(d)); //just walk there
 				try {
 					atDestination.acquire();
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-				}*/
+				}
 				state.ls = LocationState.atDestination;
 			//}
 		//}
