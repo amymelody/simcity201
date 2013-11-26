@@ -4,6 +4,7 @@ import javax.swing.*;
 
 import simcity.CityDirectory;
 import simcity.gui.BuildingGui;
+import simcity.gui.BuildingsGui;
 import simcity.gui.CityGui;
 import simcity.bank.gui.BankAnimationPanel;
 import simcity.bank.gui.BankInputPanel;
@@ -27,9 +28,9 @@ public class BankGui extends BuildingGui
 	/**
 	 * Constructor
 	 */
-	public BankGui(String n, CityGui cG, CityDirectory cD)
+	public BankGui(String n, BuildingsGui bG, CityDirectory cD)
 	{
-		super(n, cG, cD);
+		super(n, bG, cD);
 		
 		animationPanel = new BankAnimationPanel();
 		inputPanel = new BankInputPanel(n);
@@ -41,7 +42,7 @@ public class BankGui extends BuildingGui
 		inputPanel.setMinimumSize(inputDim);
 		inputPanel.setMaximumSize(inputDim);
 		inputPanel.setVisible(false);
-		cG.add(inputPanel);
+		bG.add(inputPanel);
 
 		//animation panel
 		double animationFractionOfWindow = 500 / 650;
@@ -50,24 +51,12 @@ public class BankGui extends BuildingGui
 		animationPanel.setMinimumSize(animDim);
 		animationPanel.setMaximumSize(animDim);
 		animationPanel.setVisible(false);
-		cG.add(animationPanel);
-	}
-	
-	public void setVisible(boolean visible) {
-		if(visible) {
-			animationPanel.setVisible(true);
-			inputPanel.setVisible(true);
-		}
-		else {
-			animationPanel.setVisible(false);
-			inputPanel.setVisible(false);
-		}
+		bG.add(animationPanel);
 	}
 
-	@Override
 	public void changeView(boolean visible) {
-		// TODO Auto-generated method stub
-		
+		animationPanel.setVisible(visible);
+		inputPanel.setVisible(visible);
 	}
 	
 }

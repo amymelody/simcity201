@@ -44,64 +44,6 @@ public class CityGui extends JFrame
 	{		
 		animationPanel = new CityAnimationPanel(this);
 
-		// creation of buildings
-		MarketGui market1 = new MarketGui("Market 1", this, cd);
-		animationPanel.addBuilding(market1);
-		MarketGui market2 = new MarketGui("Market 2", this, cd);
-		animationPanel.addBuilding(market2);
-		MarketGui market3 = new MarketGui("Market 3", this, cd);
-		animationPanel.addBuilding(market3);
-		BankGui bank = new BankGui("Bank", this, cd);
-		animationPanel.addBuilding(bank);
-		HousingGui house1 = new HousingGui("House 1", this, cd);
-		animationPanel.addBuilding(house1);
-		HousingGui house2 = new HousingGui("House 2", this, cd);
-		animationPanel.addBuilding(house2);
-		HousingGui house3 = new HousingGui("House 3", this, cd);
-		animationPanel.addBuilding(house3);
-		HousingGui apartment11 = new HousingGui("Apartment 1-1", this, cd);
-		animationPanel.addBuilding(apartment11);
-		HousingGui apartment12 = new HousingGui("Apartment 1-2", this, cd);
-		animationPanel.addBuilding(apartment12);
-		HousingGui apartment13 = new HousingGui("Apartment 1-3", this, cd);
-		animationPanel.addBuilding(apartment13);
-		HousingGui apartment14 = new HousingGui("Apartment 1-4", this, cd);
-		animationPanel.addBuilding(apartment14);
-		HousingGui apartment15 = new HousingGui("Apartment 1-5", this, cd);
-		animationPanel.addBuilding(apartment15);
-		HousingGui apartment16 = new HousingGui("Apartment 1-6", this, cd);
-		animationPanel.addBuilding(apartment16);
-		HousingGui apartment17 = new HousingGui("Apartment 1-7", this, cd);
-		animationPanel.addBuilding(apartment17);
-		HousingGui apartment18 = new HousingGui("Apartment 1-8", this, cd);
-		animationPanel.addBuilding(apartment18);
-		HousingGui apartment21 = new HousingGui("Apartment 2-1", this, cd);
-		animationPanel.addBuilding(apartment21);
-		HousingGui apartment22 = new HousingGui("Apartment 2-2", this, cd);
-		animationPanel.addBuilding(apartment22);
-		HousingGui apartment23 = new HousingGui("Apartment 2-3", this, cd);
-		animationPanel.addBuilding(apartment23);
-		HousingGui apartment24 = new HousingGui("Apartment 2-4", this, cd);
-		animationPanel.addBuilding(apartment24);
-		HousingGui apartment25 = new HousingGui("Apartment 2-5", this, cd);
-		animationPanel.addBuilding(apartment25);
-		HousingGui apartment26 = new HousingGui("Apartment 2-6", this, cd);
-		animationPanel.addBuilding(apartment26);
-		HousingGui apartment27 = new HousingGui("Apartment 2-7", this, cd);
-		animationPanel.addBuilding(apartment27);
-		HousingGui apartment28 = new HousingGui("Apartment 2-8", this, cd);
-		animationPanel.addBuilding(apartment28);
-		//JoshRestaurantGui joshRestaurant = new JoshRestaurantGui("Josh's Restaurant", this, cd);
-		//animationPanel.addBuilding(joshRestaurant);
-		//CherysRestaurantGui cherysRestaurant = new CherysRestaurantGui("Cherys's Restaurant", this, cd);
-		//animationPanel.addBuilding(cherysRestaurant);
-		//AnjaliRestaurantGui anjaliRestaurant = new AnjaliRestaurantGui("Anjali's Restaurant", this, cd);
-		//animationPanel.addBuilding(anjaliRestaurant);
-		//AlfredRestaurantGui alfredRestaurant = new AlfredRestaurantGui("Alfred's Restaurant", this, cd);
-		//animationPanel.addBuilding(alfredRestaurant);
-		//JesusRestaurantGui jesusRestaurant = new JesusRestaurantGui("Jesus's Restaurant", this, cd);
-		//animationPanel.addBuilding(jesusRestaurant);
-
 		inputPanel = new CityInputPanel(this, cd, null);
 
 		setBounds(BUFFERSIDE, BUFFERTOP, WINDOWX, WINDOWY);
