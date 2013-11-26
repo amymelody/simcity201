@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.concurrent.Semaphore;
 
 import simcity.bank.gui.BankDepositorGui;
+import simcity.bank.gui.BankGui;
 import simcity.bank.interfaces.BankDepositor;
 import simcity.bank.interfaces.BankManager;
 import simcity.bank.interfaces.BankTeller;
@@ -60,6 +61,7 @@ public class BankDepositorRole extends Role implements BankDepositor{
 	
 	/* Messages */
 	public void msgMakeDeposit(int cash){
+		Do("Person taking on role of bank depositor");
 		cS = CustomerState.makingTransaction;
 		transactionAmount = cash;
 		stateChanged();
@@ -67,11 +69,13 @@ public class BankDepositorRole extends Role implements BankDepositor{
 	
 	
 	public void msgMakeWithdrawal(int cash){
+		Do("Person taking on role of bank withdrawer");
 		cS = CustomerState.makingTransaction;
 		transactionAmount = 0-cash;
 		stateChanged();
 	}
 	public void msgMakeRequest(BankTeller t){
+		Do("Bank customer received message from teller to make a request");
 		this.teller = t;
 		if(transactionAmount < 0){
 			cS = CustomerState.makingWithdrawal;
@@ -83,9 +87,12 @@ public class BankDepositorRole extends Role implements BankDepositor{
 	}
 	
 	public void msgCannotMakeTransaction(){
-		//Not enough money in account for transaction
+		Do("Bank customer does not have enough money to make request. Please come back later.");
+		cS = CustomerState.leaving;
+		stateChanged();
 	}
 	public void msgTransactionComplete(){
+		Do("Bank customer received confirmation that his transaction is complete");
 		cS = CustomerState.leaving;
 		stateChanged();
 	}
@@ -116,7 +123,10 @@ public class BankDepositorRole extends Role implements BankDepositor{
 			MakeDeposit();
 			return true;
 		}
-		
+		if(cS == CustomerState.leaving){
+			Leaving();
+			return true;
+		}
 		return false;
 	}
 	
@@ -124,6 +134,7 @@ public class BankDepositorRole extends Role implements BankDepositor{
 	//Actions
 	
 	public void MakeTransaction(){
+		Do("Bank customer is going to manager");
 		DoGoToManager();
 		try {
 			customerAnimation.acquire();
@@ -154,6 +165,7 @@ public class BankDepositorRole extends Role implements BankDepositor{
 		cS = CustomerState.beingHelped;
 	}
 	public void Leaving(){
+		Do("Goodbye.");
 		DoLeaveBank();
 		try {
 			customerAnimation.acquire();
@@ -175,6 +187,14 @@ private void DoGoToTeller(){
 
 private void DoLeaveBank(){
 	gui.ExitBank();
+}
+public BankDepositorGui getGui() {
+
+	return gui;
+}
+
+public void setBankGui(BankGui g){
+	gui.setGui(g);
 }
 }
 	

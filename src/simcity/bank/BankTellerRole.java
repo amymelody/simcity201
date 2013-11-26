@@ -10,8 +10,11 @@ package simcity.bank;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.Semaphore;
 
 import simcity.PersonAgent;
+import simcity.bank.gui.BankGui;
+import simcity.bank.gui.BankTellerGui;
 import simcity.bank.interfaces.BankDepositor;
 import simcity.bank.interfaces.BankManager;
 import simcity.bank.interfaces.BankTeller;
@@ -71,7 +74,8 @@ public class BankTellerRole extends JobRole implements BankTeller   {
 		this.manager = manager;
 	}
 
-
+	private Semaphore tellerAnimation = new Semaphore(0,true);
+	BankTellerGui gui;
 
 ////MESSAGES/////
 
@@ -85,11 +89,13 @@ public class BankTellerRole extends JobRole implements BankTeller   {
 		person.msgEndShift();
 	}
 public void msgHelpCustomer(BankDepositor c, int cash){
+	Do("Teller is assigned to customer");
 	customers.add(new myCustomer(c, CustomerState.waitingForTeller, cash));
 	stateChanged();
 }
 
 public void msgMakeWithdrawal(BankDepositor c, int transaction){
+	Do("Teller is processing withdrawal");
 	if(findCustomer(c).money<transaction){
 		findCustomer(c).cS = CustomerState.broke;
 	}
@@ -100,11 +106,13 @@ public void msgMakeWithdrawal(BankDepositor c, int transaction){
 	stateChanged();
 }
 public void msgMakeDeposit(BankDepositor c, int transaction){
+	Do("Teller is processing deposit");
 	findCustomer(c).money += transaction;
 	findCustomer(c).cS = CustomerState.makingRequest;
 	stateChanged();
 }
 public void msgTransactionComplete(BankDepositor c){
+	Do("Teller received confirmation from manager that transaction was successful");
 	findCustomer(c).cS = CustomerState.transactionComplete;
 	stateChanged();
 }
@@ -137,9 +145,16 @@ public boolean pickAndExecuteAnAction(){
 
 ///ACTIONS////
 private void helpCustomer(BankDepositor c){
+	gui.GoToCustomer();
+	try {
+		tellerAnimation.acquire();
+	} catch (InterruptedException e) {
+		e.printStackTrace();
+	}
 	c.msgMakeRequest(this);
 }
 private void noMoney(BankDepositor c){
+	
 	c.msgCannotMakeTransaction();
 	
 }
@@ -160,6 +175,14 @@ private myCustomer findCustomer(BankDepositor c){
 		}
 	}
 	return null;
+}
+
+public BankTellerGui getGui(){
+	return gui;
+}
+
+public void setBankGui(BankGui g){
+	gui.setGui(g);
 }
 }
 

@@ -13,7 +13,7 @@ public class BankDepositorGui implements Gui {
 	boolean releaseIt = false;
 	private int xDestination = -20, yDestination = -20;
 	private int xHome = 20, yHome = 20;
-	
+	BankGui gui;
 	public BankDepositorGui(BankDepositorRole r){
 		this.role =r;
 	}
@@ -64,5 +64,9 @@ public class BankDepositorGui implements Gui {
 	}
 	public void AtDestination(){
 		releaseIt = false;
+	}
+
+	public void setGui(BankGui g) {
+		this.gui = gui;
 	}
 }

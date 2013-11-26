@@ -5,6 +5,10 @@ import javax.swing.Timer;
 
 import simcity.PersonAgent;
 import simcity.RestCustomerRole;
+import simcity.bank.BankDepositorRole;
+import simcity.bank.BankTellerRole;
+import simcity.bank.gui.BankDepositorGui;
+import simcity.bank.gui.BankGui;
 import simcity.housing.LandlordRole;
 import simcity.housing.ResidentRole;
 import simcity.housing.gui.HousingGui;
@@ -31,6 +35,7 @@ public class CityAnimationPanel extends JPanel implements ActionListener, MouseL
 	private List<Gui> guis = Collections.synchronizedList(new ArrayList<Gui>());
 	private CityGui cityGui;
 	List<BuildingGui> buildings = Collections.synchronizedList(new ArrayList<BuildingGui>());
+	
 	BuildingGui currentBG;
 	
 	Image bg;
@@ -118,7 +123,30 @@ public class CityAnimationPanel extends JPanel implements ActionListener, MouseL
 			}
 		}
 	}
-
+	public void addBankDepositor(BankDepositorRole d){
+		synchronized(buildings){
+			for(BuildingGui bG : buildings){
+				if(bG.getName().equals("bank1")){
+					BankGui g = (BankGui)bG;
+					d.setBankGui(g);
+					g.addBankDepositorGui(d.getGui());
+					
+				}
+			}
+		}
+	}
+	
+	public void addBankTeller(BankTellerRole t){
+		synchronized(buildings){
+			for(BuildingGui bG : buildings){
+				if(bG.getName().equals("bank1")){
+					BankGui g = (BankGui)bG;
+					t.setBankGui(g);
+					g.addBankDepositorGui(t.getGui());
+				}
+			}
+		}
+	}
 	public void addResident(ResidentRole r, String homeName, String ownerHomeName) {
 		synchronized(buildings) {
 			for(BuildingGui bG: buildings) {
@@ -147,6 +175,7 @@ public class CityAnimationPanel extends JPanel implements ActionListener, MouseL
 		}
 	}
 	
+
 	@Override
 	public void mouseClicked(MouseEvent event) {
 		int x = event.getX();

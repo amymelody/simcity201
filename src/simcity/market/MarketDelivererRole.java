@@ -42,6 +42,10 @@ public class MarketDelivererRole extends JobRole implements MarketDeliverer {
 	public void setOrder(MarketCustomer c, List<ItemOrder> i) {
 		orders.add(new Order(c, i));
 	}
+	boolean unitTest = false;
+	public void setUnitTest(boolean uT) {
+		unitTest = uT;
+	}
 
 
 	/* Accessors */
@@ -56,7 +60,7 @@ public class MarketDelivererRole extends JobRole implements MarketDeliverer {
 	public void setGui(MarketDelivererGui g){
 		gui = g;
 	}
-	
+
 
 	/* Data */
 
@@ -94,13 +98,13 @@ public class MarketDelivererRole extends JobRole implements MarketDeliverer {
 	public void msgPayment(RestCashier c, int money) {
 		synchronized(orders) {
 			for(Order o: orders) {
-				if(o.customer.equals(c)) {
+				if(o.cashier.equals(c)) {
 					o.amountPaid = money;
 					o.oS = OrderState.paying;
-					stateChanged();
 				}
 			}
 		}
+		stateChanged();
 	}
 	public void msgPay() {
 		person.msgEndShift();
@@ -135,7 +139,7 @@ public class MarketDelivererRole extends JobRole implements MarketDeliverer {
 			}
 			synchronized(orders) {
 				for(Order o: orders) {
-					if(currentOrder.equals(o) && dS == DelivererState.arrived) {
+					if(currentOrder.equals(o) && dS == DelivererState.arrived && o.oS == OrderState.newDelivery) {
 						deliverOrder(o);
 						return true;
 					}
@@ -167,13 +171,14 @@ public class MarketDelivererRole extends JobRole implements MarketDeliverer {
 		gui.leave();
 	}
 	private void goToCustomer(Order o) {
-		DoDeliverOrder(o.location); // animation
 		currentOrder = o;
-		
-		try {
-			animation.acquire();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
+		if(!unitTest) {
+			DoDeliverOrder(o.location); //animation
+			try {
+				animation.acquire();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -186,8 +191,9 @@ public class MarketDelivererRole extends JobRole implements MarketDeliverer {
 	private void takePayment(Order o) {
 		o.change = o.amountPaid - o.price;
 		o.oS = OrderState.paid;
-		o.customer.msgThankYou(o.change);
-		DoGoBack();
+		o.cashier.msgThankYou(o.change);
+		if(!unitTest)
+			DoGoBack();
 	}
 
 	private void finishDelivery(Order o) {

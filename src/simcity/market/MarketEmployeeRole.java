@@ -39,6 +39,10 @@ public class MarketEmployeeRole extends JobRole implements MarketEmployee {
 	public void setOrder(MarketCustomer c, List<ItemOrder> i) {
 		orders.add(new Order(c, i));
 	}
+	boolean unitTest = false;
+	public void setUnitTest(boolean uT) {
+		unitTest = uT;
+	}
 
 
 	/* Accessors */
@@ -53,7 +57,7 @@ public class MarketEmployeeRole extends JobRole implements MarketEmployee {
 	public void setGui(MarketEmployeeGui g){
 		gui = g;
 	}
-	
+
 
 	/* Data */
 
@@ -139,21 +143,25 @@ public class MarketEmployeeRole extends JobRole implements MarketEmployee {
 		gui.leave();
 	}
 	private void GetItems(Order o) {
-		DoGetItems(o.items); // animation
-		currentOrder = o;
-		try {
-			animation.acquire();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
+		if(!unitTest) {
+			DoGetItems(o.items); // animation
+			currentOrder = o;
+			try {
+				animation.acquire();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
 	private void WalktoCashier() {
-		DoHandItems(); // animation
-		try {
-			animation.acquire();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
+		if(!unitTest) {
+			DoHandItems(); // animation
+			try {
+				animation.acquire();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
