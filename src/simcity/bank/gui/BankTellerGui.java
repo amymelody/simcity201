@@ -14,7 +14,7 @@ public class BankTellerGui implements Gui {
 	private int xPos = -20, yPos = -20;
 	private int xDestination = -20, yDestination = -20;
 	private int xHome = -20, yHome = -20;
-	
+	BankGui gui;
 	public BankTellerGui(BankTellerRole r){
 		this.role = r;
 	}
@@ -62,5 +62,9 @@ public class BankTellerGui implements Gui {
 		xDestination = 50;
 		yDestination = 50;
 		
+	}
+	
+	public void setGui(BankGui g){
+		this.gui = gui;
 	}
 }

@@ -6,6 +6,7 @@ import simcity.CityDirectory;
 import simcity.gui.BuildingGui;
 import simcity.gui.BuildingsGui;
 import simcity.gui.CityGui;
+import simcity.bank.BankDepositorRole;
 import simcity.bank.gui.BankAnimationPanel;
 import simcity.bank.gui.BankInputPanel;
 
@@ -24,7 +25,7 @@ public class BankGui extends BuildingGui
 	private final int WINDOWY = 500;
 	private final int BUFFERTOP = 50;
 	private final int BUFFERSIDE = 15;
-
+	private Object currentPerson;
 	/**
 	 * Constructor
 	 */
@@ -59,4 +60,11 @@ public class BankGui extends BuildingGui
 		inputPanel.setVisible(visible);
 	}
 	
+	public void addBankDepositorGui(BankDepositorGui bg){
+		animationPanel.addGui(bg);
+	}
+	
+	public void addBankTellerGui(BankTellerGui tg){
+		animationPanel.addGui(tg);
+	}
 }

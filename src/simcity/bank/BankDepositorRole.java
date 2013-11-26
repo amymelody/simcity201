@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.concurrent.Semaphore;
 
 import simcity.bank.gui.BankDepositorGui;
+import simcity.bank.gui.BankGui;
 import simcity.bank.interfaces.BankDepositor;
 import simcity.bank.interfaces.BankManager;
 import simcity.bank.interfaces.BankTeller;
@@ -175,6 +176,14 @@ private void DoGoToTeller(){
 
 private void DoLeaveBank(){
 	gui.ExitBank();
+}
+public BankDepositorGui getGui() {
+
+	return gui;
+}
+
+public void setBankGui(BankGui g){
+	gui.setGui(g);
 }
 }
 	

@@ -5,6 +5,13 @@ import javax.swing.Timer;
 
 import simcity.PersonAgent;
 import simcity.RestCustomerRole;
+import simcity.bank.BankDepositorRole;
+import simcity.bank.BankTellerRole;
+import simcity.bank.gui.BankDepositorGui;
+import simcity.bank.gui.BankGui;
+import simcity.housing.LandlordRole;
+import simcity.housing.ResidentRole;
+import simcity.housing.gui.HousingGui;
 import simcity.joshrestaurant.JoshCustomerRole;
 import simcity.market.gui.MarketCustomerGui;
 import simcity.joshrestaurant.gui.JoshRestaurantGui;
@@ -28,6 +35,7 @@ public class CityAnimationPanel extends JPanel implements ActionListener, MouseL
 	private List<Gui> guis = Collections.synchronizedList(new ArrayList<Gui>());
 	private CityGui cityGui;
 	List<BuildingGui> buildings = Collections.synchronizedList(new ArrayList<BuildingGui>());
+	
 	BuildingGui currentBG;
 	
 	Image bg;
@@ -86,7 +94,7 @@ public class CityAnimationPanel extends JPanel implements ActionListener, MouseL
 	public void addRestCustomer(RestCustomerRole c) {
 		synchronized(buildings) {
 			for(BuildingGui bG: buildings) {
-				if(bG.getName().equals("Josh's Restaurant")) {
+				if(bG.getName().equals("joshRestaurant")) {
 					JoshRestaurantGui g = (JoshRestaurantGui)bG;
 					if (c instanceof JoshCustomerRole) {
 						JoshCustomerRole jC = (JoshCustomerRole)(c);
@@ -96,11 +104,11 @@ public class CityAnimationPanel extends JPanel implements ActionListener, MouseL
 			}
 		}
 	}
-	
+
 	public void addRestWaiter(RestWaiterRole w) {
 		synchronized(buildings) {
 			for(BuildingGui bG: buildings) {
-				if(bG.getName().equals("Josh's Restaurant")) {
+				if(bG.getName().equals("joshRestaurant")) {
 					JoshRestaurantGui g = (JoshRestaurantGui)bG;
 					if (w instanceof JoshNormalWaiterRole) {
 						JoshNormalWaiterRole jW = (JoshNormalWaiterRole)(w);
@@ -114,7 +122,59 @@ public class CityAnimationPanel extends JPanel implements ActionListener, MouseL
 			}
 		}
 	}
+	public void addBankDepositor(BankDepositorRole d){
+		synchronized(buildings){
+			for(BuildingGui bG : buildings){
+				if(bG.getName().equals("bank1")){
+					BankGui g = (BankGui)bG;
+					d.setBankGui(g);
+					g.addBankDepositorGui(d.getGui());
+					
+				}
+			}
+		}
+	}
 	
+	public void addBankTeller(BankTellerRole t){
+		synchronized(buildings){
+			for(BuildingGui bG : buildings){
+				if(bG.getName().equals("bank1")){
+					BankGui g = (BankGui)bG;
+					t.setBankGui(g);
+					g.addBankDepositorGui(t.getGui());
+				}
+			}
+		}
+	}
+	public void addResident(ResidentRole r, String homeName, String ownerHomeName) {
+		synchronized(buildings) {
+			for(BuildingGui bG: buildings) {
+				if(bG.getName().equals(homeName)) {
+					HousingGui g = (HousingGui)bG;
+					r.setHomeGui(g);
+					g.addResidentGui(r.getGui());
+				}
+				if(bG.getName().equals(ownerHomeName)) {
+					HousingGui g = (HousingGui)bG;
+					r.setLandlordGui(g);
+					g.addResidentGui(r.getGui());
+				}
+			}
+		}
+	}
+	public void addLandlord(LandlordRole l, String buildingName) {
+		synchronized(buildings) {
+			for(BuildingGui bG: buildings) {
+				if(bG.getName().equals(buildingName)) {
+					HousingGui g = (HousingGui)bG;
+					l.setGui(g);
+					g.addLandlordGui(l.getGui());
+				}
+			}
+		}
+	}
+	
+
 	@Override
 	public void mouseClicked(MouseEvent event) {
 		int x = event.getX();

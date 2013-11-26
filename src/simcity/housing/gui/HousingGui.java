@@ -1,6 +1,7 @@
 package simcity.housing.gui;
 
 import simcity.CityDirectory;
+import simcity.gui.BuildingsGui;
 import simcity.gui.CityGui;
 import simcity.gui.BuildingGui;
 import javax.swing.*;
@@ -23,11 +24,11 @@ public class HousingGui extends BuildingGui
 	/**
 	 * Constructor
 	 */
-	public HousingGui(String n, CityGui cG, CityDirectory cD)
+	public HousingGui(String n, BuildingsGui bG, CityDirectory cD)
 	{
-		super(n, cG, cD);
+		super(n, bG, cD);
 
-		animationPanel = new HousingAnimationPanel(cG);
+		animationPanel = new HousingAnimationPanel();
 		inputPanel = new HousingInputPanel(n);
 
 		//input panel
@@ -37,7 +38,7 @@ public class HousingGui extends BuildingGui
 		inputPanel.setMinimumSize(inputDim);
 		inputPanel.setMaximumSize(inputDim);
 		inputPanel.setVisible(false);
-		cG.add(inputPanel);
+		bG.add(inputPanel);
 
 		//animation panel
 		double animationFractionOfWindow = 500.0 / 650.0;
@@ -46,7 +47,7 @@ public class HousingGui extends BuildingGui
 		animationPanel.setMinimumSize(animDim);
 		animationPanel.setMaximumSize(animDim);
 		animationPanel.setVisible(false);
-		cG.add(animationPanel);
+		bG.add(animationPanel);
 		
 		for(int i = 0; i < 25; i++)
 		{
@@ -55,13 +56,19 @@ public class HousingGui extends BuildingGui
 				boxes[i][j] = new MoveBox(j, i, j*20, i*20);
 				if(i == 0 || j == 0 || j == 13 || i == 24 || j == 24) //walls
 				{
-					if(!((i == 1 || i == 2 || i == 22 || i == 23) && j == 13) || ((i == 11 || i == 12 || i == 13) && j == 24)) //doors
+					if(!((i == 1 || i == 2 || i == 15 || i == 16 || i == 17 || i == 18 || i == 19) && j == 13) || !((i == 11 || i == 12 || i == 13) && j == 24)) //doors
 					{
 						boxes[i][j].setOpen(false);
 					}
 				}
 			}
 		}
+		boxes[12][1].setOpen(false); //Kitchen/Dining Room divider
+		boxes[12][2].setOpen(false);
+		boxes[12][3].setOpen(false);
+		boxes[12][10].setOpen(false);
+		boxes[12][11].setOpen(false);
+		boxes[12][12].setOpen(false);
 		boxes[6][1].setOpen(false); //stove
 		boxes[6][2].setOpen(false);
 		boxes[7][1].setOpen(false);
@@ -135,6 +142,19 @@ public class HousingGui extends BuildingGui
 		}
 	}
 
+	public void addResidentGui(ResidentGui rg)
+	{
+		animationPanel.addGui(rg);
+	}
+	public void removeResidentGui(ResidentGui rg)
+	{
+		animationPanel.removeGui(rg);
+	}
+	public void addLandlordGui(LandlordGui lg)
+	{
+		animationPanel.addGui(lg);
+	}
+	
 	@Override
 	public void changeView(boolean visible)
 	{

@@ -11,7 +11,11 @@ import java.util.List;
 
 import simcity.CityDirectory;
 import simcity.market.gui.MarketGui;
+import simcity.bank.BankDepositorRole;
+import simcity.bank.BankTellerRole;
 import simcity.bank.gui.BankGui;
+import simcity.housing.LandlordRole;
+import simcity.housing.ResidentRole;
 import simcity.housing.gui.HousingGui;
 import simcity.joshrestaurant.gui.JoshRestaurantGui;
 import simcity.joshrestaurant.JoshCustomerRole;
@@ -78,15 +82,15 @@ public class CityGui extends JFrame
 		animationPanel.addRestWaiter(w);
 	}
 	
-	/*public void addResident(ResidentRole r) {
-		animationPanel.addResident(r);
+	public void addResident(ResidentRole r, String homeName, String ownerHomeName) {
+		animationPanel.addResident(r, homeName, ownerHomeName);
 	}
 	
-	public void addLandlord(LandlordRole l) {
-		animationPanel.addLandlord(l);
+	public void addLandlord(LandlordRole l, String buildingName) {
+		animationPanel.addLandlord(l, buildingName);
 	}
 	
-	public void addMarketCustomer(MarketCustomerRole c) {
+	/*public void addMarketCustomer(MarketCustomerRole c) {
 		animationPanel.addMarketCustomer(c);
 	}
 	
@@ -97,14 +101,14 @@ public class CityGui extends JFrame
 	public void addMarketDeliverer(MarketDelivererRole d) {
 		animationPanel.addMarketDeliverer(d);
 	}
-	
+	*/
 	public void addBankDepositor(BankDepositorRole d) {
 		animationPanel.addBankDepositor(d);
 	}
 	
 	public void addBankTeller(BankTellerRole t) {
 		animationPanel.addBankTeller(t);
-	}*/
+	}
 	
 	public void readConfig() {
 		inputPanel.readConfig();
