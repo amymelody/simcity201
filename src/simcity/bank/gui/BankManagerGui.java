@@ -12,8 +12,8 @@ import simcity.bank.BankTellerRole;
 public class BankManagerGui implements Gui {
 	private BankManagerRole role = null;
 	
-	private int xPos = -20, yPos = -20;
-	private int xDestination = -20, yDestination = -20;
+	private int xPos = 40, yPos = 40;
+	private int xDestination = 40, yDestination = 40;
 	private int xHome = -20, yHome = -20;
 	
 	public BankManagerGui(BankManagerRole r){
@@ -49,7 +49,8 @@ public class BankManagerGui implements Gui {
 	}
 	
 	public void ExitBank(){
-		
+		xDestination = -20;
+		yDestination = 20;
 	}
 }
 	

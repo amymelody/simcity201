@@ -3,6 +3,7 @@ package simcity;
 import javax.swing.JFrame;
 
 import simcity.gui.BuildingGui;
+import simcity.gui.BuildingsGui;
 import simcity.gui.CityGui;
 
 public class SimCity
@@ -17,11 +18,11 @@ public class SimCity
         cg.setResizable(true);
         cg.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
-        /*BuildingGui bg = new BuildingGui(cityDirectory);
+        BuildingsGui bg = new BuildingsGui(cityDirectory, cg);
         bg.setTitle("Interior");
         bg.setVisible(true);
         bg.setResizable(true);
-        bg.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);*/
+        bg.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
         System.out.println("City");
     }

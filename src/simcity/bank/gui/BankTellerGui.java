@@ -10,7 +10,7 @@ import simcity.bank.BankTellerRole;
 
 public class BankTellerGui implements Gui {
 	private BankTellerRole role = null;
-	
+	boolean releaseIt = false;
 	private int xPos = -20, yPos = -20;
 	private int xDestination = -20, yDestination = -20;
 	private int xHome = -20, yHome = -20;
@@ -48,10 +48,19 @@ public class BankTellerGui implements Gui {
 	}
 	
 	public void GoToManager(){
-		
+		xDestination = 40;
+		yDestination = 40;
+		releaseIt = true;
 	}
 	
 	public void ExitBank(){
+		xDestination = -20;
+		yDestination = -20;
+	}
+	
+	public void GoToCustomer(){
+		xDestination = 50;
+		yDestination = 50;
 		
 	}
 }

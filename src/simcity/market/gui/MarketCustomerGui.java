@@ -36,13 +36,18 @@ public class MarketCustomerGui implements Gui {
 			yPos--;
 		if(xPos == xDestination && yPos == yDestination) {
 			if(xDestination == 40 && yDestination == 60) {
-				if(gS == GuiState.toCashier)
+				if(gS == GuiState.toCashier) {
 					role.msgAtCashier();
-				else if(gS == GuiState.pickingUp)
+					gS = GuiState.nothing;
+				}
+				else if(gS == GuiState.pickingUp) {
 					role.msgAtPickUp();
+					gS = GuiState.nothing;
+				}
 			}
 			else if(xDestination == -10 && yDestination == 10 && gS == GuiState.exiting) {
 				role.msgOut();
+				gS = GuiState.nothing;
 			}
 		}
 	}

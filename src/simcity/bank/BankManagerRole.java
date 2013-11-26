@@ -21,6 +21,10 @@ public class BankManagerRole extends JobRole implements BankManager  {
 		super();
 	}
 	
+	public BankManagerRole(String name) {
+		// TODO Auto-generated constructor stub
+	}
+
 	public String getMaitreDName(){
 		return name;
 	}

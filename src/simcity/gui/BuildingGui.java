@@ -13,7 +13,6 @@ import simcity.market.gui.MarketInputPanel;
 public abstract class BuildingGui
 {
 	String name;
-	protected CityGui cityGui;
 	protected CityDirectory cityDirectory;
 	protected MarketAnimationPanel animationPanel;
 	protected MarketInputPanel inputPanel;
@@ -21,9 +20,8 @@ public abstract class BuildingGui
 	/**
 	 * Constructor
 	 */
-	public BuildingGui(String n, CityGui cG, CityDirectory cD)
+	public BuildingGui(String n, BuildingsGui bG, CityDirectory cD)
 	{
-		cityGui = cG;
 		cityDirectory = cD;
 		name = n;
 	}
@@ -31,9 +29,9 @@ public abstract class BuildingGui
 		return name;
 	}
 	
-	//public abstract void changeView(boolean visible);
-	
 	public void changeCityView() {
 		cityGui.changeView();
 	}
+	
+	public abstract void changeView(boolean visible);
 }
