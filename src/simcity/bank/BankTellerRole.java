@@ -11,22 +11,25 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import simcity.bank.BankManagerRole.myCustomer;
+import simcity.PersonAgent;
+import simcity.bank.interfaces.BankDepositor;
+import simcity.bank.interfaces.BankManager;
+import simcity.bank.interfaces.BankTeller;
 import simcity.role.JobRole;
 import simcity.role.Role;
 
 //
-public class BankTellerRole extends JobRole   {
+public class BankTellerRole extends JobRole implements BankTeller   {
 
 	private String name;
 	boolean working;
 	private class myCustomer{
-		BankDepositorRole c;
+		BankDepositor c;
 		CustomerState cS;
 		String name;
 		int money;
 		
-		myCustomer(BankDepositorRole c, CustomerState state, int cashInBank){
+		myCustomer(BankDepositor c, CustomerState state, int cashInBank){
 			this.c = c;
 			this.cS = state;
 			this.name = c.getName();
@@ -40,15 +43,31 @@ public class BankTellerRole extends JobRole   {
 	
 	public enum CustomerState{waitingForTeller, makingRequest,broke, transactionComplete, waiting, leaving}
 	
-	private BankManagerRole manager;
+	private BankManager manager;
 	
 	List<myCustomer> customers = new ArrayList<myCustomer>();
 	
+	
+	public BankTellerRole(){
+		super();
+	}
 	public BankTellerRole(String name){
 		this.name = name;
 	}
+	public String getMaitreDName(){
+		return name;
+	}
 	
-	public void setManager(BankManagerRole manager){
+	public String getName(){
+		return name;
+	}
+	
+	public void setPerson(PersonAgent p){
+		super.setPerson(p);
+		name = p.getName();
+	}
+	
+	public void setManager(BankManager manager){
 		this.manager = manager;
 	}
 
@@ -65,12 +84,12 @@ public class BankTellerRole extends JobRole   {
 	public void msgPay(){
 		person.msgEndShift();
 	}
-public void msgHelpCustomer(BankDepositorRole c, int cash){
+public void msgHelpCustomer(BankDepositor c, int cash){
 	customers.add(new myCustomer(c, CustomerState.waitingForTeller, cash));
 	stateChanged();
 }
 
-public void msgMakeWithdrawal(BankDepositorRole c, int transaction){
+public void msgMakeWithdrawal(BankDepositor c, int transaction){
 	if(findCustomer(c).money<transaction){
 		findCustomer(c).cS = CustomerState.broke;
 	}
@@ -80,12 +99,12 @@ public void msgMakeWithdrawal(BankDepositorRole c, int transaction){
 	}
 	stateChanged();
 }
-public void msgMakeDeposit(BankDepositorRole c, int transaction){
+public void msgMakeDeposit(BankDepositor c, int transaction){
 	findCustomer(c).money += transaction;
 	findCustomer(c).cS = CustomerState.makingRequest;
 	stateChanged();
 }
-public void msgTransactionComplete(BankDepositorRole c){
+public void msgTransactionComplete(BankDepositor c){
 	findCustomer(c).cS = CustomerState.transactionComplete;
 	stateChanged();
 }
@@ -117,23 +136,23 @@ public boolean pickAndExecuteAnAction(){
 }
 
 ///ACTIONS////
-private void helpCustomer(BankDepositorRole c){
+private void helpCustomer(BankDepositor c){
 	c.msgMakeRequest(this);
 }
-private void noMoney(BankDepositorRole c){
+private void noMoney(BankDepositor c){
 	c.msgCannotMakeTransaction();
 	
 }
-private void makeTransaction(BankDepositorRole c){
+private void makeTransaction(BankDepositor c){
 	manager.msgProcessTransaction(this, c, findCustomer(c).money);
 }
 
-private void transactionComplete(BankDepositorRole c){
+private void transactionComplete(BankDepositor c){
 	c.msgTransactionComplete();
 	Do("Your new bank balance is: $" + findCustomer(c).money);
 }
 
-private myCustomer findCustomer(BankDepositorRole c){
+private myCustomer findCustomer(BankDepositor c){
 	
 	for(myCustomer mc : customers){
 		if(mc.c == c){

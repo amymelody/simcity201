@@ -6,6 +6,9 @@ import java.util.List;
 import java.util.concurrent.Semaphore;
 
 import simcity.bank.gui.BankDepositorGui;
+import simcity.bank.interfaces.BankDepositor;
+import simcity.bank.interfaces.BankManager;
+import simcity.bank.interfaces.BankTeller;
 import simcity.interfaces.MarketCashier;
 import simcity.interfaces.MarketDeliverer;
 import simcity.role.Role;
@@ -46,8 +49,8 @@ public class BankDepositorRole extends Role implements BankDepositor{
 	int cash = person.getMoney();
 	
 	// References to other roles
-	BankTellerRole teller;
-	BankManagerRole manager;
+	BankTeller teller;
+	BankManager manager;
 	
 	// Customer Status Data
 	enum CustomerState {entered, makingDeposit, makingWithdrawal, makingTransaction, beingHelped, leaving, atManager, atTeller};
@@ -68,7 +71,7 @@ public class BankDepositorRole extends Role implements BankDepositor{
 		transactionAmount = 0-cash;
 		stateChanged();
 	}
-	public void msgMakeRequest(BankTellerRole t){
+	public void msgMakeRequest(BankTeller t){
 		this.teller = t;
 		if(transactionAmount < 0){
 			cS = CustomerState.makingWithdrawal;

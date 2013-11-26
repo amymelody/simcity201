@@ -7,10 +7,13 @@ import java.util.concurrent.Semaphore;
 
 import simcity.PersonAgent;
 import simcity.bank.gui.BankManagerGui;
+import simcity.bank.interfaces.BankDepositor;
+import simcity.bank.interfaces.BankManager;
+import simcity.bank.interfaces.BankTeller;
 import simcity.role.JobRole;
 
 
-public class BankManagerRole extends JobRole   {
+public class BankManagerRole extends JobRole implements BankManager  {
 	
 	String name;
 	
@@ -31,7 +34,7 @@ public class BankManagerRole extends JobRole   {
 		name = p.getName();
 	}
 	
-	public void setTellers(BankTellerRole t){
+	public void setTellers(BankTeller t){
 		addTeller(t);
 	}
 	
@@ -62,13 +65,13 @@ public class BankManagerRole extends JobRole   {
 	
 	public List<myTeller> tellers = Collections.synchronizedList(new ArrayList<myTeller>());
 	public List<myCustomer> customers = Collections.synchronizedList(new ArrayList<myCustomer>());
-	public List<BankDepositorRole> waitingCustomers = Collections.synchronizedList(new ArrayList<BankDepositorRole>());
+	public List<BankDepositor> waitingCustomers = Collections.synchronizedList(new ArrayList<BankDepositor>());
 	// BankState Status Data
 	int tellerSelection = 0;
 	enum BankState {open, closing, closed};
 	BankState bS;
 	int bankMoney;
-	private BankTellerRole teller;
+	private BankTeller teller;
 	// Cashier Status Data
 	int salary;
 	boolean working;
@@ -82,7 +85,7 @@ public class BankManagerRole extends JobRole   {
 	/* Messages */
 	
 	// Worker interactions (hiring, enter/exit shift, etc.)
-	public void msgHired(BankTellerRole t) {
+	public void msgHired(BankTeller t) {
 		addTeller(t);
 	}
 
@@ -123,7 +126,7 @@ public class BankManagerRole extends JobRole   {
 	
 	}
 	// Normative Scenario #1
-	public void msgTransaction(BankDepositorRole c){
+	public void msgTransaction(BankDepositor c){
 		
 		if(findCustomer(c) == null){
 			customers.add(new myCustomer(c, c.getName()));
@@ -134,7 +137,7 @@ public class BankManagerRole extends JobRole   {
 	}
 	
 	
-	public void msgProcessTransaction(BankTellerRole t, BankDepositorRole c, int money){
+	public void msgProcessTransaction(BankTeller t, BankDepositor c, int money){
 		teller = t;
 		findCustomer(c).cashInBank += money;
 		bankMoney += money;
@@ -183,8 +186,8 @@ public class BankManagerRole extends JobRole   {
 		
 	}
 	
-	private BankTellerRole findTeller () {
-		BankTellerRole t = tellers.get(tellerSelection%tellers.size()).t;
+	private BankTeller findTeller () {
+		BankTeller t = tellers.get(tellerSelection%tellers.size()).t;
 		tellerSelection++;
 
 		if(findTeller(t).tS == TellerState.doingNothing){
@@ -194,16 +197,13 @@ public class BankManagerRole extends JobRole   {
 	return null;
 	}	
 	
-	private void helpCustomer(BankDepositorRole c, BankTellerRole t){
+	private void helpCustomer(BankDepositor c, BankTeller t){
 		waitingCustomers.remove(c);
 		t.msgHelpCustomer(c, findCustomer(c).cashInBank);
 	}
 	
-	private void processTrasaction(BankDepositorRole c, int money) {
-		
-	}
 	
-	private void transactionComplete(BankDepositorRole c) {
+	private void transactionComplete(BankDepositor c) {
 		teller.msgTransactionComplete(c);
 	}
 	
@@ -215,12 +215,12 @@ public class BankManagerRole extends JobRole   {
 	
 	//Customer class
 	public class myCustomer{
-		BankDepositorRole customer;
+		BankDepositor customer;
 		int cashInBank;
 		String name;
 		CustomerState cS;
 	// 0 means deposit, 1 means withdrawal
-		myCustomer(BankDepositorRole c, String n){
+		myCustomer(BankDepositor c, String n){
 			cashInBank = 0;
 			name = n;
 			
@@ -231,7 +231,7 @@ public class BankManagerRole extends JobRole   {
 	public enum CustomerState{arrived, beingHelped, leaving, transactionProcessed};
 
 	
-	private myCustomer findCustomer(BankDepositorRole c){
+	private myCustomer findCustomer(BankDepositor c){
 	
 		for(myCustomer mc : customers){
 			if(mc.customer == c){
@@ -240,7 +240,7 @@ public class BankManagerRole extends JobRole   {
 		}
 		return null;
 	}
-	private myTeller findTeller(BankTellerRole t){
+	private myTeller findTeller(BankTeller t){
 		for(myTeller mt : tellers){
 			if(mt.t == t){
 				return mt;
@@ -249,10 +249,10 @@ public class BankManagerRole extends JobRole   {
 		return null;
 	}
 	private class myTeller{
-		BankTellerRole t;
+		BankTeller t;
 		TellerState tS;
 		String n;
-		myTeller(BankTellerRole teller, TellerState ts){
+		myTeller(BankTeller teller, TellerState ts){
 			t = teller;
 			tS = ts;
 		}
@@ -264,8 +264,14 @@ public class BankManagerRole extends JobRole   {
 	public enum TellerState{doingNothing, working};
 	
 	
-	public void addTeller(BankTellerRole t){
+	public void addTeller(BankTeller t){
 		tellers.add(new myTeller(t, TellerState.doingNothing));
+	}
+
+	@Override
+	public void msgHired(BankTeller t, int salary) {
+		// TODO Auto-generated method stub
+		
 	}
 
 	
