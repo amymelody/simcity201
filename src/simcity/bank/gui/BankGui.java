@@ -63,5 +63,11 @@ public class BankGui extends BuildingGui
 			inputPanel.setVisible(false);
 		}
 	}
+
+	@Override
+	public void changeView(boolean visible) {
+		// TODO Auto-generated method stub
+		
+	}
 	
 }

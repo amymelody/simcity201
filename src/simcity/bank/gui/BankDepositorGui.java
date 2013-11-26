@@ -10,7 +10,7 @@ public class BankDepositorGui implements Gui {
 	private BankDepositorRole role = null;
 	
 	private int xPos = -20, yPos = 20;
-	
+	boolean releaseIt = false;
 	private int xDestination = -20, yDestination = -20;
 	private int xHome = 20, yHome = 20;
 	
@@ -47,13 +47,22 @@ public class BankDepositorGui implements Gui {
 	}
 	
 	public void GoToManager(){
-		
+		xDestination = 38;
+		yDestination = 38;
+		releaseIt = true;
 	}
 	public void GoToTeller(){
-		
+		xDestination = 52;
+		yDestination = 52;
+		releaseIt = true;
 	}
 	
 	public void ExitBank(){
-		
+		xDestination = -20;
+		yDestination = -20;
+		releaseIt = true;
+	}
+	public void AtDestination(){
+		releaseIt = false;
 	}
 }
