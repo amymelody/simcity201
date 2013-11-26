@@ -6,7 +6,7 @@ import simcity.mock.LoggedEvent;
 import simcity.ItemOrder;
 import simcity.RestCookRole;
 import simcity.joshrestaurant.gui.JoshCookGui;
-import simcity.PersonAgent;
+import simcity.interfaces.Person;
 import simcity.interfaces.MarketCashier;
 
 
@@ -31,9 +31,9 @@ public class JoshCookRole extends RestCookRole {
 	private boolean working;
 	private String location = "joshRestaurant";
 	
-	Food steak = new Food("steak", 15, 3, 3, 1);
-	Food chicken = new Food("chicken", 20, 3, 3, 1);
-	Food salad = new Food("salad", 5, 3, 3, 1);
+	Food steak = new Food("steak", 15, 3, 1, 1);
+	Food chicken = new Food("chicken", 20, 3, 1, 1);
+	Food salad = new Food("salad", 5, 3, 2, 1);
 	Food pizza = new Food("pizza", 10, 3, 3, 1);
 	
 	public Map<String, Food> foods = new HashMap<String, Food>();
@@ -52,7 +52,7 @@ public class JoshCookRole extends RestCookRole {
 		foods.put("pizza", pizza);
 	}
 	
-	public void setPerson(PersonAgent p) {
+	public void setPerson(Person p) {
 		super.setPerson(p);
 		name = person.getName();
 	}

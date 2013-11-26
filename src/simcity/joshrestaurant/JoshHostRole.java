@@ -2,7 +2,7 @@ package simcity.joshrestaurant;
 
 import java.util.*;
 
-import simcity.PersonAgent;
+import simcity.interfaces.Person;
 import simcity.RestHostRole;
 
 /**
@@ -33,7 +33,7 @@ public class JoshHostRole extends RestHostRole {
 		}
 	}
 	
-	public void setPerson(PersonAgent p) {
+	public void setPerson(Person p) {
 		super.setPerson(p);
 		name = person.getName();
 	}
@@ -55,7 +55,7 @@ public class JoshHostRole extends RestHostRole {
 	}
 	
 	public String toString() {
-		return getName();
+		return name;
 	}
 	
 	public void addWaiter(JoshWaiterRole waiter) {

@@ -11,6 +11,10 @@ public class MockRestCustomerRole extends Role implements RestCustomer {
 		this.name = name;
 	}
 	
+	public void setCash(int c) {
+		
+	}
+	
 	public void gotHungry() {
 		log.add(new LoggedEvent("Received gotHungry"));
 	}

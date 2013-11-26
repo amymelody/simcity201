@@ -6,7 +6,7 @@ import simcity.joshrestaurant.interfaces.JoshCustomer;
 import simcity.joshrestaurant.interfaces.JoshWaiter;
 import simcity.joshrestaurant.interfaces.JoshCashier;
 import simcity.mock.LoggedEvent;
-import simcity.PersonAgent;
+import simcity.interfaces.Person;
 
 import java.util.*;
 
@@ -38,7 +38,7 @@ public class JoshCashierRole extends RestCashierRole implements JoshCashier {
 		prices.put("pizza", 9);
 	}
 	
-	public void setPerson(PersonAgent p) {
+	public void setPerson(Person p) {
 		super.setPerson(p);
 		name = person.getName();
 	}

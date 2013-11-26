@@ -130,127 +130,6 @@ public class CityCreationPanel extends JPanel implements ActionListener
 
 		add(new JLabel("Car: "));
 		add(car);
-
-		
-		
-		Properties cityConfig = new Properties();
-		
-		try {
-		    FileInputStream in = new FileInputStream("src/simcity/config1.properties");
-		    cityConfig.load(in);
-		    in.close();
-		} catch(IOException e) {
-			e.printStackTrace();
-		} catch(IllegalArgumentException iae) {
-			  iae.printStackTrace();
-		}
-		
-		List<PersonInfo> info = new ArrayList<PersonInfo>();
-		for(String key : cityConfig.stringPropertyNames()) {
-			if (key.contains("name")) {
-				info.add(new PersonInfo(cityConfig.getProperty(key),info.size()+1));
-			}
-	    }
-		for(String key : cityConfig.stringPropertyNames()) {
-			if (key.contains("job")) {
-				for (PersonInfo pI : info) {
-					if (pI.job == null) {
-						pI.job = cityConfig.getProperty(key);
-						break;
-					}
-				}
-			}
-			if (key.contains("eco")) {
-				for (PersonInfo pI : info) {
-					if (pI.eco == null) {
-						pI.eco = cityConfig.getProperty(key);
-						break;
-					}
-				}
-			}
-			if (key.contains("physical")) {
-				for (PersonInfo pI : info) {
-					if (pI.physical == null) {
-						pI.physical = cityConfig.getProperty(key);
-						break;
-					}
-				}
-			}
-			if (key.contains("housing")) {
-				for (PersonInfo pI : info) {
-					if (pI.housing == null) {
-						pI.housing = cityConfig.getProperty(key);
-						break;
-					}
-				}
-			}
-			if (key.contains("end")) {
-				for (PersonInfo pI : info) {
-					if (pI.end == -1) {
-						pI.end = Integer.parseInt(cityConfig.getProperty(key));
-						break;
-					}
-				}
-			}
-			if (key.contains("start")) {
-				for (PersonInfo pI : info) {
-					if (pI.start == -1) {
-						pI.start = Integer.parseInt(cityConfig.getProperty(key));
-						break;
-					}
-				}
-			}
-			if (key.contains("pay")) {
-				for (PersonInfo pI : info) {
-					if (pI.pay == -1) {
-						pI.pay = Integer.parseInt(cityConfig.getProperty(key));
-						break;
-					}
-				}
-			}
-			if (key.contains("car")) {
-				for (PersonInfo pI : info) {
-					if (pI.car == null) {
-						pI.car = cityConfig.getProperty(key);
-						break;
-					}
-				}
-			}
-	    }
-		
-		int money;
-		boolean car;
-		for (PersonInfo pI : info) {
-			switch(pI.eco) {
-			case "poor":
-				money = 50;
-				break;
-			case "middle":
-				money = 250;
-				break;
-			case "rich":
-				money = 500;
-				break;
-			default:
-				money = 250;
-				break;
-			}
-			if (pI.car.equals("yes")) {
-				car = true;
-			} else {
-				car = false;
-			}
-			/*System.out.println(pI.name);
-			System.out.println(pI.job);
-			System.out.println(pI.pay);
-			System.out.println(pI.start);
-			System.out.println(pI.end);
-			System.out.println(pI.eco);
-			System.out.println(pI.physical);
-			System.out.println(pI.housing);
-			System.out.println(pI.car);*/
-			inputPanel.addPerson(pI.name, pI.job, money, pI.start, pI.end, pI.eco, pI.physical, pI.housing, car, cityDirectory);
-		}
 	}
 
 	public void actionPerformed(ActionEvent e)
@@ -371,6 +250,140 @@ public class CityCreationPanel extends JPanel implements ActionListener
 			currentPerson = p;
 			currentState = State.editing;
 			editingPanel();
+		}
+	}
+	
+	public void readConfig() {
+		Properties cityConfig = new Properties();
+		
+		try {
+		    FileInputStream in = new FileInputStream("src/simcity/restaurantConfig.properties");
+		    cityConfig.load(in);
+		    in.close();
+		} catch(IOException e) {
+			e.printStackTrace();
+		} catch(IllegalArgumentException iae) {
+			  iae.printStackTrace();
+		}
+		
+		List<PersonInfo> info = new ArrayList<PersonInfo>();
+		int numPeople = 9;
+		int index = 0;
+		for(String key : cityConfig.stringPropertyNames()) {
+			if (key.contains("name")) {
+				numPeople++;
+			}
+	    }
+		for(String key : cityConfig.stringPropertyNames()) {
+			if (key.contains("name")) {
+				for(int i=10; i<=numPeople; i++) {
+					if (key.contains(Integer.toString(i))) {
+						index = i;
+						//System.out.println(index);
+					}
+				}
+				info.add(new PersonInfo(cityConfig.getProperty(key),index));
+			}
+	    }
+		for(String key : cityConfig.stringPropertyNames()) {
+			if (key.contains("job")) {
+				for (PersonInfo pI : info) {
+					if (key.contains(Integer.toString(pI.id))) {
+						pI.job = cityConfig.getProperty(key);
+						break;
+					}
+				}
+			}
+			if (key.contains("eco")) {
+				for (PersonInfo pI : info) {
+					if (key.contains(Integer.toString(pI.id))) {
+						pI.eco = cityConfig.getProperty(key);
+						break;
+					}
+				}
+			}
+			if (key.contains("physical")) {
+				for (PersonInfo pI : info) {
+					if (key.contains(Integer.toString(pI.id))) {
+						pI.physical = cityConfig.getProperty(key);
+						break;
+					}
+				}
+			}
+			if (key.contains("housing")) {
+				for (PersonInfo pI : info) {
+					if (key.contains(Integer.toString(pI.id))) {
+						pI.housing = cityConfig.getProperty(key);
+						break;
+					}
+				}
+			}
+			if (key.contains("end")) {
+				for (PersonInfo pI : info) {
+					if (key.contains(Integer.toString(pI.id))) {
+						pI.end = Integer.parseInt(cityConfig.getProperty(key));
+						break;
+					}
+				}
+			}
+			if (key.contains("start")) {
+				for (PersonInfo pI : info) {
+					if (key.contains(Integer.toString(pI.id))) {
+						pI.start = Integer.parseInt(cityConfig.getProperty(key));
+						break;
+					}
+				}
+			}
+			if (key.contains("pay")) {
+				for (PersonInfo pI : info) {
+					if (key.contains(Integer.toString(pI.id))) {
+						pI.pay = Integer.parseInt(cityConfig.getProperty(key));
+						break;
+					}
+				}
+			}
+			if (key.contains("car")) {
+				for (PersonInfo pI : info) {
+					if (key.contains(Integer.toString(pI.id))) {
+						pI.car = cityConfig.getProperty(key);
+						break;
+					}
+				}
+			}
+	    }
+		
+		int money;
+		boolean car;
+		for (PersonInfo pI : info) {
+			switch(pI.eco) {
+			case "poor":
+				money = 50;
+				break;
+			case "middle":
+				money = 250;
+				break;
+			case "rich":
+				money = 500;
+				break;
+			default:
+				money = 250;
+				break;
+			}
+			if (pI.car.equals("yes")) {
+				car = true;
+			} else {
+				car = false;
+			}
+			/*System.out.println(pI.name);
+			System.out.println(pI.job);
+			System.out.println(pI.pay);
+			System.out.println(pI.start);
+			System.out.println(pI.end);
+			System.out.println(pI.eco);
+			System.out.println(pI.physical);
+			System.out.println(pI.housing);
+			System.out.println(pI.car);*/
+			inputPanel.addPerson(pI.name, pI.job, money, pI.start, pI.end, pI.eco, pI.physical, pI.housing, car, cityDirectory);
 		}
 	}
 	

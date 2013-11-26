@@ -4,6 +4,7 @@ import simcity.CityDirectory;
 import simcity.joshrestaurant.JoshCustomerRole;
 import simcity.joshrestaurant.JoshWaiterRole;
 import simcity.gui.BuildingGui;
+import simcity.gui.BuildingsGui;
 import simcity.gui.CityGui;
 
 import javax.swing.*;
@@ -44,16 +45,16 @@ public class JoshRestaurantGui extends BuildingGui implements ActionListener {
      * Constructor for RestaurantGui class.
      * Sets up all the gui components.
      */
-    public JoshRestaurantGui(String n, CityGui cG, CityDirectory cD) {
-    	super(n, cG, cD);
+    public JoshRestaurantGui(String n, BuildingsGui bG, CityDirectory cD) {
+    	super(n, bG, cD);
     	restPanel = new JoshRestaurantInputPanel(this, cD.getJoshCashier(), cD.getJoshCook(), cD.getJoshHost(), cD.getMarketCashiers());
     	
         int WINDOWX = 450;
         int WINDOWY = 400;
     	
-    	cG.setBounds(50, 50, WINDOWX*2, WINDOWY);
+    	//bG.setBounds(50, 50, WINDOWX*2, WINDOWY);
 
-    	cG.setLayout(new GridLayout(1, 2, 10, 0));
+    	//bG.setLayout(new GridLayout(1, 2, 10, 0));
         controlPanel.setLayout(new BorderLayout());
         controlPanel.setSize(WINDOWX,WINDOWY);
 
@@ -116,8 +117,8 @@ public class JoshRestaurantGui extends BuildingGui implements ActionListener {
         
         controlPanel.add(idPanel, BorderLayout.SOUTH);
         
-        cG.add(controlPanel);
-        cG.add(animationPanel);
+        bG.add(controlPanel);
+        bG.add(animationPanel);
         
         controlPanel.setVisible(false);
         animationPanel.setVisible(false);
@@ -231,6 +232,11 @@ public class JoshRestaurantGui extends BuildingGui implements ActionListener {
             }
         }
     }
+    
+    public void changeView(boolean visible) {
+		animationPanel.setVisible(visible);
+		controlPanel.setVisible(visible);
+	}
     
     public void setVisible(boolean visible) {
 		if(visible) {

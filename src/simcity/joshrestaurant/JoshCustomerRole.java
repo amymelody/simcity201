@@ -4,7 +4,7 @@ import simcity.agent.Agent;
 import simcity.joshrestaurant.gui.JoshCustomerGui;
 import simcity.joshrestaurant.interfaces.JoshCustomer;
 import simcity.RestCustomerRole;
-import simcity.PersonAgent;
+import simcity.interfaces.Person;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -60,7 +60,7 @@ public class JoshCustomerRole extends RestCustomerRole implements JoshCustomer {
 		charge = 0;
 	}
 
-	public void setPerson(PersonAgent p) {
+	public void setPerson(Person p) {
 		super.setPerson(p);
 		name = person.getName();
 		cash = person.getMoney();
@@ -72,6 +72,10 @@ public class JoshCustomerRole extends RestCustomerRole implements JoshCustomer {
 	
 	public void setCashier(JoshCashierRole cashier) {
 		this.cashier = cashier;
+	}
+	
+	public void setCash(int c) {
+		cash = c;
 	}
 
 	public String getCustomerName() {
@@ -99,7 +103,7 @@ public class JoshCustomerRole extends RestCustomerRole implements JoshCustomer {
 	
 	// Messages
 
-	public void gotHungry() {//from animation
+	public void gotHungry() {
 		print("I'm hungry");
 		event = AgentEvent.gotHungry;
 		cash = person.getMoney();

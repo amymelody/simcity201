@@ -8,6 +8,7 @@ public abstract class Role
 {
     protected Person person;
     public EventLog log;
+    protected String name;
 
     protected Role()
     {
@@ -24,6 +25,7 @@ public abstract class Role
     public void setPerson(Person p)
     {
         person = p;
+        name = person.getName();
     }
     
     public Person getPersonAgent() //so other agents or role players can send you Person messages.
@@ -46,7 +48,7 @@ public abstract class Role
     protected void print(String msg, Throwable e)
     {
         StringBuffer sb = new StringBuffer();
-        sb.append(getName());
+        sb.append(name);
         sb.append(": ");
         sb.append(msg);
         sb.append("\n");

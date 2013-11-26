@@ -19,15 +19,15 @@ import java.util.List;
 
 public class CityAnimationPanel extends JPanel implements ActionListener, MouseListener, MouseMotionListener
 {
-	static final int TIMERINCR = 10;
+	static final int TIMERINCR = 8;
 	private final int WINDOWX = 500;
 	private final int WINDOWY = 500;
 	private Image bufferImage;
 	private Dimension bufferSize;
 
-	private List<Gui> guis = new ArrayList<Gui>();
+	private List<Gui> guis = Collections.synchronizedList(new ArrayList<Gui>());
 	private CityGui cityGui;
-	List<BuildingGui> buildings = new ArrayList<BuildingGui>();
+	List<BuildingGui> buildings = Collections.synchronizedList(new ArrayList<BuildingGui>());
 	BuildingGui currentBG;
 	
 	Image bg;
@@ -60,15 +60,17 @@ public class CityAnimationPanel extends JPanel implements ActionListener, MouseL
 		//background
 		g2.drawImage(bg, 0, 0, null);
 		
-		for(Gui gui : guis) {
-			if (gui.isPresent()) {
-				gui.updatePosition();
+		synchronized(guis) {
+			for(Gui gui : guis) {
+				if (gui.isPresent()) {
+					gui.updatePosition();
+				}
 			}
-		}
-
-		for(Gui gui : guis) {
-			if (gui.isPresent()) {
-				gui.draw(g2);
+	
+			for(Gui gui : guis) {
+				if (gui.isPresent()) {
+					gui.draw(g2);
+				}
 			}
 		}
 	}

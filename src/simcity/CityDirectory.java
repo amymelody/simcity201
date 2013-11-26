@@ -61,7 +61,7 @@ public class CityDirectory
 	private MarketCashierRole market1Cashier = new MarketCashierRole();
 	private MarketCashierRole market2Cashier = new MarketCashierRole();
 	private MarketCashierRole market3Cashier = new MarketCashierRole();
-	//private BankManagerRole bank1Manager = new BankManagerRole();
+	private BankManagerRole bank1Manager = new BankManagerRole();
 	private JoshCashierRole joshCashier = new JoshCashierRole();
 	private JoshCookRole joshCook = new JoshCookRole();
 	private JoshHostRole joshHost = new JoshHostRole();
@@ -203,9 +203,9 @@ public class CityDirectory
 		return cashiers;
 	}
 	
-	/*public BankManagerRole  getBankManager() {
+	public BankManagerRole  getBankManager() {
 		return bank1Manager;
-	}*/
+	}
 	
 	public JoshCashierRole getJoshCashier() {
 		return joshCashier;
@@ -227,7 +227,7 @@ public class CityDirectory
 		market1Cashier.setJobLocation("market1");
 		market2Cashier.setJobLocation("market2");
 		market3Cashier.setJobLocation("market3");
-		//bank1Manager.setJobLocation("bank1");
+		bank1Manager.setJobLocation("bank1");
 		joshCashier.setJobLocation("joshRestaurant");
 		joshCook.setJobLocation("joshRestaurant");
 		joshHost.setJobLocation("joshRestaurant");
@@ -257,7 +257,7 @@ public class CityDirectory
 		addBuilding("apartment25", "horizontal", new Point(apartment2X, apartment2Y));
 		addBuilding("apartment26", "horizontal", new Point(apartment2X, apartment2Y));
 		addBuilding("apartment27", "horizontal", new Point(apartment2X, apartment2Y));
-		addBuilding("bank", "horizontal", new Point(bankX, bankY));
+		addBuilding("bank1", "horizontal", new Point(bankX, bankY));
 		addBuilding("joshRestaurant", "horizontal", new Point(joshRestaurantX, joshRestaurantY));
 	
 		//add Traffic Nodes
@@ -375,12 +375,12 @@ public class CityDirectory
 			MarketEmployeeRole e  = new MarketEmployeeRole();
 			addMarketEmployee(e);
 			return e;
-		/*case "bankTellerRole":
+		case "bankTellerRole":
 			BankTellerRole t = new BankTellerRole();
 			addBankTeller(t);
 			return t;
 		case "bankManagerRole":
-			return pickBankManager();*/
+			return pickBankManager();
 		case "restCashierRole":
 			return pickRestCashier();
 		case "restCookRole":
@@ -401,6 +401,9 @@ public class CityDirectory
 		int num1 = getNumPeople("marketDelivererRole","market1");
 		int num2 = getNumPeople("marketDelivererRole","market2");
 		int num3 = getNumPeople("marketDelivererRole","market3");
+	//	System.out.println(num1);
+	//	System.out.println(num2);
+	//	System.out.println(num3);
 		int num = num1;
 		if (num > num2) {
 			num = num2;
@@ -518,9 +521,9 @@ public class CityDirectory
 		}
 	}
 	
-	/*public BankManagerRole pickBankManager() {
+	public BankManagerRole pickBankManager() {
 		return bank1Manager;
-	}*/
+	}
 	
 	public RestCashierRole pickRestCashier() {
 		/*int num1 = getNumPeople("restCashierRole","joshRestaurant");
@@ -788,7 +791,7 @@ public class CityDirectory
 				return 1;
 			}
 		}
-		if(role.equals("marketEmployee")) {
+		if(role.equals("marketEmployeeRole")) {
 			if (building.equals("market1")) {
 				return market1Employees.size();
 			}
@@ -799,7 +802,7 @@ public class CityDirectory
 				return market3Employees.size();
 			}
 		}
-		if(role.equals("marketDeliverer")) {
+		if(role.equals("marketDelivererRole")) {
 			if (building.equals("market1")) {
 				return market1Deliverers.size();
 			}
@@ -810,7 +813,7 @@ public class CityDirectory
 				return market3Deliverers.size();
 			}
 		}
-		if(role.equals("marketCashier")) {
+		if(role.equals("marketCashierRole")) {
 			if (building.equals("market1")) {
 				int num = 0;
 				for (PersonInfo p : personMap.values()) {

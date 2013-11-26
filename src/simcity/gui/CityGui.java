@@ -77,4 +77,36 @@ public class CityGui extends JFrame
 	public void addRestWaiter(RestWaiterRole w) {
 		animationPanel.addRestWaiter(w);
 	}
+	
+	/*public void addResident(ResidentRole r) {
+		animationPanel.addResident(r);
+	}
+	
+	public void addLandlord(LandlordRole l) {
+		animationPanel.addLandlord(l);
+	}
+	
+	public void addMarketCustomer(MarketCustomerRole c) {
+		animationPanel.addMarketCustomer(c);
+	}
+	
+	public void addMarketEmployee(MarketEmployeeRole e) {
+		animationPanel.addMarketEmployee(e);
+	}
+	
+	public void addMarketDeliverer(MarketDelivererRole d) {
+		animationPanel.addMarketDeliverer(d);
+	}
+	
+	public void addBankDepositor(BankDepositorRole d) {
+		animationPanel.addBankDepositor(d);
+	}
+	
+	public void addBankTeller(BankTellerRole t) {
+		animationPanel.addBankTeller(t);
+	}*/
+	
+	public void readConfig() {
+		inputPanel.readConfig();
+	}
 }

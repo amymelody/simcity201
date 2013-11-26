@@ -323,7 +323,7 @@ public class PersonAgent extends Agent implements Person
 			money += 600;
 			print("$" + money);
 		}*/
-		if (time.getHour() == 10 && time.getMinute() == 0) {
+		if (time.getHour() == 8 && time.getMinute() == 0) {
 			state.ns = NourishmentState.gotHungry;
 		}
 		stateChanged();
@@ -683,7 +683,6 @@ public class PersonAgent extends Agent implements Person
 							mr.r.setPerson(this);
 							mr.active = true;
 							state.ls = LocationState.restaurant;
-							c.setCash(money);
 							c.gotHungry();
 							state.ns = NourishmentState.hungry;
 						}

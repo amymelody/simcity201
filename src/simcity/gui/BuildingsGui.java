@@ -88,18 +88,18 @@ public class BuildingsGui extends JFrame
 		HousingGui apartment27 = new HousingGui("Apartment 2-7", this, cd);
 		cityGui.animationPanel.addBuilding(apartment27);
 		HousingGui apartment28 = new HousingGui("Apartment 2-8", this, cd);
-		cityGui.animationPanel.addBuilding(apartment28);
+		cityGui.animationPanel.addBuilding(apartment28);*/
 		JoshRestaurantGui joshRestaurant = new JoshRestaurantGui("Josh's Restaurant", this, cd);
 		cityGui.animationPanel.addBuilding(joshRestaurant);
-		CherysRestaurantGui cherysRestaurant = new CherysRestaurantGui("Cherys's Restaurant", this, cd);
+		/*CherysRestaurantGui cherysRestaurant = new CherysRestaurantGui("Cherys's Restaurant", this, cd);
 		cityGui.animationPanel.addBuilding(cherysRestaurant);
 		AnjaliRestaurantGui anjaliRestaurant = new AnjaliRestaurantGui("Anjali's Restaurant", this, cd);
 		cityGui.animationPanel.addBuilding(anjaliRestaurant);
 		AlfredRestaurantGui alfredRestaurant = new AlfredRestaurantGui("Alfred's Restaurant", this, cd);
 		cityGui.animationPanel.addBuilding(alfredRestaurant);
 		JesusRestaurantGui jesusRestaurant = new JesusRestaurantGui("Jesus's Restaurant", this, cd);
-		cityGui.animationPanel.addBuilding(jesusRestaurant);
-*/
+		cityGui.animationPanel.addBuilding(jesusRestaurant);*/
+
 	}
 
 }

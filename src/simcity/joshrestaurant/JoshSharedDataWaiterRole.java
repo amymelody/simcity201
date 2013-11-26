@@ -4,7 +4,7 @@ import simcity.joshrestaurant.gui.JoshWaiterGui;
 import simcity.joshrestaurant.gui.JoshCookGui;
 import simcity.joshrestaurant.interfaces.JoshWaiter;
 import simcity.joshrestaurant.interfaces.JoshCustomer;
-import simcity.PersonAgent;
+import simcity.interfaces.Person;
 
 import java.util.*;
 import java.util.concurrent.Semaphore;
@@ -59,7 +59,7 @@ public class JoshSharedDataWaiterRole extends JoshWaiterRole implements JoshWait
 		menu.addItem("pizza", prices.get("pizza"));
 	}
 	
-	public void setPerson(PersonAgent p) {
+	public void setPerson(Person p) {
 		super.setPerson(p);
 		name = person.getName();
 	}
@@ -89,7 +89,7 @@ public class JoshSharedDataWaiterRole extends JoshWaiterRole implements JoshWait
 	}
 	
 	public String toString() {
-		return getName();
+		return name;
 	}
 	
 	public boolean doneServingCustomers() {
