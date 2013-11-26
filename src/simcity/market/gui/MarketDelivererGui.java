@@ -5,12 +5,14 @@ import java.awt.Graphics2D;
 import java.util.List;
 
 import simcity.ItemOrder;
+import simcity.gui.DelivererGui;
 import simcity.gui.Gui;
 import simcity.market.MarketDelivererRole;
 import simcity.market.gui.MarketEmployeeGui.GuiState;
 
 public class MarketDelivererGui implements Gui {
 	private MarketDelivererRole role = null;
+	private String location;
 
 	private int xPos = -10, yPos = 10;//default Deliverer position
 	private int xDestination = 200, yDestination = 20;//default Deliverer destination
@@ -19,9 +21,14 @@ public class MarketDelivererGui implements Gui {
 	public enum GuiState {nothing, delivering, cashier, leaving}
 	public GuiState gS = GuiState.nothing;
 	
+	DelivererGui dG;
+	
 	public MarketDelivererGui(MarketDelivererRole r) {
 		this.role = r;
 
+	}
+	public void setDelivererGui(DelivererGui g) {
+		dG = g;
 	}
 
 	public void updatePosition() {
@@ -36,7 +43,7 @@ public class MarketDelivererGui implements Gui {
 			yPos--;
 		if(xPos == xDestination && yPos == yDestination) {
 			if(gS == GuiState.delivering) {
-				
+				dG.deliver(location);
 				gS = GuiState.nothing;
 			}
 			if(gS == GuiState.cashier) {
@@ -69,11 +76,18 @@ public class MarketDelivererGui implements Gui {
 	
 	/* Role Functions */
 	public void Deliver(String l) {
+		location = l;
 		xDestination = 510;
 		yDestination = 20;
 		gS = GuiState.delivering;
 	}
+	public void Outside() {
+		role.msgArrived();
+	}
 	public void GoToCashier() {
+		dG.goBack();
+	}
+	public void Inside() {
 		xDestination = 70;
 		yDestination = 10;
 		gS = GuiState.cashier;
