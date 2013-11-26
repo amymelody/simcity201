@@ -2,17 +2,21 @@ package simcity.housing.gui;
 
 public class MoveBox
 {
+	private int indexX;
+	private int indexY;
 	private int x;
 	private int y;
 	private boolean open;
 	
-	public MoveBox(int x, int y)
+	public MoveBox(int ix, int iy, int x, int y)
 	{
+		indexX = ix;
+		indexY = iy;
 		this.x = x;
 		this.y = y;
 		open = true;
 	}
-	
+
 	public int getX()
 	{
 		return x;
@@ -20,6 +24,14 @@ public class MoveBox
 	public int getY()
 	{
 		return y;
+	}
+	public int getIndexX()
+	{
+		return indexX;
+	}
+	public int getIndexY()
+	{
+		return indexY;
 	}
 	public boolean getOpen()
 	{

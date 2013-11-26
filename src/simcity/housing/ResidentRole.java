@@ -348,7 +348,7 @@ public class ResidentRole extends Role implements Resident
 	private void leaveHousing(Command c)
 	{
 		commands.remove(c);
-		goToLocation(locations.get("Outside"));
+		goToLocation(locations.get("Exit"));
 		state = ResidentState.away;
 		person.msgLeftDestination(this);
 		stateChanged();

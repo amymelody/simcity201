@@ -9,9 +9,13 @@ import java.awt.event.ActionListener;
 import java.util.List;
 import java.util.ArrayList;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
+
+import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
@@ -23,11 +27,15 @@ public class HousingAnimationPanel extends JPanel implements ActionListener
 	private Dimension bufferSize;
 
 	private List<Gui> guis = new ArrayList<Gui>();
+	private Image floor;
 	
 	public HousingAnimationPanel(CityGui cG)
 	{
 		setSize(WINDOWX, WINDOWY);
 		setVisible(true);
+		
+		ImageIcon floorIcon = new ImageIcon(this.getClass().getResource("images/HousingFloor.png"));
+		floor = floorIcon.getImage();
 		
 		bufferSize = this.getSize();
 
@@ -43,9 +51,8 @@ public class HousingAnimationPanel extends JPanel implements ActionListener
 	public void paintComponent(Graphics g)
 	{
 		Graphics2D g2 = (Graphics2D)g;
-    	g2.setColor(Color.black);
-    	g2.fillRect(0, 0, this.getSize().width, this.getSize().height);
-		
+		g2.drawImage(floor, 0, 0, null);
+    			
 		for(Gui gui : guis)
 		{
 			if (gui.isPresent())
@@ -63,13 +70,13 @@ public class HousingAnimationPanel extends JPanel implements ActionListener
 		}
 	}
 
-//	public void addGui(ResidentGui gui)
-//	{
-//		guis.add(gui);
-//	}
-//
-//	public void addGui(LandlordGui gui)
-//	{
-//		guis.add(gui);
-//	}
+	public void addGui(ResidentGui gui)
+	{
+		guis.add(gui);
+	}
+
+	public void addGui(LandlordGui gui)
+	{
+		guis.add(gui);
+	}
 }

@@ -19,10 +19,8 @@ public class LandlordRoleTest extends TestCase
 	{
 		super.setUp();
 		landlord = new LandlordRole();
-		landlord.unitTesting = true;
-		landlord.setPerson(new PersonAgent("Person"));
 		person = new MockPerson("MockPerson");
-		landlord.setMockPerson(person);
+		landlord.setPerson(person);
 		resident1 = new MockResident("MockResident1");
 		landlord.addRenter(resident1);
 		resident2 = new MockResident("MockResident2");

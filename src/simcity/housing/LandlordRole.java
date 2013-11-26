@@ -1,6 +1,7 @@
 package simcity.housing;
 
 import simcity.interfaces.Resident;
+import simcity.housing.ResidentRole.ResidentState;
 import simcity.housing.test.mock.MockPerson;
 import simcity.mock.EventLog;
 import simcity.mock.LoggedEvent;
@@ -13,8 +14,6 @@ public class LandlordRole extends JobRole
 {
 
 //Data
-	MockPerson mockPerson;
-	public boolean unitTesting = false;
 	public List<Renter> renters = Collections.synchronizedList(new ArrayList<Renter>());
 	public class Renter
 	{
@@ -49,11 +48,6 @@ public class LandlordRole extends JobRole
 	public LandlordRole()
 	{
 		super();
-	}
-	
-	public void setMockPerson(MockPerson p)
-	{
-		mockPerson = p;
 	}
 	
 //Messages
@@ -170,14 +164,11 @@ public class LandlordRole extends JobRole
 		{
 			r.state = RenterState.away;
 		}
-		mockPerson.msgIncome(moneyEarned);
 		person.msgIncome(moneyEarned);
 		moneyEarned = 0;
-		mockPerson.msgEndShift();
-		if(!unitTesting)
-		{
-			person.msgEndShift();
-		}
+		person.msgEndShift();
+		goToLocation(locations.get("Exit"));
+		person.msgLeftDestination(this);
 	}
 
 	private void goToLocation(Point p)
