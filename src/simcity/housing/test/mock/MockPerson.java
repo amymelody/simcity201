@@ -42,9 +42,9 @@ public class MockPerson extends Mock implements Person
 		groceries = glist;
 	}
 	@Override
-	public void msgLeftDestination(Role r) //from Resident
+	public void msgLeftDestination(Role r) //from Resident or Landlord
 	{
-		log.add(new LoggedEvent("Received msgLeftDestination from Resident"));
+		log.add(new LoggedEvent("Received msgLeftDestination"));
 	}
 
 	@Override

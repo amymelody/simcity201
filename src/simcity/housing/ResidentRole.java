@@ -382,14 +382,17 @@ public class ResidentRole extends Role implements Resident
 
 	private void goToLocation(Point p, String s)
 	{
-		gui.doGoToLocation(p, s);
-		try
+		if(!unitTesting)
 		{
-			atLocation.acquire();
-		}
-		catch (InterruptedException e)
-		{
-			e.printStackTrace();
+			gui.doGoToLocation(p, s);
+			try
+			{
+				atLocation.acquire();
+			}
+			catch (InterruptedException e)
+			{
+				e.printStackTrace();
+			}
 		}
 	}
 }

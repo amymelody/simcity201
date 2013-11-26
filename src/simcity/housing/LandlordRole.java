@@ -1,11 +1,8 @@
 package simcity.housing;
 
 import simcity.interfaces.Resident;
-import simcity.housing.ResidentRole.ResidentState;
 import simcity.housing.gui.HousingGui;
 import simcity.housing.gui.LandlordGui;
-import simcity.housing.gui.ResidentGui;
-import simcity.housing.test.mock.MockPerson;
 import simcity.mock.EventLog;
 import simcity.mock.LoggedEvent;
 import simcity.role.JobRole;
@@ -46,6 +43,7 @@ public class LandlordRole extends JobRole
 	Map<String, Point> locations = new HashMap<String, Point>();
 	Semaphore atLocation = new Semaphore(0, true);
 	public EventLog log = new EventLog();
+	public boolean unitTesing = false;
 	LandlordGui gui;
 
 	public LandlordRole()
@@ -187,15 +185,18 @@ public class LandlordRole extends JobRole
 
 	private void goToLocation(Point p)
 	{
-//		gui.doGoToLocation(p);
-//		try
-//		{
-//			atLocation.acquire();
-//		}
-//		catch (InterruptedException e)
-//		{
-//			e.printStackTrace();
-//		}
+		if(unitTesing)
+		{
+	//		gui.doGoToLocation(p);
+	//		try
+	//		{
+	//			atLocation.acquire();
+	//		}
+	//		catch (InterruptedException e)
+	//		{
+	//			e.printStackTrace();
+	//		}
+		}
 	}
 
 	public void addRenter(Resident r)

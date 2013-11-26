@@ -19,6 +19,7 @@ public class LandlordRoleTest extends TestCase
 	{
 		super.setUp();
 		landlord = new LandlordRole();
+		landlord.unitTesing = true;
 		person = new MockPerson("MockPerson");
 		landlord.setPerson(person);
 		resident1 = new MockResident("MockResident1");
@@ -199,11 +200,13 @@ public class LandlordRoleTest extends TestCase
 					+ person.log.getLastLoggedEvent().toString(), person.log.containsString("Received msgEndShift from Landlord"));
 			assertTrue("Landlord's variable moneyEarned should be 0. It doesn't.",
 					landlord.moneyEarned == 0);
+			assertTrue("MockPerson should have logged \"Received msgLeftDestination\" but didn't. His log reads instead: "
+					+ person.log.getLastLoggedEvent().toString(), person.log.containsString("Received msgLeftDestination"));
 			//Checking logs
 			assertEquals("Landlord should have 5 events logged after the Landlord's scheduler is called for the fifth time. Instead, it has "
 					+ landlord.log.size(), 5, landlord.log.size());
-			assertEquals("MockPerson should have 2 events logged after the Landlord's scheduler is called for the fifth time. Instead, the MockPerson's event log reads: "
-					+ person.log.toString(), 2, person.log.size());
+			assertEquals("MockPerson should have 3 events logged after the Landlord's scheduler is called for the fifth time. Instead, the MockPerson's event log reads: "
+					+ person.log.toString(), 3, person.log.size());
 			assertEquals("MockResident1 should have 2 events logged after the Landlord's scheduler is called for the fifth time. Instead, it has "
 					+ resident1.log.size(), 2, resident1.log.size());
 			assertEquals("MockResident2 should have 2 events logged after the Landlord's scheduler is called for the fifth time. Instead, it has "
