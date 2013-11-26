@@ -56,14 +56,26 @@ public class BankDepositorRole extends Role implements BankDepositor{
 	// Customer Status Data
 	enum CustomerState {entered, makingDeposit, makingWithdrawal, makingTransaction, beingHelped, leaving, atManager, atTeller};
 	CustomerState cS;
+	
+	enum MarketState{entered, makingDeposit, beingHelped, leaving}
+	MarketState mS;
+	int marketTransactionAmount = 0;
 	String location;
 	int transactionAmount = 0;
-	
+	boolean market = false;
 	/* Messages */
 	public void msgMakeDeposit(int cash){
 		Do("Person taking on role of bank depositor");
 		cS = CustomerState.makingTransaction;
 		transactionAmount = cash;
+		stateChanged();
+	}
+	
+	public void msgMarketDeposit(int cash){
+		market = true;
+		Do("Market is depositing surplus into its bank account");
+		mS = MarketState.entered;
+		cS = CustomerState.makingTransaction;
 		stateChanged();
 	}
 	
@@ -94,6 +106,15 @@ public class BankDepositorRole extends Role implements BankDepositor{
 	public void msgTransactionComplete(){
 		Do("Bank customer received confirmation that his transaction is complete");
 		cS = CustomerState.leaving;
+		while(market = false){
+		if(transactionAmount < 0){
+			person.msgIncome(transactionAmount);
+		 if(transactionAmount > 0){
+		 	person.msgExpense(transactionAmount);
+			
+			}
+		}
+		}
 		stateChanged();
 	}
 	
@@ -127,12 +148,14 @@ public class BankDepositorRole extends Role implements BankDepositor{
 			Leaving();
 			return true;
 		}
+		
+		
 		return false;
 	}
 	
 	
 	//Actions
-	
+
 	public void MakeTransaction(){
 		Do("Bank customer is going to manager");
 		DoGoToManager();

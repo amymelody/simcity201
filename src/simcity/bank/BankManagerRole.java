@@ -140,7 +140,15 @@ public class BankManagerRole extends JobRole implements BankManager  {
 			waitingCustomers.add(c);
 		stateChanged();
 	}
-	
+	public void msgMarketTransaction(BankDepositor c){
+		Do("Manager is adding market to a list of waiting customers");
+		if(findCustomer(c) == null){
+			customers.add(new myCustomer(c, c.getName()));
+		}
+			findCustomer(c).cS = CustomerState.marketArrived;
+			waitingCustomers.add(c);
+		stateChanged();
+	}
 	
 	public void msgProcessTransaction(BankTeller t, BankDepositor c, int money){
 		Do("Bank manager is processing transaction");
@@ -166,6 +174,12 @@ public class BankManagerRole extends JobRole implements BankManager  {
 			}
 		}
 		
+		for(myCustomer j : customers){
+			if(j.cS == CustomerState.marketArrived && !tellers.isEmpty()){
+				helpCustomer(waitingCustomers.get(0), findTeller());
+				return true;
+			}
+		}
 		if(bS == BankState.closing) {
 			closeUp();
 			return true;
@@ -237,7 +251,7 @@ public class BankManagerRole extends JobRole implements BankManager  {
 		}
 		
 	}
-	public enum CustomerState{arrived, beingHelped, leaving, transactionProcessed};
+	public enum CustomerState{marketArrived, arrived, marketHelped, beingHelped, marketLeaving, leaving, marketTransactionComplete, transactionProcessed};
 
 	
 	private myCustomer findCustomer(BankDepositor c){
