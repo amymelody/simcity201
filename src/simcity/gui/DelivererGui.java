@@ -2,25 +2,50 @@ package simcity.gui;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Point;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import simcity.ItemOrder;
 import simcity.gui.Gui;
 import simcity.market.MarketDelivererRole;
+import simcity.market.gui.MarketDelivererGui;
+import simcity.market.gui.MarketGui;
 
 public class DelivererGui implements Gui {
-	private DelivererGui gui = null;
-
-	private int xPos = -10, yPos = 10;//default Deliverer position
-	private int xDestination = 200, yDestination = 20;//default Deliverer destination
-	private int xHome = 200, yHome = 20; // Deliverer home position
+	private MarketDelivererGui gui;
+	private MarketGui mG;
+	Point marketPnt, destPnt;
 	
-	public enum GuiState {nothing, delivering, cashier, leaving}
+	private int xPos, yPos;//default Deliverer position
+	private int xDestination, yDestination;//default Deliverer destination
+	private int xHome, yHome; // Deliverer home poMap<K, V>ion
+	private static Map<String, Point> locations = new HashMap<String, Point>();
+	static {
+		locations.put("Market 1", new Point(250, 350));
+		locations.put("Market 2", new Point(230, 350));
+		locations.put("Market 3", new Point(60, 380));
+		locations.put("Josh's Restaurant", new Point(440, 330));
+		locations.put("Cherys's Restaurant", new Point(250, 380));
+		locations.put("Anjali's Restaurant", new Point(440, 350));
+		locations.put("Alfred's Restaurant", new Point(230, 380));
+		locations.put("Jesus's Restaurant", new Point(440, 380));
+	}
+	
+	public enum GuiState {nothing, delivering, cashier}
 	public GuiState gS = GuiState.nothing;
 	
-	public DelivererGui(DelivererGui g) {
+	public DelivererGui(MarketDelivererGui g, String nameOfMarket) {
 		this.gui = g;
-
+	
+		marketPnt = locations.get(nameOfMarket);
+		xPos = 520;
+		yPos = marketPnt.y;
+		xDestination = xPos;
+		yDestination = yPos;
+		xHome = marketPnt.x;
+		yHome = marketPnt.y;
 	}
 
 	public void updatePosition() {
@@ -35,16 +60,16 @@ public class DelivererGui implements Gui {
 			yPos--;
 		if(xPos == xDestination && yPos == yDestination) {
 			if(gS == GuiState.delivering) {
-				
+				gui.Outside();
+				xPos = 520;
+				xDestination=520;
 				gS = GuiState.nothing;
 			}
 			if(gS == GuiState.cashier) {
-				role.msgArrivedBack();
-				xDestination = xHome;
-				yDestination = yHome;
+				gui.Inside();
+				xPos = 520;
+				xDestination = 520;
 				gS = GuiState.nothing;
-			}
-			if(gS == GuiState.leaving) {
 			}
 		}
 	}
@@ -67,19 +92,19 @@ public class DelivererGui implements Gui {
 	
 	
 	/* Role Functions */
-	public void Deliver(String l) {
-		xDestination = 510;
-		yDestination = 20;
+	public void deliver(String l) {
+		xPos = marketPnt.x;
+		yPos = marketPnt.y;
+		destPnt = locations.get(l);
+		xDestination = destPnt.x;
+		yDestination = destPnt.y;
 		gS = GuiState.delivering;
 	}
-	public void GoToCashier() {
-		xDestination = 70;
-		yDestination = 10;
+	public void goBack() {
+		xPos = destPnt.x;
+		yPos = destPnt.y;
+		xDestination = xHome;
+		yDestination = yHome;
 		gS = GuiState.cashier;
-	}
-	public void leave() {
-		xDestination = -10;
-		yDestination = 10;
-		gS = GuiState.leaving;
 	}
 }

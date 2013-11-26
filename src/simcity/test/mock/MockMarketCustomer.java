@@ -35,7 +35,7 @@ public class MockMarketCustomer extends Mock implements MarketCustomer {
 	}
 	
 	@Override
-	public void msgHereIsWhatICanFulfill(List<ItemOrder> orders, boolean canFulfill) {
+	public void msgHereIsWhatICanFulfill(List<ItemOrder> orders, boolean canFulfill, int waitX, int waitY) {
 		// TODO Auto-generated method stub
 		if(canFulfill)
 			log.add(new LoggedEvent("Confirmation of (at least partial) delivery"));
@@ -57,6 +57,12 @@ public class MockMarketCustomer extends Mock implements MarketCustomer {
 	@Override
 	public void msgThankYou(int change) {
 		log.add(new LoggedEvent("Received change"));
+	}
+
+	@Override
+	public void msgOrderReady() {
+		// TODO Auto-generated method stub
+		log.add(new LoggedEvent("My order is ready"));
 	}
 	
 }

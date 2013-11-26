@@ -50,6 +50,8 @@ public class MarketGui extends BuildingGui
 		animationPanel.setMaximumSize(animDim);
 		animationPanel.setVisible(false);
 		bG.add(animationPanel);
+		
+		
 	}
 	
 	public void changeView(boolean visible) {
