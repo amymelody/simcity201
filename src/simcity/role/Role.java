@@ -24,7 +24,7 @@ public abstract class Role
     
     public void setPerson(Person p)
     {
-        person = p;
+    	person = p;
         name = person.getName();
     }
     

@@ -60,6 +60,12 @@ public class MockBankManager extends Mock implements BankManager {
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public void msgProcessTransaction(BankTeller t, BankDepositor c, int cash) {
+		// TODO Auto-generated method stub
+		
+	}
 	
 	
 }

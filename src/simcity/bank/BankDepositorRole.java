@@ -10,6 +10,8 @@ import simcity.bank.gui.BankGui;
 import simcity.bank.interfaces.BankDepositor;
 import simcity.bank.interfaces.BankManager;
 import simcity.bank.interfaces.BankTeller;
+import simcity.interfaces.Person;
+import simcity.bank.test.mock.MockBankManager;
 import simcity.interfaces.MarketCashier;
 import simcity.interfaces.MarketDeliverer;
 import simcity.role.Role;
@@ -20,7 +22,7 @@ public class BankDepositorRole extends Role implements BankDepositor{
 	//
 	/* Constructors */
 	String name;
-
+	boolean unitTesting = false;
 	public BankDepositorRole(){
 		super();
 	}
@@ -35,11 +37,13 @@ public class BankDepositorRole extends Role implements BankDepositor{
 		return name;
 	}
 	
-	public void setPerson(PersonAgent p){
+	public void setPerson(Person p){
 		super.setPerson(p);
 		name = p.getName();
+		int cash = person.getMoney();
+
 	}
-	public void setManager(BankManagerRole b) {
+	public void setManager(BankManager b) {
 		manager = b;
 	}
 	/* Animation */
@@ -47,21 +51,25 @@ public class BankDepositorRole extends Role implements BankDepositor{
 	BankDepositorGui gui;
 	
 	/* Data */
-	int cash = person.getMoney();
 	
 	// References to other roles
 	BankTeller teller;
 	BankManager manager;
 	
 	// Customer Status Data
-	enum CustomerState {entered, makingDeposit, makingWithdrawal, makingTransaction, beingHelped, leaving, atManager, atTeller};
+	public enum CustomerState {entered, makingDeposit, makingWithdrawal, makingTransaction, beingHelped, leaving, atManager, atTeller};
 	CustomerState cS;
-	
+	public CustomerState getCustomerState(){
+		return cS;
+	}
 	enum MarketState{entered, makingDeposit, beingHelped, leaving}
 	MarketState mS;
 	int marketTransactionAmount = 0;
 	String location;
 	int transactionAmount = 0;
+	public int getTransactionAmount(){
+		return transactionAmount;
+	}
 	boolean market = false;
 	/* Messages */
 	public void msgMakeDeposit(int cash){
@@ -199,25 +207,28 @@ public class BankDepositorRole extends Role implements BankDepositor{
 	}
 
 	/* Actions */
+	
+		private void DoGoToManager(){
+			gui.GoToManager();
+		}
+		
+		private void DoGoToTeller(){
+			gui.GoToTeller();
+		}
+		
+		private void DoLeaveBank(){
+			gui.ExitBank();
+		}
+		public BankDepositorGui getGui() {
+		
+			return gui;
+		}
+		
+		public void setBankGui(BankGui g){
+			gui.setGui(g);
+		}
 
-private void DoGoToManager(){
-	gui.GoToManager();
+
 }
 
-private void DoGoToTeller(){
-	gui.GoToTeller();
-}
-
-private void DoLeaveBank(){
-	gui.ExitBank();
-}
-public BankDepositorGui getGui() {
-
-	return gui;
-}
-
-public void setBankGui(BankGui g){
-	gui.setGui(g);
-}
-}
 	

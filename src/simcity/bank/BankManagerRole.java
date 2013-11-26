@@ -24,7 +24,7 @@ public class BankManagerRole extends JobRole implements BankManager  {
 	public BankManagerRole(String name) {
 		this.name = name;
 	}
-
+	
 	public String getMaitreDName(){
 		return name;
 	}

@@ -3,6 +3,7 @@ package simcity.bank.gui;
 import javax.swing.*;
 
 import simcity.gui.Gui;
+import simcity.joshrestaurant.gui.JoshRestaurantAnimationPanel;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -17,10 +18,16 @@ public class BankAnimationPanel extends JPanel implements ActionListener {
 	static final int FILLRECTX = 200;
 	static final int FILLRECTY = 250;
 	static final int FILLRECT = 50;
-    private final int WINDOWX = 300;
-    private final int WINDOWY = 300;
+    private final int WINDOWX = 500;
+    private final int WINDOWY = 500;
+    static final int TABLEX = 150;
+	static final int TABLEY = 250;
+	static final int TABLEWIDTH = 50;
+	static final int TABLEHEIGHT = 50;
+	
     private Image bufferImage;
     private Dimension bufferSize;
+	BankAnimationPanel animationPanel = new BankAnimationPanel();
 
 
 	private List<Gui> guis = new ArrayList<Gui>();
@@ -72,6 +79,7 @@ public class BankAnimationPanel extends JPanel implements ActionListener {
 		if(gui.isPresent()){
 			gui.draw(managerArea);
 			gui.draw(tellerArea);
+			
 			}
 		}
 	}
@@ -85,4 +93,5 @@ public class BankAnimationPanel extends JPanel implements ActionListener {
 	public void addGui(BankTellerGui gui){
 		guis.add(gui);
 	}
+	
 }
