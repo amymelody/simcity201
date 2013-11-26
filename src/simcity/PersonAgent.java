@@ -21,7 +21,7 @@ import simcity.mock.LoggedEvent;
 import simcity.role.Role;
 import simcity.housing.ResidentRole;
 import simcity.market.MarketCustomerRole;
-//import simcity.bank.BankDepositorRole;
+import simcity.bank.BankDepositorRole;
 import simcity.role.JobRole;
 
 import java.util.*;
@@ -336,6 +336,7 @@ public class PersonAgent extends Agent implements Person
 	}
 	
 	public void msgYoureHired(String role, int payrate, Map<Day,Time> startShifts, Map<Day,Time> endShifts) {
+		print("You're hired");
 		JobRole j = city.JobFactory(role);
 		addRole(j, role);
 		job = new Job(j.getJobLocation(), role, payrate, startShifts, endShifts);
@@ -727,10 +728,10 @@ public class PersonAgent extends Agent implements Person
 			print("I'm going to the bank");
 			goToDestination(b.location);
 		} else {
-			/*if (!findRole(b.depositorRole)) {
+			if (!findRole(b.depositorRole)) {
 				BankDepositorRole d = city.BankDepositorFactory(b.depositorRole);
 				addRole(d, b.depositorRole);
-			} */
+			}
 			synchronized(roles) {
 				for (MyRole mr : roles) {
 					if (mr.name.equals(b.depositorRole)) {

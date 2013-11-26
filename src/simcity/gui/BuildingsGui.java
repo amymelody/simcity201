@@ -51,7 +51,7 @@ public class BuildingsGui extends JFrame
 		cityGui.animationPanel.addBuilding(market3);
 		BankGui bank = new BankGui("bank1", this, cd);
 		cityGui.animationPanel.addBuilding(bank);
-		/*HousingGui house1 = new HousingGui("house1", this, cd);
+		HousingGui house1 = new HousingGui("house1", this, cd);
 		cityGui.animationPanel.addBuilding(house1);
 		HousingGui house2 = new HousingGui("house2", this, cd);
 		cityGui.animationPanel.addBuilding(house2);
@@ -88,7 +88,7 @@ public class BuildingsGui extends JFrame
 		HousingGui apartment26 = new HousingGui("apartment26", this, cd);
 		cityGui.animationPanel.addBuilding(apartment26);
 		HousingGui apartment27 = new HousingGui("apartment27", this, cd);
-		cityGui.animationPanel.addBuilding(apartment27);*/
+		cityGui.animationPanel.addBuilding(apartment27);
 		JoshRestaurantGui joshRestaurant = new JoshRestaurantGui("joshRestaurant", this, cd);
 		cityGui.animationPanel.addBuilding(joshRestaurant);
 		/*CherysRestaurantGui cherysRestaurant = new CherysRestaurantGui("cherysRestaurant", this, cd);
