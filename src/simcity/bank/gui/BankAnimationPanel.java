@@ -46,27 +46,27 @@ public class BankAnimationPanel extends JPanel implements ActionListener {
 	
 	public void paintComponent(Graphics g){
 		
-        Graphics2D managerArea = (Graphics2D)g;
-        Graphics2D tellerArea = (Graphics2D)g;
+        Graphics2D g2 = (Graphics2D)g;
         //Clear the screen by painting a rectangle the size of the frame
-       
+        //getBackground()
         
-        managerArea.setColor(getBackground());
-        managerArea.fillRect(0,0,WINDOWX, WINDOWY);
-        tellerArea.setColor(getBackground());
-        tellerArea.fillRect(0,0,WINDOWX, WINDOWY);
+        
+        g2.setColor(Color.white);
+        g2.fillRect(0,0,WINDOWX, WINDOWY);
  
         //Here is the table
         
-        managerArea.fillRect(10, 200, 50, 20);
-        managerArea.drawString("Cook Area", 5, 200);
+        g2.setColor(Color.red);
+        g2.fillRect(10, 200, 50, 20);
         
-        tellerArea.fillRect(110, 200, 50, 20);
-        tellerArea.drawString("Teller Desk", 105, 200);
+        g2.setColor(Color.black);
+        g2.drawString("Cook Area", 5, 200);
         
-       
-
-	
+        g2.setColor(Color.green);
+        g2.fillRect(110, 200, 50, 20);
+        
+        g2.setColor(Color.black);
+        g2.drawString("Teller Desk", 105, 200);
 	
 	for(Gui gui : guis){
 		if(gui.isPresent()){
@@ -76,8 +76,7 @@ public class BankAnimationPanel extends JPanel implements ActionListener {
 	
 	for(Gui gui : guis){
 		if(gui.isPresent()){
-			gui.draw(managerArea);
-			gui.draw(tellerArea);
+			gui.draw(g2);
 			
 			}
 		}
