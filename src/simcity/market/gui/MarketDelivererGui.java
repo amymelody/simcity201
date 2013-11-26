@@ -11,9 +11,12 @@ import simcity.market.MarketDelivererRole;
 public class MarketDelivererGui implements Gui {
 	private MarketDelivererRole role = null;
 
-	private int xPos = -20, yPos = -20;//default Deliverer position
-	private int xDestination = -20, yDestination = -20;//default Deliverer destination
-	private int xHome = -20, yHome = -20; // Deliverer home position
+	private int xPos = -10, yPos = 10;//default Deliverer position
+	private int xDestination = 200, yDestination = 20;//default Deliverer destination
+	private int xHome = 200, yHome = 20; // Deliverer home position
+	
+	public enum GuiState {nothing, delivering, cashier, leaving}
+	public GuiState gS = GuiState.nothing;
 	
 	public MarketDelivererGui(MarketDelivererRole r) {
 		this.role = r;
@@ -51,12 +54,18 @@ public class MarketDelivererGui implements Gui {
 	
 	/* Role Functions */
 	public void Deliver(String l) {
-		
+		xDestination = 510;
+		yDestination = 20;
+		gS = GuiState.delivering;
 	}
 	public void GoToCashier() {
-		
+		xDestination = 70;
+		yDestination = 10;
+		gS = GuiState.cashier;
 	}
 	public void leave() {
-		
+		xDestination = -10;
+		yDestination = 10;
+		gS = GuiState.leaving;
 	}
 }
