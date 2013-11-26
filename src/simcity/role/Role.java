@@ -1,12 +1,12 @@
 package simcity.role;
 
-import simcity.PersonAgent;
+import simcity.interfaces.Person;
 import simcity.agent.StringUtil;
 import simcity.mock.EventLog;
 
 public abstract class Role
 {
-    protected PersonAgent person;
+    protected Person person;
     public EventLog log;
 
     protected Role()
@@ -21,12 +21,12 @@ public abstract class Role
         person.stateChanged();
     }
     
-    public void setPerson(PersonAgent p)
+    public void setPerson(Person p)
     {
         person = p;
     }
     
-    public PersonAgent getPersonAgent() //so other agents or role players can send you Person messages.
+    public Person getPersonAgent() //so other agents or role players can send you Person messages.
     {
         return person;
     }

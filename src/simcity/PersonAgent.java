@@ -208,7 +208,7 @@ public class PersonAgent extends Agent implements Person
 	}
 	
 	private boolean wantToGoToRestaurant() {
-		/*if (state.ps == PhysicalState.fit) {
+		if (state.ps == PhysicalState.fit) {
 			return false;
 		}
 		if (state.ps == PhysicalState.average){
@@ -217,7 +217,7 @@ public class PersonAgent extends Agent implements Person
 				return true;
 			}
 			return false;
-		}*/
+		}
 		return true;
 	}
 	
@@ -317,7 +317,7 @@ public class PersonAgent extends Agent implements Person
 		time.hour = h;
 		time.minute = m;
 		print(time.getDay().toString() + ", " + time.getHour() + ":" + time.getMinute());
-		if (time.getHour() == 8) {
+		if (time.getHour() == 8 && time.getMinute() == 0) {
 			state.ns = NourishmentState.gotHungry;
 		}
 		stateChanged();
