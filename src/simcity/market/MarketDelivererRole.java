@@ -78,18 +78,18 @@ public class MarketDelivererRole extends JobRole implements MarketDeliverer {
 	// Start/End Shifts
 	public void msgStartShift() {
 		working = true;
-		//stateChanged();
+		stateChanged();
 	}
 	public void msgEndShift() {
 		working = false;
-		//stateChanged();
+		stateChanged();
 	}
 
 	// Normative Scenarios
 	public void msgDeliverItems(Order o) {
 		o.oS = OrderState.newDelivery;
 		orders.add(o);
-		//stateChanged();
+		stateChanged();
 	}
 	public void msgPayment(RestCashier c, int money) {
 		synchronized(orders) {
@@ -97,7 +97,7 @@ public class MarketDelivererRole extends JobRole implements MarketDeliverer {
 				if(o.customer.equals(c)) {
 					o.amountPaid = money;
 					o.oS = OrderState.paying;
-					//stateChanged();
+					stateChanged();
 				}
 			}
 		}
@@ -109,12 +109,12 @@ public class MarketDelivererRole extends JobRole implements MarketDeliverer {
 	public void msgArrived() {
 		animation.release();
 		dS = DelivererState.arrived;
-		//stateChanged();
+		stateChanged();
 	}
 	public void msgArrivedBack() {
 		animation.release();
 		dS = DelivererState.arrivedBack;
-		//stateChanged();
+		stateChanged();
 	}
 
 

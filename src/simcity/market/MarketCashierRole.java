@@ -164,11 +164,11 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 	// Start/End Shift
 	public void msgStartShift() {
 		working = true;
-		//stateChanged();
+		stateChanged();
 	}
 	public void msgEndShift() {
 		working = false;
-		//stateChanged();
+		stateChanged();
 	}
 
 	// Worker interactions (hiring, enter/exit shift, etc.)
@@ -216,20 +216,20 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 	}
 	public void msgDoneForTheDay() {
 		mS = MarketState.closing;
-		//stateChanged();
+		stateChanged();
 	}
 	// Inventory updated +10 every time market opens
 	public void msgWereOpen() {
 		mS = MarketState.open;
 		marketMoneySurplus = 0;
 		inventory.opening();
-		//stateChanged();
+		stateChanged();
 	}
 
 	// Normative Scenario #1
 	public void msgIWantItems(MarketCustomer c, List<ItemOrder> items) {
 		orders.add(new Order(c, items));
-		//stateChanged();
+		stateChanged();
 	}
 	
 	public void msgImHere(MarketCustomer c) {
@@ -240,7 +240,7 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 				}
 			}
 		}
-		//stateChanged();
+		stateChanged();
 	}
 	
 	public void msgHereAreItems(Order order, MarketEmployee e) {
@@ -258,7 +258,7 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 				}
 			}
 		}
-		//stateChanged();
+		stateChanged();
 	}
 	public void msgPayment(MarketCustomer c, int money) {
 		synchronized(orders) {
@@ -270,6 +270,7 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 				}
 			}
 		}
+		stateChanged();
 	}
 
 	// Normative Scenario #2

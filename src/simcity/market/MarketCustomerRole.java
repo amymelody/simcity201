@@ -102,13 +102,13 @@ public class MarketCustomerRole extends Role implements MarketCustomer {
 	public void msgHereAreItemsandPrice(List<ItemOrder> i, int price) {
 		cost = price;
 		cS = CustomerState.getting;
-		//stateChanged();
+		stateChanged();
 	}
 
 	public void msgThankYou(int chnge) {
 		change = chnge;
 		cS = CustomerState.leaving;
-		//stateChanged();
+		stateChanged();
 	}
 
 
@@ -116,18 +116,18 @@ public class MarketCustomerRole extends Role implements MarketCustomer {
 	public void msgAtCashier() {
 		animation.release();
 		cS = CustomerState.atCashier;
-		//stateChanged();
+		stateChanged();
 	}
 	
 	public void msgAtPickUp() {
 		animation.release();
 		cS = CustomerState.atPickUp;
-		//stateChanged();
+		stateChanged();
 	}
 	
 	public void msgOut() {
 		cS = CustomerState.out;
-		//stateChanged();
+		stateChanged();
 	}
 
 

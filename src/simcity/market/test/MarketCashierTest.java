@@ -6,6 +6,7 @@ import java.util.List;
 import simcity.market.MarketCashierRole;
 import simcity.market.MarketCashierRole.MarketState;
 import simcity.market.Order.OrderState;
+import simcity.market.test.mock.MockPerson;
 import simcity.test.mock.MockMarketCustomer;
 import simcity.test.mock.MockMarketDeliverer;
 import simcity.test.mock.MockMarketEmployee;
@@ -23,6 +24,7 @@ public class MarketCashierTest extends TestCase
 	MockMarketCustomer customer1, customer2;
 	MockRestCashier rCashier1, rCashier2;
 	MockRestCook rCook1, rCook2;
+	MockPerson person;
 
 
 	/**
@@ -42,6 +44,7 @@ public class MarketCashierTest extends TestCase
 		rCook2 = new MockRestCook("rCook2");
 		rCashier1 = new MockRestCashier("MockRestCashier1");
 		rCashier2 = new MockRestCashier("MockRestCashier2");
+		person = new MockPerson("MockPerson");
 	}
 
 
@@ -51,6 +54,7 @@ public class MarketCashierTest extends TestCase
 	public void testOneNormalCustomerScenario1()
 	{
 		// Set up
+		cashier.setPerson(person);
 		customer1.cashier = cashier;
 		employee1.cashier = cashier;
 		cashier.setEmployees(employee1, 10, true);
@@ -89,7 +93,7 @@ public class MarketCashierTest extends TestCase
 		assertTrue("Cashier should have sent confirmation to customer1. Customer1 should have a log that reads: Confirmation of (at least partial) delivery. Instead it reads: " + customer1.log.toString(), customer1.log.getLastLoggedEvent().getMessage() == "Confirmation of (at least partial) delivery");
 		assertEquals("Lasagna inventory goes down by 2. Inventory amount should be 8. It isn't.", cashier.inventory.getAmount("Lasagna"), (Integer) 8);
 		assertEquals("Horchata inventory goes down by 5. Inventory amount should be 5. It isn't.", cashier.inventory.getAmount("Horchata"), (Integer) 5);
-
+		
 		// Step 2a - Receiving items from Employee (Message)
 		cashier.msgHereAreItems(employee1.orders.get(0), employee1);
 
@@ -100,11 +104,25 @@ public class MarketCashierTest extends TestCase
 		assertTrue("Cashier's scheduler should have returned true, but didn't.", cashier.pickAndExecuteAnAction());
 
 		// Check postconditions for Step 2b
+		assertTrue("Cashier should have an order in List orders in which OrderState == know. It doesn't.", cashier.orders.get(0).getOS() == OrderState.know);
+		assertTrue("Cashier should have called customer1"
+				+ " to pick up order. Customer1 should have a log that reads: My order is ready. Instead it reads: " + customer1.log.toString(), customer1.log.getLastLoggedEvent().getMessage() == "My order is ready");
+		assertEquals("Cashier should have an order in List orders in which price == $35. It doesn't.", cashier.orders.get(0).price, 35);
+
+		// Step 3a - Customer arrives at desk
+		cashier.msgImHere(customer1);
+		
+		// Check postconditions for Step 3a
+		assertTrue("Cashier should have one order in List orders in which OrderState == here. It doesn't.", cashier.orders.get(0).getOS() == OrderState.here);
+		
+		// Step 3b - Hand order to Customer (Scheduler/Action)
+		assertTrue("Cashier's scheduler should have returned true, but didn't.", cashier.pickAndExecuteAnAction());
+		
+		// Check postconditions for Step 3b
 		assertTrue("Cashier should have an order in List orders in which OrderState == paying. It doesn't.", cashier.orders.get(0).getOS() == OrderState.paying);
 		assertTrue("Cashier should have called customer1"
 				+ " to pick up order. Customer1 should have a log that reads: Received correct items and payment. Instead it reads: " + customer1.log.toString(), customer1.log.getLastLoggedEvent().getMessage() == "Received correct items and payment");
-		assertEquals("Cashier should have an order in List orders in which price == $35. It doesn't.", cashier.orders.get(0).price, 35);
-
+		
 		// Step 3a - Take Customer's payment (Message)
 		cashier.msgPayment(customer1, 40);
 
@@ -129,6 +147,7 @@ public class MarketCashierTest extends TestCase
 	public void testTwoNormalCustomerScenario2()
 	{
 		// Set up
+		cashier.setPerson(person);
 		rCook1.cashier = cashier;
 		deliverer1.cashier = cashier;
 		cashier.setDeliverers(deliverer1, 10, true);
@@ -191,6 +210,7 @@ public class MarketCashierTest extends TestCase
 	public void testThreeNormalMultipleCustomerScenario1()
 	{
 		// Set up
+		cashier.setPerson(person);
 		customer1.cashier = cashier;
 		customer2.cashier = cashier;
 		employee1.cashier = cashier;
@@ -273,47 +293,76 @@ public class MarketCashierTest extends TestCase
 		assertTrue("Cashier's scheduler should have returned true, but didn't.", cashier.pickAndExecuteAnAction());
 
 		// Check postconditions for Step 2b
+		assertTrue("Cashier should have an order in List orders in which OrderState == know. It doesn't.", cashier.orders.get(0).getOS() == OrderState.know);
+		assertTrue("Cashier should have called customer1"
+				+ " to pick up order. Customer1 should have a log that reads: My order is ready. Instead it reads: " + customer1.log.toString(), customer1.log.getLastLoggedEvent().getMessage() == "My order is ready");
+		assertEquals("Cashier should have an order in List orders in which price == $35. It doesn't.", cashier.orders.get(0).price, 35);
+
+		// Step 3a - Customer arrives at desk
+		cashier.msgImHere(customer1);
+		
+		// Check postconditions for Step 3a
+		assertTrue("Cashier should have one order in List orders in which OrderState == here. It doesn't.", cashier.orders.get(0).getOS() == OrderState.here);
+		
+		// Step 3b - Hand order to Customer (Scheduler/Action)
+		assertTrue("Cashier's scheduler should have returned true, but didn't.", cashier.pickAndExecuteAnAction());
+		
+		// Check postconditions for Step 3b
 		assertTrue("Cashier should have an order in List orders in which OrderState == paying. It doesn't.", cashier.orders.get(0).getOS() == OrderState.paying);
 		assertTrue("Cashier should have called customer1"
 				+ " to pick up order. Customer1 should have a log that reads: Received correct items and payment. Instead it reads: " + customer1.log.toString(), customer1.log.getLastLoggedEvent().getMessage() == "Received correct items and payment");
 		assertEquals("Cashier should have an order in List orders in which price == $35. It doesn't.", cashier.orders.get(0).price, 35);
 
-		// Step 2c - Take Customer1's payment (Message)
+		// Step 3c - Take Customer1's payment (Message)
 		cashier.msgPayment(customer1, 40);
 
-		// Check postconditions for Step 2c
+		// Check postconditions for Step 3c
 		assertEquals("Cashier should have one order in List orders in which amountPaid == $40. It doesn't.", cashier.orders.get(0).amountPaid, 40);
 		assertEquals("Cashier should have one order in List orders in which change == $5. It doesn't.", cashier.orders.get(0).change, 5);
 
-		// Step 2d - Hand Customer1's change (Scheduler/Action)
+		// Step 3d - Hand Customer1's change (Scheduler/Action)
 		assertTrue("Cashier's scheduler should have returned true, but didn't.", cashier.pickAndExecuteAnAction());
 
-		// Check postconditions for Step 2d
+		// Check postconditions for Step 3d
 		assertEquals("Cashier should have one order in List orders. It doesn't.", cashier.orders.size(), 1);		
 		assertTrue("Cashier should have handed customer1's"
 				+ " change. Customer1 should have a log that reads: Received change. Instead it reads: " + customer1.log.toString(), customer1.log.getLastLoggedEvent().getMessage() == "Received change");
 		assertEquals("marketMoney should total up to $85. It doesn't", cashier.viewMarketMoney(), 85);
 
-		// Step 3b - Letting Customer2 know Order is ready (Scheduler/Action)
+		// Step 4b - Letting Customer2 know Order is ready (Scheduler/Action)
 		assertTrue("Cashier's scheduler should have returned true, but didn't.", cashier.pickAndExecuteAnAction());
+		
+		// Check postconditions for Step 4b
+		assertTrue("Cashier should have an order in List orders in which OrderState == know. It doesn't.", cashier.orders.get(0).getOS() == OrderState.know);
+		assertTrue("Cashier should have called customer2"
+				+ " to pick up order. Customer2 should have a log that reads: My order is ready. Instead it reads: " + customer2.log.toString(), customer2.log.getLastLoggedEvent().getMessage() == "My order is ready");
 
+		// Step 5a - Customer arrives at desk
+		cashier.msgImHere(customer2);
+		
+		// Check postconditions for Step 5a
+		assertTrue("Cashier should have one order in List orders in which OrderState == here. It doesn't.", cashier.orders.get(0).getOS() == OrderState.here);
+		
+		// Step 5b - Hand order to Customer (Scheduler/Action)
+		assertTrue("Cashier's scheduler should have returned true, but didn't.", cashier.pickAndExecuteAnAction());
+		
 		// Check postconditions for Step 3b
 		assertTrue("Cashier should have an order in List orders in which OrderState == paying. It doesn't.", cashier.orders.get(0).getOS() == OrderState.paying);
 		assertTrue("Cashier should have called customer2"
 				+ " to pick up order. Customer2 should have a log that reads: Received correct items and payment. Instead it reads: " + customer2.log.toString(), customer2.log.getLastLoggedEvent().getMessage() == "Received correct items and payment");
 		assertEquals("Cashier should have an order in List orders in which price == $75. It doesn't.", cashier.orders.get(0).price, 75);
 
-		// Step 3c - Take Customer2's payment (Message)
+		// Step 5c - Take Customer2's payment (Message)
 		cashier.msgPayment(customer2, 100);
 
-		// Check postconditions for Step 3c
+		// Check postconditions for Step 5c
 		assertEquals("Cashier should have one order in List orders in which amountPaid == $100. It doesn't.", cashier.orders.get(0).amountPaid, 100);
 		assertEquals("Cashier should have one order in List orders in which change == $25. It doesn't.", cashier.orders.get(0).change, 25);
 
-		// Step 3d - Hand Customer2's change (Scheduler/Action)
+		// Step 5d - Hand Customer2's change (Scheduler/Action)
 		assertTrue("Cashier's scheduler should have returned true, but didn't.", cashier.pickAndExecuteAnAction());
 
-		// Check postconditions for Step 3d
+		// Check postconditions for Step 5d
 		assertEquals("Cashier should have no orders in List orders. It doesn't.", cashier.orders.size(), 0);		
 		assertTrue("Cashier should have handed customer2's"
 				+ " change. Customer2 should have a log that reads: Received change. Instead it reads: " + customer2.log.toString(), customer2.log.getLastLoggedEvent().getMessage() == "Received change");
@@ -326,6 +375,7 @@ public class MarketCashierTest extends TestCase
 	public void testFourNormalMultipleCustomersScenario2()
 	{
 		// Set up
+		cashier.setPerson(person);
 		rCook1.cashier = cashier;
 		rCook2.cashier = cashier;
 		deliverer1.cashier = cashier;
@@ -430,6 +480,7 @@ public class MarketCashierTest extends TestCase
 	public void testFiveNormalMultipleCustomerMultipleEmployeesScenario1()
 	{
 		// Set up
+		cashier.setPerson(person);
 		customer1.cashier = cashier;
 		customer2.cashier = cashier;
 		employee1.cashier = cashier;
@@ -511,51 +562,79 @@ public class MarketCashierTest extends TestCase
 		// Check postconditions for Step 3a
 		assertTrue("Cashier should have two orders in List orders in which OrderState == ready. It doesn't.", cashier.orders.get(0).getOS() == OrderState.ready && cashier.orders.get(0).getOS() == OrderState.ready);
 
-		// Step 2b - Letting Customer1 know Order is ready (Scheduler/Action)
+		// Step 3b - Letting Customer1 know Order is ready (Scheduler/Action)
 		assertTrue("Cashier's scheduler should have returned true, but didn't.", cashier.pickAndExecuteAnAction());
 
-		// Check postconditions for Step 2b
+		// Check postconditions for Step 3b
+		assertTrue("Cashier should have an order in List orders in which OrderState == know. It doesn't.", cashier.orders.get(0).getOS() == OrderState.know);
+		assertTrue("Cashier should have called customer1"
+				+ " to pick up order. Customer1 should have a log that reads: My order is ready. Instead it reads: " + customer1.log.toString(), customer1.log.getLastLoggedEvent().getMessage() == "My order is ready");
+		
+		// Step 4a - Customer arrives at desk
+		cashier.msgImHere(customer1);
+		
+		// Check postconditions for Step 4a
+		assertTrue("Cashier should have one order in List orders in which OrderState == here. It doesn't.", cashier.orders.get(0).getOS() == OrderState.here);
+		
+		// Step 4b - Hand order to Customer (Scheduler/Action)
+		assertTrue("Cashier's scheduler should have returned true, but didn't.", cashier.pickAndExecuteAnAction());
+		
+		// Check postconditions for Step 4b
 		assertTrue("Cashier should have an order in List orders in which OrderState == paying. It doesn't.", cashier.orders.get(0).getOS() == OrderState.paying);
 		assertTrue("Cashier should have called customer1"
 				+ " to pick up order. Customer1 should have a log that reads: Received correct items and payment. Instead it reads: " + customer1.log.toString(), customer1.log.getLastLoggedEvent().getMessage() == "Received correct items and payment");
 		assertEquals("Cashier should have an order in List orders in which price == $35. It doesn't.", cashier.orders.get(0).price, 35);
 
-		// Step 2c - Take Customer1's payment (Message)
+		// Step 4c - Take Customer1's payment (Message)
 		cashier.msgPayment(customer1, 40);
 
-		// Check postconditions for Step 2c
+		// Check postconditions for Step 4c
 		assertEquals("Cashier should have one order in List orders in which amountPaid == $40. It doesn't.", cashier.orders.get(0).amountPaid, 40);
 		assertEquals("Cashier should have one order in List orders in which change == $5. It doesn't.", cashier.orders.get(0).change, 5);
 
-		// Step 2d - Hand Customer1's change (Scheduler/Action)
+		// Step 4d - Hand Customer1's change (Scheduler/Action)
 		assertTrue("Cashier's scheduler should have returned true, but didn't.", cashier.pickAndExecuteAnAction());
 
-		// Check postconditions for Step 2d
+		// Check postconditions for Step 4d
 		assertEquals("Cashier should have one order in List orders. It doesn't.", cashier.orders.size(), 1);		
 		assertTrue("Cashier should have handed customer1's"
 				+ " change. Customer1 should have a log that reads: Received change. Instead it reads: " + customer1.log.toString(), customer1.log.getLastLoggedEvent().getMessage() == "Received change");
 		assertEquals("marketMoney should total up to $85. It doesn't", cashier.viewMarketMoney(), 85);
 
-		// Step 3b - Letting Customer2 know Order is ready (Scheduler/Action)
+		// Step 5b - Letting Customer2 know Order is ready (Scheduler/Action)
 		assertTrue("Cashier's scheduler should have returned true, but didn't.", cashier.pickAndExecuteAnAction());
 
-		// Check postconditions for Step 3b
+		// Check postconditions for Step 5b
+		assertTrue("Cashier should have an order in List orders in which OrderState == know. It doesn't.", cashier.orders.get(0).getOS() == OrderState.know);
+		assertTrue("Cashier should have called customer2"
+				+ " to pick up order. Customer2 should have a log that reads: My order is ready. Instead it reads: " + customer2.log.toString(), customer2.log.getLastLoggedEvent().getMessage() == "My order is ready");
+		
+		// Step 5a - Customer arrives at desk
+		cashier.msgImHere(customer2);
+		
+		// Check postconditions for Step 5a
+		assertTrue("Cashier should have one order in List orders in which OrderState == here. It doesn't.", cashier.orders.get(0).getOS() == OrderState.here);
+		
+		// Step 5b - Hand order to Customer (Scheduler/Action)
+		assertTrue("Cashier's scheduler should have returned true, but didn't.", cashier.pickAndExecuteAnAction());
+		
+		// Check postconditions for Step 5b
 		assertTrue("Cashier should have an order in List orders in which OrderState == paying. It doesn't.", cashier.orders.get(0).getOS() == OrderState.paying);
 		assertTrue("Cashier should have called customer2"
 				+ " to pick up order. Customer2 should have a log that reads: Received correct items and payment. Instead it reads: " + customer2.log.toString(), customer2.log.getLastLoggedEvent().getMessage() == "Received correct items and payment");
 		assertEquals("Cashier should have an order in List orders in which price == $75. It doesn't.", cashier.orders.get(0).price, 75);
 
-		// Step 3c - Take Customer2's payment (Message)
+		// Step 5c - Take Customer2's payment (Message)
 		cashier.msgPayment(customer2, 100);
 
-		// Check postconditions for Step 3c
+		// Check postconditions for Step 5c
 		assertEquals("Cashier should have one order in List orders in which amountPaid == $100. It doesn't.", cashier.orders.get(0).amountPaid, 100);
 		assertEquals("Cashier should have one order in List orders in which change == $25. It doesn't.", cashier.orders.get(0).change, 25);
 
-		// Step 3d - Hand Customer2's change (Scheduler/Action)
+		// Step 5d - Hand Customer2's change (Scheduler/Action)
 		assertTrue("Cashier's scheduler should have returned true, but didn't.", cashier.pickAndExecuteAnAction());
 
-		// Check postconditions for Step 3d
+		// Check postconditions for Step 5d
 		assertEquals("Cashier should have no orders in List orders. It doesn't.", cashier.orders.size(), 0);		
 		assertTrue("Cashier should have handed customer2's"
 				+ " change. Customer2 should have a log that reads: Received change. Instead it reads: " + customer2.log.toString(), customer2.log.getLastLoggedEvent().getMessage() == "Received change");
@@ -568,6 +647,7 @@ public class MarketCashierTest extends TestCase
 	public void testSixNormalMultipleCustomersMultipleDeliverersScenario2()
 	{
 		// Set up
+		cashier.setPerson(person);
 		rCook1.cashier = cashier;
 		rCook2.cashier = cashier;
 		deliverer1.cashier = cashier;
@@ -675,6 +755,7 @@ public class MarketCashierTest extends TestCase
 	public void testSevenNormalCustomerOutOfItemsScenario1()
 	{
 		// Set up
+		cashier.setPerson(person);
 		customer1.cashier = cashier;
 		employee1.cashier = cashier;
 		cashier.setEmployees(employee1, 10, true);
@@ -720,24 +801,38 @@ public class MarketCashierTest extends TestCase
 
 		// Step 2b - Letting Customer know Order is ready (Scheduler/Action)
 		assertTrue("Cashier's scheduler should have returned true, but didn't.", cashier.pickAndExecuteAnAction());
-
+		
 		// Check postconditions for Step 2b
+		assertTrue("Cashier should have an order in List orders in which OrderState == know. It doesn't.", cashier.orders.get(0).getOS() == OrderState.know);
+		assertTrue("Cashier should have called customer1"
+				+ " to pick up order. Customer1 should have a log that reads: My order is ready. Instead it reads: " + customer1.log.toString(), customer1.log.getLastLoggedEvent().getMessage() == "My order is ready");
+		
+		// Step 3a - Customer arrives at desk
+		cashier.msgImHere(customer1);
+		
+		// Check postconditions for Step 3a
+		assertTrue("Cashier should have one order in List orders in which OrderState == here. It doesn't.", cashier.orders.get(0).getOS() == OrderState.here);
+		
+		// Step 3b - Hand order to Customer (Scheduler/Action)
+		assertTrue("Cashier's scheduler should have returned true, but didn't.", cashier.pickAndExecuteAnAction());
+		
+		// Check postconditions for Step 3b
 		assertTrue("Cashier should have an order in List orders in which OrderState == paying. It doesn't.", cashier.orders.get(0).getOS() == OrderState.paying);
 		assertTrue("Cashier should have called customer1"
 				+ " to pick up order. Customer1 should have a log that reads: Received correct items and payment. Instead it reads: " + customer1.log.toString(), customer1.log.getLastLoggedEvent().getMessage() == "Received correct items and payment");
 		assertEquals("Cashier should have an order in List orders in which price == $29. It doesn't.", cashier.orders.get(0).price, 29);
 
-		// Step 3a - Take Customer's payment (Message)
+		// Step 4a - Take Customer's payment (Message)
 		cashier.msgPayment(customer1, 40);
 
-		// Check postconditions for Step 3a
+		// Check postconditions for Step 4a
 		assertEquals("Cashier should have one order in List orders in which amountPaid == $40. It doesn't.", cashier.orders.get(0).amountPaid, 40);
 		assertEquals("Cashier should have one order in List orders in which change == $11. It doesn't.", cashier.orders.get(0).change, 11);
 
-		// Step 3b - Hand Customer's change (Scheduler/Action)
+		// Step 4b - Hand Customer's change (Scheduler/Action)
 		assertTrue("Cashier's scheduler should have returned true, but didn't.", cashier.pickAndExecuteAnAction());
 
-		// Check postconditions for Step 3b
+		// Check postconditions for Step 4b
 		assertEquals("Cashier should have no orders in List orders. It doesn't.", cashier.orders.size(), 0);		
 		assertTrue("Cashier should have handed customer1's"
 				+ " change. Customer1 should have a log that reads: Received change. Instead it reads: " + customer1.log.toString(), customer1.log.getLastLoggedEvent().getMessage() == "Received change");
@@ -751,6 +846,7 @@ public class MarketCashierTest extends TestCase
 	public void testEightNormalCustomerOutOfItemsScenario2()
 	{
 		// Set up
+		cashier.setPerson(person);
 		rCook1.cashier = cashier;
 		deliverer1.cashier = cashier;
 		cashier.setDeliverers(deliverer1, 10, true);
@@ -813,6 +909,7 @@ public class MarketCashierTest extends TestCase
 	public void testNineNormalCustomerOutOfItemsScenario1()
 	{
 		// Set up
+		cashier.setPerson(person);
 		customer1.cashier = cashier;
 		employee1.cashier = cashier;
 		cashier.setEmployees(employee1, 10, true);
@@ -858,6 +955,7 @@ public class MarketCashierTest extends TestCase
 	public void testTenNormalCustomerOutOfItemsScenario2()
 	{
 		// Set up
+		cashier.setPerson(person);
 		rCook1.cashier = cashier;
 		deliverer1.cashier = cashier;
 		cashier.setDeliverers(deliverer1, 10, true);
@@ -905,6 +1003,7 @@ public class MarketCashierTest extends TestCase
 	public void testElevenClosingUpShop()
 	{
 		// Set up
+		cashier.setPerson(person);
 		deliverer1.cashier = cashier;
 		employee1.cashier = cashier;
 		deliverer2.cashier = cashier;

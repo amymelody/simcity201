@@ -85,7 +85,7 @@ public class MarketEmployeeRole extends JobRole implements MarketEmployee {
 	// Normative Scenarios
 	public void msgGetItems(Order o) {
 		orders.add(o);
-		//stateChanged();
+		stateChanged();
 	}
 	public void msgPay() {
 		person.msgEndShift();
@@ -95,13 +95,13 @@ public class MarketEmployeeRole extends JobRole implements MarketEmployee {
 	public void msgHaveItems() {
 		animation.release();
 		eS = EmployeeState.toCashier;
-		//stateChanged();
+		stateChanged();
 	}
 
 	public void msgAtCashier() {
 		animation.release();
 		eS = EmployeeState.handing;
-		//stateChanged();
+		stateChanged();
 	}
 
 

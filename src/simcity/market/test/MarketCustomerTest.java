@@ -55,7 +55,7 @@ public class MarketCustomerTest extends TestCase
 
 		// Check preconditions for Step 1b
 		assertEquals("MockCashier should have an empty log befor the scheduler is called. Instead the MockCashier's event log reads: " + cashier.log.toString(), 0, cashier.log.size());
-
+	
 		// Step 1b - Walking to order (Scheduler/Action)
 		assertTrue("Customer's scheduler should have returned true, but didn't.", customer.pickAndExecuteAnAction());
 
@@ -76,7 +76,7 @@ public class MarketCustomerTest extends TestCase
 		assertTrue("Customer should have ordered to cashier. Cashier should have a log that reads: Received order. Instead it reads: " + cashier.log.toString(), cashier.log.getLastLoggedEvent().getMessage() == "Received order");
 
 		// Step 3a - Receive Cashier's confirmation (Message)
-		customer.msgHereIsWhatICanFulfill(test1Orders, true);
+		customer.msgHereIsWhatICanFulfill(test1Orders, true, 10, 220);
 
 		// Check postconditions for Step 3a
 		assertEquals("CustomerState == waiting. It isn't", customer.cS, CustomerState.waiting);
@@ -162,7 +162,7 @@ public class MarketCustomerTest extends TestCase
 		assertTrue("Customer should have ordered to cashier. Cashier should have a log that reads: Received order. Instead it reads: " + cashier.log.toString(), cashier.log.getLastLoggedEvent().getMessage() == "Received order");
 
 		// Step 3a - Receive Cashier's confirmation (Message)
-		customer.msgHereIsWhatICanFulfill(test2Orders, false);
+		customer.msgHereIsWhatICanFulfill(test2Orders, false, 10, 220);
 
 		// Check postconditions for Step 3a
 		assertEquals("CustomerState == leaving. It isn't", customer.cS, CustomerState.leaving);
