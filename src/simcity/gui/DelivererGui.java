@@ -1,4 +1,4 @@
-package simcity.market.gui;
+package simcity..gui;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -9,8 +9,8 @@ import simcity.gui.Gui;
 import simcity.market.MarketDelivererRole;
 import simcity.market.gui.MarketEmployeeGui.GuiState;
 
-public class MarketDelivererGui implements Gui {
-	private MarketDelivererRole role = null;
+public class DelivererGui implements Gui {
+	private DelivererGui gui = null;
 
 	private int xPos = -10, yPos = 10;//default Deliverer position
 	private int xDestination = 200, yDestination = 20;//default Deliverer destination
@@ -19,8 +19,8 @@ public class MarketDelivererGui implements Gui {
 	public enum GuiState {nothing, delivering, cashier, leaving}
 	public GuiState gS = GuiState.nothing;
 	
-	public MarketDelivererGui(MarketDelivererRole r) {
-		this.role = r;
+	public DelivererGui(DelivererGui g) {
+		this.gui = g;
 
 	}
 

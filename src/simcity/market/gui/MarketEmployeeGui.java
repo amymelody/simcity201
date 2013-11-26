@@ -72,6 +72,9 @@ public class MarketEmployeeGui implements Gui {
 				role.msgAtCashier();
 				xDestination = xHome;
 				yDestination = yHome;
+				gS = GuiState.nothing;
+			}
+			if(gS == GuiState.leaving) {
 			}
 		}
 	}
