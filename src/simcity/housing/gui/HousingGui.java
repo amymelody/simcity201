@@ -1,10 +1,12 @@
-package simcity.market.gui;
+package simcity.housing.gui;
 
 import javax.swing.*;
 
 import simcity.CityDirectory;
 import simcity.gui.BuildingGui;
 import simcity.gui.CityGui;
+import simcity.housing.gui.HousingAnimationPanel;
+import simcity.housing.gui.HousingInputPanel;
 
 import java.awt.*;
 
@@ -12,10 +14,10 @@ import java.awt.*;
  * Main GUI class.
  * Contains the outer city animation and input panel
  */
-public class MarketGui extends BuildingGui
+public class HousingGui extends BuildingGui
 {
-	private MarketAnimationPanel animationPanel;
-	private MarketInputPanel inputPanel;
+	private HousingAnimationPanel animationPanel;
+	private HousingInputPanel inputPanel;
 	
 	private final int WINDOWX = 650;
 	private final int WINDOWY = 500;
@@ -25,12 +27,12 @@ public class MarketGui extends BuildingGui
 	/**
 	 * Constructor
 	 */
-	public MarketGui(String n, CityGui cG, CityDirectory cD)
+	public HousingGui(String n, CityGui cG, CityDirectory cD)
 	{
 		super(n, cG, cD);
 		
-		animationPanel = new MarketAnimationPanel();
-		inputPanel = new MarketInputPanel(this, n);
+		animationPanel = new HousingAnimationPanel();
+		inputPanel = new HousingInputPanel(n);
 
 		//input panel
 		double inputFractionOfWindow = 150 / 650;
@@ -52,8 +54,14 @@ public class MarketGui extends BuildingGui
 	}
 	
 	public void setVisible(boolean visible) {
-		animationPanel.setVisible(visible);
-		inputPanel.setVisible(visible);
+		if(visible) {
+			animationPanel.setVisible(true);
+			inputPanel.setVisible(true);
+		}
+		else {
+			animationPanel.setVisible(false);
+			inputPanel.setVisible(false);
+		}
 	}
 	
 }

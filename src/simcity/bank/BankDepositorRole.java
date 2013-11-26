@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Semaphore;
 
+import simcity.bank.gui.BankDepositorGui;
 import simcity.interfaces.MarketCashier;
 import simcity.interfaces.MarketDeliverer;
 import simcity.role.Role;
@@ -38,8 +39,8 @@ public class BankDepositorRole extends Role {
 		manager = b;
 	}
 	/* Animation */
-	private Semaphore animation = new Semaphore(0, true);
-	//CustomerGui gui;
+	private Semaphore customerAnimation = new Semaphore(0, true);
+	BankDepositorGui gui;
 	
 	/* Data */
 	int cash = person.getMoney();
@@ -49,33 +50,69 @@ public class BankDepositorRole extends Role {
 	BankManagerRole manager;
 	
 	// Customer Status Data
-	enum CustomerState {entered, makingDeposit, makingWithdrawal, beingHelped, Leaving};
+	enum CustomerState {entered, makingDeposit, makingWithdrawal, makingTransaction, beingHelped, leaving, atManager, atTeller};
 	CustomerState cS;
 	String location;
+	int transactionAmount = 0;
 	
 	/* Messages */
 	public void msgMakeDeposit(int cash){
-		cS = CustomerState.makingDeposit;
+		cS = CustomerState.makingTransaction;
+		transactionAmount = cash;
 		stateChanged();
 	}
 	
 	
 	public void msgMakeWithdrawal(int cash){
-		cS = CustomerState.makingWithdrawal;
+		cS = CustomerState.makingTransaction;
+		transactionAmount = 0-cash;
+		stateChanged();
+	}
+	public void msgMakeRequest(BankTellerRole t){
+		this.teller = t;
+		if(transactionAmount < 0){
+			cS = CustomerState.makingWithdrawal;
+		}
+		if(transactionAmount >= 0){
+			cS = CustomerState.makingDeposit;
+		}
 		stateChanged();
 	}
 	
+	public void msgCannotMakeTransaction(){
+		//Not enough money in account for transaction
+	}
+	public void msgTransactionComplete(){
+		cS = CustomerState.leaving;
+		stateChanged();
+	}
+	
+	
+	/*Animation messages*/
+	public void msgAtManager(){
+		customerAnimation.release();
+	}
+	
+	public void msgAtTeller(){
+		customerAnimation.release();
+	}
+	public void msgLeft(){
+		customerAnimation.release();
+	}
 	/* Scheduler */
 	public boolean pickAndExecuteAnAction() {
-		if(cS == CustomerState.makingDeposit) {
-			MakeTransaction(0);
+		if(cS == CustomerState.makingTransaction) {
+			MakeTransaction();
 			return true;
 		}
 		if(cS == CustomerState.makingWithdrawal){
-			MakeTransaction(1);
+			MakeWithdrawal();
 			return true;
 		}
-			
+		if(cS == CustomerState.makingDeposit){
+			MakeDeposit();
+			return true;
+		}
 		
 		return false;
 	}
@@ -83,11 +120,58 @@ public class BankDepositorRole extends Role {
 	
 	//Actions
 	
-	public void MakeTransaction(int transaction){
-		manager.msgMakeTransaction(this, transaction);
-		
+	public void MakeTransaction(){
+		DoGoToManager();
+		try {
+			customerAnimation.acquire();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		manager.msgTransaction(this);
+		cS = CustomerState.beingHelped; 
 	}
-	
-}
+	public void MakeWithdrawal(){
+		DoGoToTeller();
+		try {
+			customerAnimation.acquire();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		teller.msgMakeWithdrawal(this, transactionAmount);
+		cS = CustomerState.beingHelped;
+	}
+	public void MakeDeposit(){
+		DoGoToTeller();
+		try {
+			customerAnimation.acquire();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		teller.msgMakeDeposit(this, transactionAmount);
+		cS = CustomerState.beingHelped;
+	}
+	public void Leaving(){
+		DoLeaveBank();
+		try {
+			customerAnimation.acquire();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		cS = CustomerState.leaving;
+	}
+
 	/* Actions */
+
+private void DoGoToManager(){
+	gui.GoToManager();
+}
+
+private void DoGoToTeller(){
+	gui.GoToTeller();
+}
+
+private void DoLeaveBank(){
+	gui.ExitBank();
+}
+}
 	

@@ -3,6 +3,8 @@ package simcity.gui;
 import javax.swing.JPanel;
 
 import simcity.CityDirectory;
+import simcity.market.gui.MarketAnimationPanel;
+import simcity.market.gui.MarketInputPanel;
 
 /**
  * Main GUI class.
@@ -13,6 +15,8 @@ public abstract class BuildingGui
 	String name;
 	private CityGui cityGui;
 	private CityDirectory cityDirectory;
+	protected MarketAnimationPanel animationPanel;
+	protected MarketInputPanel inputPanel;
 
 	/**
 	 * Constructor
@@ -26,5 +30,10 @@ public abstract class BuildingGui
 	public String getName() {
 		return name;
 	}
+	
 	public abstract void setVisible(boolean visible);
+	
+	public void changeCityView() {
+		cityGui.changeView();
+	}
 }
