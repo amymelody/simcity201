@@ -1,8 +1,71 @@
 package simcity.housing.gui;
 
-import javax.swing.JPanel;
+import simcity.gui.CityGui;
+import simcity.gui.Gui;
 
-public class HousingAnimationPanel extends JPanel 
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.List;
+import java.util.ArrayList;
+
+public class HousingAnimationPanel extends JPanel implements ActionListener
 {
-	//Animation panel
+	static final int TIMERINCR = 10;
+	private final int WINDOWX = 500;
+	private final int WINDOWY = 500;
+	private Dimension bufferSize;
+
+	private List<Gui> guis = new ArrayList<Gui>();
+
+	
+	public HousingAnimationPanel(CityGui cG)
+	{
+		setSize(WINDOWX, WINDOWY);
+		setVisible(true);
+		
+		bufferSize = this.getSize();
+
+		Timer timer = new Timer(TIMERINCR, this);
+		timer.start();
+	}
+
+	public void actionPerformed(ActionEvent e)
+	{
+		repaint();  //Will have paintComponent called
+	}
+
+	public void paintComponent(Graphics g)
+	{
+		Graphics2D g2 = (Graphics2D)g;
+    	g2.setColor(Color.black);
+    	g2.fillRect(0, 0, this.getSize().width, this.getSize().height);
+		
+		for(Gui gui : guis)
+		{
+			if (gui.isPresent())
+			{
+				gui.updatePosition();
+			}
+		}
+
+		for(Gui gui : guis)
+		{
+			if (gui.isPresent())
+			{
+				gui.draw(g2);
+			}
+		}
+	}
+
+//	public void addGui(ResidentGui gui)
+//	{
+//		guis.add(gui);
+//	}
+//
+//	public void addGui(LandlordGui gui)
+//	{
+//		guis.add(gui);
+//	}
 }

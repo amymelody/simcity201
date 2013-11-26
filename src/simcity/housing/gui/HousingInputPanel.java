@@ -6,12 +6,10 @@ import simcity.gui.BuildingGui;
 
 public class HousingInputPanel extends JPanel 
 {
-	//Super container for all gui panels other than animation--closest to the restaurant panel
+	public String name;
 	
-	BuildingGui gui;
-	
-	public HousingInputPanel(BuildingGui g)
+	public HousingInputPanel(String n)
 	{
-		gui = g;
+		name = n;
 	}
 }
