@@ -14,6 +14,8 @@ public class HousingGui extends BuildingGui
 	private final int WINDOWY = 500;
 	private final int BUFFERTOP = 50;
 	private final int BUFFERSIDE = 15;
+	
+	private MoveBox[][] multD = new int[5][10];
 
 	/**
 	 * Constructor

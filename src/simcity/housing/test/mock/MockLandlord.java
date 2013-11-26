@@ -1,7 +1,7 @@
 package simcity.housing.test.mock;
 
-import simcity.housing.interfaces.Landlord;
-import simcity.housing.interfaces.Resident;
+import simcity.interfaces.Landlord;
+import simcity.interfaces.Resident;
 import simcity.mock.LoggedEvent;
 import simcity.mock.Mock;
 

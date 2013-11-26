@@ -3,7 +3,7 @@ package simcity.housing.test.mock;
 import java.util.List;
 
 import simcity.ItemOrder;
-import simcity.housing.interfaces.Resident;
+import simcity.interfaces.Resident;
 import simcity.mock.Mock;
 import simcity.mock.LoggedEvent;
 

@@ -1,6 +1,6 @@
 package simcity.housing.test;
 
-import simcity.PersonAgent;
+import simcity.interfaces.Person;
 import simcity.housing.ResidentRole;
 import simcity.housing.ResidentRole.ResidentState;
 import simcity.housing.ResidentRole.Command;
@@ -19,9 +19,7 @@ public class ResidentRoleTest extends TestCase
 		super.setUp();
 		resident = new ResidentRole();
 		resident.unitTesting = true;
-		resident.setPerson(new PersonAgent("Person"));
-		person = new MockPerson("MockPerson");
-		resident.setMockPerson(person);
+		resident.setPerson(new Person("Person"));
 		landlord = new MockLandlord("MockLandlord");
 		resident.setLandlord(landlord);
 	}

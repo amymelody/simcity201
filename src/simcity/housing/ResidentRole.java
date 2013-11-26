@@ -1,7 +1,6 @@
 package simcity.housing;
 
-import simcity.housing.interfaces.Landlord;
-import simcity.housing.test.mock.MockPerson;
+import simcity.interfaces.Landlord;
 import simcity.interfaces.Resident;
 import simcity.mock.EventLog;
 import simcity.mock.LoggedEvent;
@@ -15,7 +14,6 @@ public class ResidentRole extends Role implements Resident
 {
 
 //Data	
-	MockPerson mockPerson;
 	Landlord landlord = null;
 
 	public enum ResidentState
@@ -60,17 +58,12 @@ public class ResidentRole extends Role implements Resident
 	{
 		landlord = l;
 	}
-	public void setMockPerson(MockPerson p)
-	{
-		mockPerson = p;
-	}
 	
 //Messages
 	public void msgRentDue() //from Landlord
 	{
 		log.add(new LoggedEvent("Received msgRentDue from Landlord. Setting person.rentDue and maintenanceSchedule--"));
 		maintenanceSchedule--;
-		//mockPerson.rentDue = true;
 		person.setRentDue(true);
 	}
 	public void msgAtLandlord() //from Person
@@ -196,7 +189,6 @@ public class ResidentRole extends Role implements Resident
 	{
 		commands.remove(c);
 		landlord.msgPayRent(this, rent);
-		//mockPerson.msgExpense(rent);
 		person.msgExpense(rent);
 		rent = -1;
 		stateChanged();
@@ -279,11 +271,9 @@ public class ResidentRole extends Role implements Resident
 	}
 	public void groceryCheck(List<ItemOrder> gList)
 	{
-		//mockPerson.msgDoneEating();
 		person.msgDoneEating();
 		if(gList.size() > 0)
 		{
-			//mockPerson.msgFoodLow(gList);
 			person.msgFoodLow(gList);
 		}
 		stateChanged();
@@ -360,7 +350,6 @@ public class ResidentRole extends Role implements Resident
 		commands.remove(c);
 		goToLocation(locations.get("Outside"));
 		state = ResidentState.away;
-		//mockPerson.msgLeftDestination(this);
 		person.msgLeftDestination(this);
 		stateChanged();
 	}
