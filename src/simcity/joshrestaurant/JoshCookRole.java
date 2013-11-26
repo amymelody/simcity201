@@ -209,7 +209,7 @@ public class JoshCookRole extends RestCookRole {
 				stateChanged();
 			}
 		},
-		foods.get(o.choice).getCookingTime() * 1000);
+		foods.get(o.choice).getCookingTime() * 500);
 		foods.get(o.choice).setAmount(foods.get(o.choice).getAmount()-1);
 		print(foods.get(o.choice).type + " inventory: " + foods.get(o.choice).amount);
 		if (foods.get(o.choice).amount <= foods.get(o.choice).low && foods.get(o.choice).state == FoodState.Enough) {

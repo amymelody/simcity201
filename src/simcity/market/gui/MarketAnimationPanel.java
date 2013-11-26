@@ -26,7 +26,7 @@ public class MarketAnimationPanel extends JPanel implements ActionListener {
 		setSize(WINDOWX, WINDOWY);
 		setVisible(true);
 		
-		ImageIcon bgIcon = new ImageIcon("images/market_floor.png");
+		ImageIcon bgIcon = new ImageIcon(this.getClass().getResource("images/market_floor.png"));
 		bg = bgIcon.getImage();
 		
 		bufferSize = this.getSize();

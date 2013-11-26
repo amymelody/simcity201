@@ -47,5 +47,9 @@ public class BankManagerGui implements Gui {
 	public int getYPos() {
 		return yPos;
 	}
+	
+	public void ExitBank(){
+		
+	}
 }
 	

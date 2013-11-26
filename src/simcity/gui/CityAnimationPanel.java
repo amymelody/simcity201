@@ -3,7 +3,14 @@ package simcity.gui;
 import javax.swing.*;
 import javax.swing.Timer;
 
+import simcity.PersonAgent;
+import simcity.RestCustomerRole;
+import simcity.joshrestaurant.JoshCustomerRole;
 import simcity.market.gui.MarketCustomerGui;
+import simcity.joshrestaurant.gui.JoshRestaurantGui;
+import simcity.RestWaiterRole;
+import simcity.joshrestaurant.JoshNormalWaiterRole;
+import simcity.joshrestaurant.JoshSharedDataWaiterRole;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -74,6 +81,38 @@ public class CityAnimationPanel extends JPanel implements ActionListener, MouseL
 		buildings.add(bG);
 	}
 	
+	public void addRestCustomer(RestCustomerRole c) {
+		synchronized(buildings) {
+			for(BuildingGui bG: buildings) {
+				if(bG.getName().equals("Josh's Restaurant")) {
+					JoshRestaurantGui g = (JoshRestaurantGui)bG;
+					if (c instanceof JoshCustomerRole) {
+						JoshCustomerRole jC = (JoshCustomerRole)(c);
+						g.addCustomer(jC);
+					}
+				}
+			}
+		}
+	}
+	
+	public void addRestWaiter(RestWaiterRole w) {
+		synchronized(buildings) {
+			for(BuildingGui bG: buildings) {
+				if(bG.getName().equals("Josh's Restaurant")) {
+					JoshRestaurantGui g = (JoshRestaurantGui)bG;
+					if (w instanceof JoshNormalWaiterRole) {
+						JoshNormalWaiterRole jW = (JoshNormalWaiterRole)(w);
+						g.addWaiter(jW);
+					}
+					if (w instanceof JoshSharedDataWaiterRole) {
+						JoshSharedDataWaiterRole jW = (JoshSharedDataWaiterRole)(w);
+						g.addWaiter(jW);
+					}
+				}
+			}
+		}
+	}
+	
 	@Override
 	public void mouseClicked(MouseEvent event) {
 		int x = event.getX();
@@ -85,8 +124,7 @@ public class CityAnimationPanel extends JPanel implements ActionListener, MouseL
 				synchronized(buildings) {
 					for(BuildingGui bG: buildings) {
 						if(bG.getName().equals("House 1")) {
-							cityGui.changeView();
-							bG.setVisible(true);
+							bG.changeView(true);
 							currentBG = bG;
 						}
 					}
@@ -97,8 +135,7 @@ public class CityAnimationPanel extends JPanel implements ActionListener, MouseL
 				synchronized(buildings) {
 					for(BuildingGui bG: buildings) {
 						if(bG.getName().equals("House 2")) {
-							cityGui.changeView();
-							bG.setVisible(true);
+							bG.changeView(true);
 							currentBG = bG;
 						}
 					}
@@ -109,8 +146,7 @@ public class CityAnimationPanel extends JPanel implements ActionListener, MouseL
 				synchronized(buildings) {
 					for(BuildingGui bG: buildings) {
 						if(bG.getName().equals("House 3")) {
-							cityGui.changeView();
-							bG.setVisible(true);
+							bG.changeView(true);
 							currentBG = bG;
 						}
 					}
@@ -121,8 +157,7 @@ public class CityAnimationPanel extends JPanel implements ActionListener, MouseL
 				synchronized(buildings) {
 					for(BuildingGui bG: buildings) {
 						if(bG.getName().equals("Bank")) {
-							cityGui.changeView();
-							bG.setVisible(true);
+							bG.changeView(true);
 							currentBG = bG;
 						}
 					}
@@ -133,8 +168,7 @@ public class CityAnimationPanel extends JPanel implements ActionListener, MouseL
 				synchronized(buildings) {
 					for(BuildingGui bG: buildings) {
 						if(bG.getName().equals("Apartment 1-1")) {
-							cityGui.changeView();
-							bG.setVisible(true);
+							bG.changeView(true);
 							currentBG = bG;
 						}
 					}
@@ -145,8 +179,7 @@ public class CityAnimationPanel extends JPanel implements ActionListener, MouseL
 				synchronized(buildings) {
 					for(BuildingGui bG: buildings) {
 						if(bG.getName().equals("Apartment 1-2")) {
-							cityGui.changeView();
-							bG.setVisible(true);
+							bG.changeView(true);
 							currentBG = bG;
 						}
 					}
@@ -157,8 +190,7 @@ public class CityAnimationPanel extends JPanel implements ActionListener, MouseL
 				synchronized(buildings) {
 					for(BuildingGui bG: buildings) {
 						if(bG.getName().equals("Apartment 1-3")) {
-							cityGui.changeView();
-							bG.setVisible(true);
+							bG.changeView(true);
 							currentBG = bG;
 						}
 					}
@@ -169,8 +201,7 @@ public class CityAnimationPanel extends JPanel implements ActionListener, MouseL
 				synchronized(buildings) {
 					for(BuildingGui bG: buildings) {
 						if(bG.getName().equals("Apartment 1-4")) {
-							cityGui.changeView();
-							bG.setVisible(true);
+							bG.changeView(true);
 							currentBG = bG;
 						}
 					}
@@ -181,8 +212,7 @@ public class CityAnimationPanel extends JPanel implements ActionListener, MouseL
 				synchronized(buildings) {
 					for(BuildingGui bG: buildings) {
 						if(bG.getName().equals("Apartment 1-5")) {
-							cityGui.changeView();
-							bG.setVisible(true);
+							bG.changeView(true);
 							currentBG = bG;
 						}
 					}
@@ -193,8 +223,7 @@ public class CityAnimationPanel extends JPanel implements ActionListener, MouseL
 				synchronized(buildings) {
 					for(BuildingGui bG: buildings) {
 						if(bG.getName().equals("Apartment 1-6")) {
-							cityGui.changeView();
-							bG.setVisible(true);
+							bG.changeView(true);
 							currentBG = bG;
 						}
 					}
@@ -205,8 +234,7 @@ public class CityAnimationPanel extends JPanel implements ActionListener, MouseL
 				synchronized(buildings) {
 					for(BuildingGui bG: buildings) {
 						if(bG.getName().equals("Apartment 1-7")) {
-							cityGui.changeView();
-							bG.setVisible(true);
+							bG.changeView(true);
 							currentBG = bG;
 						}
 					}
@@ -217,8 +245,7 @@ public class CityAnimationPanel extends JPanel implements ActionListener, MouseL
 				synchronized(buildings) {
 					for(BuildingGui bG: buildings) {
 						if(bG.getName().equals("Apartment 1-8")) {
-							cityGui.changeView();
-							bG.setVisible(true);
+							bG.changeView(true);
 							currentBG = bG;
 						}
 					}
@@ -229,8 +256,7 @@ public class CityAnimationPanel extends JPanel implements ActionListener, MouseL
 				synchronized(buildings) {
 					for(BuildingGui bG: buildings) {
 						if(bG.getName().equals("Apartment 2-1")) {
-							cityGui.changeView();
-							bG.setVisible(true);
+							bG.changeView(true);
 							currentBG = bG;
 						}
 					}
@@ -241,8 +267,8 @@ public class CityAnimationPanel extends JPanel implements ActionListener, MouseL
 				synchronized(buildings) {
 					for(BuildingGui bG: buildings) {
 						if(bG.getName().equals("Apartment 2-2")) {
-							cityGui.changeView();
-							bG.setVisible(true);
+							
+							bG.changeView(true);
 							currentBG = bG;
 						}
 					}
@@ -253,8 +279,7 @@ public class CityAnimationPanel extends JPanel implements ActionListener, MouseL
 				synchronized(buildings) {
 					for(BuildingGui bG: buildings) {
 						if(bG.getName().equals("Apartment 2-3")) {
-							cityGui.changeView();
-							bG.setVisible(true);
+							bG.changeView(true);
 							currentBG = bG;
 						}
 					}
@@ -265,8 +290,7 @@ public class CityAnimationPanel extends JPanel implements ActionListener, MouseL
 				synchronized(buildings) {
 					for(BuildingGui bG: buildings) {
 						if(bG.getName().equals("Apartment 2-4")) {
-							cityGui.changeView();
-							bG.setVisible(true);
+							bG.changeView(true);
 							currentBG = bG;
 						}
 					}
@@ -277,8 +301,7 @@ public class CityAnimationPanel extends JPanel implements ActionListener, MouseL
 				synchronized(buildings) {
 					for(BuildingGui bG: buildings) {
 						if(bG.getName().equals("Apartment 2-5")) {
-							cityGui.changeView();
-							bG.setVisible(true);
+							bG.changeView(true);
 							currentBG = bG;
 						}
 					}
@@ -289,8 +312,7 @@ public class CityAnimationPanel extends JPanel implements ActionListener, MouseL
 				synchronized(buildings) {
 					for(BuildingGui bG: buildings) {
 						if(bG.getName().equals("Apartment 2-6")) {
-							cityGui.changeView();
-							bG.setVisible(true);
+							bG.changeView(true);
 							currentBG = bG;
 						}
 					}
@@ -301,8 +323,7 @@ public class CityAnimationPanel extends JPanel implements ActionListener, MouseL
 				synchronized(buildings) {
 					for(BuildingGui bG: buildings) {
 						if(bG.getName().equals("Apartment 2-7")) {
-							cityGui.changeView();
-							bG.setVisible(true);
+							bG.changeView(true);
 							currentBG = bG;
 						}
 					}
@@ -313,8 +334,7 @@ public class CityAnimationPanel extends JPanel implements ActionListener, MouseL
 				synchronized(buildings) {
 					for(BuildingGui bG: buildings) {
 						if(bG.getName().equals("Apartment 2-8")) {
-							cityGui.changeView();
-							bG.setVisible(true);
+							bG.changeView(true);
 							currentBG = bG;
 						}
 					}
@@ -325,8 +345,7 @@ public class CityAnimationPanel extends JPanel implements ActionListener, MouseL
 				synchronized(buildings) {
 					for(BuildingGui bG: buildings) {
 						if(bG.getName().equals("Market 1")) {
-							cityGui.changeView();
-							bG.setVisible(true);
+							bG.changeView(true);
 							currentBG = bG;
 						}
 					}
@@ -338,8 +357,7 @@ public class CityAnimationPanel extends JPanel implements ActionListener, MouseL
 				synchronized(buildings) {
 					for(BuildingGui bG: buildings) {
 						if(bG.getName().equals("Market 2")) {
-							cityGui.changeView();
-							bG.setVisible(true);
+							bG.changeView(true);
 							currentBG = bG;
 						}
 					}
@@ -350,8 +368,8 @@ public class CityAnimationPanel extends JPanel implements ActionListener, MouseL
 				synchronized(buildings) {
 					for(BuildingGui bG: buildings) {
 						if(bG.getName().equals("Market 3")) {
-							cityGui.changeView();
-							bG.setVisible(true);
+							
+							bG.changeView(true);
 							currentBG = bG;
 						}
 					}
@@ -362,8 +380,7 @@ public class CityAnimationPanel extends JPanel implements ActionListener, MouseL
 				synchronized(buildings) {
 					for(BuildingGui bG: buildings) {
 						if(bG.getName().equals("Josh's Restaurant")) {
-							cityGui.changeView();
-							bG.setVisible(true);
+							bG.changeView(true);
 							currentBG = bG;
 						}
 					}
@@ -374,8 +391,7 @@ public class CityAnimationPanel extends JPanel implements ActionListener, MouseL
 				synchronized(buildings) {
 					for(BuildingGui bG: buildings) {
 						if(bG.getName().equals("Cherys's Restaurant")) {
-							cityGui.changeView();
-							bG.setVisible(true);
+							bG.changeView(true);
 							currentBG = bG;
 						}
 					}
@@ -386,8 +402,8 @@ public class CityAnimationPanel extends JPanel implements ActionListener, MouseL
 				synchronized(buildings) {
 					for(BuildingGui bG: buildings) {
 						if(bG.getName().equals("Anjali's Restaurant")) {
-							cityGui.changeView();
-							bG.setVisible(true);
+							
+							bG.changeView(true);
 							currentBG = bG;
 						}
 					}
@@ -398,8 +414,7 @@ public class CityAnimationPanel extends JPanel implements ActionListener, MouseL
 				synchronized(buildings) {
 					for(BuildingGui bG: buildings) {
 						if(bG.getName().equals("Alfred's Restaurant")) {
-							cityGui.changeView();
-							bG.setVisible(true);
+							bG.changeView(true);
 							currentBG = bG;
 						}
 					}
@@ -410,8 +425,7 @@ public class CityAnimationPanel extends JPanel implements ActionListener, MouseL
 				synchronized(buildings) {
 					for(BuildingGui bG: buildings) {
 						if(bG.getName().equals("Jesus's Restaurant")) {
-							cityGui.changeView();
-							bG.setVisible(true);
+							bG.changeView(true);
 							currentBG = bG;
 						}
 					}

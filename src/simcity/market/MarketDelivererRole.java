@@ -62,15 +62,15 @@ public class MarketDelivererRole extends JobRole implements MarketDeliverer {
 
 	// List of Orders
 	public List<Order> orders =  Collections.synchronizedList(new ArrayList<Order>());
-	Order currentOrder = null;
+	public Order currentOrder = null;
 
 	// References to other roles
 	MarketCashier cashier;
 
-	// Employee Status
-	enum DelivererState {nothing, going, arrived, goingBack, arrivedBack};
-	DelivererState dS = DelivererState.nothing;
-	boolean working;
+	// Deliverer Status
+	public enum DelivererState {nothing, going, arrived, goingBack, arrivedBack};
+	public DelivererState dS = DelivererState.nothing;
+	public boolean working;
 
 
 	/* Messages */
@@ -87,6 +87,7 @@ public class MarketDelivererRole extends JobRole implements MarketDeliverer {
 
 	// Normative Scenarios
 	public void msgDeliverItems(Order o) {
+		o.oS = OrderState.newDelivery;
 		orders.add(o);
 		//stateChanged();
 	}
@@ -168,6 +169,7 @@ public class MarketDelivererRole extends JobRole implements MarketDeliverer {
 	private void goToCustomer(Order o) {
 		DoDeliverOrder(o.location); // animation
 		currentOrder = o;
+		
 		try {
 			animation.acquire();
 		} catch (InterruptedException e) {

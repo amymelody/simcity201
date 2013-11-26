@@ -1,5 +1,7 @@
 package simcity.housing.interfaces;
 
+import simcity.interfaces.Resident;
+
 public interface Landlord
 {
 	public abstract void msgStartShift(); //from Person

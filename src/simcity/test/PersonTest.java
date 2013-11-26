@@ -56,8 +56,8 @@ public class PersonTest extends TestCase
 		
 		assertEquals("First role in roles should be inactive. It isn't.", false, person.roles.get(0).isActive());
 		
-		assertEquals("Person should have an empty event log before the first message. Instead, the Person's event log reads: "
-				+ person.log.toString(), 0, person.log.size());
+		assertTrue("Person should have logged \"Received msgIncome\" but didn't. His last event logged reads instead: " 
+				+ person.log.getLastLoggedEvent().toString(), person.log.containsString("Received msgIncome"));
 		
 		assertEquals("Person should have $400. It doesn't.", 400, person.getMoney());
 		
@@ -102,8 +102,6 @@ public class PersonTest extends TestCase
 		
 		assertEquals("Person should have $384. It doesn't.", 384, person.getMoney());
 		
-		assertFalse("Person's scheduler should have returned false, but didn't.", person.pickAndExecuteAnAction());
-		
 	}
 	
 	public void testDepositor()
@@ -114,8 +112,8 @@ public class PersonTest extends TestCase
 		
 		assertEquals("First role in roles should be inactive. It isn't.", false, person.roles.get(0).isActive());
 		
-		assertEquals("Person should have an empty event log before the first message. Instead, the Person's event log reads: "
-				+ person.log.toString(), 0, person.log.size());
+		assertTrue("Person should have logged \"Received msgIncome\" but didn't. His last event logged reads instead: " 
+				+ person.log.getLastLoggedEvent().toString(), person.log.containsString("Received msgIncome"));
 		
 		assertEquals("Person should have $400. It doesn't.", 400, person.getMoney());
 		
@@ -154,8 +152,6 @@ public class PersonTest extends TestCase
 		
 		assertEquals("First role in roles should be inactive. It isn't.", false, person.roles.get(0).isActive());
 		
-		assertFalse("Person's scheduler should have returned false, but didn't.", person.pickAndExecuteAnAction());
-		
 	}
 	
 	public void testGoToWorkByBus()
@@ -176,8 +172,8 @@ public class PersonTest extends TestCase
 		
 		assertEquals("First role in roles should be inactive. It isn't.", false, person.roles.get(0).isActive());
 		
-		assertEquals("Person should have an empty event log before the first message. Instead, the Person's event log reads: "
-				+ person.log.toString(), 0, person.log.size());
+		assertTrue("Person should have logged \"Received msgIncome\" but didn't. His last event logged reads instead: " 
+				+ person.log.getLastLoggedEvent().toString(), person.log.containsString("Received msgIncome"));
 		
 		assertEquals("Person should have $400. It doesn't.", 400, person.getMoney());
 		
@@ -268,8 +264,6 @@ public class PersonTest extends TestCase
 		
 		assertEquals("First role in roles should be inactive. It isn't.", false, person.roles.get(0).isActive());
 		
-		assertFalse("Person's scheduler should have returned false, but didn't.", person.pickAndExecuteAnAction());
-		
 	}
 	
 	public void testDriveToMarket()
@@ -292,8 +286,8 @@ public class PersonTest extends TestCase
 		
 		assertEquals("MarketCust role should be inactive. It isn't.", false, person.roles.get(1).isActive());
 		
-		assertEquals("Person should have an empty event log before the first message. Instead, the Person's event log reads: "
-				+ person.log.toString(), 0, person.log.size());
+		assertTrue("Person should have logged \"Received msgIncome\" but didn't. His last event logged reads instead: " 
+				+ person.log.getLastLoggedEvent().toString(), person.log.containsString("Received msgIncome"));
 		
 		assertEquals("Person should have $400. It doesn't.", 400, person.getMoney());
 		
@@ -438,8 +432,8 @@ public class PersonTest extends TestCase
 		
 		assertEquals("Waiter role should be inactive. It isn't.", false, person.roles.get(2).isActive());
 		
-		assertEquals("Person should have an empty event log before the first message. Instead, the Person's event log reads: "
-				+ person.log.toString(), 0, person.log.size());
+		assertTrue("Person should have logged \"Received msgIncome\" but didn't. His last event logged reads instead: " 
+				+ person.log.getLastLoggedEvent().toString(), person.log.containsString("Received msgIncome"));
 		
 		assertEquals("Person should have $400. It doesn't.", 400, person.getMoney());
 		
@@ -589,6 +583,5 @@ public class PersonTest extends TestCase
 		
 		person.setRentDue(false);
 		
-		assertFalse("Person's scheduler should have returned false, but didn't.", person.pickAndExecuteAnAction());
 	}
 }

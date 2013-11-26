@@ -1,6 +1,6 @@
 package simcity.housing;
 
-import simcity.housing.interfaces.Resident;
+import simcity.interfaces.Resident;
 import simcity.housing.test.mock.MockPerson;
 import simcity.mock.EventLog;
 import simcity.mock.LoggedEvent;
