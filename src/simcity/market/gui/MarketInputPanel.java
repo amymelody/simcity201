@@ -33,6 +33,10 @@ public class MarketInputPanel extends JPanel implements ActionListener
         goBack.addActionListener(this);
         
         setLayout(new GridLayout(LSPACE, LSPACE));
+        setBorder(BorderFactory.createBevelBorder(0));
+        
+        initMarketLabel();
+        add(marketLabel);
         add(goBack);
 	}
 	
@@ -42,12 +46,23 @@ public class MarketInputPanel extends JPanel implements ActionListener
                 "<html><br/>"
                 + "<h3>Welcome to " + name + "!</h3>"
                 		+ "<h4><u> Menu</u></h4><table>"
-                		+ "<tr><td>Steak</td><td>$15.00</td></tr>"
-                		+ "<tr><td>Salad</td><td>$5.00</td></tr>"
-                		+ "<tr><td>Pizza</td><td>$8.00</td></tr>"
+                		+ "<tr><td>Car</td><td>$1,000.00</td></tr>"
+                		+ "<tr><td>Salad</td><td>$3.00</td></tr>"
+                		+ "<tr><td>Steak</td><td>$10.00</td></tr>"
+                		+ "<tr><td>Pizza</td><td>$5.00</td></tr>"
+                		+ "<tr><td>Chicken</td><td>$10.00</td></tr>"
+                		+ "<tr><td>Spaghetti</td><td>$8.00</td></tr>"
+                		+ "<tr><td>Lasagna</td><td>$10.00</td></tr>"
+                		+ "<tr><td>Garlic Bread</td><td>$5.00</td></tr>"
+                		+ "<tr><td>Ribs</td><td>$10.00</td></tr>"
+                		+ "<tr><td>Burger</td><td>$8.00</td></tr>"
+                		+ "<tr><td>Enchiladas</td><td>$10.00</td></tr>"
+                		+ "<tr><td>Tacos</td><td>$5.00</td></tr>"
+                		+ "<tr><td>Pozole</td><td>$8.00</td></tr>"
+                		+ "<tr><td>Horchata</td><td>$3.00</td></tr>"
                 		+ "</table><br></html>");
 
-        marketLabel.setBorder(BorderFactory.createBevelBorder(0));
+        //marketLabel.setBorder(BorderFactory.createBevelBorder(0));
         marketLabel.add(marketInfo, BorderLayout.CENTER);
         marketLabel.add(new JLabel("      "), BorderLayout.EAST);
         marketLabel.add(new JLabel("      "), BorderLayout.WEST);
@@ -56,8 +71,7 @@ public class MarketInputPanel extends JPanel implements ActionListener
 	public void actionPerformed(ActionEvent event) {
 		if(event.getSource() == goBack) {
 			marketGui.changeView(false);
-			
 		}
-		
+	
 	}
 }
