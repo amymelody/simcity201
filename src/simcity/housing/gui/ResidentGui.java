@@ -143,6 +143,11 @@ public class ResidentGui implements Gui
 	        g.fillOval(xPos, yPos, dimensions + 19, dimensions - 1);
         }
 	}
+	
+	public HousingGui getCurrentHouse()
+	{
+		return gui;
+	}
 
 	@Override
 	public boolean isPresent()

@@ -29,6 +29,8 @@ public class HousingAnimationPanel extends JPanel implements ActionListener
 	private List<Gui> guis = new ArrayList<Gui>();
 	private Image floor;
 	
+	private HousingGui superGui;
+	
 	public HousingAnimationPanel()
 	{
 		setSize(WINDOWX, WINDOWY);
@@ -41,6 +43,11 @@ public class HousingAnimationPanel extends JPanel implements ActionListener
 
 		Timer timer = new Timer(TIMERINCR, this);
 		timer.start();
+	}
+	
+	public void setHousingGui(HousingGui gui)
+	{
+		superGui = gui;
 	}
 
 	public void actionPerformed(ActionEvent e)
@@ -55,17 +62,45 @@ public class HousingAnimationPanel extends JPanel implements ActionListener
     			
 		for(Gui gui : guis)
 		{
-			if (gui.isPresent())
+			if(gui instanceof ResidentGui)
 			{
-				gui.updatePosition();
+				ResidentGui rg = (ResidentGui)gui;
+				if(rg.getCurrentHouse() == this.superGui)
+				{
+					if (gui.isPresent())
+					{
+						gui.updatePosition();
+					}
+				}
+			}
+			else
+			{
+				if (gui.isPresent())
+				{
+					gui.updatePosition();
+				}
 			}
 		}
 
 		for(Gui gui : guis)
 		{
-			if (gui.isPresent())
+			if(gui instanceof ResidentGui)
 			{
-				gui.draw(g2);
+				ResidentGui rg = (ResidentGui)gui;
+				if(rg.getCurrentHouse() == this.superGui)
+				{
+					if (gui.isPresent())
+					{
+						gui.draw(g2);
+					}
+				}
+			}
+			else
+			{
+				if (gui.isPresent())
+				{
+					gui.draw(g2);
+				}
 			}
 		}
 	}
