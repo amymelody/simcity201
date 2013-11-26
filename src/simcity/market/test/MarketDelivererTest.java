@@ -132,62 +132,184 @@ public class MarketDelivererTest extends TestCase
 	} // End of Test 1
 
 	/**
-	 * This tests the first normal scenario (Customer comes in and order a list of items) when out of ALL items wanted
+	 * This tests the first normal scenario (Customer comes in and order a list of items) when out of SOME items wanted
 	 */
-	public void testTwoNormalCustomerOutOfItemsScenario1()
+	public void testTwoNormalCustomerOutOfSomeItemsScenario1()
 	{
 		// Set up
-		customer.setCashier(cashier);
+		deliverer.setCashier(cashier);
+		deliverer.working = true;
 		List<ItemOrder> test2Orders = new ArrayList<ItemOrder>(); // orders Lasagna and Horchata
+		List<ItemOrder> test2IncompleteOrders = new ArrayList<ItemOrder>();
+		Order test2Order = new Order(rCook1, rCashier1, test2Orders, "Josh's Restaurant");
 		test2Orders.add(new ItemOrder("Lasagna", 2));
 		test2Orders.add(new ItemOrder("Horchata", 5));
+		test2IncompleteOrders.add(new ItemOrder("Lasagna", 2));
+		test2IncompleteOrders.add(new ItemOrder("Horchata", 2));
+		test2Order.price = 26;
 
 		// Check preconditions for Step 1a
-		assertEquals("CustomerState == nothing. It isn't", customer.cS, CustomerState.nothing);		
-		assertEquals("CustomerRole should have an empty event log before msgIWantItems(...) is called. Instead, CustomerRole's event log reads: "
-				+ customer.log.toString(), 0, customer.log.size());
-
+		assertEquals("Deliverer should have no orders in List orders. It doesn't.", deliverer.orders.size(), 0);		
+		assertEquals("DelivererRole should have an empty event log before msgDeliverItems(...) is called. Instead, the Deliverer's event log reads: "
+				+ deliverer.log.toString(), 0, deliverer.log.size());
+		
 		// Step 1a - Going to order (Message)
-		customer.msgOrderItems(test2Orders);
+		deliverer.msgDeliverItems(test2Order);
 
 		// Check postconditions for Step 1a
-		assertEquals("CustomerState == arrived. It isn't", customer.cS, CustomerState.arrived);	
-		assertFalse("CustomerRole's items should NOT be null. It isn't", customer.items == null);		
-
+		assertEquals("Deliverer should have one order in List orders. It doesn't.", deliverer.orders.size(), 1);
+		assertTrue("Deliverer should have one order in List orders in which OrderState == newDelivery. It doesn't.", deliverer.orders.get(0).getOS() == OrderState.newDelivery);
+		assertFalse("Deliverer should have one order in List orders for delivery. It doesn't", deliverer.orders.get(0).location == null);
+		
 		// Check preconditions for Step 1b
 		assertEquals("MockCashier should have an empty log befor the scheduler is called. Instead the MockCashier's event log reads: " + cashier.log.toString(), 0, cashier.log.size());
+		assertEquals("MockRestCook should have an empty log befor the scheduler is called. Instead the MockRestCook's event log reads: " + rCook1.log.toString(), 0, rCook1.log.size());
+		assertEquals("MockRestCashier should have an empty log befor the scheduler is called. Instead the MockRestCashier's event log reads: " + rCashier1.log.toString(), 0, rCashier1.log.size());
 
 		// Step 1b - Walking to order (Scheduler/Action)
-		assertTrue("Customer's scheduler should have returned true, but didn't.", customer.pickAndExecuteAnAction());
+		assertTrue("Deliverer's scheduler should have returned true, but didn't.", deliverer.pickAndExecuteAnAction());
 
 		// Check postconditions for Step 1b
-		assertEquals("CustomerState == walking. It isn't", customer.cS, CustomerState.walking);	
-
+		assertTrue("Deliverer's current order should be test1Order. It isn't.", deliverer.currentOrder == deliverer.orders.get(0));
+				
 		// Step 1c - Arrived at cashier's desk (Message)
-		customer.msgAtCashier();
+		deliverer.msgArrived();
 
 		// Check postconditions for Step 1c
-		assertEquals("CustomerState == atCashier. It isn't", customer.cS, CustomerState.atCashier);	
-
+		assertEquals("DelivererState == arrived. It isn't", deliverer.dS, DelivererState.arrived);	
+		
 		// Step 2b - Giving order to cashier (Scheduler/Action)
-		assertTrue("Customer's scheduler should have returned true, but didn't.", customer.pickAndExecuteAnAction());
+		assertTrue("Deliverer's scheduler should have returned true, but didn't.", deliverer.pickAndExecuteAnAction());
 
 		// Check postconditions for Step 2b
-		assertEquals("CustomerState == confirming. It isn't", customer.cS, CustomerState.confirming);
-		assertTrue("Customer should have ordered to cashier. Cashier should have a log that reads: Received order. Instead it reads: " + cashier.log.toString(), cashier.log.getLastLoggedEvent().getMessage() == "Received order");
+		assertEquals("Deliverer has one order in List orders in which OrderState == ready. It doesn't.", deliverer.orders.get(0).getOS(), OrderState.ready);
+		assertEquals("Deliverer's currentOrder has OrderState == ready. It doesn't.", deliverer.currentOrder.getOS(), OrderState.ready);
+		assertTrue("RCook1 should have received order from Deliverer. RCook1 should have a log that reads: Received delivery. Instead it reads: " + rCook1.log.toString(), rCook1.log.getLastLoggedEvent().getMessage() == "Received delivery");
+		assertTrue("RCashier1 should have received bill from Deliverer. RCashier1 should have a log that reads: Received market bill. Instead it reads: " + rCashier1.log.toString(), rCashier1.log.getLastLoggedEvent().getMessage() == "Received market bill");
 
 		// Step 3a - Receive Cashier's confirmation (Message)
-		customer.msgHereIsWhatICanFulfill(test2Orders, false);
-
+		deliverer.msgPayment(rCashier1, 30);
+		
 		// Check postconditions for Step 3a
-		assertEquals("CustomerState == leaving. It isn't", customer.cS, CustomerState.leaving);
-
-		// Step 3b - Leave Market (Scheduler/Action)
-		assertTrue("Customer's scheduler should have returned true, but didn't.", customer.pickAndExecuteAnAction());
+		assertEquals("Deliverer has one order in List orders in which OrderState == paying. It doesn't.", deliverer.orders.get(0).getOS(), OrderState.paying);
+		assertEquals("Deliverer's currentOrder has OrderState == paying. It doesn't.", deliverer.currentOrder.getOS(), OrderState.paying);
+		assertEquals("Deliverer has one order in List orders in which amountPaid == 40. It doesn't.", deliverer.currentOrder.amountPaid, 30);
+		
+		// Step 3b -  Going to waiting area (Scheduler/Action)
+		assertTrue("Deliverer's scheduler should have returned true, but didn't.", deliverer.pickAndExecuteAnAction());
 
 		// Check postconditions for Step 3b
-		assertEquals("CustomerState == done. It isn't", customer.cS, CustomerState.done);
+		assertEquals("Deliverer has one order in List orders in which OrderState == paid. It doesn't.", deliverer.orders.get(0).getOS(), OrderState.paid);
+		assertEquals("Deliverer's currentOrder has OrderState == paid. It doesn't.", deliverer.currentOrder.getOS(), OrderState.paid);
+		assertEquals("Deliverer has one order in List orders in which change == 4. It doesn't.", deliverer.currentOrder.change, 4);
+		assertTrue("RCashier1 should have received change from Deliverer. RCashier1 should have a log that reads: Received change. Instead it reads: " + rCashier1.log.toString(), rCashier1.log.getLastLoggedEvent().getMessage() == "Received change");
+		
+		// Step 4a - Order Ready (Message)
+		deliverer.msgArrivedBack();
+
+		// Check postconditions for Step 4a
+		assertEquals("DelivererState == arrivedBack. It isn't", deliverer.dS, DelivererState.arrivedBack);
+
+		// Step 4b - Give payment to Cashier (Scheduler/Action)
+		assertTrue("Deliverer's scheduler should have returned true, but didn't.", deliverer.pickAndExecuteAnAction());
+
+		// Check postconditions for Step 4b
+		assertTrue("Cashier should have received change from Deliverer. Cashier should have a log that reads: Received deliver order to finish. Instead it reads: " + cashier.log.toString(), cashier.log.getLastLoggedEvent().getMessage() == "Received deliver order to finish");
+		assertTrue("Deliverer's currentOrder should be null. It isn't.", deliverer.currentOrder == null);
+		assertTrue("Deliverer should have no orders in List orders. It doesn't.", deliverer.orders.size() == 0);
 		
 	} // End of Test 2
+
+	/**
+	 * This tests the second normal scenario (Delivery order from cook) with more than one Restaurant
+	 */
+	public void testThreeNormalCustomerMoreThanOneScenario2()
+	{
+		// Set up
+		deliverer.setCashier(cashier);
+		deliverer.working = true;
+		List<ItemOrder> test1Orders = new ArrayList<ItemOrder>(); // orders Lasagna and Horchata
+		List<ItemOrder> test2Orders = new ArrayList<ItemOrder>(); // orders Pizza and Burgers
+		Order test1Order = new Order(rCook1, rCashier1, test1Orders, "Josh's Restaurant");
+		Order test2Order = new Order(rCook2, rCashier2, test2Orders, "Cherys's Restaurant");
+		test1Orders.add(new ItemOrder("Lasagna", 2));
+		test1Orders.add(new ItemOrder("Horchata", 5));
+		test2Orders.add(new ItemOrder("Pizza", 2));
+		test2Orders.add(new ItemOrder("Burger", 5));
+		test1Order.price = 35;
+		test2Order.price = 50;
+
+		// Check preconditions for Step 1a
+		assertEquals("Deliverer should have no orders in List orders. It doesn't.", deliverer.orders.size(), 0);		
+		assertEquals("DelivererRole should have an empty event log before msgDeliverItems(...) is called. Instead, the Deliverer's event log reads: "
+				+ deliverer.log.toString(), 0, deliverer.log.size());
+		
+		// Step 1a - Going to order (Message)
+		deliverer.msgDeliverItems(test1Order);
+
+		// Check postconditions for Step 1a
+		assertEquals("Deliverer should have one order in List orders. It doesn't.", deliverer.orders.size(), 1);
+		assertTrue("Deliverer should have one order in List orders in which OrderState == newDelivery. It doesn't.", deliverer.orders.get(0).getOS() == OrderState.newDelivery);
+		assertFalse("Deliverer should have one order in List orders for delivery. It doesn't", deliverer.orders.get(0).location == null);
+		
+		// Check preconditions for Step 1b
+		assertEquals("MockCashier should have an empty log befor the scheduler is called. Instead the MockCashier's event log reads: " + cashier.log.toString(), 0, cashier.log.size());
+		assertEquals("MockRestCook should have an empty log befor the scheduler is called. Instead the MockRestCook's event log reads: " + rCook1.log.toString(), 0, rCook1.log.size());
+		assertEquals("MockRestCashier should have an empty log befor the scheduler is called. Instead the MockRestCashier's event log reads: " + rCashier1.log.toString(), 0, rCashier1.log.size());
+
+		// Step 1b - Walking to order (Scheduler/Action)
+		assertTrue("Deliverer's scheduler should have returned true, but didn't.", deliverer.pickAndExecuteAnAction());
+
+		// Check postconditions for Step 1b
+		assertTrue("Deliverer's current order should be test1Order. It isn't.", deliverer.currentOrder == deliverer.orders.get(0));
+				
+		// Step 1c - Arrived at cashier's desk (Message)
+		deliverer.msgArrived();
+
+		// Check postconditions for Step 1c
+		assertEquals("DelivererState == arrived. It isn't", deliverer.dS, DelivererState.arrived);	
+		
+		// Step 2b - Giving order to cashier (Scheduler/Action)
+		assertTrue("Deliverer's scheduler should have returned true, but didn't.", deliverer.pickAndExecuteAnAction());
+
+		// Check postconditions for Step 2b
+		assertEquals("Deliverer has one order in List orders in which OrderState == ready. It doesn't.", deliverer.orders.get(0).getOS(), OrderState.ready);
+		assertEquals("Deliverer's currentOrder has OrderState == ready. It doesn't.", deliverer.currentOrder.getOS(), OrderState.ready);
+		assertTrue("RCook1 should have received order from Deliverer. RCook1 should have a log that reads: Received delivery. Instead it reads: " + rCook1.log.toString(), rCook1.log.getLastLoggedEvent().getMessage() == "Received delivery");
+		assertTrue("RCashier1 should have received bill from Deliverer. RCashier1 should have a log that reads: Received market bill. Instead it reads: " + rCashier1.log.toString(), rCashier1.log.getLastLoggedEvent().getMessage() == "Received market bill");
+
+		// Step 3a - Receive Cashier's confirmation (Message)
+		deliverer.msgPayment(rCashier1, 40);
+		
+		// Check postconditions for Step 3a
+		assertEquals("Deliverer has one order in List orders in which OrderState == paying. It doesn't.", deliverer.orders.get(0).getOS(), OrderState.paying);
+		assertEquals("Deliverer's currentOrder has OrderState == paying. It doesn't.", deliverer.currentOrder.getOS(), OrderState.paying);
+		assertEquals("Deliverer has one order in List orders in which amountPaid == 40. It doesn't.", deliverer.currentOrder.amountPaid, 40);
+		
+		// Step 3b -  Going to waiting area (Scheduler/Action)
+		assertTrue("Deliverer's scheduler should have returned true, but didn't.", deliverer.pickAndExecuteAnAction());
+
+		// Check postconditions for Step 3b
+		assertEquals("Deliverer has one order in List orders in which OrderState == paid. It doesn't.", deliverer.orders.get(0).getOS(), OrderState.paid);
+		assertEquals("Deliverer's currentOrder has OrderState == paid. It doesn't.", deliverer.currentOrder.getOS(), OrderState.paid);
+		assertEquals("Deliverer has one order in List orders in which change == 5. It doesn't.", deliverer.currentOrder.change, 5);
+		assertTrue("RCashier1 should have received change from Deliverer. RCashier1 should have a log that reads: Received change. Instead it reads: " + rCashier1.log.toString(), rCashier1.log.getLastLoggedEvent().getMessage() == "Received change");
+		
+		// Step 4a - Order Ready (Message)
+		deliverer.msgArrivedBack();
+
+		// Check postconditions for Step 4a
+		assertEquals("DelivererState == arrivedBack. It isn't", deliverer.dS, DelivererState.arrivedBack);
+
+		// Step 4b - Give payment to Cashier (Scheduler/Action)
+		assertTrue("Deliverer's scheduler should have returned true, but didn't.", deliverer.pickAndExecuteAnAction());
+
+		// Check postconditions for Step 4b
+		assertTrue("Cashier should have received change from Deliverer. Cashier should have a log that reads: Received deliver order to finish. Instead it reads: " + cashier.log.toString(), cashier.log.getLastLoggedEvent().getMessage() == "Received deliver order to finish");
+		assertTrue("Deliverer's currentOrder should be null. It isn't.", deliverer.currentOrder == null);
+		assertTrue("Deliverer should have no orders in List orders. It doesn't.", deliverer.orders.size() == 0);
+		
+	} // End of Test 3
+	
 
 }
