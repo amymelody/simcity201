@@ -15,7 +15,7 @@ public class HousingGui extends BuildingGui
 	private final int BUFFERTOP = 50;
 	private final int BUFFERSIDE = 15;
 	
-	private MoveBox[][] multD = new int[5][10];
+	private MoveBox[][] boxes = new MoveBox[25][25];
 
 	/**
 	 * Constructor
@@ -44,6 +44,18 @@ public class HousingGui extends BuildingGui
 		animationPanel.setMaximumSize(animDim);
 		animationPanel.setVisible(false);
 		cG.add(animationPanel);
+		
+		for(int i = 0; i < 25; i++)
+		{
+			for(int j = 0; j < 25; j++)
+			{
+				boxes[i][j] = new MoveBox(j*20, i*20);
+				if(i == 0 || j == 0 || i == 24 || j == 24)
+				{
+					boxes[i][j].setOpen(false);
+				}
+			}
+		}
 	}
 	
 	public void setVisible(boolean visible)

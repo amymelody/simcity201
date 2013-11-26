@@ -10,6 +10,23 @@ public class MoveBox
 	{
 		this.x = x;
 		this.y = y;
-		open = false;
+		open = true;
+	}
+	
+	public int getX()
+	{
+		return x;
+	}
+	public int getY()
+	{
+		return y;
+	}
+	public boolean getOpen()
+	{
+		return open;
+	}
+	public void setOpen(boolean tf)
+	{
+		open = tf;
 	}
 }
