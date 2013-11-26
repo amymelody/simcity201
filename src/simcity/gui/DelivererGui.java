@@ -23,14 +23,14 @@ public class DelivererGui implements Gui {
 	private int xHome, yHome; // Deliverer home poMap<K, V>ion
 	private static Map<String, Point> locations = new HashMap<String, Point>();
 	static {
-		locations.put("Market 1", new Point(250, 350));
-		locations.put("Market 2", new Point(230, 350));
-		locations.put("Market 3", new Point(60, 380));
-		locations.put("Josh's Restaurant", new Point(440, 330));
-		locations.put("Cherys's Restaurant", new Point(250, 380));
-		locations.put("Anjali's Restaurant", new Point(440, 350));
-		locations.put("Alfred's Restaurant", new Point(230, 380));
-		locations.put("Jesus's Restaurant", new Point(440, 380));
+		locations.put("market1", new Point(250, 350));
+		locations.put("market2", new Point(230, 350));
+		locations.put("market3", new Point(60, 380));
+		locations.put("joshRestaurant", new Point(440, 330));
+		locations.put("cherysRestaurant", new Point(250, 380));
+		locations.put("anjaliRestaurant", new Point(440, 350));
+		locations.put("alfredRestaurant", new Point(230, 380));
+		locations.put("jesusRestaurant", new Point(440, 380));
 	}
 	
 	public enum GuiState {nothing, delivering, cashier}
