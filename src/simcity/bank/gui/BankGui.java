@@ -67,4 +67,6 @@ public class BankGui extends BuildingGui
 	public void addBankTellerGui(BankTellerGui tg){
 		animationPanel.addGui(tg);
 	}
+	
+	
 }
