@@ -11,6 +11,8 @@ import java.util.List;
 
 import simcity.CityDirectory;
 import simcity.market.gui.MarketGui;
+import simcity.bank.BankDepositorRole;
+import simcity.bank.BankTellerRole;
 import simcity.bank.gui.BankGui;
 import simcity.housing.LandlordRole;
 import simcity.housing.ResidentRole;
@@ -99,14 +101,14 @@ public class CityGui extends JFrame
 	public void addMarketDeliverer(MarketDelivererRole d) {
 		animationPanel.addMarketDeliverer(d);
 	}
-	
+	*/
 	public void addBankDepositor(BankDepositorRole d) {
 		animationPanel.addBankDepositor(d);
 	}
 	
 	public void addBankTeller(BankTellerRole t) {
 		animationPanel.addBankTeller(t);
-	}*/
+	}
 	
 	public void readConfig() {
 		inputPanel.readConfig();

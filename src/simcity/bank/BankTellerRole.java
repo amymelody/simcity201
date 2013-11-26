@@ -10,8 +10,11 @@ package simcity.bank;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.Semaphore;
 
 import simcity.PersonAgent;
+import simcity.bank.gui.BankGui;
+import simcity.bank.gui.BankTellerGui;
 import simcity.bank.interfaces.BankDepositor;
 import simcity.bank.interfaces.BankManager;
 import simcity.bank.interfaces.BankTeller;
@@ -71,7 +74,8 @@ public class BankTellerRole extends JobRole implements BankTeller   {
 		this.manager = manager;
 	}
 
-
+	private Semaphore tellerAnimation = new Sempahore(0,true);
+	BankTellerGui gui;
 
 ////MESSAGES/////
 
@@ -160,6 +164,14 @@ private myCustomer findCustomer(BankDepositor c){
 		}
 	}
 	return null;
+}
+
+public BankTellerGui getGui(){
+	return gui;
+}
+
+public void setBankGui(BankGui g){
+	gui.setGui(g);
 }
 }
 
