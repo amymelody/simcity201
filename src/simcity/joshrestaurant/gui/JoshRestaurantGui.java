@@ -82,7 +82,7 @@ public class JoshRestaurantGui extends BuildingGui implements ActionListener {
         
         infoLabel = new JTextField(); 
         pause = new JButton("Pause");
-        pause.addActionListener(new ActionListener() {
+        /*pause.addActionListener(new ActionListener() {
         	@Override
         	public void actionPerformed(ActionEvent e) {
         		if (pause.getText().equals("Pause")) {
@@ -95,7 +95,7 @@ public class JoshRestaurantGui extends BuildingGui implements ActionListener {
         			animationPanel.resumeAnimation();
         		}
         	}
-        });
+        });*/
 
         infoPanel.add(pause);
         infoPanel.add(infoLabel);
@@ -169,6 +169,7 @@ public class JoshRestaurantGui extends BuildingGui implements ActionListener {
      * For v3, it will propose a break for the waiter.
      */
     public void actionPerformed(ActionEvent e) {
+    	/*
         if (e.getSource() == stateCB) {
         	if (stateCB.getText().equals("Hungry?")) {
 	            if (currentPerson instanceof JoshCustomerRole) {
@@ -190,6 +191,7 @@ public class JoshRestaurantGui extends BuildingGui implements ActionListener {
 	            }
         	}
         }
+        */
     }
     /**
      * Message sent from a customer gui to enable that customer's

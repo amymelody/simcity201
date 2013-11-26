@@ -88,7 +88,6 @@ public class CityAnimationPanel extends JPanel implements ActionListener, MouseL
 	}
 	
 	public void addBuilding(BuildingGui bG) {
-		System.out.println(bG.getName());
 		buildings.add(bG);
 	}
 	
@@ -142,7 +141,7 @@ public class CityAnimationPanel extends JPanel implements ActionListener, MouseL
 				if(bG.getName().equals("bank1")){
 					BankGui g = (BankGui)bG;
 					t.setBankGui(g);
-					g.addBankDepositorGui(t.getGui());
+					g.addBankTellerGui(t.getGui());
 				}
 			}
 		}

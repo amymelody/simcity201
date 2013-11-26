@@ -317,7 +317,7 @@ public class PersonAgent extends Agent implements Person
 		time.day = d;
 		time.hour = h;
 		time.minute = m;
-		//print(time.getDay().toString() + ", " + time.getHour() + ":" + time.getMinute());
+		print(time.getDay().toString() + ", " + time.getHour() + ":" + time.getMinute());
 		//print(job.startShifts.get(time.getDay()).getDay().toString() + ", " + job.startShifts.get(time.getDay()).getHour() + ":" + job.startShifts.get(time.getDay()).getMinute());
 		/*if (time.getHour() == 8 && time.getMinute() == 0) {
 			money += 600;
@@ -336,7 +336,6 @@ public class PersonAgent extends Agent implements Person
 	}
 	
 	public void msgYoureHired(String role, int payrate, Map<Day,Time> startShifts, Map<Day,Time> endShifts) {
-		print("You're hired");
 		JobRole j = city.JobFactory(role);
 		addRole(j, role);
 		job = new Job(j.getJobLocation(), role, payrate, startShifts, endShifts);
@@ -435,9 +434,10 @@ public class PersonAgent extends Agent implements Person
 	//Scheduler
 	
 	public boolean pickAndExecuteAnAction() {
-		if (state.ts == TransportationState.walking || state.ts == TransportationState.walkingFromVehicle) { 
+		if (state.ts == TransportationState.walking || state.ts == TransportationState.walkingFromVehicle) {
 			if (job != null && state.ws == WorkingState.notWorking && !job.startShifts.get(time.getDay()).isEqualTo(job.endShifts.get(time.getDay())) && (time.plus(60)).greaterThanOrEqualTo(job.startShifts.get(time.getDay())) && !time.greaterThanOrEqualTo(job.endShifts.get(time.getDay()))) { //if an hour before your shift starts
-			if (state.ls == LocationState.home) {
+				print("GOTOWORK");
+				if (state.ls == LocationState.home) {
 					leaveHouse();
 					return true;
 				} else if (state.ls == LocationState.outside || state.ls == LocationState.atDestination) {
@@ -446,11 +446,13 @@ public class PersonAgent extends Agent implements Person
 				}
 			}
 			if (state.ws == WorkingState.working && time.greaterThanOrEqualTo(job.endShifts.get(time.getDay()) ) && !job.role.equals("landlord")) { //if your shift ends
+				print("ENDSHIFT");
 				endShift();
 				return true;
 			} 
 			if (state.ws == WorkingState.notWorking) {
 				if (money <= minBalance && haveBankAccount) {
+					print("GOTOBANK");
 					if (state.ls == LocationState.home) {
 						leaveHouse();
 						return true;
@@ -460,6 +462,7 @@ public class PersonAgent extends Agent implements Person
 					} 
 				} 
 				if (rentDue) {
+					print("GOTOOWNERHOUSE");
 					if (state.ls == LocationState.home) {
 						leaveHouse();
 						return true;
@@ -469,6 +472,7 @@ public class PersonAgent extends Agent implements Person
 					} 
 				} 
 				if (!foodNeeded.isEmpty()) {
+					print("GOTOMARKET");
 					if (state.ls == LocationState.home) {
 						leaveHouse();
 						return true;
@@ -479,6 +483,7 @@ public class PersonAgent extends Agent implements Person
 				} 
 				if (state.ns == NourishmentState.gotHungry) {
 					if (wantToGoToRestaurant()) {
+						print("GOTORESTAURANT");
 						if (state.ls == LocationState.home) {
 							leaveHouse();
 							return true;
@@ -487,6 +492,7 @@ public class PersonAgent extends Agent implements Person
 							return true;
 						} 
 					} else {
+						print("GOHOME");
 						if (state.ls == LocationState.home) {
 							goEat();
 							return true;
@@ -497,12 +503,14 @@ public class PersonAgent extends Agent implements Person
 					} 
 				} 
 				if (!groceries.isEmpty()) {
+					print("GOHOME");
 					if (state.ls == LocationState.outside || state.ls == LocationState.atDestination) {
 						goHome();
 						return true;
 					} 
 				} 
 				if (money >= maxBalance) {
+					print("GOTOBANK");
 					if (state.ls == LocationState.home) {
 						leaveHouse();
 						return true;
@@ -524,7 +532,6 @@ public class PersonAgent extends Agent implements Person
 			for (MyRole mr : roles) {
 				if (mr.active) {
 					anytrue = mr.r.pickAndExecuteAnAction();
-					//print("roleScheduler");
 					return anytrue;
 				}
 			}
@@ -566,12 +573,13 @@ public class PersonAgent extends Agent implements Person
 	private void goHome() {
 		Housing h = houses.get(0); //person's house
 		if (state.ls != LocationState.atDestination || (destination != null && !destination.equals(h.location))) {
-			print("I'm going home");
+			print("I'm going home to " + h.location);
 			goToDestination(h.location);
 		} else {
 			if (!findRole(h.residentRole)) {
 				ResidentRole r = city.ResidentFactory(h.residentRole);
 				addRole(r, h.residentRole);
+				cG.addResident(r, h.location, houses.get(1).location);
 			}
 			synchronized(roles) {
 				for (MyRole mr : roles) {
@@ -647,6 +655,7 @@ public class PersonAgent extends Agent implements Person
 			if (!findRole(h.residentRole)) {
 				ResidentRole r = city.ResidentFactory(h.residentRole);
 				addRole(r, h.residentRole);
+				cG.addResident(r, houses.get(0).location, h.location);
 			} 
 			synchronized(roles) {
 				for (MyRole mr : roles) {
