@@ -49,28 +49,35 @@ public class JoshRestaurantGui extends BuildingGui implements ActionListener {
     	super(n, bG, cD);
     	restPanel = new JoshRestaurantInputPanel(this, cD.getJoshCashier(), cD.getJoshCook(), cD.getJoshHost(), cD.getMarketCashiers());
     	
-        int WINDOWX = 450;
-        int WINDOWY = 400;
+        int WINDOWX = 650;
+        int WINDOWY = 500;
     	
     	//bG.setBounds(50, 50, WINDOWX*2, WINDOWY);
 
     	//bG.setLayout(new GridLayout(1, 2, 10, 0));
         controlPanel.setLayout(new BorderLayout());
-        controlPanel.setSize(WINDOWX,WINDOWY);
+        //controlPanel.setSize(WINDOWX,WINDOWY);
 
-        Dimension restDim = new Dimension(WINDOWX, (int) (WINDOWY * .6));
-        restPanel.setPreferredSize(restDim);
-        restPanel.setMinimumSize(restDim);
-        restPanel.setMaximumSize(restDim);
+        double controlFractionOfWindow = 150.0 / 650.0;
+        Dimension controlDim = new Dimension((int)(WINDOWX * controlFractionOfWindow), WINDOWY);
+        controlPanel.setPreferredSize(controlDim);
+        controlPanel.setMinimumSize(controlDim);
+        controlPanel.setMaximumSize(controlDim);
         controlPanel.add(restPanel, BorderLayout.CENTER);
+        
+        double animFractionOfWindow = 500.0 / 650.0;
+        Dimension animDim = new Dimension((int)(WINDOWX * animFractionOfWindow), WINDOWY);
+        animationPanel.setPreferredSize(animDim);
+        animationPanel.setMinimumSize(animDim);
+        animationPanel.setMaximumSize(animDim);
         
         // Now, setup the info panel
         Dimension infoDim = new Dimension(WINDOWX, (int) (WINDOWY * .15));
         infoPanel = new JPanel();
-        infoPanel.setPreferredSize(infoDim);
+        /*infoPanel.setPreferredSize(infoDim);
         infoPanel.setMinimumSize(infoDim);
         infoPanel.setMaximumSize(infoDim);
-        infoPanel.setBorder(BorderFactory.createTitledBorder("Information"));
+        infoPanel.setBorder(BorderFactory.createTitledBorder("Information"));*/
 
         stateCB = new JCheckBox();
         stateCB.setText("Hungry?");

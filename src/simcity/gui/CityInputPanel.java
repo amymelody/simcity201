@@ -1,6 +1,5 @@
 package simcity.gui;
 
-import simcity.CarAgent;
 import simcity.Day;
 import simcity.PersonAgent;
 import simcity.Time;
@@ -16,10 +15,9 @@ import java.util.List;
 
 public class CityInputPanel extends JPanel implements ActionListener
 {
-	static final int TIMERINCR = 3000;
+	static final int TIMERINCR = 2000;
 	
 	private Vector<PersonAgent> people = new Vector<PersonAgent>();
-	private Vector<CarAgent> cars = new Vector<CarAgent>();
 	
 	private CityDirectory cityDirectory;
 	private BuildingGui buildingGui;

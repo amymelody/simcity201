@@ -46,6 +46,8 @@ public class MockMarketCashier extends Mock implements MarketCashier {
 	
 	public void msgIWantItems(MarketCustomer c, List<ItemOrder> i) {};
 	
+	public void msgImHere(MarketCustomer c) {};
+	
 	public void msgHereAreItems(Order order, MarketEmployee e) {};
 	
 	public void msgPayment(MarketCustomer c, int money) {};

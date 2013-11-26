@@ -48,46 +48,9 @@ public class ListPanel extends JPanel implements ActionListener {
      * Handles the event of the add button being pressed
      */
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == addPersonB) {
-        	if (!restPanel.getInfoText().equals("")) {
-        		addPerson(restPanel.getInfoText());
-        	}
-        }
-        else {
-        	// Isn't the second for loop more beautiful?
-            /*for (int i = 0; i < list.size(); i++) {
-                JButton temp = list.get(i);*/
-        	for (JButton temp:list){
-                if (e.getSource() == temp)
-                    restPanel.showInfo(type, temp.getText());
-            }
-        }
-    }
-
-    /**
-     * If the add button is pressed, this function creates
-     * a spot for it in the scroll pane, and tells the restaurant panel
-     * to add a new person.
-     *
-     * @param name name of new person
-     */
-    public void addPerson(String name) {
-        if (name != null) {
-            JButton button = new JButton(name);
-            button.setBackground(Color.white);
-
-            Dimension paneSize = pane.getSize();
-            Dimension buttonSize = new Dimension(paneSize.width - 20,
-                    (int) (paneSize.height / 7));
-            button.setPreferredSize(buttonSize);
-            button.setMinimumSize(buttonSize);
-            button.setMaximumSize(buttonSize);
-            button.addActionListener(this);
-            list.add(button);
-            view.add(button);
-            restPanel.addPerson(type, name);//puts customer on list
-            restPanel.showInfo(type, name);//puts hungry button on panel
-            validate();
+        for (JButton temp:list){
+            if (e.getSource() == temp)
+                restPanel.showInfo(type, temp.getText());
         }
     }
 }
