@@ -153,6 +153,9 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 	public enum MarketState {open, closing, closed};
 	public MarketState mS;
 	public BankManagerRole manager;
+	
+	// Reference to bank
+	//bank;
 
 	// Cashier Status Data
 	int salary;
@@ -371,7 +374,7 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 		}
 		marketMoney -= salary;
 		marketMoneySurplus = marketMoney - 100;
-		// Send a message to the bank to store money surplus
+		//bank.msgMakeDeposit(marketMoneySurplus);
 		marketMoney = 100;
 		msgEndShift();
 	}
