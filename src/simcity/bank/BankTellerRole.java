@@ -74,7 +74,7 @@ public class BankTellerRole extends JobRole implements BankTeller   {
 		this.manager = manager;
 	}
 
-	private Semaphore tellerAnimation = new Sempahore(0,true);
+	private Semaphore tellerAnimation = new Semaphore(0,true);
 	BankTellerGui gui;
 
 ////MESSAGES/////

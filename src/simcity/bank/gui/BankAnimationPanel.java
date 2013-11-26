@@ -14,10 +14,13 @@ import java.util.Map;
 import java.util.Random;
 
 public class BankAnimationPanel extends JPanel implements ActionListener {
-	private final int WINDOWX = 400;
-	private final int WINDOWY = 400;
-	private Image bufferImage;
-	private Dimension bufferSize;
+	static final int FILLRECTX = 200;
+	static final int FILLRECTY = 250;
+	static final int FILLRECT = 50;
+    private final int WINDOWX = 300;
+    private final int WINDOWY = 300;
+    private Image bufferImage;
+    private Dimension bufferSize;
 
 
 	private List<Gui> guis = new ArrayList<Gui>();
@@ -36,16 +39,27 @@ public class BankAnimationPanel extends JPanel implements ActionListener {
 	}
 	
 	public void paintComponent(Graphics g){
-		Graphics2D managerArea = (Graphics2D)g;
-		Graphics2D tellerArea = (Graphics2D)g;
 		
-		managerArea.setColor(getBackground());
-		managerArea.fillRect(10,200,50,20);
-		managerArea.drawString("Manager Desk", 5, 20);
-		tellerArea.setColor(getBackground());
-		tellerArea.fillRect(10,200,50,20);
-		tellerArea.drawString("Teller Desk", 105, 200);
-		
+        Graphics2D managerArea = (Graphics2D)g;
+        Graphics2D tellerArea = (Graphics2D)g;
+        //Clear the screen by painting a rectangle the size of the frame
+       
+        
+        managerArea.setColor(getBackground());
+        managerArea.fillRect(0,0,WINDOWX, WINDOWY);
+        tellerArea.setColor(getBackground());
+        tellerArea.fillRect(0,0,WINDOWX, WINDOWY);
+ 
+        //Here is the table
+        
+        managerArea.fillRect(10, 200, 50, 20);
+        managerArea.drawString("Cook Area", 5, 200);
+        
+        tellerArea.fillRect(110, 200, 50, 20);
+        tellerArea.drawString("Teller Desk", 105, 200);
+        
+       
+
 	
 	
 	for(Gui gui : guis){
