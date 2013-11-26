@@ -6,6 +6,7 @@ import java.util.List;
 import simcity.market.MarketCustomerRole;
 import simcity.market.MarketCustomerRole.CustomerState;
 import simcity.market.gui.MarketCustomerGui;
+import simcity.market.test.mock.MockPerson;
 import simcity.test.mock.MockMarketCashier;
 import simcity.ItemOrder;
 import junit.framework.*;
@@ -16,6 +17,7 @@ public class MarketCustomerTest extends TestCase
 	MarketCustomerRole customer;
 	MarketCustomerGui gui;
 	MockMarketCashier cashier;
+	MockPerson person;
 
 	/**
 	 * This method is run before each test. You can use it to instantiate the class variables
@@ -26,7 +28,9 @@ public class MarketCustomerTest extends TestCase
 		customer = new MarketCustomerRole();
 		gui = new MarketCustomerGui(customer);
 		customer.setGui(gui);
+		customer.setUnitTest(true);
 		cashier = new MockMarketCashier("MockCashier");
+		person = new MockPerson("MockPerson");
 	}
 
 
@@ -36,6 +40,7 @@ public class MarketCustomerTest extends TestCase
 	public void testOneNormalCustomerScenario1()
 	{
 		// Set up
+		customer.setPerson(person);
 		customer.setCashier(cashier);
 		List<ItemOrder> test1Orders = new ArrayList<ItemOrder>(); // orders Lasagna and Horchata
 		test1Orders.add(new ItemOrder("Lasagna", 2));
@@ -122,6 +127,7 @@ public class MarketCustomerTest extends TestCase
 	public void testTwoNormalCustomerOutOfItemsScenario1()
 	{
 		// Set up
+		customer.setPerson(person);
 		customer.setCashier(cashier);
 		List<ItemOrder> test2Orders = new ArrayList<ItemOrder>(); // orders Lasagna and Horchata
 		test2Orders.add(new ItemOrder("Lasagna", 2));

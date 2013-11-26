@@ -9,6 +9,7 @@ import simcity.market.MarketDelivererRole.DelivererState;
 import simcity.market.Order;
 import simcity.market.Order.OrderState;
 import simcity.market.gui.MarketDelivererGui;
+import simcity.market.test.mock.MockPerson;
 import simcity.test.mock.MockMarketCashier;
 import simcity.test.mock.MockRestCashier;
 import simcity.test.mock.MockRestCook;
@@ -22,6 +23,7 @@ public class MarketDelivererTest extends TestCase
 	MockMarketCashier cashier;
 	MockRestCook rCook1, rCook2;
 	MockRestCashier rCashier1, rCashier2;
+	MockPerson person;
 
 	/**
 	 * This method is run before each test. You can use it to instantiate the class variables
@@ -37,6 +39,9 @@ public class MarketDelivererTest extends TestCase
 		rCook2 = new MockRestCook("MockRestCook2");
 		rCashier1 = new MockRestCashier("MockRestCashier1");
 		rCashier2 = new MockRestCashier("MockRestCashier2");
+		person = new MockPerson("MockPerson");
+		deliverer.setPerson(person);
+		deliverer.setUnitTest(true);
 	}
 
 
@@ -120,7 +125,7 @@ public class MarketDelivererTest extends TestCase
 		assertTrue("Deliverer's scheduler should have returned true, but didn't.", deliverer.pickAndExecuteAnAction());
 
 		// Check postconditions for Step 4b
-		assertTrue("Cashier should have received change from Deliverer. Cashier should have a log that reads: Received deliver order to finish. Instead it reads: " + cashier.log.toString(), rCashier1.log.getLastLoggedEvent().getMessage() == "Received deliver order to finish");
+		assertTrue("Cashier should have received change from Deliverer. Cashier should have a log that reads: Received deliver order to finish. Instead it reads: " + cashier.log.toString(), cashier.log.getLastLoggedEvent().getMessage() == "Received deliver order to finish");
 		assertTrue("Deliverer's currentOrder should be null. It isn't.", deliverer.currentOrder == null);
 		assertTrue("Deliverer should have no orders in List orders. It doesn't.", deliverer.orders.size() == 0);
 		
