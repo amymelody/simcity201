@@ -316,7 +316,7 @@ public class PersonAgent extends Agent implements Person
 		time.day = d;
 		time.hour = h;
 		time.minute = m;
-		print(time.getDay().toString() + ", " + time.getHour() + ":" + time.getMinute());
+		//print(time.getDay().toString() + ", " + time.getHour() + ":" + time.getMinute());
 		if (time.getHour() == 8 && time.getMinute() == 0) {
 			state.ns = NourishmentState.gotHungry;
 		}
@@ -429,7 +429,7 @@ public class PersonAgent extends Agent implements Person
 	
 	public boolean pickAndExecuteAnAction() {
 		if (state.ts == TransportationState.walking || state.ts == TransportationState.walkingFromVehicle) { 
-			if (job != null && state.ws == WorkingState.notWorking && job.startShifts.get(time.getDay()) != job.endShifts.get(time.getDay()) && (time.plus(60)).greaterThanOrEqualTo(job.startShifts.get(time.getDay())) && !time.greaterThanOrEqualTo(job.endShifts.get(time.getDay()))) { //if an hour before your shift starts
+			if (job != null && state.ws == WorkingState.notWorking && !job.startShifts.get(time.getDay()).isEqualTo(job.endShifts.get(time.getDay())) && (time.plus(60)).greaterThanOrEqualTo(job.startShifts.get(time.getDay())) && !time.greaterThanOrEqualTo(job.endShifts.get(time.getDay()))) { //if an hour before your shift starts
 				if (state.ls == LocationState.home) {
 					leaveHouse();
 					return true;

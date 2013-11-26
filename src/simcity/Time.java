@@ -63,4 +63,11 @@ public class Time
 		return false;
 	}
 	
+	public boolean isEqualTo(Time t) {
+		if (day == t.day && hour == t.hour && minute == t.minute) {
+			return true;
+		}
+		return false;
+	}
+	
 }

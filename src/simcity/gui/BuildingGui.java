@@ -31,7 +31,7 @@ public abstract class BuildingGui
 		return name;
 	}
 	
-	public abstract void changeView(boolean visible);
+	//public abstract void changeView(boolean visible);
 	
 	public void changeCityView() {
 		cityGui.changeView();

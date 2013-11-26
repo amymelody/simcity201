@@ -103,11 +103,11 @@ public class CityDirectory
 			job = p.getJob(); //not actual function yet
 			jobBuilding = jobB;
 			homeBuilding = homeB;
-			if(homeBuilding == "apartment10" || homeBuilding == "apartment11" || homeBuilding == "apartment12" || homeBuilding == "apartment13" || homeBuilding == "apartment14" || homeBuilding == "apartment15")
+			if(homeBuilding == "apartment10" || homeBuilding == "apartment11" || homeBuilding == "apartment12" || homeBuilding == "apartment13" || homeBuilding == "apartment14" || homeBuilding == "apartment15" || homeBuilding == "apartment16" || homeBuilding == "apartment17")
 			{
 				apartment1ResIDs.add(ID);
 			}
-			else if(homeBuilding == "apartment20" || homeBuilding == "apartment21" || homeBuilding == "apartment22" || homeBuilding == "apartment23" || homeBuilding == "apartment24" || homeBuilding == "apartment25")
+			else if(homeBuilding == "apartment20" || homeBuilding == "apartment21" || homeBuilding == "apartment22" || homeBuilding == "apartment23" || homeBuilding == "apartment24" || homeBuilding == "apartment25" || homeBuilding == "apartment26" || homeBuilding == "apartment27")
 			{
 				apartment2ResIDs.add(ID);
 			}
@@ -159,12 +159,12 @@ public class CityDirectory
 				type = "housing";
 				residential = new HousingInfo("house", 6);
 			}
-			else if(n == "apartment1" || n == "apartment10" || n == "apartment11" || n == "apartment12" || n == "apartment13" || n == "apartment14" || n == "apartment15")
+			else if(n == "apartment1" || n == "apartment10" || n == "apartment11" || n == "apartment12" || n == "apartment13" || n == "apartment14" || n == "apartment15" || n == "apartment16" || n == "apartment17")
 			{
 				type = "housing";
 				residential = new HousingInfo("apartment", 1);
 			}
-			else if(n == "apartment2" || n == "apartment20" || n == "apartment21" || n == "apartment22" || n == "apartment23" || n == "apartment24" || n == "apartment25")
+			else if(n == "apartment2" || n == "apartment20" || n == "apartment21" || n == "apartment22" || n == "apartment23" || n == "apartment24" || n == "apartment25" || n == "apartment26" || n == "apartment27")
 			{
 				type = "housing";
 				residential = new HousingInfo("apartment", 2);
@@ -246,6 +246,8 @@ public class CityDirectory
 		addBuilding("apartment13", "horizontal", new Point(apartment1X, apartment1Y));
 		addBuilding("apartment14", "horizontal", new Point(apartment1X, apartment1Y));
 		addBuilding("apartment15", "horizontal", new Point(apartment1X, apartment1Y));
+		addBuilding("apartment16", "horizontal", new Point(apartment1X, apartment1Y));
+		addBuilding("apartment17", "horizontal", new Point(apartment1X, apartment1Y));
 		addBuilding("apartment2", "horizontal", new Point(apartment2X, apartment2Y));
 		addBuilding("apartment20", "horizontal", new Point(apartment2X, apartment2Y));
 		addBuilding("apartment21", "horizontal", new Point(apartment2X, apartment2Y));
@@ -253,6 +255,8 @@ public class CityDirectory
 		addBuilding("apartment23", "horizontal", new Point(apartment2X, apartment2Y));
 		addBuilding("apartment24", "horizontal", new Point(apartment2X, apartment2Y));
 		addBuilding("apartment25", "horizontal", new Point(apartment2X, apartment2Y));
+		addBuilding("apartment26", "horizontal", new Point(apartment2X, apartment2Y));
+		addBuilding("apartment27", "horizontal", new Point(apartment2X, apartment2Y));
 		addBuilding("bank", "horizontal", new Point(bankX, bankY));
 		addBuilding("joshRestaurant", "horizontal", new Point(joshRestaurantX, joshRestaurantY));
 	
@@ -643,17 +647,21 @@ public class CityDirectory
 			}
 		} else {
 			int num1 = getNumPeople("residentRole", "apartment10");
-			int num2 = getNumPeople("residentRole", "apartment11");
-			int num3 = getNumPeople("residentRole", "apartment12");
-			int num4 = getNumPeople("residentRole", "apartment13");
-			int num5 = getNumPeople("residentRole", "apartment14");
-			int num6 = getNumPeople("residentRole", "apartment15");
-			int num7 = getNumPeople("residentRole", "apartment20");
-			int num8 = getNumPeople("residentRole", "apartment21");
-			int num9 = getNumPeople("residentRole", "apartment22");
-			int num10 = getNumPeople("residentRole", "apartment23");
-			int num11 = getNumPeople("residentRole", "apartment24");
+			int num3 = getNumPeople("residentRole", "apartment11");
+			int num5 = getNumPeople("residentRole", "apartment12");
+			int num7 = getNumPeople("residentRole", "apartment13");
+			int num9 = getNumPeople("residentRole", "apartment14");
+			int num11 = getNumPeople("residentRole", "apartment15");
+			int num13 = getNumPeople("residentRole", "apartment16");
+			int num15 = getNumPeople("residentRole", "apartment17");
+			int num2 = getNumPeople("residentRole", "apartment20");
+			int num4 = getNumPeople("residentRole", "apartment21");
+			int num6 = getNumPeople("residentRole", "apartment22");
+			int num8 = getNumPeople("residentRole", "apartment23");
+			int num10 = getNumPeople("residentRole", "apartment24");
 			int num12 = getNumPeople("residentRole", "apartment25");
+			int num14 = getNumPeople("residentRole", "apartment26");
+			int num16 = getNumPeople("residentRole", "apartment27");
 			int num = num1;
 			if (num > num2) {
 				num = num2;
@@ -688,41 +696,65 @@ public class CityDirectory
 			if (num > num12) {
 				num = num12;
 			}
+			if (num > num13) {
+				num = num13;
+			}
+			if (num > num14) {
+				num = num14;
+			}
+			if (num > num15) {
+				num = num15;
+			}
+			if (num > num16) {
+				num = num16;
+			}
 			if (num == num1) {
 				housing = "apartment10";
 			}
 			if (num == num2) {
-				housing = "apartment11";
-			}
-			if (num == num3) {
-				housing = "apartment12";
-			}
-			if (num == num4) {
-				housing = "apartment13";
-			}
-			if (num == num5) {
-				housing = "apartment14";
-			}
-			if (num == num6) {
-				housing = "apartment15";
-			}
-			if (num == num7) {
 				housing = "apartment20";
 			}
-			if (num == num8) {
+			if (num == num3) {
+				housing = "apartment11";
+			}
+			if (num == num4) {
 				housing = "apartment21";
 			}
-			if (num == num9) {
+			if (num == num5) {
+				housing = "apartment12";
+			}
+			if (num == num6) {
 				housing = "apartment22";
 			}
-			if (num == num10) {
+			if (num == num7) {
+				housing = "apartment13";
+			}
+			if (num == num8) {
 				housing = "apartment23";
 			}
-			if (num == num11) {
+			if (num == num9) {
+				housing = "apartment14";
+			}
+			if (num == num10) {
 				housing = "apartment24";
 			}
-			else {
+			if (num == num11) {
+				housing = "apartment15";
+			}
+			if (num == num12) {
 				housing = "apartment25";
+			}
+			if (num == num13) {
+				housing = "apartment16";
+			}
+			if (num == num14) {
+				housing = "apartment26";
+			}
+			if (num == num15) {
+				housing = "apartment17";
+			}
+			else {
+				housing = "apartment27";
 			}
 		}
 		p.setHome(housing);
@@ -756,7 +788,57 @@ public class CityDirectory
 				return 1;
 			}
 		}
-		//if(role.equals(market)) //in progress
+		if(role.equals("marketEmployee")) {
+			if (building.equals("market1")) {
+				return market1Employees.size();
+			}
+			if (building.equals("market2")) {
+				return market2Employees.size();
+			}
+			if (building.equals("market3")) {
+				return market3Employees.size();
+			}
+		}
+		if(role.equals("marketDeliverer")) {
+			if (building.equals("market1")) {
+				return market1Deliverers.size();
+			}
+			if (building.equals("market2")) {
+				return market2Deliverers.size();
+			}
+			if (building.equals("market3")) {
+				return market3Deliverers.size();
+			}
+		}
+		if(role.equals("marketCashier")) {
+			if (building.equals("market1")) {
+				int num = 0;
+				for (PersonInfo p : personMap.values()) {
+					if (p.job.equals(role) && p.jobBuilding.equals(building)) {
+						num++;
+					}
+				}
+				return num;
+			}
+			if (building.equals("market2")) {
+				int num = 0;
+				for (PersonInfo p : personMap.values()) {
+					if (p.job.equals(role) && p.jobBuilding.equals(building)) {
+						num++;
+					}
+				}
+				return num;
+			}
+			if (building.equals("market3")) {
+				int num = 0;
+				for (PersonInfo p : personMap.values()) {
+					if (p.job.equals(role) && p.jobBuilding.equals(building)) {
+						num++;
+					}
+				}
+				return num;
+			}
+		}
 		return 0;
 	}
 	

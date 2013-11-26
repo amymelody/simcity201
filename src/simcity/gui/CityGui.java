@@ -91,8 +91,8 @@ public class CityGui extends JFrame
 		animationPanel.addBuilding(apartment27);
 		HousingGui apartment28 = new HousingGui("Apartment 2-8", this, cd);
 		animationPanel.addBuilding(apartment28);
-		//JoshRestaurantGui joshRestaurant = new JoshRestaurantGui("Josh's Restaurant", this, cd);
-		//animationPanel.addBuilding(joshRestaurant);
+		JoshRestaurantGui joshRestaurant = new JoshRestaurantGui("Josh's Restaurant", this, cd);
+		animationPanel.addBuilding(joshRestaurant);
 		//CherysRestaurantGui cherysRestaurant = new CherysRestaurantGui("Cherys's Restaurant", this, cd);
 		//animationPanel.addBuilding(cherysRestaurant);
 		//AnjaliRestaurantGui anjaliRestaurant = new AnjaliRestaurantGui("Anjali's Restaurant", this, cd);

@@ -136,7 +136,7 @@ public class CityCreationPanel extends JPanel implements ActionListener
 		Properties cityConfig = new Properties();
 		
 		try {
-		    FileInputStream in = new FileInputStream("src/simcity/restaurantConfig.properties");
+		    FileInputStream in = new FileInputStream("src/simcity/config1.properties");
 		    cityConfig.load(in);
 		    in.close();
 		} catch(IOException e) {
