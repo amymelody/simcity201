@@ -64,14 +64,16 @@ public class MarketCustomerRole extends Role implements MarketCustomer {
 
 	// Order items information
 	public List<ItemOrder> items;
+	public List<ItemOrder> itemsReceived;
 	public int cost;
+	public int change;
 	boolean delivery;
 
 	// References to other roles
 	MarketCashier cashier;
 
 	// Customer Status Data
-	public enum CustomerState {nothing, arrived, atCashier, confirming, waiting, getting, paying, leaving, done, walking};
+	public enum CustomerState {nothing, arrived, atCashier, confirming, waiting, getting, paying, leaving, done, out, walking};
 	public CustomerState cS = CustomerState.nothing;
 	String location;
 
@@ -91,15 +93,13 @@ public class MarketCustomerRole extends Role implements MarketCustomer {
 	}
 	
 	public void msgHereAreItemsandPrice(List<ItemOrder> i, int price) {
-		person.msgExpense(price);
-		person.msgReceivedItems(i);
 		cost = price;
 		cS = CustomerState.getting;
 		//stateChanged();
 	}
 
-	public void msgThankYou(int change) {
-		person.msgIncome(change);
+	public void msgThankYou(int chnge) {
+		change = chnge;
 		cS = CustomerState.leaving;
 		//stateChanged();
 	}
@@ -109,6 +109,11 @@ public class MarketCustomerRole extends Role implements MarketCustomer {
 	public void msgAtCashier() {
 		animation.release();
 		cS = CustomerState.atCashier;
+		//stateChanged();
+	}
+	
+	public void msgOut() {
+		cS = CustomerState.out;
 		//stateChanged();
 	}
 
@@ -135,6 +140,10 @@ public class MarketCustomerRole extends Role implements MarketCustomer {
 			GetOut();
 			return true;
 		}
+		if(cS == CustomerState.out) {
+			updateInfo();
+			return true;
+		}
 		return false;
 	}
 
@@ -143,11 +152,11 @@ public class MarketCustomerRole extends Role implements MarketCustomer {
 	private void GoToCashier() {
 		cS = CustomerState.walking;
 		DoGoToCashier(); // animation
-		try {
-			animation.acquire();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+		//try {
+		//	animation.acquire();
+		//} catch (InterruptedException e) {
+		//	e.printStackTrace();
+		//}
 	}
 	private void GiveOrder() {
 		cashier.msgIWantItems(this, items);
@@ -173,6 +182,12 @@ public class MarketCustomerRole extends Role implements MarketCustomer {
 	private void GetOut() {
 		cS = CustomerState.done;
 		DoGetOut(); // animation
+	}
+	
+	private void updateInfo() {
+		person.msgExpense(cost);
+		person.msgIncome(change);
+		person.msgReceivedItems(itemsReceived);
 	}
 
 

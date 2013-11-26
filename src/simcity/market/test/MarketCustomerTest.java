@@ -172,7 +172,7 @@ public class MarketCustomerTest extends TestCase
 
 		// Check postconditions for Step 3b
 		assertEquals("CustomerState == done. It isn't", customer.cS, CustomerState.done);
-
+		
 	} // End of Test 2
 
 }
