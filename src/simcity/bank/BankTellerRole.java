@@ -19,6 +19,7 @@ import simcity.role.Role;
 public class BankTellerRole extends JobRole   {
 
 	private String name;
+	boolean working;
 	private class myCustomer{
 		BankDepositorRole c;
 		CustomerState cS;
@@ -55,6 +56,12 @@ public class BankTellerRole extends JobRole   {
 
 ////MESSAGES/////
 
+	public void msgStartShift(){
+		working = true;
+	}
+	public void msgEndShift(){
+		working = false;
+	}
 	public void msgPay(){
 		person.msgEndShift();
 	}
@@ -126,18 +133,6 @@ private void transactionComplete(BankDepositorRole c){
 	Do("Your new bank balance is: $" + findCustomer(c).money);
 }
 
-@Override
-public void msgStartShift() {
-	// TODO Auto-generated method stub
-	
-}
-
-@Override
-public void msgEndShift() {
-	// TODO Auto-generated method stub
-	
-}
-	
 private myCustomer findCustomer(BankDepositorRole c){
 	
 	for(myCustomer mc : customers){

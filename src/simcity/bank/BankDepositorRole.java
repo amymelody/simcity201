@@ -12,7 +12,7 @@ import simcity.role.Role;
 import simcity.ItemOrder;
 import simcity.PersonAgent;
 
-public class BankDepositorRole extends Role {
+public class BankDepositorRole extends Role implements BankDepositor{
 	//
 	/* Constructors */
 	String name;

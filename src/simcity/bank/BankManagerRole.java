@@ -151,7 +151,7 @@ public class BankManagerRole extends JobRole   {
 			}
 			for(myCustomer x : customers){
 				if(x.cS == CustomerState.transactionProcessed){
-					TransactionComplete(x.customer);
+					transactionComplete(x.customer);
 				}
 			}
 		}
@@ -213,7 +213,7 @@ public class BankManagerRole extends JobRole   {
 	
 	
 	//Customer class
-	private class myCustomer{
+	public class myCustomer{
 		BankDepositorRole customer;
 		int cashInBank;
 		String name;
