@@ -43,7 +43,7 @@ public class CityGui extends JFrame
 	public CityGui(CityDirectory cd)
 	{		
 		animationPanel = new CityAnimationPanel(this);
-		
+
 		// creation of buildings
 		MarketGui market1 = new MarketGui("Market 1", this, cd);
 		animationPanel.addBuilding(market1);
@@ -91,8 +91,8 @@ public class CityGui extends JFrame
 		animationPanel.addBuilding(apartment27);
 		HousingGui apartment28 = new HousingGui("Apartment 2-8", this, cd);
 		animationPanel.addBuilding(apartment28);
-		JoshRestaurantGui joshRestaurant = new JoshRestaurantGui("Josh's Restaurant", this, cd);
-		animationPanel.addBuilding(joshRestaurant);
+		//JoshRestaurantGui joshRestaurant = new JoshRestaurantGui("Josh's Restaurant", this, cd);
+		//animationPanel.addBuilding(joshRestaurant);
 		//CherysRestaurantGui cherysRestaurant = new CherysRestaurantGui("Cherys's Restaurant", this, cd);
 		//animationPanel.addBuilding(cherysRestaurant);
 		//AnjaliRestaurantGui anjaliRestaurant = new AnjaliRestaurantGui("Anjali's Restaurant", this, cd);
@@ -101,7 +101,7 @@ public class CityGui extends JFrame
 		//animationPanel.addBuilding(alfredRestaurant);
 		//JesusRestaurantGui jesusRestaurant = new JesusRestaurantGui("Jesus's Restaurant", this, cd);
 		//animationPanel.addBuilding(jesusRestaurant);
-		
+
 		inputPanel = new CityInputPanel(this, cd, null);
 
 		setBounds(BUFFERSIDE, BUFFERTOP, WINDOWX, WINDOWY);
@@ -136,27 +136,4 @@ public class CityGui extends JFrame
 	public void addRestWaiter(RestWaiterRole w) {
 		animationPanel.addRestWaiter(w);
 	}
-
-	public void changeView() {
-		if(animationPanel.isVisible()) {
-			animationPanel.setVisible(false);
-			inputPanel.setVisible(false);
-		}
-		else {
-			animationPanel.setVisible(true);
-			inputPanel.setVisible(true);
-		}
-	}
-
-		/**
-		 * Main routine to get gui started
-		 */
-		public static void main(String[] args) {
-			CityGui gui = new CityGui(cityDirectory);
-			gui.setTitle("SimCity201: City of the Blind");
-			gui.setVisible(true);
-			gui.setResizable(false);
-			gui.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		}
-
-	}
+}
