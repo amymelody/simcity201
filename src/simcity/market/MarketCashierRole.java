@@ -10,13 +10,13 @@ import java.util.concurrent.Semaphore;
 
 import simcity.role.JobRole;
 import simcity.ItemOrder;
-import simcity.PersonAgent;
 import simcity.bank.BankManagerRole;
 import simcity.interfaces.BankDepositor;
 import simcity.interfaces.MarketCashier;
 import simcity.interfaces.MarketCustomer;
 import simcity.interfaces.MarketDeliverer;
 import simcity.interfaces.MarketEmployee;
+import simcity.interfaces.Person;
 import simcity.interfaces.RestCashier;
 import simcity.interfaces.RestCook;
 import simcity.market.Order.OrderState;
@@ -38,7 +38,7 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 	public String getName() {
 		return name;
 	}
-	public void setPerson(PersonAgent p) {
+	public void setPerson(Person p) {
 		super.setPerson(p);
 		name = p.getName();
 	}
