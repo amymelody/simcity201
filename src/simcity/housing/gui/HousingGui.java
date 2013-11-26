@@ -47,6 +47,7 @@ public class HousingGui extends BuildingGui
 		animationPanel.setMinimumSize(animDim);
 		animationPanel.setMaximumSize(animDim);
 		animationPanel.setVisible(false);
+		animationPanel.setHousingGui(this);
 		bG.add(animationPanel);
 		
 		for(int i = 0; i < 25; i++)

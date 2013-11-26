@@ -9,8 +9,8 @@ import simcity.interfaces.RestCook;
 
 public class Order {
 	MarketCustomer customer;
-	RestCashier cashier;
-	RestCook cook;
+	public RestCashier cashier;
+	public RestCook cook;
 	List<ItemOrder> items;
 	List<ItemOrder> fulfilling;
 	OrderState oS;

@@ -8,6 +8,7 @@ import simcity.ItemOrder;
 import simcity.PersonAgent;
 import simcity.interfaces.MarketCashier;
 import simcity.interfaces.MarketCustomer;
+import simcity.interfaces.Person;
 import simcity.market.gui.MarketCustomerGui;
 
 public class MarketCustomerRole extends Role implements MarketCustomer {
@@ -34,7 +35,7 @@ public class MarketCustomerRole extends Role implements MarketCustomer {
 	public String getName() {
 		return name;
 	}
-	public void setPerson(PersonAgent p) {
+	public void setPerson(Person p) {
 		super.setPerson(p);
 		name = p.getName();
 	}

@@ -135,26 +135,14 @@ public class MarketDelivererRole extends JobRole implements MarketDeliverer {
 						goToCustomer(o);
 						return true;
 					}
-				}
-			}
-			synchronized(orders) {
-				for(Order o: orders) {
 					if(currentOrder.equals(o) && dS == DelivererState.arrived && o.oS == OrderState.newDelivery) {
 						deliverOrder(o);
 						return true;
 					}
-				}
-			}
-			synchronized(orders) {
-				for(Order o: orders) {
 					if(o.equals(currentOrder) && o.oS == OrderState.paying) {
 						takePayment(o);
 						return true;
 					}
-				}
-			}
-			synchronized(orders) {
-				for(Order o: orders) {
 					if(currentOrder.equals(o) && dS == DelivererState.arrivedBack) {
 						finishDelivery(o);
 						return true;
@@ -200,6 +188,7 @@ public class MarketDelivererRole extends JobRole implements MarketDeliverer {
 		cashier.msgDelivered(currentOrder, this);
 		currentOrder = null;
 		orders.remove(o);
+		stateChanged();
 	}
 
 

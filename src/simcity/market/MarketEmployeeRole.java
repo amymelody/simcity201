@@ -11,6 +11,7 @@ import simcity.ItemOrder;
 import simcity.interfaces.MarketCashier;
 import simcity.interfaces.MarketCustomer;
 import simcity.interfaces.MarketEmployee;
+import simcity.interfaces.Person;
 import simcity.market.Order.OrderState;
 import simcity.market.gui.MarketCustomerGui;
 import simcity.market.gui.MarketEmployeeGui;
@@ -32,6 +33,10 @@ public class MarketEmployeeRole extends JobRole implements MarketEmployee {
 	}
 	public void setCashier(MarketCashier ch) {
 		cashier = ch;
+	}
+	public void setPerson(Person p) {
+		super.setPerson(p);
+		name = p.getName();
 	}
 
 

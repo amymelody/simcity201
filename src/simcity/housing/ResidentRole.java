@@ -45,6 +45,8 @@ public class ResidentRole extends Role implements Resident
 	private Timer timer = new Timer();
 	public EventLog log = new EventLog();
 	public boolean unitTesting = false;
+	private HousingGui home;
+	private HousingGui landlordHome;
 	private ResidentGui gui;
 
 	public ResidentRole()
@@ -69,11 +71,11 @@ public class ResidentRole extends Role implements Resident
 	}
 	public void setHomeGui(HousingGui g)
 	{
-		gui.setGui(g);m
+		home = g;
 	}
 	public void setLandlordGui(HousingGui g)
 	{
-		gui.setGui(g);k
+		landlordHome = g;
 	}
 	
 	public ResidentGui getGui()
@@ -92,6 +94,7 @@ public class ResidentRole extends Role implements Resident
 	{
 		log.add(new LoggedEvent("Received msgAtLandlord from Person. State.atLandlord, Command.talkToLandlord"));
 		state = ResidentState.atLandlord;
+		gui.setGui(landlordHome);
 		commands.add(Command.talkToLandlord);
 		stateChanged();
 	}
@@ -125,6 +128,7 @@ public class ResidentRole extends Role implements Resident
 	{
 		log.add(new LoggedEvent("Received msgImHome from Person. State.atHome"));
 		state = ResidentState.atHome;
+		gui.setGui(home);
 		stateChanged();
 	}
 

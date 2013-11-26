@@ -10,12 +10,13 @@ import java.util.concurrent.Semaphore;
 
 import simcity.role.JobRole;
 import simcity.ItemOrder;
-import simcity.PersonAgent;
 import simcity.bank.BankManagerRole;
+import simcity.interfaces.BankDepositor;
 import simcity.interfaces.MarketCashier;
 import simcity.interfaces.MarketCustomer;
 import simcity.interfaces.MarketDeliverer;
 import simcity.interfaces.MarketEmployee;
+import simcity.interfaces.Person;
 import simcity.interfaces.RestCashier;
 import simcity.interfaces.RestCook;
 import simcity.market.Order.OrderState;
@@ -37,13 +38,16 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 	public String getName() {
 		return name;
 	}
-	public void setPerson(PersonAgent p) {
+	public void setPerson(Person p) {
 		super.setPerson(p);
 		name = p.getName();
 	}
 
 
 	/* Hacks */
+	public void setBankDepositor(BankDepositor bD) {
+		bank = bD;
+	}
 	public void setEmployees(MarketEmployee e, int s) {
 		employees.add(new myEmployee(e, s));
 	}
@@ -155,7 +159,7 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 	public BankManagerRole manager;
 	
 	// Reference to bank
-	//bank;
+	BankDepositor bank;
 
 	// Cashier Status Data
 	int salary;
@@ -374,7 +378,7 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 		}
 		marketMoney -= salary;
 		marketMoneySurplus = marketMoney - 100;
-		//bank.msgMakeDeposit(marketMoneySurplus);
+		bank.msgMarketDeposit(marketMoneySurplus);
 		marketMoney = 100;
 		msgEndShift();
 	}
