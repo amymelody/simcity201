@@ -1,4 +1,4 @@
-package simcity..gui;
+package simcity.gui;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -7,7 +7,6 @@ import java.util.List;
 import simcity.ItemOrder;
 import simcity.gui.Gui;
 import simcity.market.MarketDelivererRole;
-import simcity.market.gui.MarketEmployeeGui.GuiState;
 
 public class DelivererGui implements Gui {
 	private DelivererGui gui = null;
