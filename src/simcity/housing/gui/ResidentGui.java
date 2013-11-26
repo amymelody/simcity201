@@ -19,6 +19,7 @@ public class ResidentGui implements Gui
 	private int xGoal, yGoal;
 	private int dimensions;
 	private int boxY, boxX;
+	private List<MoveBox> pastBoxes = new ArrayList<MoveBox>();
 	private MoveBox currentBox;
 	private boolean exiting;
 
@@ -34,7 +35,7 @@ public class ResidentGui implements Gui
 	private Command pastCommand = Command.noCommand;
 	private Command command = Command.noCommand;
 	
-	public ResidentGui(ResidentRole r, HousingGui gui)
+	public ResidentGui(ResidentRole r)
 	{
 		resident = r;
 		xPos = 500;
@@ -49,6 +50,10 @@ public class ResidentGui implements Gui
 		exiting = false;
 		pastCommand = Command.noCommand;
 		command = Command.noCommand;
+	}
+	
+	public void setGui(HousingGui gui)
+	{
 		this.gui = gui;
 	}
 
@@ -76,6 +81,7 @@ public class ResidentGui implements Gui
 				currentBox = null;
 				
 				resident.msgAtLocation();
+				gui.removeResidentGui(this);
 			}
 		}
 		else
@@ -194,18 +200,18 @@ public class ResidentGui implements Gui
 				boxesToCheck.add(gui.getBox(boxY, boxX - 1));
 			}
 		}
-		if (yPos < yGoal)
-		{
-			if((boxY + 1) < 25)
-			{
-				boxesToCheck.add(gui.getBox(boxY + 1, boxX));
-			}
-		}
 		else if (yPos > yGoal)
 		{
 			if((boxY - 1) >= 0)
 			{
 				boxesToCheck.add(gui.getBox(boxY - 1, boxX));
+			}
+		}
+		if (yPos < yGoal)
+		{
+			if((boxY + 1) < 25)
+			{
+				boxesToCheck.add(gui.getBox(boxY + 1, boxX));
 			}
 		}
 
@@ -235,8 +241,26 @@ public class ResidentGui implements Gui
 		{
 			currentBox.setOpen(true);
 			boxesToCheck.add(currentBox);
+			pastBoxes.add(currentBox);
+			currentBox = null;
 		}
+		List<MoveBox> untouchedBoxes = new ArrayList<MoveBox>();
 		for(MoveBox b : boxesToCheck)
+		{
+			boolean untouched = true;
+			for(MoveBox pb : pastBoxes)
+			{
+				if(b == pb)
+				{
+					untouched = false;
+				}
+			}
+			if(untouched)
+			{
+				untouchedBoxes.add(b);
+			}
+		}
+		for(MoveBox b : untouchedBoxes)
 		{
 			if(b.getOpen())
 			{
@@ -244,6 +268,68 @@ public class ResidentGui implements Gui
 				boxX = b.getIndexX();
 				boxY = b.getIndexY();
 				currentBox = b;
+			}
+		}
+		if(currentBox == null)
+		{
+
+			gui.setBox(boxesToCheck);
+			boxesToCheck.clear();
+
+			if (yPos < yGoal)
+			{
+				if((boxY - 1) >= 0)
+				{
+					boxesToCheck.add(gui.getBox(boxY - 1, boxX));
+				}
+			}
+			else if (yPos > yGoal)
+			{
+				if((boxY + 1) < 25)
+				{
+					boxesToCheck.add(gui.getBox(boxY + 1, boxX));
+				}
+			}
+			if (xPos < xGoal)
+			{
+				if((boxX - 1) >= 0)
+				{
+					boxesToCheck.add(gui.getBox(boxY, boxX - 1));
+				}
+			}
+			else if (xPos > xGoal)
+			{
+				if((boxX + 1) < 25)
+				{
+					boxesToCheck.add(gui.getBox(boxY, boxX + 1));
+				}
+			}
+			
+			untouchedBoxes.clear();
+			for(MoveBox b : boxesToCheck)
+			{
+				boolean untouched = true;
+				for(MoveBox pb : pastBoxes)
+				{
+					if(b == pb)
+					{
+						untouched = false;
+					}
+				}
+				if(untouched)
+				{
+					untouchedBoxes.add(b);
+				}
+			}
+			for(MoveBox b : untouchedBoxes)
+			{
+				if(b.getOpen())
+				{
+					b.setOpen(false);
+					boxX = b.getIndexX();
+					boxY = b.getIndexY();
+					currentBox = b;
+				}
 			}
 		}
 		boxesToCheck.remove(currentBox);

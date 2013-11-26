@@ -2,6 +2,9 @@ package simcity.housing;
 
 import simcity.interfaces.Resident;
 import simcity.housing.ResidentRole.ResidentState;
+import simcity.housing.gui.HousingGui;
+import simcity.housing.gui.LandlordGui;
+import simcity.housing.gui.ResidentGui;
 import simcity.housing.test.mock.MockPerson;
 import simcity.mock.EventLog;
 import simcity.mock.LoggedEvent;
@@ -43,11 +46,22 @@ public class LandlordRole extends JobRole
 	Map<String, Point> locations = new HashMap<String, Point>();
 	Semaphore atLocation = new Semaphore(0, true);
 	public EventLog log = new EventLog();
-//	ResidentGui gui;
+	LandlordGui gui;
 
 	public LandlordRole()
 	{
 		super();
+		gui = new LandlordGui(this);
+	}
+	
+	public void setGui(HousingGui g)
+	{
+		gui.setGui(g);
+	}
+	
+	public LandlordGui getGui()
+	{
+		return gui;
 	}
 	
 //Messages

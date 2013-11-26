@@ -29,7 +29,7 @@ public class HousingAnimationPanel extends JPanel implements ActionListener
 	private List<Gui> guis = new ArrayList<Gui>();
 	private Image floor;
 	
-	public HousingAnimationPanel(CityGui cG)
+	public HousingAnimationPanel()
 	{
 		setSize(WINDOWX, WINDOWY);
 		setVisible(true);
@@ -73,6 +73,10 @@ public class HousingAnimationPanel extends JPanel implements ActionListener
 	public void addGui(ResidentGui gui)
 	{
 		guis.add(gui);
+	}
+	public void removeGui(ResidentGui gui)
+	{
+		guis.remove(gui);
 	}
 
 	public void addGui(LandlordGui gui)

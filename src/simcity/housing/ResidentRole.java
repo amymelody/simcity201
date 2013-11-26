@@ -1,5 +1,6 @@
 package simcity.housing;
 
+import simcity.housing.gui.HousingGui;
 import simcity.housing.gui.ResidentGui;
 import simcity.interfaces.Landlord;
 import simcity.interfaces.Resident;
@@ -53,17 +54,31 @@ public class ResidentRole extends Role implements Resident
 		foodInFridge.add(new ItemOrder("Pizza", 5));
 		foodInFridge.add(new ItemOrder("Chicken", 5));
 		foodInFridge.add(new ItemOrder("Steak", 5));
-		locations.put("Fridge", new Point(x, y));
-		locations.put("Stove", new Point(x, y));
-		locations.put("Table", new Point(x, y));
-		locations.put("Sofa", new Point(x, y));
-		locations.put("Doorway", new Point(x, y));
-		locations.put("Exit", new Point(x, y));
+		locations.put("Fridge", new Point(220, 140));
+		locations.put("Stove", new Point(60, 140));
+		locations.put("Table", new Point(100, 340));
+		locations.put("Sofa", new Point(360, 240));
+		locations.put("Doorway", new Point(480, 240));
+		locations.put("Exit", new Point(480, 260));
+		gui = new ResidentGui(this);
 	}
 	
 	public void setLandlord(Landlord l)
 	{
 		landlord = l;
+	}
+	public void setHomeGui(HousingGui g)
+	{
+		gui.setGui(g);m
+	}
+	public void setLandlordGui(HousingGui g)
+	{
+		gui.setGui(g);k
+	}
+	
+	public ResidentGui getGui()
+	{
+		return gui;
 	}
 	
 //Messages
