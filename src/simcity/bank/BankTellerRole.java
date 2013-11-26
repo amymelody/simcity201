@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import simcity.bank.BankManagerRole.myCustomer;
 import simcity.role.JobRole;
 import simcity.role.Role;
 
@@ -22,9 +23,9 @@ public class BankTellerRole extends JobRole   {
 		BankDepositorRole c;
 		CustomerState cS;
 		String name;
-		double money;
+		int money;
 		
-		myCustomer(BankDepositorRole c, CustomerState state, double cashInBank){
+		myCustomer(BankDepositorRole c, CustomerState state, int cashInBank){
 			this.c = c;
 			this.cS = state;
 			this.name = c.getName();
@@ -36,7 +37,7 @@ public class BankTellerRole extends JobRole   {
 		}
 	}
 	
-	public enum CustomerState{waitingForTeller, makingRequest, waiting, leaving}
+	public enum CustomerState{waitingForTeller, makingRequest,broke, transactionComplete, waiting, leaving}
 	
 	private BankManagerRole manager;
 	
@@ -53,8 +54,32 @@ public class BankTellerRole extends JobRole   {
 
 
 ////MESSAGES/////
-public void msgHelpCustomer(BankDepositorRole c, double cash){
+
+	public void msgPay(){
+		person.msgEndShift();
+	}
+public void msgHelpCustomer(BankDepositorRole c, int cash){
 	customers.add(new myCustomer(c, CustomerState.waitingForTeller, cash));
+	stateChanged();
+}
+
+public void msgMakeWithdrawal(BankDepositorRole c, int transaction){
+	if(findCustomer(c).money<transaction){
+		findCustomer(c).cS = CustomerState.broke;
+	}
+	else{
+		findCustomer(c).money += transaction;
+		findCustomer(c).cS = CustomerState.makingRequest;
+	}
+	stateChanged();
+}
+public void msgMakeDeposit(BankDepositorRole c, int transaction){
+	findCustomer(c).money += transaction;
+	findCustomer(c).cS = CustomerState.makingRequest;
+	stateChanged();
+}
+public void msgTransactionComplete(BankDepositorRole c){
+	findCustomer(c).cS = CustomerState.transactionComplete;
 	stateChanged();
 }
 
@@ -62,15 +87,43 @@ public void msgHelpCustomer(BankDepositorRole c, double cash){
 public boolean pickAndExecuteAnAction(){
 	for(myCustomer c : customers){
 		if(c.getCustomerState() == CustomerState.waitingForTeller){
-			helpCustomer(this, c.c);
+			helpCustomer(c.c);
+		}
+	
+	}
+	for(myCustomer j : customers){
+		if(j.getCustomerState() == CustomerState.broke){
+			noMoney(j.c);
+		}
+	}
+	for(myCustomer x : customers){
+		if(x.getCustomerState() == CustomerState.makingRequest){
+			makeTransaction(x.c);
+		}
+	}
+	for(myCustomer l : customers){
+		if(l.getCustomerState() == CustomerState.transactionComplete){
+			transactionComplete(l.c);
 		}
 	}
 	return false;
 }
 
 ///ACTIONS////
-private void helpCustomer(BankTellerRole t, BankDepositorRole c){
+private void helpCustomer(BankDepositorRole c){
 	c.msgMakeRequest(this);
+}
+private void noMoney(BankDepositorRole c){
+	c.msgCannotMakeTransaction();
+	
+}
+private void makeTransaction(BankDepositorRole c){
+	manager.msgProcessTransaction(this, c, findCustomer(c).money);
+}
+
+private void transactionComplete(BankDepositorRole c){
+	c.msgTransactionComplete();
+	Do("Your new bank balance is: $" + findCustomer(c).money);
 }
 
 @Override
@@ -85,5 +138,14 @@ public void msgEndShift() {
 	
 }
 	
+private myCustomer findCustomer(BankDepositorRole c){
+	
+	for(myCustomer mc : customers){
+		if(mc.c == c){
+			return mc;
+		}
+	}
+	return null;
+}
 }
 

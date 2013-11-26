@@ -1,15 +1,24 @@
-package simcity.housing.gui;
+package simcity.bank.gui;
+
+import javax.swing.*;
 
 import simcity.CityDirectory;
-import simcity.gui.CityGui;
 import simcity.gui.BuildingGui;
-import javax.swing.*;
+import simcity.gui.CityGui;
+import simcity.bank.gui.BankAnimationPanel;
+import simcity.bank.gui.BankInputPanel;
+
 import java.awt.*;
 
-public class HousingGui extends BuildingGui
+/**
+ * Main GUI class.
+ * Contains the outer city animation and input panel
+ */
+public class BankGui extends BuildingGui
 {
-	private HousingAnimationPanel animationPanel;
-	private HousingInputPanel inputPanel;
+	private BankAnimationPanel animationPanel;
+	private BankInputPanel inputPanel;
+	
 	private final int WINDOWX = 650;
 	private final int WINDOWY = 500;
 	private final int BUFFERTOP = 50;
@@ -18,15 +27,15 @@ public class HousingGui extends BuildingGui
 	/**
 	 * Constructor
 	 */
-	public HousingGui(String n, CityGui cG, CityDirectory cD)
+	public BankGui(String n, CityGui cG, CityDirectory cD)
 	{
 		super(n, cG, cD);
-
-		animationPanel = new HousingAnimationPanel(cG);
-		inputPanel = new HousingInputPanel(n);
+		
+		animationPanel = new BankAnimationPanel();
+		inputPanel = new BankInputPanel(n);
 
 		//input panel
-		double inputFractionOfWindow = 150.0 / 650.0;
+		double inputFractionOfWindow = 150 / 650;
 		Dimension inputDim = new Dimension((int)(WINDOWX * inputFractionOfWindow), WINDOWY);
 		inputPanel.setPreferredSize(inputDim);
 		inputPanel.setMinimumSize(inputDim);
@@ -35,7 +44,7 @@ public class HousingGui extends BuildingGui
 		cG.add(inputPanel);
 
 		//animation panel
-		double animationFractionOfWindow = 500.0 / 650.0;
+		double animationFractionOfWindow = 500 / 650;
 		Dimension animDim = new Dimension((int)(WINDOWX * animationFractionOfWindow), WINDOWY);
 		animationPanel.setPreferredSize(animDim);
 		animationPanel.setMinimumSize(animDim);
@@ -44,17 +53,15 @@ public class HousingGui extends BuildingGui
 		cG.add(animationPanel);
 	}
 	
-	public void setVisible(boolean visible)
-	{
-		if(visible)
-		{
+	public void setVisible(boolean visible) {
+		if(visible) {
 			animationPanel.setVisible(true);
 			inputPanel.setVisible(true);
 		}
-		else
-		{
+		else {
 			animationPanel.setVisible(false);
 			inputPanel.setVisible(false);
 		}
 	}
+	
 }

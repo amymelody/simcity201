@@ -29,8 +29,8 @@ public class MarketGui extends BuildingGui
 	{
 		super(n, cG, cD);
 		
-		animationPanel = new MarketAnimationPanel(cG);
-		inputPanel = new MarketInputPanel(n);
+		animationPanel = new MarketAnimationPanel();
+		inputPanel = new MarketInputPanel(this, n);
 
 		//input panel
 		double inputFractionOfWindow = 150 / 650;
@@ -52,14 +52,8 @@ public class MarketGui extends BuildingGui
 	}
 	
 	public void setVisible(boolean visible) {
-		if(visible) {
-			animationPanel.setVisible(true);
-			inputPanel.setVisible(true);
-		}
-		else {
-			animationPanel.setVisible(false);
-			inputPanel.setVisible(false);
-		}
+		animationPanel.setVisible(visible);
+		inputPanel.setVisible(visible);
 	}
 	
 }

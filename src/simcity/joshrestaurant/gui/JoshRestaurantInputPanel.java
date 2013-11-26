@@ -19,9 +19,7 @@ import java.util.Vector;
 import simcity.gui.BuildingGui;
 
 public class JoshRestaurantInputPanel extends JPanel 
-{
-	//Super container for all gui panels other than animation--closest to the restaurant panel
-
+{	
     //Host, cook, waiters and customers
     private JoshHostRole host;
     private JoshCookRole cook;
@@ -32,19 +30,16 @@ public class JoshRestaurantInputPanel extends JPanel
     private Vector<MarketCashierRole> markets = new Vector<MarketCashierRole>();
     private int numCustomers = 0;
 
-    private JoshRestaurantAnimationPanel animationPanel;
     private JPanel restLabel = new JPanel();
     private ListPanel customerPanel = new ListPanel(this, "Customers");
     private ListPanel waiterPanel = new ListPanel(this, "Waiters");
     private JPanel group = new JPanel();
 
-    private BuildingGui gui;
-    private JoshRestaurantGui restGui; //reference to main gui
+    private JoshRestaurantGui gui; //reference to main gui
     private JoshCookGui cookGui;
 
-    public JoshRestaurantInputPanel(BuildingGui g, JoshRestaurantAnimationPanel a, JoshCashierRole ca, JoshCookRole co, JoshHostRole h, ArrayList<MarketCashierRole> cashiers) {
+    public JoshRestaurantInputPanel(JoshRestaurantGui g, JoshCashierRole ca, JoshCookRole co, JoshHostRole h, ArrayList<MarketCashierRole> cashiers) {
     	gui = g;
-    	animationPanel = a;
     	host = h;
     	cashier = ca;
     	cook = co;
@@ -59,7 +54,7 @@ public class JoshRestaurantInputPanel extends JPanel
 		cook.setStand(stand);
         
 		cookGui = new JoshCookGui(cook);
-		animationPanel.addGui(cookGui);
+		gui.animationPanel.addGui(cookGui);
 		cook.setGui(cookGui);
 	
         setLayout(new GridLayout(1, 2, 20, 20));
@@ -77,7 +72,7 @@ public class JoshRestaurantInputPanel extends JPanel
      * Returns the text from RestaurantGui's infoLabel
      */
     public String getInfoText() {
-    	return restGui.getInfoLabelText();
+    	return gui.getInfoLabelText();
     }
     
     public void addMarketCashier(MarketCashierRole c) {
@@ -98,7 +93,7 @@ public class JoshRestaurantInputPanel extends JPanel
     
     public void addCustomer(JoshCustomerRole c) {
     	JoshCustomerGui g = new JoshCustomerGui(c, this);
-		animationPanel.addGui(g);
+		gui.animationPanel.addGui(g);
 		c.setHost(host);
 		c.setCashier(cashier);
 		c.setGui(g);
@@ -112,7 +107,7 @@ public class JoshRestaurantInputPanel extends JPanel
     	}
     	
 		JoshWaiterGui g = new JoshWaiterGui(w, this, waiters.size()+1);
-		animationPanel.addGui(g);
+		gui.animationPanel.addGui(g);
  		w.setHost(host);
  		w.setCashier(cashier);
  		w.setCook(cook);
@@ -216,7 +211,7 @@ public class JoshRestaurantInputPanel extends JPanel
             for (int i = 0; i < customers.size(); i++) {
                 JoshCustomerRole temp = customers.get(i).cust;
                 if (temp.getName() == name)
-                    restGui.updateInfoPanel(temp);
+                    gui.updateInfoPanel(temp);
             }
         }
         if (type.equals("Waiters")) {
@@ -224,7 +219,7 @@ public class JoshRestaurantInputPanel extends JPanel
             for (int i = 0; i < waiters.size(); i++) {
                 JoshWaiterRole temp = waiters.get(i);
                 if (temp.getName() == name)
-                    restGui.updateInfoPanel(temp);
+                    gui.updateInfoPanel(temp);
             }
         }
     }

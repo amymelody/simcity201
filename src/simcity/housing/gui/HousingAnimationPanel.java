@@ -3,12 +3,17 @@ package simcity.housing.gui;
 import simcity.gui.CityGui;
 import simcity.gui.Gui;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 import java.util.ArrayList;
+
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import javax.swing.JPanel;
+import javax.swing.Timer;
 
 public class HousingAnimationPanel extends JPanel implements ActionListener
 {
@@ -18,7 +23,6 @@ public class HousingAnimationPanel extends JPanel implements ActionListener
 	private Dimension bufferSize;
 
 	private List<Gui> guis = new ArrayList<Gui>();
-
 	
 	public HousingAnimationPanel(CityGui cG)
 	{
