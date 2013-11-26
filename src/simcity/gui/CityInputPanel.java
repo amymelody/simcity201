@@ -100,6 +100,7 @@ public class CityInputPanel extends JPanel implements ActionListener
 		PersonGui g = new PersonGui(p, gui);
 		p.setCityDirectory(c);
 		p.setCityGui(gui);
+		p.setGui(g);
 		gui.addGui(g);
 		
 		Map<Day, Time> startShifts = new HashMap<Day, Time>();

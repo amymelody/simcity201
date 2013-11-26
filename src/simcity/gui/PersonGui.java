@@ -10,9 +10,16 @@ public class PersonGui implements Gui {
 	private PersonAgent agent = null;
 	private CityGui gui;
 
-	private int xPos = -20, yPos = -20;//default Person position
-	private int xDestination = -20, yDestination = -20;//default Person destination
+	private static final int width = 10;
+	private static final int height = 10;
+	private int xPos = 0, yPos = 0;//default Person position
+	private int xDestination = 0, yDestination = 0;//default Person destination
 	private int buildingX, buildingY;
+	private boolean goingRight;
+	private boolean goingDown;
+	
+	private enum Command {noCommand, GoToDestination};
+	private Command command=Command.noCommand;
 
 	public PersonGui(PersonAgent p, CityGui g) {
 		agent = p;
@@ -20,6 +27,15 @@ public class PersonGui implements Gui {
 	}
 
 	public void updatePosition() {
+		/*if (xPos <= xDestination)
+			goingRight = true;
+		if (xPos > xDestination)
+			goingRight = false;
+		if (yPos <= yDestination)
+			goingDown = true;
+		if (yPos > yDestination)
+			goingDown = false;*/
+		
 		if (xPos < xDestination)
 			xPos++;
 		else if (xPos > xDestination)
@@ -30,15 +46,19 @@ public class PersonGui implements Gui {
 		else if (yPos > yDestination)
 			yPos--;
 		
+		
+		
 		if (xPos == xDestination && yPos == yDestination) {
-        	if (xDestination == buildingX && yDestination == buildingY) {
+        	if (command == Command.GoToDestination) {
         		agent.msgAtDestination();
         	}
+        	command = Command.noCommand;
         }
 	}
 
 	public void draw(Graphics2D g) {
 		g.setColor(Color.BLUE);
+		g.fillRect(xPos, yPos, width, height);
 	}
 	
 	public void DoGoToDestination(Point p) {
@@ -46,6 +66,7 @@ public class PersonGui implements Gui {
 		buildingY = p.y;
 		xDestination = buildingX;
 		yDestination = buildingY;
+		command = Command.GoToDestination;
 	}
 
 	public boolean isPresent() {

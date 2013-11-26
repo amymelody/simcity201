@@ -2,7 +2,7 @@ package simcity;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.LinkedList;
+import java.util.*;
 import java.util.Scanner;
 
 public class TrafficGraph {
@@ -41,6 +41,10 @@ public class TrafficGraph {
 	//get nodes in traffic
 	public LinkedList<TrafficNode> getNodes() {
 		return nodes;
+	}
+	
+	public void addNode(TrafficNode n) {
+		nodes.add(n);
 	}
 	
 }

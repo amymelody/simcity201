@@ -8,8 +8,6 @@ import java.util.*;
 
 public class JoshCookGui implements Gui{
 	
-	private JoshCookRole agent = null;
-	private Timer timer = new Timer();
 	public ArrayList<Order> orders = new ArrayList<Order>();
 	
 	static final int COOKINGW = 60;

@@ -45,6 +45,8 @@ import simcity.alfredrestaurant.AlfredWaiterRole;*/
 public class CityDirectory
 {
 	Map<Integer, PersonInfo> personMap;
+	Map<String, BuildingInfo> buildingMap;
+	private List<TrafficNode> trafficNodes = new ArrayList<TrafficNode>();
 	
 	//All job roles in the city
 	private Vector<JoshWaiterRole> joshWaiters = new Vector<JoshWaiterRole>();
@@ -63,6 +65,9 @@ public class CityDirectory
 	private JoshCashierRole joshCashier = new JoshCashierRole();
 	private JoshCookRole joshCook = new JoshCookRole();
 	private JoshHostRole joshHost = new JoshHostRole();
+	
+	private static final int joshRestaurantX = 355;
+	private static final int joshRestaurantY = 290;
 	
 	class PersonInfo
 	{
@@ -90,7 +95,7 @@ public class CityDirectory
 			}
 		}
 	}
-	Map<String, BuildingInfo> buildingMap;
+	
 	class BuildingInfo
 	{
 		String name;
@@ -210,6 +215,56 @@ public class CityDirectory
 		joshCashier.setJobLocation("joshRestaurant");
 		joshCook.setJobLocation("joshRestaurant");
 		joshHost.setJobLocation("joshRestaurant");
+		
+		buildingMap.put("joshRestaurant", new BuildingInfo("joshRestaurant", "horizontal", new Point(joshRestaurantX, joshRestaurantY)));
+	
+		trafficNodes.add(new TrafficNode(0,0));
+		trafficNodes.add(new TrafficNode(70,0));
+		trafficNodes.add(new TrafficNode(210,0));
+		trafficNodes.add(new TrafficNode(280,0));
+		trafficNodes.add(new TrafficNode(420,0));
+		trafficNodes.add(new TrafficNode(480,0));
+		trafficNodes.add(new TrafficNode(0,70));
+		trafficNodes.add(new TrafficNode(70,70));
+		trafficNodes.add(new TrafficNode(210,70));
+		trafficNodes.add(new TrafficNode(280,70));
+		trafficNodes.add(new TrafficNode(420,70));
+		trafficNodes.add(new TrafficNode(480,70));
+		trafficNodes.add(new TrafficNode(0,210));
+		trafficNodes.add(new TrafficNode(70,210));
+		trafficNodes.add(new TrafficNode(210,210));
+		trafficNodes.add(new TrafficNode(280,210));
+		trafficNodes.add(new TrafficNode(420,210));
+		trafficNodes.add(new TrafficNode(480,210));
+		trafficNodes.add(new TrafficNode(0,280));
+		trafficNodes.add(new TrafficNode(70,280));
+		trafficNodes.add(new TrafficNode(210,280));
+		trafficNodes.add(new TrafficNode(280,280));
+		trafficNodes.add(new TrafficNode(420,280));
+		trafficNodes.add(new TrafficNode(480,280));
+		trafficNodes.add(new TrafficNode(0,420));
+		trafficNodes.add(new TrafficNode(70,420));
+		trafficNodes.add(new TrafficNode(210,420));
+		trafficNodes.add(new TrafficNode(280,420));
+		trafficNodes.add(new TrafficNode(420,420));
+		trafficNodes.add(new TrafficNode(480,420));
+		trafficNodes.add(new TrafficNode(0,480));
+		trafficNodes.add(new TrafficNode(70,480));
+		trafficNodes.add(new TrafficNode(210,480));
+		trafficNodes.add(new TrafficNode(280,480));
+		trafficNodes.add(new TrafficNode(420,480));
+		trafficNodes.add(new TrafficNode(480,480));
+		
+		/*for (TrafficNode node : trafficNodes) {
+			for (TrafficNode n : trafficNodes) {
+				if (n.x == node.x && n.y != node.y) {
+					if (n.)
+				}
+				if (n.y == node.y && n.x != node.x) {
+					
+				}
+			}
+		}*/
 	}
 	
 	public ResidentRole ResidentFactory(String role) {
