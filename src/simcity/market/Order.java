@@ -19,7 +19,7 @@ public class Order {
 	public int change;
 	public String location;
 	
-	Order(MarketCustomer c, List<ItemOrder> i) {
+	public Order(MarketCustomer c, List<ItemOrder> i) {
 		customer = c;
 		items = i;
 		oS = OrderState.none;
@@ -29,7 +29,7 @@ public class Order {
 		location = null;
 	}
 	
-	Order(RestCook ck, RestCashier ch, List<ItemOrder> i, String l) {
+	public Order(RestCook ck, RestCashier ch, List<ItemOrder> i, String l) {
 		customer = null;
 		cashier = ch;
 		cook = ck;
