@@ -45,6 +45,17 @@ public class HousingGui extends BuildingGui
 		animationPanel.setVisible(false);
 		cG.add(animationPanel);
 		
+		for(int i = 0; i < 25; i++)
+		{
+			for(int j = 0; j < 25; j++)
+			{
+				boxes[i][j] = new MoveBox(j*20, i*20);
+				if(i == 0 || j == 0 || i == 24 || j == 24)
+				{
+					boxes[i][j].setOpen(false);
+				}
+			}
+		}
 	}
 	
 	public void setVisible(boolean visible)

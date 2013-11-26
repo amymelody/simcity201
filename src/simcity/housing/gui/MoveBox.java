@@ -10,7 +10,7 @@ public class MoveBox
 	{
 		this.x = x;
 		this.y = y;
-		open = false;
+		open = true;
 	}
 	
 	public int getX()
