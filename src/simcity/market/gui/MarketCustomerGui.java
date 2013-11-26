@@ -2,6 +2,9 @@ package simcity.market.gui;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Point;
+import java.util.HashMap;
+import java.util.Map;
 
 import simcity.gui.Gui;
 import simcity.market.MarketCustomerRole;
@@ -13,6 +16,9 @@ public class MarketCustomerGui implements Gui {
 	private int xDestination = -20, yDestination = -20;//default Customer destination
 	private int xHome = -20, yHome = -20; // Customer home position
 
+	public enum GuiState {nothing, toCashier, toWaiting, pickingUp, exiting};
+	GuiState gS = GuiState.nothing;
+	
 	public MarketCustomerGui(MarketCustomerRole r) {
 		this.role = r;
 
@@ -28,6 +34,17 @@ public class MarketCustomerGui implements Gui {
 			yPos++;
 		else if (yPos > yDestination)
 			yPos--;
+		if(xPos == xDestination && yPos == yDestination) {
+			if(xDestination == 40 && yDestination == 60) {
+				if(gS == GuiState.toCashier)
+					role.msgAtCashier();
+				else if(gS == GuiState.pickingUp)
+					role.msgAtPickUp();
+			}
+			else if(xDestination == -10 && yDestination == 10 && gS == GuiState.exiting) {
+				role.msgOut();
+			}
+		}
 	}
 
 	public void draw(Graphics2D g) {
@@ -49,15 +66,26 @@ public class MarketCustomerGui implements Gui {
 	
 	/* Role Functions */
 	public void GoToCashier() {
+		xDestination = 40;
+		yDestination = 60;
+		gS = GuiState.toCashier;
 		
 	}
-	public void GoToWaitingArea() {
-		
+	public void GoToWaitingArea(int wX, int wY) {
+		xDestination = wX;
+		yDestination = wY;
+		xHome = wX;
+		yHome = wY;
+		gS = GuiState.toWaiting;
 	}
 	public void PickUpItems() {
-		
+		xDestination = 40;
+		yDestination = 60;
+		gS = GuiState.pickingUp;
 	}
 	public void ExitMarket() {
-		
+		xDestination = -10;
+		yDestination = 10;
+		gS = GuiState.exiting;
 	}
 }

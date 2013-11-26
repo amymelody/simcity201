@@ -27,6 +27,8 @@ public interface MarketCashier {
 	
 	public abstract void msgIWantItems(MarketCustomer c, List<ItemOrder> i);
 	
+	public abstract void msgImHere(MarketCustomer c);
+	
 	public abstract void msgHereAreItems(Order order, MarketEmployee e);
 	
 	public abstract void msgPayment(MarketCustomer c, int money);
