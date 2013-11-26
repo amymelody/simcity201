@@ -113,10 +113,11 @@ public class BankManagerRole extends JobRole   {
 		bS = BankState.closing;
 	}
 
+	/*
 	public void msgHired(BankTellerRole t, int salary){
 		addTeller(t);
 	}
-	
+	*/
 	public void msgWereOpen(){
 		bS = BankState.open;
 	
