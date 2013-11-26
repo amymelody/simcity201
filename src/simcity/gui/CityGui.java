@@ -109,7 +109,7 @@ public class CityGui extends JFrame
 		setLayout(frameLayout);
 
 		// input panel
-		double inputFractionOfWindow = 150 / 650;
+		double inputFractionOfWindow = 150.0 / 650.0;
 		Dimension inputDim = new Dimension((int)(WINDOWX * inputFractionOfWindow), WINDOWY);
 		inputPanel.setPreferredSize(inputDim);
 		inputPanel.setMinimumSize(inputDim);
@@ -117,7 +117,7 @@ public class CityGui extends JFrame
 		add(inputPanel, frameLayout.WEST);
 
 		// animation panel
-		double animationFractionOfWindow = 500 / 650;
+		double animationFractionOfWindow = 500.0 / 650.0;
 		Dimension animDim = new Dimension((int)(WINDOWX * animationFractionOfWindow), WINDOWY);
 		animationPanel.setPreferredSize(animDim);
 		animationPanel.setMinimumSize(animDim);

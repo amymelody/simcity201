@@ -47,7 +47,6 @@ public class CityInputPanel extends JPanel implements ActionListener
 		buildingGui = bg;
 		creationPanel = new CityCreationPanel(this, cityDirectory);
 		gui = g;
-		System.out.println("lol im here");
         setLayout(new BoxLayout(this, 0));
         add(creationPanel);
         add(new JLabel(""));
