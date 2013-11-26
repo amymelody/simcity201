@@ -27,7 +27,6 @@ public class BankAnimationPanel extends JPanel implements ActionListener {
 	
     private Image bufferImage;
     private Dimension bufferSize;
-	BankAnimationPanel animationPanel = new BankAnimationPanel();
 
 
 	private List<Gui> guis = new ArrayList<Gui>();
