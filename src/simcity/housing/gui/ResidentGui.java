@@ -7,11 +7,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import simcity.gui.Gui;
+import simcity.housing.ResidentRole;
 
 public class ResidentGui implements Gui
 {
-	private boolean isPresent = false;
-	
+	ResidentRole resident;
 	HousingGui gui;
 
 	private int xPos, yPos;
@@ -20,9 +20,23 @@ public class ResidentGui implements Gui
 	private int dimensions;
 	private int boxY, boxX;
 	private MoveBox currentBox;
+	private boolean exiting;
 
-	public ResidentGui(HousingGui gui)
+	private enum Command
 	{
+		putFood,
+		getFood,
+		cook,
+		eat,
+		exit,
+		noCommand;
+	}
+	private Command pastCommand = Command.noCommand;
+	private Command command = Command.noCommand;
+	
+	public ResidentGui(ResidentRole r, HousingGui gui)
+	{
+		resident = r;
 		xPos = 500;
 		yPos = 220;
 		xDestination = xPos;
@@ -32,37 +46,74 @@ public class ResidentGui implements Gui
 		boxY = 11;
 		boxX = 25;
 		dimensions = 20;
+		exiting = false;
+		pastCommand = Command.noCommand;
+		command = Command.noCommand;
 		this.gui = gui;
 	}
 
 	public void updatePosition()
 	{
-		if(xPos == xDestination && yPos == yDestination && (xPos != xGoal || yPos != yGoal))
+		if(exiting)
 		{
-			findMoveBox();
+			if (xPos < 500)
+			{
+				xPos++;
+			}
+			else
+			{
+				xPos = 500;
+				yPos = 220;
+				xDestination = xPos;
+				yDestination = yPos;
+				xGoal = xPos;
+				yGoal = yPos;
+				boxY = 11;
+				boxX = 25;
+				exiting = false;
+				pastCommand = Command.noCommand;
+				command = Command.noCommand;
+				currentBox = null;
+				
+				resident.msgAtLocation();
+			}
 		}
-		
-		if (xPos < xDestination)
+		else
 		{
-			xPos++;
-		}
-		else if (xPos > xDestination)
-		{
-			xPos--;
-		}
-
-		if (yPos < yDestination)
-		{
-			yPos++;
-		}
-		else if (yPos > yDestination)
-		{
-			yPos--;
-		}
-		
-		if (xPos == xGoal && yPos == yGoal)
-		{
-			//xtra fun stuff
+			if(xPos == xDestination && yPos == yDestination && (xPos != xGoal || yPos != yGoal))
+			{
+				findMoveBox();
+			}
+			
+			if (xPos < xDestination)
+			{
+				xPos++;
+			}
+			else if (xPos > xDestination)
+			{
+				xPos--;
+			}
+	
+			if (yPos < yDestination)
+			{
+				yPos++;
+			}
+			else if (yPos > yDestination)
+			{
+				yPos--;
+			}
+			
+			if (xPos == xGoal && yPos == yGoal)
+			{
+				if(command == Command.exit)
+				{
+					exiting = true; 
+				}
+				else
+				{
+					resident.msgAtLocation();
+				}
+			}
 		}
 	}
 
@@ -70,22 +121,59 @@ public class ResidentGui implements Gui
 	{
 		g.setColor(Color.BLUE);
 		g.fillRect(xPos, yPos, dimensions, dimensions);
+        if(pastCommand == Command.getFood || command == Command.putFood)
+        {
+	        g.setColor(Color.WHITE);
+	        g.fillOval(xPos, yPos, dimensions - 1, dimensions - 1);
+        }
+        if(pastCommand == Command.cook)
+        {
+	        g.setColor(Color.YELLOW);
+	        g.fillOval(xPos, yPos, dimensions - 1, dimensions - 1);
+        }
+        if(pastCommand == Command.eat)
+        {
+	        g.setColor(Color.GREEN);
+	        g.fillOval(xPos, yPos, dimensions + 19, dimensions - 1);
+        }
 	}
 
-	public void setPresent(boolean p)
-	{
-		isPresent = p;
-	}
 	@Override
 	public boolean isPresent()
 	{
-		return isPresent;
+		return true;
 	}
 
-	public void doGoToLocation(Point p)
+	public void doGoToLocation(Point p, String purpose)
 	{
 		xGoal = (int) p.getX();
 		yGoal = (int) p.getY();
+
+		pastCommand = command;
+		if(purpose.equals("Put food"))
+		{
+			command = Command.putFood;
+		}
+		if(purpose.equals("Get food"))
+		{
+			command = Command.getFood;
+		}
+		if(purpose.equals("Cook"))
+		{
+			command = Command.cook;
+		}
+		if(purpose.equals("Eat"))
+		{
+			command = Command.eat;
+		}
+		if(purpose.equals("Exit"))
+		{
+			command = Command.exit;
+		}
+		else
+		{
+			command = Command.noCommand;
+		}
 	}
 	
 	public void findMoveBox()

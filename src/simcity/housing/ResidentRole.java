@@ -1,5 +1,6 @@
 package simcity.housing;
 
+import simcity.housing.gui.ResidentGui;
 import simcity.interfaces.Landlord;
 import simcity.interfaces.Resident;
 import simcity.mock.EventLog;
@@ -43,7 +44,7 @@ public class ResidentRole extends Role implements Resident
 	private Timer timer = new Timer();
 	public EventLog log = new EventLog();
 	public boolean unitTesting = false;
-//	private ResidentGui gui;
+	private ResidentGui gui;
 
 	public ResidentRole()
 	{
@@ -52,6 +53,12 @@ public class ResidentRole extends Role implements Resident
 		foodInFridge.add(new ItemOrder("Pizza", 5));
 		foodInFridge.add(new ItemOrder("Chicken", 5));
 		foodInFridge.add(new ItemOrder("Steak", 5));
+		locations.put("Fridge", new Point(x, y));
+		locations.put("Stove", new Point(x, y));
+		locations.put("Table", new Point(x, y));
+		locations.put("Sofa", new Point(x, y));
+		locations.put("Doorway", new Point(x, y));
+		locations.put("Exit", new Point(x, y));
 	}
 	
 	public void setLandlord(Landlord l)
@@ -145,7 +152,7 @@ public class ResidentRole extends Role implements Resident
     			clean();
     	    	return true;
     		}
-    		goToLocation(locations.get("Sofa"));
+    		goToLocation(locations.get("Sofa"), "");
         	return false;
 		}
     	if(state == ResidentState.atLandlord)
@@ -196,7 +203,7 @@ public class ResidentRole extends Role implements Resident
 	private void putGroceriesInFridge(Command c)
 	{
 		commands.remove(c);
-		goToLocation(locations.get("Fridge"));
+		goToLocation(locations.get("Fridge"), "Put food");
 		for(ItemOrder food : foodInFridge)
 		{
 			for(ItemOrder grocery : groceries)	
@@ -214,7 +221,7 @@ public class ResidentRole extends Role implements Resident
 	private void prepareFood(Command c)
 	{
 		commands.remove(c);
-		goToLocation(locations.get("Fridge"));
+		goToLocation(locations.get("Fridge"), "Get food");
 		ItemOrder food = foodInFridge.get(random.nextInt(foodInFridge.size()));
 		final List<ItemOrder> groceryList = new ArrayList<ItemOrder>();
 		for(ItemOrder i : foodInFridge)
@@ -235,7 +242,7 @@ public class ResidentRole extends Role implements Resident
 				}
 			}
 		}
-		goToLocation(locations.get("Stove"));
+		goToLocation(locations.get("Stove"), "Cook");
 		if(unitTesting)
 		{
 			eat(groceryList);
@@ -253,7 +260,7 @@ public class ResidentRole extends Role implements Resident
 	}
 	public void eat(final List<ItemOrder> gList)
 	{
-		goToLocation(locations.get("Table"));
+		goToLocation(locations.get("Table"), "Eat");
 		if(unitTesting)
 		{
 			groceryCheck(gList);
@@ -280,11 +287,11 @@ public class ResidentRole extends Role implements Resident
 	}
 	private void clean()
 	{
-		goToLocation(locations.get("Fridge"));
+		goToLocation(locations.get("Fridge"), "");
 		Do("Cleaning Fridge");
 		if(unitTesting)
 		{
-			goToLocation(locations.get("Stove"));
+			goToLocation(locations.get("Stove"), "");
 		}
 		else
 		{
@@ -292,14 +299,14 @@ public class ResidentRole extends Role implements Resident
 				{
 					public void run()
 					{
-						goToLocation(locations.get("Stove"));
+						goToLocation(locations.get("Stove"), "");
 					}
 				}, 1000);
 		}
 		Do("Cleaning Stove");
 		if(unitTesting)
 		{
-			goToLocation(locations.get("Table"));
+			goToLocation(locations.get("Table"), "");
 		}
 		else
 		{
@@ -307,14 +314,14 @@ public class ResidentRole extends Role implements Resident
 				{
 					public void run()
 					{
-						goToLocation(locations.get("Table"));
+						goToLocation(locations.get("Table"), "");
 					}
 				}, 1000);
 		}
 		Do("Cleaning Table");
 		if(unitTesting)
 		{
-			goToLocation(locations.get("Sofa"));
+			goToLocation(locations.get("Sofa"), "");
 		}
 		else
 		{
@@ -322,14 +329,14 @@ public class ResidentRole extends Role implements Resident
 				{
 					public void run()
 					{
-						goToLocation(locations.get("Sofa"));
+						goToLocation(locations.get("Sofa"), "");
 					}
 				}, 1000);
 		}
 		Do("Cleaning Sofa");
 		if(unitTesting)
 		{
-			goToLocation(locations.get("Doorway"));
+			goToLocation(locations.get("Doorway"), "");
 		}
 		else
 		{
@@ -337,7 +344,7 @@ public class ResidentRole extends Role implements Resident
 				{
 					public void run()
 					{
-						goToLocation(locations.get("Doorway"));
+						goToLocation(locations.get("Doorway"), "");
 					}
 				}, 1000);
 		}
@@ -348,22 +355,22 @@ public class ResidentRole extends Role implements Resident
 	private void leaveHousing(Command c)
 	{
 		commands.remove(c);
-		goToLocation(locations.get("Exit"));
+		goToLocation(locations.get("Exit"), "Exit");
 		state = ResidentState.away;
 		person.msgLeftDestination(this);
 		stateChanged();
 	}
 
-	private void goToLocation(Point p)
+	private void goToLocation(Point p, String s)
 	{
-//		gui.doGoToLocation(p);
-//		try
-//		{
-//			atLocation.acquire();
-//		}
-//		catch (InterruptedException e)
-//		{
-//			e.printStackTrace();
-//		}
+		gui.doGoToLocation(p, s);
+		try
+		{
+			atLocation.acquire();
+		}
+		catch (InterruptedException e)
+		{
+			e.printStackTrace();
+		}
 	}
 }
