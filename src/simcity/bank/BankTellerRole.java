@@ -89,11 +89,13 @@ public class BankTellerRole extends JobRole implements BankTeller   {
 		person.msgEndShift();
 	}
 public void msgHelpCustomer(BankDepositor c, int cash){
+	Do("Teller is assigned to customer");
 	customers.add(new myCustomer(c, CustomerState.waitingForTeller, cash));
 	stateChanged();
 }
 
 public void msgMakeWithdrawal(BankDepositor c, int transaction){
+	Do("Teller is processing withdrawal");
 	if(findCustomer(c).money<transaction){
 		findCustomer(c).cS = CustomerState.broke;
 	}
@@ -104,11 +106,13 @@ public void msgMakeWithdrawal(BankDepositor c, int transaction){
 	stateChanged();
 }
 public void msgMakeDeposit(BankDepositor c, int transaction){
+	Do("Teller is processing deposit");
 	findCustomer(c).money += transaction;
 	findCustomer(c).cS = CustomerState.makingRequest;
 	stateChanged();
 }
 public void msgTransactionComplete(BankDepositor c){
+	Do("Teller received confirmation from manager that transaction was successful");
 	findCustomer(c).cS = CustomerState.transactionComplete;
 	stateChanged();
 }
@@ -141,9 +145,16 @@ public boolean pickAndExecuteAnAction(){
 
 ///ACTIONS////
 private void helpCustomer(BankDepositor c){
+	gui.GoToCustomer();
+	try {
+		tellerAnimation.acquire();
+	} catch (InterruptedException e) {
+		e.printStackTrace();
+	}
 	c.msgMakeRequest(this);
 }
 private void noMoney(BankDepositor c){
+	
 	c.msgCannotMakeTransaction();
 	
 }

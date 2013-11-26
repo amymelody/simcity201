@@ -22,7 +22,7 @@ public class BankManagerRole extends JobRole implements BankManager  {
 	}
 	
 	public BankManagerRole(String name) {
-		// TODO Auto-generated constructor stub
+		this.name = name;
 	}
 
 	public String getMaitreDName(){
@@ -90,6 +90,7 @@ public class BankManagerRole extends JobRole implements BankManager  {
 	
 	// Worker interactions (hiring, enter/exit shift, etc.)
 	public void msgHired(BankTeller t) {
+		Do("Manager has hired teller");
 		addTeller(t);
 	}
 
@@ -131,7 +132,7 @@ public class BankManagerRole extends JobRole implements BankManager  {
 	}
 	// Normative Scenario #1
 	public void msgTransaction(BankDepositor c){
-		
+		Do("Manager is adding customer to a list of waiting customers");
 		if(findCustomer(c) == null){
 			customers.add(new myCustomer(c, c.getName()));
 		}
@@ -142,6 +143,7 @@ public class BankManagerRole extends JobRole implements BankManager  {
 	
 	
 	public void msgProcessTransaction(BankTeller t, BankDepositor c, int money){
+		Do("Bank manager is processing transaction");
 		teller = t;
 		findCustomer(c).cashInBank += money;
 		bankMoney += money;
@@ -177,6 +179,7 @@ public class BankManagerRole extends JobRole implements BankManager  {
 	/* Actions */
 	
 	private void leaveBank(){
+		Do("Bank manager is leaving bank");
 		gui.ExitBank();
 	}
 	private void closeUp() {
@@ -202,12 +205,14 @@ public class BankManagerRole extends JobRole implements BankManager  {
 	}	
 	
 	private void helpCustomer(BankDepositor c, BankTeller t){
+		Do("Manager is finding a teller to help the customer");
 		waitingCustomers.remove(c);
 		t.msgHelpCustomer(c, findCustomer(c).cashInBank);
 	}
 	
 	
 	private void transactionComplete(BankDepositor c) {
+		Do("Manager has successfully processed transaction");
 		teller.msgTransactionComplete(c);
 	}
 	
