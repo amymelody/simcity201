@@ -46,6 +46,7 @@ public class PersonTest extends TestCase
 		bus = new MockBus("bus");
 		car = new MockCar("car");
 		person.msgIncome(400);
+		person.unitTesting = true;
 	}	
 	
 	public void testRestaurantCustomer()
@@ -102,6 +103,7 @@ public class PersonTest extends TestCase
 		
 		assertEquals("Person should have $384. It doesn't.", 384, person.getMoney());
 		
+		assertFalse("Person's scheduler should have returned false, but didn't.", person.pickAndExecuteAnAction());
 	}
 	
 	public void testDepositor()
@@ -118,6 +120,8 @@ public class PersonTest extends TestCase
 		assertEquals("Person should have $400. It doesn't.", 400, person.getMoney());
 		
 		assertEquals("Person's location state should be outside. It isn't", LocationState.outside, person.state.getLState());
+	
+		person.msgCreatedAccount();
 		
 		person.msgExpense(300);
 		
@@ -152,13 +156,12 @@ public class PersonTest extends TestCase
 		
 		assertEquals("First role in roles should be inactive. It isn't.", false, person.roles.get(0).isActive());
 		
+		assertFalse("Person's scheduler should have returned false, but didn't.", person.pickAndExecuteAnAction());
 	}
 	
-	public void testGoToWorkByBus()
+	public void testGoToWork()
 	{
 		person.addRole(waiter, "restWaiterRole");
-		person.setPState(PhysicalState.lazy);
-		person.addBusStop(busStop);
 		
 		Map<Day, Time> startShifts = new HashMap<Day, Time>();
 		startShifts.put(Day.Mon, new Time(Day.Mon, 9, 0));
@@ -185,34 +188,6 @@ public class PersonTest extends TestCase
 		
 		assertTrue("Person should have logged \"Received msgUpdateWatch\" but didn't. His last event logged reads instead: " 
 				+ person.log.getLastLoggedEvent().toString(), person.log.containsString("Received msgUpdateWatch"));
-		
-		assertTrue("Person's scheduler should have returned true (it should call goToWork, which then calls goToDestination), but didn't.", person.pickAndExecuteAnAction());
-		
-		assertEquals("Person's transportation state should be waitingForBus. It isn't", TransportationState.waitingForBus, person.state.getTState());
-		
-		assertTrue("Person's destination should be joshRestaurant. Instead it is " + person.getDestination(), person.getDestination().equals("joshRestaurant"));
-		
-		assertTrue("BusStop should have logged \"Received msgWaitingForBus\" but didn't. Its last event logged reads instead: " 
-				+ busStop.log.getLastLoggedEvent().toString(), busStop.log.containsString("Received msgWaitingForBus"));
-		
-		assertFalse("Person's scheduler should have returned false, but didn't.", person.pickAndExecuteAnAction());
-		
-		person.msgBusIsHere(bus);
-		
-		assertTrue("Person's scheduler should have returned true (it should call boardBus), but didn't.", person.pickAndExecuteAnAction());
-		
-		assertEquals("Person's transportation state should be ridingBus. It isn't", TransportationState.ridingBus, person.state.getTState());
-		
-		assertTrue("Bus should have logged \"Received msgComingAboard. Destination = joshRestaurant\" but didn't. Its last event logged reads instead: " 
-				+ bus.log.getLastLoggedEvent().toString(), bus.log.containsString("Received msgComingAboard. Destination = joshRestaurant"));
-		
-		assertFalse("Person's scheduler should have returned false, but didn't.", person.pickAndExecuteAnAction());
-		
-		person.msgAtDestination("joshRestaurant");
-		
-		assertTrue("Person's destination should be joshRestaurant. Instead it is " + person.getDestination(), person.getDestination().equals("joshRestaurant"));
-		
-		assertEquals("Person's transportation state should be walkingFromVehicle. It isn't", TransportationState.walkingFromVehicle, person.state.getTState());
 		
 		assertTrue("Person's scheduler should have returned true (it should call goToWork, which then calls goToDestination), but didn't.", person.pickAndExecuteAnAction());
 		
@@ -264,13 +239,14 @@ public class PersonTest extends TestCase
 		
 		assertEquals("First role in roles should be inactive. It isn't.", false, person.roles.get(0).isActive());
 		
+		assertFalse("Person's scheduler should have returned false, but didn't.", person.pickAndExecuteAnAction());
+		
 	}
 	
-	public void testDriveToMarket()
+	public void testGoToMarket()
 	{
 		person.addRole(resident, "residentRole");
 		person.addRole(marketCust, "market1CustomerRole");
-		person.msgBoughtCar(car);
 		person.setLState(LocationState.home);
 		List<ItemOrder> foods = new ArrayList<ItemOrder>();
 		foods.add(new ItemOrder("steak", 2));
@@ -326,21 +302,6 @@ public class PersonTest extends TestCase
 		
 		assertTrue("Person's scheduler should have returned true (it should call goToMarket, which then calls goToDestination), but didn't.", person.pickAndExecuteAnAction());
 		
-		assertEquals("Person's transportation state should be inCar. It isn't", TransportationState.inCar, person.state.getTState());
-		
-		assertTrue("Person's destination should be market1. Instead it is " + person.getDestination(), person.getDestination().equals("market1"));
-		
-		assertTrue("Car should have logged \"Received msgGoToDestination. Destination = market1\" but didn't. Its last event logged reads instead: " 
-				+ car.log.getLastLoggedEvent().toString(), car.log.containsString("Received msgGoToDestination. Destination = market1"));
-		
-		person.msgAtDestination("market1");
-		
-		assertTrue("Person's destination should be market1. Instead it is " + person.getDestination(), person.getDestination().equals("market1"));
-		
-		assertEquals("Person's transportation state should be walkingFromVehicle. It isn't", TransportationState.walkingFromVehicle, person.state.getTState());
-		
-		assertTrue("Person's scheduler should have returned true (it should call goToMarket, which then calls goToDestination), but didn't.", person.pickAndExecuteAnAction());
-		
 		assertEquals("Person's location state should be atDestination. It isn't", LocationState.atDestination, person.state.getLState());
 		
 		assertTrue("Person's scheduler should have returned true (it should call goToMarket), but didn't.", person.pickAndExecuteAnAction());
@@ -379,21 +340,6 @@ public class PersonTest extends TestCase
 		
 		assertTrue("Person's scheduler should have returned true (it should call goHome, which then calls goToDestination), but didn't.", person.pickAndExecuteAnAction());
 		
-		assertEquals("Person's transportation state should be inCar. It isn't", TransportationState.inCar, person.state.getTState());
-		
-		assertTrue("Person's destination should be home. Instead it is " + person.getDestination(), person.getDestination().equals("home"));
-		
-		assertTrue("Car should have logged \"Received msgGoToDestination. Destination = market1\" but didn't. Its last event logged reads instead: " 
-				+ car.log.getLastLoggedEvent().toString(), car.log.containsString("Received msgGoToDestination. Destination = home"));
-		
-		person.msgAtDestination("home");
-		
-		assertTrue("Person's destination should be home. Instead it is " + person.getDestination(), person.getDestination().equals("home"));
-		
-		assertEquals("Person's transportation state should be walkingFromVehicle. It isn't", TransportationState.walkingFromVehicle, person.state.getTState());
-		
-		assertTrue("Person's scheduler should have returned true (it should call goHome, which then calls goToDestination), but didn't.", person.pickAndExecuteAnAction());
-		
 		assertEquals("Person's location state should be atDestination. It isn't", LocationState.atDestination, person.state.getLState());
 		
 		assertTrue("Person's scheduler should have returned true (it should call goHome), but didn't.", person.pickAndExecuteAnAction());
@@ -421,6 +367,9 @@ public class PersonTest extends TestCase
 		
 		Map<Day, Time> endShifts = new HashMap<Day, Time>();
 		endShifts.put(Day.Mon, new Time(Day.Mon, 17, 0));
+		
+		person.msgCreatedAccount();
+		person.msgUpdateWatch(Day.Mon, 0, 0);
 		
 		person.msgYoureHired("joshRestaurant", "restWaiterRole", 80, startShifts, endShifts);
 		
@@ -582,6 +531,8 @@ public class PersonTest extends TestCase
 		assertEquals("Waiter role should be inactive. It isn't.", false, person.roles.get(2).isActive());
 		
 		person.setRentDue(false);
+		
+		assertFalse("Person's scheduler should have returned false, but didn't.", person.pickAndExecuteAnAction());
 		
 	}
 }

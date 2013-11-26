@@ -38,6 +38,7 @@ public class PersonAgent extends Agent implements Person
 	private Car car;
 	private Bus bus;
 	private String destination;
+	public boolean unitTesting = false;
 	
 	private CityDirectory city;
 	private CityGui cG;
@@ -127,7 +128,7 @@ public class PersonAgent extends Agent implements Person
 	public String getJobLocation() {
 		return job.location;
 	}
-	
+
 	public int getMoney() {
 		return money;
 	}
@@ -317,7 +318,12 @@ public class PersonAgent extends Agent implements Person
 		time.hour = h;
 		time.minute = m;
 		//print(time.getDay().toString() + ", " + time.getHour() + ":" + time.getMinute());
-		if (time.getHour() == 8 && time.getMinute() == 0) {
+		//print(job.startShifts.get(time.getDay()).getDay().toString() + ", " + job.startShifts.get(time.getDay()).getHour() + ":" + job.startShifts.get(time.getDay()).getMinute());
+		/*if (time.getHour() == 8 && time.getMinute() == 0) {
+			money += 600;
+			print("$" + money);
+		}*/
+		if (time.getHour() == 10 && time.getMinute() == 0) {
 			state.ns = NourishmentState.gotHungry;
 		}
 		stateChanged();
@@ -339,6 +345,7 @@ public class PersonAgent extends Agent implements Person
 				cG.addRestWaiter(rW);
 			}
 		}
+		//print(job.location);
 		stateChanged();
 	}
 	
@@ -406,7 +413,6 @@ public class PersonAgent extends Agent implements Person
 
 	public void msgEndShift() {
 		state.ws = WorkingState.notWorking;
-		money += job.payrate;
 		stateChanged();
 	}
 	
@@ -430,7 +436,7 @@ public class PersonAgent extends Agent implements Person
 	public boolean pickAndExecuteAnAction() {
 		if (state.ts == TransportationState.walking || state.ts == TransportationState.walkingFromVehicle) { 
 			if (job != null && state.ws == WorkingState.notWorking && !job.startShifts.get(time.getDay()).isEqualTo(job.endShifts.get(time.getDay())) && (time.plus(60)).greaterThanOrEqualTo(job.startShifts.get(time.getDay())) && !time.greaterThanOrEqualTo(job.endShifts.get(time.getDay()))) { //if an hour before your shift starts
-				if (state.ls == LocationState.home) {
+			if (state.ls == LocationState.home) {
 					leaveHouse();
 					return true;
 				} else if (state.ls == LocationState.outside || state.ls == LocationState.atDestination) {
@@ -523,7 +529,7 @@ public class PersonAgent extends Agent implements Person
 			}
 		}
 		
-		if (state.ts == TransportationState.walking && state.ls != LocationState.home && state.ls != LocationState.leavingHouse) {
+		if (!unitTesting && state.ts == TransportationState.walking && state.ls != LocationState.home && state.ls != LocationState.leavingHouse) {
 			goHome(); //if nothing left to do, go home and do whatever
 			return true;
 		}
@@ -569,10 +575,11 @@ public class PersonAgent extends Agent implements Person
 			synchronized(roles) {
 				for (MyRole mr : roles) {
 					if (mr.name.equals(h.residentRole)) {
-						mr.active = true;
-						state.ls = LocationState.home;
 						if (mr.r instanceof Resident) {
+							mr.active = true;
+							state.ls = LocationState.home;
 							Resident r = (Resident)(mr.r);
+							mr.r.setPerson(this);
 							r.msgImHome();
 							if (!groceries.isEmpty()) {
 								print("Bringing groceries home");
@@ -599,6 +606,7 @@ public class PersonAgent extends Agent implements Person
 				if (mr.name.equals(h.residentRole)) {
 					if (mr.r instanceof Resident) {
 						Resident r = (Resident)(mr.r);
+						mr.r.setPerson(this);
 						mr.active = true;
 						print("Eating at home");
 		                r.msgEat();
@@ -617,6 +625,7 @@ public class PersonAgent extends Agent implements Person
 				if (mr.name.equals(h.residentRole)) {
 					if (mr.r instanceof Resident) {
 						Resident r = (Resident)(mr.r);
+						mr.r.setPerson(this);
 						mr.active = true;
 						print("Leaving house");
 						r.msgLeave();
@@ -643,6 +652,7 @@ public class PersonAgent extends Agent implements Person
 					if (mr.name.equals(h.residentRole)) {
 						if (mr.r instanceof Resident) {
 							Resident r = (Resident)(mr.r);
+							mr.r.setPerson(this);
 							mr.active = true;
 							state.ls = LocationState.ownerHouse;
 							r.msgAtLandlord();
@@ -670,8 +680,10 @@ public class PersonAgent extends Agent implements Person
 					if (mr.name.equals(r.customerRole)) {
 						if (mr.r instanceof RestCustomer) {
 							RestCustomer c = (RestCustomer)(mr.r);
+							mr.r.setPerson(this);
 							mr.active = true;
 							state.ls = LocationState.restaurant;
+							c.setCash(money);
 							c.gotHungry();
 							state.ns = NourishmentState.hungry;
 						}
@@ -697,6 +709,7 @@ public class PersonAgent extends Agent implements Person
 					if (mr.name.equals(m.customerRole)) {
 						if (mr.r instanceof MarketCustomer) {
 							MarketCustomer c = (MarketCustomer)(mr.r);
+							mr.r.setPerson(this);
 							mr.active = true;
 							state.ls = LocationState.market;
 							c.msgOrderItems(foodNeeded);
@@ -724,6 +737,7 @@ public class PersonAgent extends Agent implements Person
 					if (mr.name.equals(b.depositorRole)) {
 						if (mr.r instanceof BankDepositor) {
 							BankDepositor d = (BankDepositor)(mr.r);
+							mr.r.setPerson(this);
 							mr.active = true;
 							state.ls = LocationState.bank;
 							if (money >= maxBalance) {
@@ -750,6 +764,7 @@ public class PersonAgent extends Agent implements Person
 					if (mr.name.equals(job.role)) {
 						if (mr.r instanceof JobInterface) {
 							JobInterface j = (JobInterface)(mr.r);
+							mr.r.setPerson(this);
 							mr.active = true;
 							j.msgStartShift();
 							state.ls = job.jobLocation;
@@ -778,12 +793,14 @@ public class PersonAgent extends Agent implements Person
 			} else {*/
 				state.ts = TransportationState.walking;
 				destination = d;
-				gui.DoGoToDestination(city.getBuildingEntrance(d)); //just walk there
-				try {
-					atDestination.acquire();
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+				if (!unitTesting) {
+					gui.DoGoToDestination(city.getBuildingEntrance(d)); //just walk there
+					try {
+						atDestination.acquire();
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
 				state.ls = LocationState.atDestination;
 			//}
@@ -846,6 +863,8 @@ public class PersonAgent extends Agent implements Person
 			location = l;
 			role = r;
 			payrate = p;
+			this.startShifts = startShifts;
+			this.endShifts = endShifts;
 			switch (location) {
 				case "joshRestaurant": case "cherysRestaurant": case "alfredRestaurant": case "anjaliRestaurant": case "jesusRestaurant":
 					jobLocation = LocationState.restaurant;
@@ -862,8 +881,6 @@ public class PersonAgent extends Agent implements Person
 				default:
 					break;
 			}
-			this.startShifts = startShifts;
-			this.endShifts = endShifts;
 		}
 		String role;
 		LocationState jobLocation;
