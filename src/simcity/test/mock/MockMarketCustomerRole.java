@@ -43,7 +43,7 @@ public class MockMarketCustomerRole extends Role implements MarketCustomer {
 
 	@Override
 	public void msgHereIsWhatICanFulfill(List<ItemOrder> orders,
-			boolean canFulfill) {
+			boolean canFulfill, int waitX, int waitY) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -56,6 +56,12 @@ public class MockMarketCustomerRole extends Role implements MarketCustomer {
 
 	@Override
 	public void msgThankYou(int change) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void msgOrderReady() {
 		// TODO Auto-generated method stub
 		
 	}
