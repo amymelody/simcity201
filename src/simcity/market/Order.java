@@ -45,5 +45,5 @@ public class Order {
 		return oS;
 	}
 	
-	public enum OrderState {none, newDelivery, handing, getting, ready, paying, paid, done, delivered};
+	public enum OrderState {none, newDelivery, handing, getting, ready, paying, paid, done, delivered, here, know};
 }

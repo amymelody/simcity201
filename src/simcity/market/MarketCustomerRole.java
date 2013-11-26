@@ -58,6 +58,7 @@ public class MarketCustomerRole extends Role implements MarketCustomer {
 	public void setGui(MarketCustomerGui g){
 		gui = g;
 	}
+	int waitingChairX, waitingChairY;
 	
 
 	/* Data */
@@ -73,7 +74,7 @@ public class MarketCustomerRole extends Role implements MarketCustomer {
 	MarketCashier cashier;
 
 	// Customer Status Data
-	public enum CustomerState {nothing, arrived, atCashier, confirming, waiting, getting, paying, leaving, done, out, walking};
+	public enum CustomerState {nothing, arrived, atCashier, confirming, waiting, getting, paying, leaving, done, out, walking, ready, atPickUp};
 	public CustomerState cS = CustomerState.nothing;
 	String location;
 
@@ -85,11 +86,17 @@ public class MarketCustomerRole extends Role implements MarketCustomer {
 		//stateChanged();
 	}
 
-	public void msgHereIsWhatICanFulfill(List<ItemOrder> orders, boolean canFulfill) {
+	public void msgHereIsWhatICanFulfill(List<ItemOrder> orders, boolean canFulfill, int waitX, int waitY) {
 		if(canFulfill)
 			cS = CustomerState.waiting;
 		else
 			cS = CustomerState.leaving;
+		waitingChairX = waitX;
+		waitingChairY = waitY;
+	}
+	
+	public void msgOrderReady() {
+		cS = CustomerState.ready;
 	}
 	
 	public void msgHereAreItemsandPrice(List<ItemOrder> i, int price) {
@@ -109,6 +116,12 @@ public class MarketCustomerRole extends Role implements MarketCustomer {
 	public void msgAtCashier() {
 		animation.release();
 		cS = CustomerState.atCashier;
+		//stateChanged();
+	}
+	
+	public void msgAtPickUp() {
+		animation.release();
+		cS = CustomerState.atPickUp;
 		//stateChanged();
 	}
 	
@@ -132,6 +145,14 @@ public class MarketCustomerRole extends Role implements MarketCustomer {
 			WillWait();
 			return true;
 		}
+		if(cS == CustomerState.ready) {
+			GoingToPickUp();
+			return true;
+		}
+		if(cS == CustomerState.atPickUp) {
+			AtDesk();
+			return true;
+		}
 		if(cS == CustomerState.getting) {
 			GetItems();
 			return true;
@@ -152,11 +173,11 @@ public class MarketCustomerRole extends Role implements MarketCustomer {
 	private void GoToCashier() {
 		cS = CustomerState.walking;
 		DoGoToCashier(); // animation
-		//try {
-		//	animation.acquire();
-		//} catch (InterruptedException e) {
-		//	e.printStackTrace();
-		//}
+		try {
+			animation.acquire();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 	private void GiveOrder() {
 		cashier.msgIWantItems(this, items);
@@ -167,10 +188,8 @@ public class MarketCustomerRole extends Role implements MarketCustomer {
 		DoWillWait(); // animation
 	}
 
-	private void GetItems() {
-		cashier.msgPayment(this, cost);
-		cS = CustomerState.paying;
-		cost = 0;
+	private void GoingToPickUp() {
+		cS = CustomerState.walking;
 		DoGetItems(); // animation
 		try {
 			animation.acquire();
@@ -178,10 +197,23 @@ public class MarketCustomerRole extends Role implements MarketCustomer {
 			e.printStackTrace();
 		}
 	}
+	
+	private void AtDesk() {
+		cS = CustomerState.nothing;
+		cashier.msgImHere(this);
+	}
+	
+	private void GetItems() {
+		cashier.msgPayment(this, cost);
+		cS = CustomerState.paying;
+		cost = 0;
+	}
 
 	private void GetOut() {
 		cS = CustomerState.done;
 		DoGetOut(); // animation
+		waitingChairX = 0;
+		waitingChairY = 0;
 	}
 	
 	private void updateInfo() {
@@ -198,7 +230,7 @@ public class MarketCustomerRole extends Role implements MarketCustomer {
 	}
 
 	private void DoWillWait() {
-		gui.GoToWaitingArea();
+		gui.GoToWaitingArea(waitingChairX, waitingChairY);
 	}
 
 	private void DoGetItems() {

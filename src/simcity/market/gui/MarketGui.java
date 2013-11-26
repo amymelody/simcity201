@@ -54,7 +54,6 @@ public class MarketGui extends BuildingGui
 	public void changeView(boolean visible) {
 		animationPanel.setVisible(visible);
 		inputPanel.setVisible(visible);
-		cityGui.changeView();
 	}
 	
 }

@@ -1,8 +1,11 @@
 package simcity.market;
 
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Semaphore;
 
 import simcity.role.JobRole;
@@ -108,6 +111,29 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 	public void setGui(MarketCashierGui g){
 		gui = g;
 	}
+	private static Map<Integer, Point> chairLocations = new HashMap<Integer, Point>();
+	static {
+		chairLocations.put(1, new Point(40, 160));
+		chairLocations.put(2, new Point(10, 160));
+		chairLocations.put(3, new Point(40, 170));
+		chairLocations.put(4, new Point(10, 170));
+		chairLocations.put(5, new Point(40, 180));
+		chairLocations.put(6, new Point(10, 180));
+		chairLocations.put(7, new Point(40, 190));
+		chairLocations.put(8, new Point(10, 190));
+		chairLocations.put(9, new Point(40, 200));
+		chairLocations.put(10, new Point(10, 200));
+		chairLocations.put(11, new Point(40, 210));
+		chairLocations.put(12, new Point(10, 210));
+		chairLocations.put(13, new Point(40, 220));
+		chairLocations.put(14, new Point(10, 220));
+		chairLocations.put(15, new Point(40, 230));
+		chairLocations.put(16, new Point(10, 230));
+		chairLocations.put(17, new Point(30, 240));
+		chairLocations.put(18, new Point(20, 240));
+		chairLocations.put(19, new Point(10, 240));
+	}
+	Integer chairCnt = 1;
 	
 	
 	/* Data */
@@ -206,6 +232,17 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 		//stateChanged();
 	}
 	
+	public void msgImHere(MarketCustomer c) {
+		synchronized(orders) {
+			for(Order o: orders) {
+				if(o.customer.equals(c)) {
+					o.oS = OrderState.here;
+				}
+			}
+		}
+		//stateChanged();
+	}
+	
 	public void msgHereAreItems(Order order, MarketEmployee e) {
 		synchronized(orders) {
 			for(Order o: orders) {
@@ -284,6 +321,10 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 			synchronized(orders) {
 				for(Order o: orders) {
 					if(o.oS == OrderState.ready) {
+						LetCustomerKnow(o);
+						return true;
+					}
+					if(o.oS == OrderState.here) {
 						HandToCustomer(o);
 						return true;
 					}
@@ -384,6 +425,11 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 		}
 	}
 
+	private void LetCustomerKnow(Order o) {
+		o.oS = OrderState.know;
+		o.customer.msgOrderReady();
+	}
+	
 	private void HandToCustomer(Order o) {
 		o.oS = OrderState.paying;
 		o.customer.msgHereAreItemsandPrice(o.items, o.price);
@@ -483,8 +529,13 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 		calculatePrice(o);
 		if(o.location != null)
 			o.cook.msgHereIsWhatICanFulfill(o.fulfilling, HaveSomeItems(o.fulfilling));
-		else
-			o.customer.msgHereIsWhatICanFulfill(o.fulfilling, HaveSomeItems(o.fulfilling));
+		else {
+			o.customer.msgHereIsWhatICanFulfill(o.fulfilling, HaveSomeItems(o.fulfilling), (int)chairLocations.get(chairCnt).getX(), (int)chairLocations.get(chairCnt).getY());
+			if(chairCnt == 19)
+				chairCnt = 1;
+			else
+				chairCnt++;
+		}
 	}
 	//stateChanged() in case MarketState == closing
 	private void removeOrder(Order o) {
