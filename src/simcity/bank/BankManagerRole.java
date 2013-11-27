@@ -72,20 +72,27 @@ public class BankManagerRole extends JobRole implements BankManager  {
 	public List<BankDepositor> waitingCustomers = Collections.synchronizedList(new ArrayList<BankDepositor>());
 	// BankState Status Data
 	int tellerSelection = 0;
+	
 	enum BankState {open, closing, closed};
 	BankState bS;
-	int bankMoney;
+	int bankMoney = 100;
 	private BankTeller teller;
+	private BankDepositor depositor;
 	// Cashier Status Data
 	int salary;
 	boolean working;
 	private myCustomer cust;
 	private Semaphore managerAnimation = new Semaphore(0,true);
-	BankManagerGui gui;
+	BankManagerGui gui = new BankManagerGui(this);
 	public void setGui(BankManagerGui g){
 		gui = g;
 	}
-	
+	public void setTeller(BankTeller t){
+		this.teller = teller;
+	}
+	public void setDepositor(BankDepositor d){
+		this.depositor = d;
+	}
 	/* Messages */
 	
 	// Worker interactions (hiring, enter/exit shift, etc.)
@@ -136,15 +143,22 @@ public class BankManagerRole extends JobRole implements BankManager  {
 		if(findCustomer(c) == null){
 			customers.add(new myCustomer(c, c.getName()));
 		}
+		while(findCustomer(c) != null){
 			findCustomer(c).cS = CustomerState.arrived;
 			waitingCustomers.add(c);
+		}
+			
+		
 		stateChanged();
 	}
+
+	
 	public void msgMarketTransaction(BankDepositor c){
 		Do("Manager is adding market to a list of waiting customers");
 		if(findCustomer(c) == null){
 			customers.add(new myCustomer(c, c.getName()));
 		}
+		else
 			findCustomer(c).cS = CustomerState.marketArrived;
 			waitingCustomers.add(c);
 		stateChanged();
@@ -242,6 +256,7 @@ public class BankManagerRole extends JobRole implements BankManager  {
 		int cashInBank;
 		String name;
 		CustomerState cS;
+
 	// 0 means deposit, 1 means withdrawal
 		myCustomer(BankDepositor c, String n){
 			cashInBank = 0;
@@ -249,11 +264,14 @@ public class BankManagerRole extends JobRole implements BankManager  {
 			
 			
 		}
+		public CustomerState getCustomerState(){
+			return cS;
+		}
 		
 	}
 	public enum CustomerState{marketArrived, arrived, marketHelped, beingHelped, marketLeaving, leaving, marketTransactionComplete, transactionProcessed};
-
 	
+
 	private myCustomer findCustomer(BankDepositor c){
 	
 		for(myCustomer mc : customers){

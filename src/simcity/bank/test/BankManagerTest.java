@@ -9,6 +9,8 @@ import simcity.bank.test.mock.MockBankTeller;
 import simcity.bank.test.mock.MockPerson;
 import simcity.bank.BankManagerRole.myCustomer;
 import simcity.bank.BankManagerRole.CustomerState;
+
+
 import junit.framework.*;
 
 public class BankManagerTest extends TestCase
@@ -39,8 +41,26 @@ public class BankManagerTest extends TestCase
 	 */
 	public void testBankNormativeScenario() //tests deposit
 	{
+		//Test pre conditions
+		manager.setDepositor(customer);
+		manager.setTeller(teller);
 		
+		//Manager should have no accounts
+		assertEquals("Bank should have no customer accounts", 0, manager.customers.size());
 		
+		manager.msgTransaction(customer);
+		assertEquals("Bank should now have one customer in accounts", 1, manager.customers.size());
+		assertTrue("Manager scheduler should return true to find a teller to help customer", manager.pickAndExecuteAnAction());
+		assertTrue("MockTeller should have logged an event for receiving \"msgHelpCustomer\" "
+	                + teller.log.getLastLoggedEvent().toString(), teller.log.containsString("Received message from manager to work with customer"));
+	                
+		
+		manager.msgProcessTransaction(teller, customer, 500);
+		assertEquals("Bank money should now be at 600", 600, manager.getBankMoney());
+		assertTrue("Bank scheduler should have returned true", manager.pickAndExecuteAnAction());
+		assertTrue("MockTeller should have logged an event for receiving \"msgTransactionComplete\" "
+                + teller.log.getLastLoggedEvent().toString(), teller.log.containsString("Received message from manager that transaction was successful"));
+	
 	}
 
 		

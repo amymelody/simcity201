@@ -60,7 +60,7 @@ public class BankAnimationPanel extends JPanel implements ActionListener {
         g2.fillRect(10, 200, 50, 20);
         
         g2.setColor(Color.black);
-        g2.drawString("Cook Area", 5, 200);
+        g2.drawString("Manager Desk", 5, 200);
         
         g2.setColor(Color.green);
         g2.fillRect(110, 200, 50, 20);

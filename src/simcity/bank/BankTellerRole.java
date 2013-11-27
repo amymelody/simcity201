@@ -75,7 +75,7 @@ public class BankTellerRole extends JobRole implements BankTeller   {
 	}
 
 	private Semaphore tellerAnimation = new Semaphore(0,true);
-	BankTellerGui gui;
+	BankTellerGui gui = new BankTellerGui(this);
 
 ////MESSAGES/////
 
@@ -100,7 +100,7 @@ public void msgMakeWithdrawal(BankDepositor c, int transaction){
 		findCustomer(c).cS = CustomerState.broke;
 	}
 	else{
-		findCustomer(c).money += transaction;
+		findCustomer(c).money += -transaction;
 		findCustomer(c).cS = CustomerState.makingRequest;
 	}
 	stateChanged();

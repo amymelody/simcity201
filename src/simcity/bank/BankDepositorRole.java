@@ -71,6 +71,9 @@ public class BankDepositorRole extends Role implements BankDepositor{
 		return transactionAmount;
 	}
 	boolean market = false;
+	
+	
+	
 	/* Messages */
 	public void msgMakeDeposit(int cash){
 		Do("Person taking on role of bank depositor");
@@ -82,7 +85,7 @@ public class BankDepositorRole extends Role implements BankDepositor{
 	public void msgMarketDeposit(int cash){
 		market = true;
 		Do("Market is depositing surplus into its bank account");
-		mS = MarketState.entered;
+		//mS = MarketState.entered;
 		cS = CustomerState.makingTransaction;
 		stateChanged();
 	}
