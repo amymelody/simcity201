@@ -33,6 +33,7 @@ Please see the Wiki for instructions on running SimCity201.
 
 ###Notes
   + For some reason, even though Anjali was unable to compile and run the program on her Mac, so she made changes on her teammates computers that were related to bank
-  + 
+  + Everyone worked super hard, everyone pulled their weight, Josh was an amazing team leader!
+  + Alfred was supposed to figure out movement in general and collisions, he left the project halfway through though
 
 
