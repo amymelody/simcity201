@@ -159,7 +159,7 @@ public class BankManagerRole extends JobRole implements BankManager  {
 	
 	public void msgMarketTransaction(BankDepositor c){
 		Do("Manager is adding market to a list of waiting customers");
-		//BankManagerRole
+		//BankManagerRole changes
 		if(findCustomer(c) == null){
 			Do("No customer found, creating customer");
 			customers.add(new myCustomer(c, c.getName()));
