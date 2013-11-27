@@ -191,4 +191,16 @@ public class MockPerson extends Mock implements Person {
 		log.add(new LoggedEvent("State changed"));
 	}
 
+	@Override
+	public String getHome() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int getSalary() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 }
