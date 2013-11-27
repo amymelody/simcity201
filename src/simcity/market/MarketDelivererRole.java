@@ -34,9 +34,9 @@ public class MarketDelivererRole extends JobRole implements MarketDeliverer {
 		super.setPerson(p);
 		name = p.getName();
 	}
-	public void setCashier(MarketCashier ch, int salary) {
+	public void setCashier(MarketCashier ch) {
 		cashier = ch;
-		ch.msgHired(this, salary);
+		ch.msgHired(this, person.getSalary());
 	}
 
 	/* Hacks */
@@ -118,6 +118,9 @@ public class MarketDelivererRole extends JobRole implements MarketDeliverer {
 		animation.release();
 		dS = DelivererState.arrivedBack;
 		stateChanged();
+	}
+	public void left() {
+		person.msgLeftDestination(this);
 	}
 
 
