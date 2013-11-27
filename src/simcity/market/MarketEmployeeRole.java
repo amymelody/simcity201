@@ -34,9 +34,9 @@ public class MarketEmployeeRole extends JobRole implements MarketEmployee {
 	public String getName() {
 		return name;
 	}
-	public void setCashier(MarketCashier ch, int salary) {
+	public void setCashier(MarketCashier ch) {
 		cashier = ch;
-		ch.msgHired(this, salary);
+		ch.msgHired(this, person.getSalary());
 	}
 	public void setPerson(Person p) {
 		super.setPerson(p);
