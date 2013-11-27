@@ -23,6 +23,7 @@ Please see the Wiki for instructions on running SimCity201.
   + Bank returns a null pointer error halfway through running
   + Reduced functionality: only one restaurant
   + Restaurant works, but food is never put on plating area
+  + ResidentGui does not work in certain cases
   + 
 
 
