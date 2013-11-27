@@ -453,7 +453,6 @@ public class PersonAgent extends Agent implements Person
 	public boolean pickAndExecuteAnAction() {
 		if (state.ts == TransportationState.walking || state.ts == TransportationState.walkingFromVehicle) {
 			if (job != null && state.ws == WorkingState.notWorking && !job.startShifts.get(time.getDay()).isEqualTo(job.endShifts.get(time.getDay())) && (time.plus(60)).greaterThanOrEqualTo(job.startShifts.get(time.getDay())) && !time.greaterThanOrEqualTo(job.endShifts.get(time.getDay()))) { //if an hour before your shift starts
-				print("GOTOWORK");
 				if (state.ls == LocationState.home) {
 					leaveHouse();
 					return true;
@@ -463,13 +462,11 @@ public class PersonAgent extends Agent implements Person
 				}
 			}
 			if (state.ws == WorkingState.working && time.greaterThanOrEqualTo(job.endShifts.get(time.getDay()) ) && !job.role.equals("landlord")) { //if your shift ends
-				print("ENDSHIFT");
 				endShift();
 				return true;
 			} 
 			if (state.ws == WorkingState.notWorking) {
 				if (money <= minBalance && haveBankAccount && state.ls != LocationState.bank) {
-					print("GOTOBANK");
 					if (state.ls == LocationState.home) {
 						leaveHouse();
 						return true;
@@ -479,7 +476,6 @@ public class PersonAgent extends Agent implements Person
 					} 
 				} 
 				if (rentDue) {
-					print("GOTOOWNERHOUSE");
 					if (state.ls == LocationState.home) {
 						leaveHouse();
 						return true;
@@ -489,7 +485,6 @@ public class PersonAgent extends Agent implements Person
 					} 
 				} 
 				if (!foodNeeded.isEmpty()) {
-					print("GOTOMARKET");
 					if (state.ls == LocationState.home) {
 						leaveHouse();
 						return true;
@@ -500,7 +495,6 @@ public class PersonAgent extends Agent implements Person
 				} 
 				if (state.ns == NourishmentState.gotHungry) {
 					if (wantToGoToRestaurant()) {
-						print("GOTORESTAURANT");
 						if (state.ls == LocationState.home) {
 							leaveHouse();
 							return true;
@@ -509,7 +503,6 @@ public class PersonAgent extends Agent implements Person
 							return true;
 						} 
 					} else {
-						print("GOHOME");
 						if (state.ls == LocationState.home) {
 							goEat();
 							return true;
@@ -520,7 +513,6 @@ public class PersonAgent extends Agent implements Person
 					} 
 				} 
 				if (!groceries.isEmpty()) {
-					print("GOHOME");
 					if (state.ls == LocationState.outside || state.ls == LocationState.atDestination) {
 						goHome();
 						return true;

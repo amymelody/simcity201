@@ -100,7 +100,7 @@ public class CityDirectory
 			ID = i;
 			person = p;
 			name = p.getName();
-			job = p.getJob(); //not actual function yet
+			job = p.getJob();
 			jobBuilding = jobB;
 			homeBuilding = homeB;
 			if(homeBuilding == "apartment10" || homeBuilding == "apartment11" || homeBuilding == "apartment12" || homeBuilding == "apartment13" || homeBuilding == "apartment14" || homeBuilding == "apartment15" || homeBuilding == "apartment16" || homeBuilding == "apartment17")
