@@ -19,7 +19,7 @@ public class MockResident extends Mock implements Resident
 	@Override
 	public void msgRentDue() //from Landlord
 	{
-		log.add(new LoggedEvent("Received msgRentDue from Landlord. Setting person.rentDue and maintenanceSchedule--"));
+		log.add(new LoggedEvent("Received msgRentDue from Landlord. Setting person.rentDue"));
 	}
 	@Override
 	public void msgAtLandlord() //from Person
@@ -35,7 +35,7 @@ public class MockResident extends Mock implements Resident
 	@Override
 	public void msgEat() //from Person
 	{
-		log.add(new LoggedEvent("Received msgEat from Person. Command.eat"));
+		log.add(new LoggedEvent("Received msgEat from Person. Command.eat and maintenanceSchedule--"));
 	}
 	@Override
 	public void msgGroceries(List<ItemOrder> g) //from Person

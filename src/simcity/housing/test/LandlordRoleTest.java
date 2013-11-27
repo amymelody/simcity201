@@ -64,11 +64,11 @@ public class LandlordRoleTest extends TestCase
 		assertEquals("Landlord should have no commands. Instead, it has "
 				+ landlord.commands.size(), 0, landlord.commands.size());
 		assertTrue("MockResident1 should have logged \"Received msgRentDue\" but didn't",
-				resident1.log.containsString("Received msgRentDue from Landlord. Setting person.rentDue and maintenanceSchedule--"));
+				resident1.log.containsString("Received msgRentDue from Landlord. Setting person.rentDue"));
 		assertTrue("Landlord's first renter's state should be state = RenterState.called. It isn't",
 				landlord.renters.get(0).state == RenterState.called);
 		assertTrue("MockResident2 should have logged \"Received msgRentDue\" but didn't",
-				resident2.log.containsString("Received msgRentDue from Landlord. Setting person.rentDue and maintenanceSchedule--"));
+				resident2.log.containsString("Received msgRentDue from Landlord. Setting person.rentDue"));
 		assertTrue("Landlord's second renter's state should be state = RenterState.called. It isn't",
 				landlord.renters.get(1).state == RenterState.called);
 		//Checking logs

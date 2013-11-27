@@ -73,6 +73,8 @@ public class ResidentRoleTest extends TestCase
 				+ resident.commands.size(), 1, resident.commands.size());
 		assertTrue("Resident's command should be Command.eat. It isn't",
 				resident.commands.get(0) == Command.eat);
+		assertEquals("Resident's maintenanceSchedule should equal 2. It doesn't",
+				2, resident.maintenanceSchedule);
 		assertTrue("Resident's scheduler should have returned true, but didn't.",
 				resident.pickAndExecuteAnAction());
 				//running eat()
@@ -176,15 +178,13 @@ public class ResidentRoleTest extends TestCase
 		resident.msgRentDue(); //from Landlord
 
 		assertTrue("Resident should have logged \"Received msgRentDue\" but didn't. His log reads instead: "
-				+ resident.log.getLastLoggedEvent().toString(), resident.log.containsString("Received msgRentDue from Landlord. Setting person.rentDue and maintenanceSchedule--"));
+				+ resident.log.getLastLoggedEvent().toString(), resident.log.containsString("Received msgRentDue from Landlord. Setting person.rentDue"));
 		assertTrue("Resident's state should be state = ResidentState.atHome. It isn't",
 				resident.state == ResidentState.atHome);
 		assertEquals("Resident should have no commands. Instead, it has "
 				+ resident.commands.size(), 0, resident.commands.size());
 		assertTrue("MockPerson's rentDue should be true. It isn't",
 				person.rentDue);
-		assertEquals("Resident's maintenanceSchedule should equal 2. It doesn't",
-				2, resident.maintenanceSchedule);
 		assertFalse("Resident's scheduler should have returned false, but didn't.",
 				resident.pickAndExecuteAnAction());
 		//Checking logs
