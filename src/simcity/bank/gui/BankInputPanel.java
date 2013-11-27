@@ -34,6 +34,7 @@ public class BankInputPanel extends JPanel
 		t.setManager(manager);
 		t.setGui(g);
 		tellers.add(t);
+		manager.addTeller(t);
 	}
 	
 	public void addDepositor(BankDepositorRole d) {

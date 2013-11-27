@@ -129,7 +129,7 @@ public class CityAnimationPanel extends JPanel implements ActionListener, MouseL
 			}
 		}
 	}
-	public void addBankDepositor(BankDepositorRole d){
+	public void addBankDepositor(BankDepositorRole d) {
 		synchronized(buildings){
 			for(BuildingGui bG : buildings){
 				if(bG.getName().equals("bank1")){

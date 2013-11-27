@@ -15,8 +15,6 @@ public class PersonGui implements Gui {
 	private int xPos = 0, yPos = 0;//default Person position
 	private int xDestination = 0, yDestination = 0;//default Person destination
 	private int buildingX, buildingY;
-	private boolean goingRight;
-	private boolean goingDown;
 	
 	private enum Command {noCommand, GoToDestination};
 	private Command command=Command.noCommand;
@@ -27,14 +25,6 @@ public class PersonGui implements Gui {
 	}
 
 	public void updatePosition() {
-		/*if (xPos <= xDestination)
-			goingRight = true;
-		if (xPos > xDestination)
-			goingRight = false;
-		if (yPos <= yDestination)
-			goingDown = true;
-		if (yPos > yDestination)
-			goingDown = false;*/
 		
 		if (xPos < xDestination)
 			xPos++;
@@ -57,8 +47,10 @@ public class PersonGui implements Gui {
 	}
 
 	public void draw(Graphics2D g) {
-		g.setColor(Color.BLUE);
-		g.fillRect(xPos, yPos, width, height);
+		if (command != Command.noCommand) { 
+			g.setColor(Color.BLUE);
+			g.fillRect(xPos, yPos, width, height);
+		}
 	}
 	
 	public void DoGoToDestination(Point p) {

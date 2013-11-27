@@ -3,6 +3,7 @@ package simcity.market.gui;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -18,7 +19,7 @@ public class MarketEmployeeGui implements Gui {
 	private MarketEmployeeRole role = null;
 
 	private int xPos = -10, yPos = 10;//default Employee position
-	private int xDestination = 190, yDestination = -20;//default Employee destination
+	private int xDestination = -10, yDestination = 10;//default Employee destination
 	private int xHome = 190, yHome = -20; // Employee home position
 	private List<ItemOrder> items;
 	private Queue<Point> destinations = new LinkedList<Point>();
@@ -75,12 +76,14 @@ public class MarketEmployeeGui implements Gui {
 				gS = GuiState.nothing;
 			}
 			if(gS == GuiState.leaving) {
+				role.left();
 			}
 		}
 	}
 
 	public void draw(Graphics2D g) {
 		g.setColor(Color.YELLOW);
+		g.fillRect(20, 20, xPos, yPos);
 	}
 
 	public boolean isPresent() {

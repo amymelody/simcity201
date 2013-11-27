@@ -2,6 +2,7 @@ package simcity.market.gui;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.util.List;
 
 import simcity.ItemOrder;
@@ -15,7 +16,7 @@ public class MarketDelivererGui implements Gui {
 	private String location;
 
 	private int xPos = -10, yPos = 10;//default Deliverer position
-	private int xDestination = 200, yDestination = 20;//default Deliverer destination
+	private int xDestination = -10, yDestination = 10;//default Deliverer destination
 	private int xHome = 200, yHome = 20; // Deliverer home position
 	
 	public enum GuiState {nothing, delivering, cashier, leaving}
@@ -53,12 +54,14 @@ public class MarketDelivererGui implements Gui {
 				gS = GuiState.nothing;
 			}
 			if(gS == GuiState.leaving) {
+				role.left();
 			}
 		}
 	}
 
 	public void draw(Graphics2D g) {
 		g.setColor(Color.GREEN);
+		g.fillRect(20, 20, xPos, yPos);
 	}
 
 	public boolean isPresent() {

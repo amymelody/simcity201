@@ -30,7 +30,7 @@ public class JoshCashierRole extends RestCashierRole implements JoshCashier {
 	public JoshCashierRole() {
 		super();
 		working = false;
-		cash = 200;
+		cash = 1000;
 		
 		prices.put("steak", 16);
 		prices.put("chicken", 11);
@@ -63,6 +63,7 @@ public class JoshCashierRole extends RestCashierRole implements JoshCashier {
 	}
 	
 	public void msgEndShift() {
+		cash -= person.getSalary();
 		working = false;
 		stateChanged();
 	}
