@@ -48,7 +48,7 @@ public class BankTellerRole extends JobRole implements BankTeller   {
 	
 	private BankManager manager;
 	
-	List<myCustomer> customers = new ArrayList<myCustomer>();
+	public List<myCustomer> customers = new ArrayList<myCustomer>();
 	
 	
 	public BankTellerRole(){
