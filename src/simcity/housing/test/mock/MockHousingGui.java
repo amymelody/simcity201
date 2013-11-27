@@ -71,12 +71,6 @@ public class MockHousingGui extends Mock implements HousingGuiInterface
 	}
 
 	@Override
-	public void removeResidentGui(ResidentGui rg)
-	{
-		log.add(new LoggedEvent(""));
-	}
-
-	@Override
 	public MoveBox getBox(int y, int x)
 	{
 		log.add(new LoggedEvent("Received getBox. Y = " + y + ", X = " + x));

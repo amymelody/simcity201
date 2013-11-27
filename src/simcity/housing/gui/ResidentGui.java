@@ -91,12 +91,11 @@ public class ResidentGui implements Gui
 				currentBox = null;
 				
 				resident.msgAtLocation();
-				gui.removeResidentGui(this);
 			}
 		}
 		else
 		{
-			if(xPos == xDestination && yPos == yDestination && (xPos != xGoal || yPos != yGoal))
+			if(xPos == xDestination && yPos == yDestination && (xDestination != xGoal || yDestination != yGoal))
 			{
 				findMoveBox();
 			}
@@ -121,6 +120,7 @@ public class ResidentGui implements Gui
 			
 			if (xPos == xGoal && yPos == yGoal)
 			{
+				pastBoxes.clear();
 				if(command == Command.exit)
 				{
 					exiting = true; 
@@ -204,7 +204,7 @@ public class ResidentGui implements Gui
 		log.add(new LoggedEvent("Received findMoveBox"));
 		
 		List<MoveBox> boxesToCheck = new ArrayList<MoveBox>();
-		
+
 		if (xPos < xGoal)
 		{
 			if((boxX + 1) < 25)
@@ -221,21 +221,21 @@ public class ResidentGui implements Gui
 		}
 		if(boxX < 25)
 		{
-		if (yPos > yGoal)
-		{
-			if((boxY - 1) >= 0)
+			if (yPos > yGoal)
 			{
-				boxesToCheck.add(gui.getBox(boxY - 1, boxX));
+				if((boxY - 1) >= 0)
+				{
+					boxesToCheck.add(gui.getBox(boxY - 1, boxX));
+				}
+			}
+			else if (yPos < yGoal)
+			{
+				if((boxY + 1) < 25)
+				{
+					boxesToCheck.add(gui.getBox(boxY + 1, boxX));
+				}
 			}
 		}
-		else if (yPos < yGoal)
-		{
-			if((boxY + 1) < 25)
-			{
-				boxesToCheck.add(gui.getBox(boxY + 1, boxX));
-			}
-		}
-	}
 
 		if (xPos == xGoal)
 		{

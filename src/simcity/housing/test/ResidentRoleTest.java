@@ -214,7 +214,7 @@ public class ResidentRoleTest extends TestCase
 		assertTrue("Resident's state should be state = ResidentState.away. It isn't",
 				resident.state == ResidentState.away);
 		assertTrue("MockPerson should have logged \"Received msgLeftDestination\" but didn't. His log reads instead: "
-				+ person.log.getLastLoggedEvent().toString(), person.log.containsString("Received msgLeftDestination from Resident"));
+				+ person.log.getLastLoggedEvent().toString(), person.log.containsString("Received msgLeftDestination"));
 		//Checking logs
 		assertEquals("Resident should have 3 events logged after the Resident's scheduler is called for the third time. Instead, it has "
 				+ resident.log.size(), 3, resident.log.size());
@@ -300,7 +300,7 @@ public class ResidentRoleTest extends TestCase
 		assertTrue("Resident's state should be state = ResidentState.away. It isn't",
 				resident.state == ResidentState.away);
 		assertTrue("MockPerson should have logged \"Received msgLeftDestination\" but didn't. His log reads instead: "
-				+ person.log.getLastLoggedEvent().toString(), person.log.containsString("Received msgLeftDestination from Resident"));
+				+ person.log.getLastLoggedEvent().toString(), person.log.containsString("Received msgLeftDestination"));
 		//Checking logs
 		assertEquals("Resident should have 6 events logged after the Resident's scheduler is called for the sixth time. Instead, it has "
 				+ resident.log.size(), 6, resident.log.size());

@@ -109,7 +109,7 @@ public class HousingGui extends BuildingGui implements HousingGuiInterface
 		{
 			for(int j = 0; j < 25; j++)
 			{
-				boxBlock[i][j] = new Semaphore(0, true);
+				boxBlock[i][j] = new Semaphore(1, true);
 			}
 		}
 	}
@@ -149,13 +149,15 @@ public class HousingGui extends BuildingGui implements HousingGuiInterface
 	{
 		animationPanel.addGui(rg);
 	}
-	public void removeResidentGui(ResidentGui rg)
-	{
-		animationPanel.removeGui(rg);
-	}
+
 	public void addLandlordGui(LandlordGui lg)
 	{
 		animationPanel.addGui(lg);
+	}
+	
+	public String getName()
+	{
+		return super.getName();
 	}
 	
 	@Override
