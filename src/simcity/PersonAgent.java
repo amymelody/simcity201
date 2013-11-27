@@ -325,10 +325,10 @@ public class PersonAgent extends Agent implements Person
 		time.hour = h;
 		time.minute = m;
 		//print(time.getDay().toString() + ", " + time.getHour() + ":" + time.getMinute());
-//		if (time.getHour() == 9 && time.getMinute() == 0) {
-//			money += 600;
-//			print("$" + money);
-//		}
+		if (time.getHour() == 9 && time.getMinute() == 0) {
+			money += 600;
+			print("$" + money);
+		}
 	//	if (time.getHour() == 8 && time.getMinute() == 0) {
 	//		state.ns = NourishmentState.gotHungry;
 	//	}
