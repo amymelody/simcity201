@@ -22,6 +22,9 @@ import simcity.role.Role;
 import simcity.housing.ResidentRole;
 import simcity.market.MarketCustomerRole;
 import simcity.bank.BankDepositorRole;
+import simcity.bank.BankTellerRole;
+import simcity.market.MarketEmployeeRole;
+import simcity.market.MarketDelivererRole;
 import simcity.role.JobRole;
 
 import java.util.*;
@@ -318,7 +321,6 @@ public class PersonAgent extends Agent implements Person
 		time.hour = h;
 		time.minute = m;
 		print(time.getDay().toString() + ", " + time.getHour() + ":" + time.getMinute());
-		//print(job.startShifts.get(time.getDay()).getDay().toString() + ", " + job.startShifts.get(time.getDay()).getHour() + ":" + job.startShifts.get(time.getDay()).getMinute());
 		/*if (time.getHour() == 8 && time.getMinute() == 0) {
 			money += 600;
 			print("$" + money);
@@ -344,6 +346,18 @@ public class PersonAgent extends Agent implements Person
 				RestWaiterRole rW = (RestWaiterRole)j;
 				cG.addRestWaiter(rW);
 			}
+		}
+		if (role.equals("marketEmployeeRole")) {
+			MarketEmployeeRole e = (MarketEmployeeRole)j;
+			cG.addMarketEmployee(e);
+		}
+		if (role.equals("marketDelivererRole")) {
+			MarketDelivererRole d = (MarketDelivererRole)j;
+			cG.addMarketDeliverer(d);
+		}
+		if (role.equals("bankTellerRole")) {
+			BankTellerRole t = (BankTellerRole)j;
+			cG.addBankTeller(t);
 		}
 		//print(job.location);
 		stateChanged();
@@ -712,6 +726,7 @@ public class PersonAgent extends Agent implements Person
 			if (!findRole(m.customerRole)) {
 				MarketCustomerRole c = city.MarketCustomerFactory(m.customerRole);
 				addRole(c, m.customerRole);
+				cG.addMarketCustomer(c, m.location);
 			} 
 			synchronized(roles) {
 				for (MyRole mr : roles) {

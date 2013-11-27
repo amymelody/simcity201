@@ -632,9 +632,6 @@ public class CityDirectory
 			int num1 = getNumPeople("residentRole", "house1");
 			int num2 = getNumPeople("residentRole", "house2");
 			int num3 = getNumPeople("residentRole", "house3");
-			System.out.println(num1);
-			System.out.println(num2);
-			System.out.println(num3);
 			int num = num1;
 			if (num > num2) {
 				num = num2;
@@ -651,7 +648,6 @@ public class CityDirectory
 			else {
 				housing = "house3";
 			}
-			System.out.println(housing);
 		} else {
 			int num1 = getNumPeople("residentRole", "apartment10");
 			int num3 = getNumPeople("residentRole", "apartment11");

@@ -22,6 +22,9 @@ import simcity.joshrestaurant.JoshCustomerRole;
 import simcity.joshrestaurant.JoshWaiterRole;
 import simcity.joshrestaurant.JoshNormalWaiterRole;
 import simcity.joshrestaurant.JoshSharedDataWaiterRole;
+import simcity.market.MarketCustomerRole;
+import simcity.market.MarketEmployeeRole;
+import simcity.market.MarketDelivererRole;
 import simcity.RestWaiterRole;
 import simcity.RestCustomerRole;
 
@@ -90,8 +93,8 @@ public class CityGui extends JFrame
 		animationPanel.addLandlord(l, buildingName);
 	}
 	
-	/*public void addMarketCustomer(MarketCustomerRole c) {
-		animationPanel.addMarketCustomer(c);
+	public void addMarketCustomer(MarketCustomerRole c, String location) {
+		animationPanel.addMarketCustomer(c, location);
 	}
 	
 	public void addMarketEmployee(MarketEmployeeRole e) {
@@ -101,7 +104,7 @@ public class CityGui extends JFrame
 	public void addMarketDeliverer(MarketDelivererRole d) {
 		animationPanel.addMarketDeliverer(d);
 	}
-	*/
+	
 	public void addBankDepositor(BankDepositorRole d) {
 		animationPanel.addBankDepositor(d);
 	}

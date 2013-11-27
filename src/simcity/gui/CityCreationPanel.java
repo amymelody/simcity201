@@ -256,7 +256,7 @@ public class CityCreationPanel extends JPanel implements ActionListener
 		Properties cityConfig = new Properties();
 		
 		try {
-		    cityConfig.load(this.getClass().getResourceAsStream("../config1.properties"));
+		    cityConfig.load(this.getClass().getResourceAsStream("../marketConfig.properties"));
 		} catch(IOException e) {
 			e.printStackTrace();
 		} catch(IllegalArgumentException iae) {
