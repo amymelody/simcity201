@@ -138,7 +138,7 @@ public class LandlordRole extends JobRole
     		sendEndShift();
     		return true;
     	}
-    	goToLocation(locations.get("Sofa"));
+    	goToLocation(locations.get("Sofa"), "");
     	return false;
     }
 
@@ -159,7 +159,7 @@ public class LandlordRole extends JobRole
 	private void sendAmountOwed(Command c)
 	{
 		commands.remove(c);
-		goToLocation(locations.get("Doorway"));
+		goToLocation(locations.get("Doorway"), "");
 		for(Renter r : renters)
 		{
 			if(r.state == RenterState.arrived)
@@ -179,23 +179,23 @@ public class LandlordRole extends JobRole
 		person.msgIncome(moneyEarned);
 		moneyEarned = 0;
 		person.msgEndShift();
-		goToLocation(locations.get("Exit"));
+		goToLocation(locations.get("Exit"), "Exit");
 		person.msgLeftDestination(this);
 	}
 
-	private void goToLocation(Point p)
+	private void goToLocation(Point p, String s)
 	{
 		if(unitTesing)
 		{
-	//		gui.doGoToLocation(p);
-	//		try
-	//		{
-	//			atLocation.acquire();
-	//		}
-	//		catch (InterruptedException e)
-	//		{
-	//			e.printStackTrace();
-	//		}
+			gui.doGoToLocation(p, s);
+			try
+			{
+				atLocation.acquire();
+			}
+			catch (InterruptedException e)
+			{
+				e.printStackTrace();
+			}
 		}
 	}
 
