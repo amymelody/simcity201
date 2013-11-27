@@ -329,10 +329,10 @@ public class PersonAgent extends Agent implements Person
 		time.hour = h;
 		time.minute = m;
 		//print(time.getDay().toString() + ", " + time.getHour() + ":" + time.getMinute());
-		if (time.getHour() == 9 && time.getMinute() == 0) {
-			money += 600;
-			print("$" + money);
-		}
+//		if (time.getHour() == 9 && time.getMinute() == 0) {
+//			money += 600;
+//			print("$" + money);
+//		}
 	//	if (time.getHour() == 8 && time.getMinute() == 0) {
 	//		state.ns = NourishmentState.gotHungry;
 	//	}
@@ -458,7 +458,6 @@ public class PersonAgent extends Agent implements Person
 	public boolean pickAndExecuteAnAction() {
 		if (state.ts == TransportationState.walking || state.ts == TransportationState.walkingFromVehicle) {
 			if (job != null && state.ws == WorkingState.notWorking && !job.startShifts.get(time.getDay()).isEqualTo(job.endShifts.get(time.getDay())) && (time.plus(60)).greaterThanOrEqualTo(job.startShifts.get(time.getDay())) && !time.greaterThanOrEqualTo(job.endShifts.get(time.getDay()))) { //if an hour before your shift starts
-				print("GOTOWOKR");
 				if (state.ls == LocationState.home) {
 					leaveHouse();
 					return true;
@@ -468,13 +467,11 @@ public class PersonAgent extends Agent implements Person
 				}
 			}
 			if (state.ws == WorkingState.working && time.greaterThanOrEqualTo(job.endShifts.get(time.getDay()) ) && !job.role.equals("landlord")) { //if your shift ends
-				print("ENDSHIFT");
 				endShift();
 				return true;
 			} 
 			if (state.ws == WorkingState.notWorking) {
 				if (money <= minBalance && haveBankAccount && state.ls != LocationState.bank) {
-					print("GOTOBANK");
 					if (state.ls == LocationState.home) {
 						leaveHouse();
 						return true;
@@ -484,7 +481,6 @@ public class PersonAgent extends Agent implements Person
 					} 
 				} 
 				if (rentDue) {
-					print("RENTDUE");
 					if (state.ls == LocationState.home) {
 						leaveHouse();
 						return true;
@@ -504,7 +500,6 @@ public class PersonAgent extends Agent implements Person
 				} 
 				if (state.ns == NourishmentState.gotHungry) {
 					if (wantToGoToRestaurant()) {
-						print("GOTORESTAURANT");
 						if (state.ls == LocationState.home) {
 							leaveHouse();
 							return true;
@@ -513,7 +508,6 @@ public class PersonAgent extends Agent implements Person
 							return true;
 						} 
 					} else {
-						print("GOEATATHOME");
 						if (state.ls == LocationState.home) {
 							goEat();
 							return true;
@@ -530,7 +524,6 @@ public class PersonAgent extends Agent implements Person
 					} 
 				} 
 				if (money >= maxBalance && state.ls != LocationState.bank) {
-					print("DFDFGOTOBANK");
 					if (state.ls == LocationState.home) {
 						leaveHouse();
 						return true;
@@ -551,7 +544,6 @@ public class PersonAgent extends Agent implements Person
 		synchronized(roles) {
 			for (MyRole mr : roles) {
 				if (mr.active) {
-					print("ROLESCHEDULER");
 					anytrue = mr.r.pickAndExecuteAnAction();
 					return anytrue;
 				}
