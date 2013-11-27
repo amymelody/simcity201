@@ -98,7 +98,6 @@ public class MarketInputPanel extends JPanel implements ActionListener
 	public void addEmployee(MarketEmployeeRole e) {
 		MarketEmployeeGui g = new MarketEmployeeGui(e);
 		marketGui.animationPanel.addGui(g);
-		e.setCashier(cashier);
 		e.setGui(g);
 		employees.add(e);
 	}
@@ -106,7 +105,6 @@ public class MarketInputPanel extends JPanel implements ActionListener
 	public void addDeliverer(MarketDelivererRole d) {
 		MarketDelivererGui g = new MarketDelivererGui(d);
 		marketGui.animationPanel.addGui(g);
-		d.setCashier(cashier);
 		d.setGui(g);
 		deliverers.add(d);
 	}
