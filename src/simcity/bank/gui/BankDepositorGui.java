@@ -45,6 +45,8 @@ public class BankDepositorGui implements Gui {
 
 	public void draw(Graphics2D g) {
 		g.setColor(Color.GREEN);
+		g.fillRect(xPos, yPos, 30, 30);
+		g.drawString("Depositor", xPos, yPos);
 	}
 
 	public boolean isPresent() {
