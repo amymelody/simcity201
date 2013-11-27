@@ -117,6 +117,10 @@ public class MarketEmployeeRole extends JobRole implements MarketEmployee {
 		eS = EmployeeState.handing;
 		stateChanged();
 	}
+	
+	public void left() {
+		person.msgLeftDestination(this);
+	}
 
 
 	/* Scheduler */

@@ -18,7 +18,7 @@ import simcity.market.MarketEmployeeRole;
 import simcity.market.MarketCustomerRole;
 import simcity.market.MarketCashierRole;
 
-public class MarketInputPanel extends JPanel implements ActionListener
+public class MarketInputPanel extends JPanel
 {
 	static final int LSPACE = 10;
 	static final int GROWS = 3;
@@ -30,6 +30,7 @@ public class MarketInputPanel extends JPanel implements ActionListener
 	private JPanel marketLabel = new JPanel();
     JLabel marketInfo = new JLabel();
     private MarketCashierRole cashier;
+    private MarketCashierGui cashierGui;
 	private Vector<MarketEmployeeRole> employees = new Vector<MarketEmployeeRole>();
 	private Vector<MarketDelivererRole> deliverers = new Vector<MarketDelivererRole>();
 	private Vector<MarketCustomerRole> customers = new Vector<MarketCustomerRole>();
@@ -40,20 +41,15 @@ public class MarketInputPanel extends JPanel implements ActionListener
 		marketGui = mG;
 		cashier = c;
 		
-		MarketCashierGui cashierGui = new MarketCashierGui(cashier);
+		cashierGui = new MarketCashierGui(cashier);
 		marketGui.animationPanel.addGui(cashierGui);
 		cashier.setGui(cashierGui);
-		
-		goBack = new JButton ("Top View");
-		goBack.setPreferredSize(new Dimension(10, 20));
-        goBack.addActionListener(this);
         
         setLayout(new GridLayout(LSPACE, LSPACE));
         setBorder(BorderFactory.createBevelBorder(0));
         
         initMarketLabel();
         add(marketLabel);
-        add(goBack);
 	}
 	
 	private void initMarketLabel() {
@@ -83,13 +79,6 @@ public class MarketInputPanel extends JPanel implements ActionListener
         marketLabel.add(new JLabel("      "), BorderLayout.EAST);
         marketLabel.add(new JLabel("      "), BorderLayout.WEST);
     }
-	
-	public void actionPerformed(ActionEvent event) {
-		if(event.getSource() == goBack) {
-			marketGui.changeView(false);
-		}
-	
-	}
 	
 	public void setCashier(MarketCashierRole cashier) {
 		this.cashier = cashier;

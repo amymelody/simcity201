@@ -119,6 +119,9 @@ public class MarketDelivererRole extends JobRole implements MarketDeliverer {
 		dS = DelivererState.arrivedBack;
 		stateChanged();
 	}
+	public void left() {
+		person.msgLeftDestination(this);
+	}
 
 
 	/* Scheduler */

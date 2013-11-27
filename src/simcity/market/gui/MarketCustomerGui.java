@@ -3,6 +3,7 @@ package simcity.market.gui;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -54,6 +55,7 @@ public class MarketCustomerGui implements Gui {
 
 	public void draw(Graphics2D g) {
 		g.setColor(Color.BLUE);
+		g.fillRect(20, 20, xPos, yPos);
 	}
 
 	public boolean isPresent() {

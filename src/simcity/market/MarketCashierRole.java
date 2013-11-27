@@ -285,7 +285,7 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 	// Normative Scenario #2
 	public void msgIWantDelivery(RestCook rCk, RestCashier rCh, List<ItemOrder> i, String location) {
 		orders.add(new Order(rCk, rCh, i, location));
-		//stateChanged();
+		stateChanged();
 	}
 	public void msgDelivered(Order order, MarketDeliverer d) {
 		synchronized(orders) {
@@ -302,7 +302,13 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 				}
 			}
 		}
-		//stateChanged();
+		stateChanged();
+	}
+	
+	
+	/* Animation Messages */
+	public void left() {
+		person.msgLeftDestination(this);
 	}
 
 	/* Scheduler */

@@ -132,6 +132,7 @@ public class MarketCustomerRole extends Role implements MarketCustomer {
 
 	public void msgOut() {
 		cS = CustomerState.out;
+		person.msgLeftDestination(this);
 		stateChanged();
 	}
 
