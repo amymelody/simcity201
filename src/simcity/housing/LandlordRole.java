@@ -117,6 +117,7 @@ public class LandlordRole extends JobRole
     			return true;
     		}
     	}
+    	
     	for(Command c : commands)
     	{
     		if(c == Command.callRenters)
@@ -127,7 +128,7 @@ public class LandlordRole extends JobRole
     	}
     	boolean allRentCollected = true;
     	for(Renter r : renters)
-    	{
+    	{ 
     		if(r.state != RenterState.paid)
     		{
     			allRentCollected = false;
