@@ -66,6 +66,8 @@ public class CityDirectory
 	private JoshCookRole joshCook = new JoshCookRole();
 	private JoshHostRole joshHost = new JoshHostRole();
 	
+	private List<PersonAgent> renters = new ArrayList<PersonAgent>();
+	
 	private static final int house1X = 70;
 	private static final int house1Y = 180;
 	private static final int house2X = 100;
@@ -649,6 +651,7 @@ public class CityDirectory
 				housing = "house3";
 			}
 		} else {
+			renters.add(p);
 			int num1 = getNumPeople("residentRole", "apartment10");
 			int num3 = getNumPeople("residentRole", "apartment11");
 			int num5 = getNumPeople("residentRole", "apartment12");
@@ -850,5 +853,13 @@ public class CityDirectory
 	
 	public Point getBuildingEntrance(String building) {
 		return buildingMap.get(building).loc;
+	}
+	
+	public void assignLandlord()
+	{
+		for(PersonAgent p : renters)
+		{
+			p.setOwnerHome(landlords.get(0).getPersonAgent().getHome());
+		}
 	}
 }

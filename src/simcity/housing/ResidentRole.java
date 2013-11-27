@@ -86,8 +86,7 @@ public class ResidentRole extends Role implements Resident
 //Messages
 	public void msgRentDue() //from Landlord
 	{
-		log.add(new LoggedEvent("Received msgRentDue from Landlord. Setting person.rentDue and maintenanceSchedule--"));
-		maintenanceSchedule--;
+		log.add(new LoggedEvent("Received msgRentDue from Landlord. Setting person.rentDue"));
 		person.setRentDue(true);
 	}
 	public void msgAtLandlord() //from Person
@@ -107,8 +106,9 @@ public class ResidentRole extends Role implements Resident
 	}
 	public void msgEat() //from Person
 	{
-		log.add(new LoggedEvent("Received msgEat from Person. Command.eat"));
+		log.add(new LoggedEvent("Received msgEat from Person. Command.eat and maintenanceSchedule--"));
 		commands.add(Command.eat);
+		maintenanceSchedule--;
 		stateChanged();
 	}
 	public void msgGroceries(List<ItemOrder> g) //from Person

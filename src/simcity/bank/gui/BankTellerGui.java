@@ -33,6 +33,8 @@ public class BankTellerGui implements Gui {
 	
 	public void draw(Graphics2D g){
 		g.setColor(Color.YELLOW);
+		g.fillRect(xPos, yPos, 30, 30);
+		g.drawString("Teller", xPos, yPos);
 	}
 	
 	public boolean isPresent() {
