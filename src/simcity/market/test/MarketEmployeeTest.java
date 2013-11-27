@@ -47,7 +47,7 @@ public class MarketEmployeeTest extends TestCase
 	public void testOneNormalCustomerScenario2()
 	{
 		// Set up
-		employee.setCashier(cashier, 10);
+		employee.setCashier(cashier);
 		employee.working = true;
 		List<ItemOrder> test1Orders = new ArrayList<ItemOrder>(); // orders Lasagna and Horchata
 		Order test1Order = new Order(customer1, test1Orders);
@@ -119,7 +119,7 @@ public class MarketEmployeeTest extends TestCase
 	public void testTwoNormalCustomerMoreThanOneScenario2()
 	{
 		// Set up
-		employee.setCashier(cashier, 10);
+		employee.setCashier(cashier);
 		employee.working = true;
 		List<ItemOrder> test1Orders = new ArrayList<ItemOrder>(); // orders Lasagna and Horchata
 		Order test1Order = new Order(customer1, test1Orders);
