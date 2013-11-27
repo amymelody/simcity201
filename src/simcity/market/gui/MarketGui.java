@@ -12,6 +12,7 @@ import simcity.market.MarketDelivererRole;
 import simcity.market.MarketCustomerRole;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
 
 /**
  * Main GUI class.
@@ -82,6 +83,12 @@ public class MarketGui extends BuildingGui
 	
 	public void addMarketCustomer(MarketCustomerRole c) {
 		inputPanel.addCustomer(c);
+	}
+
+	@Override
+	public void updateAnimation() {
+		// TODO Auto-generated method stub
+		//animationPanel.updatePosition();
 	}
 	
 }
