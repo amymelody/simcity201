@@ -19,15 +19,16 @@ Please see the Wiki for instructions on running SimCity201.
 
 
 ###Not working components of v1
-  + The bank is not functioning because git is not processing the changes that Anjali is pushing to the repository. We have fixed the issues but they are not upating. 
   + Transportation: There are no cars or buses because Alfred left in the middle of the project. Wilcynski said that we do not need to worry about this aspect of the project because of that.
   + 
 
 
 ###How to run our simcity
-
+  + Select a config file using the panel on the left, click the radio button, then cick the run scenario button. CLose the program after running each scenario. Run it again choosing a different scenario. 
+  + Note that you will have to click inside some of the houses to make things progress in the animation. 
 
 ###Notes
-  +For some reason, even though Anjali was updating her code and pushing to github, old versions of her code were still showing up online and other team members were pulling old versions of her code. There's an error that comes up when a manager tries to add a customer, but the issue was fixed but it still won't show up on github. 
+  + For some reason, even though Anjali was unable to compile and run the program on her Mac, so she made changes on her teammates computers that were related to bank
+  + 
 
 
