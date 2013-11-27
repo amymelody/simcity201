@@ -149,35 +149,6 @@ public class JoshRestaurantInputPanel extends JPanel
     	}
     	return total;
     }
-    
-    /*public void pauseAgents() {
-    	host.pause();
-    	cook.pause();
-    	cashier.pause();
-    	for (JoshWaiterRole w : waiters) {
-    		w.pause();
-    	}
-    	for (MyCustomer mc : customers) {
-    		mc.cust.pause();
-    	}
-    	for (JoshMarketRole m : markets) {
-    		m.pause();
-    	}
-    }
-    
-    public void resumeAgents() {
-    	host.resume();
-    	cook.resume();
-    	for (JoshWaiterRole w : waiters) {
-    		w.resume();
-    	}
-    	for (MyCustomer mc : customers) {
-    		mc.cust.resume();
-    	}
-    	for (JoshMarketRole m : markets) {
-    		m.resume();
-    	}
-    }*/
 
     /**
      * Sets up the restaurant label that includes the menu,

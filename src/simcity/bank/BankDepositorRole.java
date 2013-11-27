@@ -46,9 +46,12 @@ public class BankDepositorRole extends Role implements BankDepositor{
 	public void setManager(BankManager b) {
 		manager = b;
 	}
+	public void setGui(BankDepositorGui g) {
+		gui = g;
+	}
 	/* Animation */
 	private Semaphore customerAnimation = new Semaphore(0, true);
-	BankDepositorGui gui = new BankDepositorGui(this);
+	BankDepositorGui gui;
 	
 	/* Data */
 	

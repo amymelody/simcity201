@@ -76,10 +76,13 @@ public class BankTellerRole extends JobRole implements BankTeller   {
 	public void setDepositor(BankDepositor depositor){
 		this.depositor = depositor;
 	}
+	public void setGui(BankTellerGui g) {
+		gui = g;
+	}
 	private BankDepositor depositor;
 	
 	private Semaphore tellerAnimation = new Semaphore(0,true);
-	BankTellerGui gui = new BankTellerGui(this);
+	BankTellerGui gui;
 
 ////MESSAGES/////
 

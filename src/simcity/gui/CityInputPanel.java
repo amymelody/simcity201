@@ -15,7 +15,7 @@ import java.util.List;
 
 public class CityInputPanel extends JPanel implements ActionListener
 {
-	static final int TIMERINCR = 2000;
+	static final int TIMERINCR = 1500;
 	
 	private Vector<PersonAgent> people = new Vector<PersonAgent>();
 	
