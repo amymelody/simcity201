@@ -87,16 +87,16 @@ public class MarketInputPanel extends JPanel
 	public void addEmployee(MarketEmployeeRole e) {
 		MarketEmployeeGui g = new MarketEmployeeGui(e);
 		marketGui.animationPanel.addGui(g);
-		e.setCashier(cashier);
 		e.setGui(g);
+		e.setCashier(cashier);
 		employees.add(e);
 	}
 	
 	public void addDeliverer(MarketDelivererRole d) {
 		MarketDelivererGui g = new MarketDelivererGui(d);
 		marketGui.animationPanel.addGui(g);
-		d.setCashier(cashier);
 		d.setGui(g);
+		d.setCashier(cashier);
 		deliverers.add(d);
 	}
 	

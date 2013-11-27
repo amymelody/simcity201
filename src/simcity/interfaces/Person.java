@@ -71,6 +71,8 @@ public interface Person {
 	
 	public abstract String getJob();
 	
+	public abstract int getSalary();
+	
 	public abstract String getDestination();
 	
 	public abstract void stateChanged();

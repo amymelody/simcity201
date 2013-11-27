@@ -28,7 +28,20 @@ public class BankDepositorGui implements Gui {
 			yPos++;
 		else if (yPos > yDestination)
 			yPos--;
-	}
+		if(xPos == xDestination && yPos == yDestination){
+			if(xDestination == 38 && yDestination == 38){
+				role.msgAtManager();
+			}
+				else if(xDestination == 52 && yDestination == 52){
+					role.msgAtTeller();
+				}
+				else if(xDestination == -20 && yDestination == -20){
+					role.msgLeft();
+			
+				}
+				
+			}
+		}
 
 	public void draw(Graphics2D g) {
 		g.setColor(Color.GREEN);

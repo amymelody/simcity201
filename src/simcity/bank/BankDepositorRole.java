@@ -53,6 +53,7 @@ public class BankDepositorRole extends Role implements BankDepositor{
 	private Semaphore customerAnimation = new Semaphore(0, true);
 	BankDepositorGui gui;
 	
+	
 	/* Data */
 	
 	// References to other roles
@@ -60,7 +61,7 @@ public class BankDepositorRole extends Role implements BankDepositor{
 	BankManager manager;
 	
 	// Customer Status Data
-	public enum CustomerState {entered, makingDeposit, makingWithdrawal, makingTransaction, beingHelped, leaving, atManager, atTeller};
+	public enum CustomerState {entered, makingDeposit, makingWithdrawal, makingTransaction, beingHelped, leaving, atManager, atTeller, out};
 	CustomerState cS;
 	public CustomerState getCustomerState(){
 		return cS;
@@ -76,6 +77,8 @@ public class BankDepositorRole extends Role implements BankDepositor{
 	boolean market = false;
 	
 	
+	/*Animation messages*/
+
 	
 	/* Messages */
 	public void msgMakeDeposit(int cash){
@@ -136,13 +139,19 @@ public class BankDepositorRole extends Role implements BankDepositor{
 	/*Animation messages*/
 	public void msgAtManager(){
 		customerAnimation.release();
+		cS = CustomerState.atManager;
+		stateChanged();
 	}
 	
 	public void msgAtTeller(){
 		customerAnimation.release();
+		cS = CustomerState.atTeller;
+		stateChanged();
 	}
 	public void msgLeft(){
 		customerAnimation.release();
+		cS = CustomerState.out;
+		stateChanged();
 	}
 	/* Scheduler */
 	public boolean pickAndExecuteAnAction() {
