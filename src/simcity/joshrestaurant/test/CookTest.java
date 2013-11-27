@@ -29,6 +29,7 @@ public class CookTest extends TestCase
 		cook.addMarket(cashier);
 		cook.setStand(stand);
 		
+		cook.unitTesting = true;
 		cook.msgStartShift();
 	}	
 	

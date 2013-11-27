@@ -52,10 +52,10 @@ public class ResidentRole extends Role implements Resident
 	public ResidentRole()
 	{
 		super();
-		foodInFridge.add(new ItemOrder("Salad", 5));
-		foodInFridge.add(new ItemOrder("Pizza", 5));
-		foodInFridge.add(new ItemOrder("Chicken", 5));
-		foodInFridge.add(new ItemOrder("Steak", 5));
+		foodInFridge.add(new ItemOrder("Salad", 1));
+		foodInFridge.add(new ItemOrder("Pizza", 1));
+		foodInFridge.add(new ItemOrder("Chicken", 1));
+		foodInFridge.add(new ItemOrder("Steak", 1));
 		locations.put("Fridge", new Point(220, 140));
 		locations.put("Stove", new Point(60, 140));
 		locations.put("Table", new Point(100, 340));

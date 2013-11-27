@@ -333,9 +333,10 @@ public class PersonAgent extends Agent implements Person
 //			money += 600;
 //			print("$" + money);
 //		}
-	//	if (time.getHour() == 8 && time.getMinute() == 0) {
-	//		state.ns = NourishmentState.gotHungry;
-	//	}
+		if (time.getHour() == 8 && time.getMinute() == 0) {
+			print("Got hungry");
+			state.ns = NourishmentState.gotHungry;
+		}
 		stateChanged();
 	}
 
