@@ -44,8 +44,7 @@ public class BankTellerTest extends TestCase
         {
                 // Set up
                 teller.setManager(manager);
-                customer.setPerson(person);
-
+                teller.setDepositor(customer);
                 // Check preconditions for Step 1a
                 assertEquals("Customer transactionAmount should be 0", 0, customer.getTransactionAmount());
                 
