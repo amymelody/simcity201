@@ -82,7 +82,8 @@ public class BankDepositorRole extends Role implements BankDepositor{
 	
 	/* Messages */
 	public void msgMakeDeposit(int cash){
-		Do("Person taking on role of bank depositor");
+		//Do("Person taking on role of bank depositor");
+		System.out.println("lsoser");
 		cS = CustomerState.makingTransaction;
 		transactionAmount = cash;
 		stateChanged();
@@ -182,6 +183,7 @@ public class BankDepositorRole extends Role implements BankDepositor{
 	public void MakeTransaction(){
 		Do("Bank customer is going to manager");
 		DoGoToManager();
+		
 		try {
 			customerAnimation.acquire();
 		} catch (InterruptedException e) {
