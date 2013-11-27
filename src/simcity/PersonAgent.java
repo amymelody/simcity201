@@ -320,14 +320,14 @@ public class PersonAgent extends Agent implements Person
 		time.day = d;
 		time.hour = h;
 		time.minute = m;
-		print(time.getDay().toString() + ", " + time.getHour() + ":" + time.getMinute());
-		/*if (time.getHour() == 8 && time.getMinute() == 0) {
+		//print(time.getDay().toString() + ", " + time.getHour() + ":" + time.getMinute());
+		if (time.getHour() == 9 && time.getMinute() == 0) {
 			money += 600;
 			print("$" + money);
-		}*/
-		if (time.getHour() == 8 && time.getMinute() == 0) {
-			state.ns = NourishmentState.gotHungry;
 		}
+	//	if (time.getHour() == 8 && time.getMinute() == 0) {
+	//		state.ns = NourishmentState.gotHungry;
+	//	}
 		stateChanged();
 	}
 
@@ -347,14 +347,14 @@ public class PersonAgent extends Agent implements Person
 				cG.addRestWaiter(rW);
 			}
 		}
-		if (role.equals("marketEmployeeRole")) {
+		/*if (role.equals("marketEmployeeRole")) {
 			MarketEmployeeRole e = (MarketEmployeeRole)j;
 			cG.addMarketEmployee(e);
 		}
 		if (role.equals("marketDelivererRole")) {
 			MarketDelivererRole d = (MarketDelivererRole)j;
 			cG.addMarketDeliverer(d);
-		}
+		}*/
 		if (role.equals("bankTellerRole")) {
 			BankTellerRole t = (BankTellerRole)j;
 			cG.addBankTeller(t);
@@ -551,10 +551,10 @@ public class PersonAgent extends Agent implements Person
 			}
 		}
 		
-		if (!unitTesting && state.ts == TransportationState.walking && state.ls != LocationState.home && state.ls != LocationState.leavingHouse) {
-			goHome(); //if nothing left to do, go home and do whatever
-			return true;
-		}
+	//	if (!unitTesting && state.ts == TransportationState.walking && state.ls != LocationState.home && state.ls != LocationState.leavingHouse) {
+	//		goHome(); //if nothing left to do, go home and do whatever
+	//		return true;
+	//	}
 		
 		return false;
 	}
