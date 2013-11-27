@@ -1,6 +1,7 @@
 package simcity.test.mock;
 
-import simcity.interfaces.BankDepositor;
+import simcity.bank.interfaces.BankDepositor;
+import simcity.bank.interfaces.BankTeller;
 import simcity.mock.LoggedEvent;
 import simcity.role.Role;
 
@@ -12,6 +13,13 @@ public class MockBankDepositorRole extends Role implements BankDepositor {
 	public MockBankDepositorRole(String name) {
 		this.name = name;
 	}
+	
+	public void msgTransactionComplete() {
+	}
+	
+	public void msgCannotMakeTransaction() {};
+	
+	public void msgMakeRequest(BankTeller t) {};
 	
 	public void msgMakeDeposit(int amount) {
 		log.add(new LoggedEvent("Received msgMakeDeposit. Amount = $" + amount));
