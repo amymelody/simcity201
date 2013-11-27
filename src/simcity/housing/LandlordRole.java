@@ -185,7 +185,7 @@ public class LandlordRole extends JobRole
 
 	private void goToLocation(Point p, String s)
 	{
-		if(unitTesing)
+		if(!unitTesing)
 		{
 			gui.doGoToLocation(p, s);
 			try
