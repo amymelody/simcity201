@@ -235,7 +235,6 @@ public class CityCreationPanel extends JPanel implements ActionListener
 		rich.setText("+ $500");
 		middle.setText("+ $250");
 		poor.setText("+ $50");
-//		if they have a car, car.setEnabled(false) and car.setSelected(true), else car.setSelected(false)
 	}
 	
 	public void setState(PersonAgent p)
@@ -257,7 +256,7 @@ public class CityCreationPanel extends JPanel implements ActionListener
 		Properties cityConfig = new Properties();
 		
 		try {
-		    cityConfig.load(this.getClass().getResourceAsStream("../restaurantConfig.properties"));
+		    cityConfig.load(this.getClass().getResourceAsStream("../config1.properties"));
 		} catch(IOException e) {
 			e.printStackTrace();
 		} catch(IllegalArgumentException iae) {
@@ -277,7 +276,6 @@ public class CityCreationPanel extends JPanel implements ActionListener
 				for(int i=10; i<=numPeople; i++) {
 					if (key.contains(Integer.toString(i))) {
 						index = i;
-						//System.out.println(index);
 					}
 				}
 				info.add(new PersonInfo(cityConfig.getProperty(key),index));

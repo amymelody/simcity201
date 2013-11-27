@@ -632,6 +632,9 @@ public class CityDirectory
 			int num1 = getNumPeople("residentRole", "house1");
 			int num2 = getNumPeople("residentRole", "house2");
 			int num3 = getNumPeople("residentRole", "house3");
+			System.out.println(num1);
+			System.out.println(num2);
+			System.out.println(num3);
 			int num = num1;
 			if (num > num2) {
 				num = num2;
@@ -642,12 +645,13 @@ public class CityDirectory
 			if (num == num1) {
 				housing = "house1";
 			}
-			if (num == num1) {
+			else if (num == num2) {
 				housing = "house2";
 			}
 			else {
 				housing = "house3";
 			}
+			System.out.println(housing);
 		} else {
 			int num1 = getNumPeople("residentRole", "apartment10");
 			int num3 = getNumPeople("residentRole", "apartment11");
@@ -711,55 +715,58 @@ public class CityDirectory
 			if (num > num16) {
 				num = num16;
 			}
+			
 			if (num == num1) {
 				housing = "apartment10";
 			}
-			if (num == num2) {
+			else if (num == num2) {
 				housing = "apartment20";
 			}
-			if (num == num3) {
+			else if (num == num3) {
 				housing = "apartment11";
 			}
-			if (num == num4) {
+			else if (num == num4) {
 				housing = "apartment21";
 			}
-			if (num == num5) {
+			else if (num == num5) {
 				housing = "apartment12";
 			}
-			if (num == num6) {
+			else if (num == num6) {
 				housing = "apartment22";
 			}
-			if (num == num7) {
+			else if (num == num7) {
 				housing = "apartment13";
 			}
-			if (num == num8) {
+			else if (num == num8) {
 				housing = "apartment23";
 			}
-			if (num == num9) {
+			else if (num == num9) {
 				housing = "apartment14";
 			}
-			if (num == num10) {
+			else if (num == num10) {
 				housing = "apartment24";
 			}
-			if (num == num11) {
+			else if (num == num11) {
 				housing = "apartment15";
 			}
-			if (num == num12) {
+			else if (num == num12) {
 				housing = "apartment25";
 			}
-			if (num == num13) {
+			else if (num == num13) {
 				housing = "apartment16";
 			}
-			if (num == num14) {
+			else if (num == num14) {
 				housing = "apartment26";
 			}
-			if (num == num15) {
+			else if (num == num15) {
 				housing = "apartment17";
 			}
 			else {
 				housing = "apartment27";
 			}
 		}
+		int iD = getNumPeople("residentRole", housing);
+		buildingMap.get(housing).residential.residentID = iD;
 		p.setHome(housing);
 		personMap.put(personMap.size(), new PersonInfo(personMap.size(), p, jobB, housing));
 	}
@@ -783,7 +790,7 @@ public class CityDirectory
 				}
 				return 1;
 			}
-			if(buildingMap.get(building).residential.type.equals("housing"))
+			if(buildingMap.get(building).residential.type.equals("house"))
 			{
 				if (buildingMap.get(building).residential.residentID == -1) {
 					return 0;

@@ -159,13 +159,13 @@ public class PersonAgent extends Agent implements Person
 			state.es = EconomicState.poor;
 			money = 50;
 			minBalance = 10;
-			maxBalance = 800;
+			maxBalance = 200;
 			break;
 		case "middle":
 			state.es = EconomicState.middle;
 			money = 250;
 			minBalance = 100;
-			maxBalance = 1000;
+			maxBalance = 400;
 			break;
 		case "rich":
 			state.es = EconomicState.rich;
