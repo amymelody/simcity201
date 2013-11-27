@@ -1,478 +1,286 @@
 package simcity.market.test;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import simcity.ItemOrder;
 import simcity.market.MarketEmployeeRole;
+import simcity.market.MarketEmployeeRole.EmployeeState;
+import simcity.market.Order;
+import simcity.market.Order.OrderState;
+import simcity.market.gui.MarketEmployeeGui;
+import simcity.market.test.mock.MockPerson;
+import simcity.test.mock.MockMarketCashier;
+import simcity.test.mock.MockMarketCustomer;
 import junit.framework.*;
 
 public class MarketEmployeeTest extends TestCase
 {
-	//these are instantiated for each test separately via the setUp() method.
-	JesusCashierRole cashier;
-	MockMarketDeliverer waiter;
-	MockMarketCustomer customer;
-	MockMarketEmployee market1, market2;
-
+	// Needed for tests
+	MarketEmployeeRole employee;
+	MarketEmployeeGui gui;
+	MockMarketCashier cashier;
+	MockMarketCustomer customer1, customer2;
+	MockPerson person;
 
 	/**
 	 * This method is run before each test. You can use it to instantiate the class variables
 	 * for your agent and mocks, etc.
 	 */
 	public void setUp() throws Exception{
-		super.setUp();		
-		cashier = new JesusCashierRole("Cashier");		
-		customer = new MockMarketCustomer("MockCustomer");		
-		waiter = new MockMarketDeliverer("MockWaiter");
-		market1 = new MockMarketEmployee("MockMarket1");
-		market2 = new MockMarketEmployee("MockMarket2");
-	}	
+		super.setUp();	
+		employee = new MarketEmployeeRole();
+		gui = new MarketEmployeeGui(employee);
+		employee.setGui(gui);
+		cashier = new MockMarketCashier("MockCashier");
+		customer1 = new MockMarketCustomer("MockMarketCustomer1");
+		customer2 = new MockMarketCustomer("MockMarketCustomer2");
+		person = new MockPerson("MockPerson");
+		employee.setPerson(person);
+		employee.setUnitTest(true);
+	}
+
+
 	/**
-	 * This tests the cashier under very simple terms: one customer is ready to pay the exact bill.
-	 * Interleaved with "One market bills cashier" test
+	 * This tests the first normal scenario ()
 	 */
-	public void testOneNormalCustomerScenario()
+	public void testOneNormalCustomerScenario2()
 	{
-		//setUp() runs first before this test!
+		// Set up
+		employee.setCashier(cashier);
+		employee.working = true;
+		List<ItemOrder> test1Orders = new ArrayList<ItemOrder>(); // orders Lasagna and Horchata
+		Order test1Order = new Order(customer1, test1Orders);
+		test1Orders.add(new ItemOrder("Lasagna", 2));
+		test1Orders.add(new ItemOrder("Horchata", 5));
+		test1Order.price = 35;
 
-		customer.cashier = cashier;//You can do almost anything in a unit test.			
-		market1.cashier = cashier;
-		market2.cashier = cashier;
-		//check preconditions
-		assertEquals("Cashier should have 0 checks in it. It doesn't.",cashier.checks.size(), 0);		
-		assertEquals("CashierAgent should have an empty event log before the Cashier's ComputeCheck is called. Instead, the Cashier's event log reads: "
-				+ cashier.log.toString(), 0, cashier.log.size());
+		// Check preconditions for Step 1a
+		assertEquals("Employee should have no orders in List orders. It doesn't.", employee.orders.size(), 0);		
+		assertEquals("EmployeeRole should have an empty event log before msgDeliverItems(...) is called. Instead, the Employee's event log reads: "
+				+ employee.log.toString(), 0, employee.log.size());
 
-		//step 1a of the test
-		//Computing Check
-		cashier.msgComputeCheck(waiter, customer, "Steak", customer.name);//send the message from a waiter
+		// Step 1a - Receiving order (Message)
+		employee.msgGetItems(test1Order);
 
-		//step 1b
-		//Market Bill
-		cashier.msgHereIsBill(market1, 50, 0);//send the message from a market
+		// Check postconditions for Step 1a
+		assertEquals("Employee should have one order in List orders. It doesn't.", employee.orders.size(), 1);
+		assertTrue("Employee should have one order in List orders in which OrderState == none. It doesn't.", employee.orders.peek().getOS() == OrderState.none);
+		assertTrue("Employee should have one order in List orders NOT for delivery. It doesn't", employee.orders.peek().location == null);
 
-		//check postconditions for step 1b and preconditions for step 2
+		// Check preconditions for Step 1b
+		assertEquals("MockCashier should have an empty log befor the scheduler is called. Instead the MockCashier's event log reads: " + cashier.log.toString(), 0, cashier.log.size());
+		assertEquals("MockCustomer should have an empty log befor the scheduler is called. Instead the MockRestCook's event log reads: " + customer1.log.toString(), 0, customer1.log.size());
+		assertTrue("Employee's state should be nothing. It isn't.", employee.eS == EmployeeState.nothing);
+		assertTrue("Current order is null. It isn't.", employee.currentOrder == null);
 
-		assertEquals("MockMarket should have an empty event log before the Cashier's scheduler is called. Instead, the MockMarket's event log reads: "
-				+ market1.log.toString(), 0, market1.log.size());
+		// Step 1b - Retrieving items (Scheduler/Action)
+		assertTrue("Employee's scheduler should have returned true, but didn't.", employee.pickAndExecuteAnAction());
+		assertEquals("EmployeeState == getting. It isn't", employee.eS, EmployeeState.getting);	
 
-		assertEquals("Cashier should have 1 bill in it. It doesn't.", cashier.bills.size(), 1);
+		// Check postconditions for Step 1b
+		assertTrue("Employee's current order should be test1Order. It isn't.", employee.currentOrder == test1Order);
 
-		//check postconditions for step 1a and preconditions for step 2
+		// Step 1c - Items are now retrieved (Message)
+		employee.msgHaveItems();
 
-		assertEquals("MockWaiter should have an empty event log before the Cashier's scheduler is called. Instead, the MockWaiter's event log reads: "
-				+ waiter.log.toString(), 0, waiter.log.size());
+		// Check postconditions for Step 1c
+		assertEquals("EmployeeState == toCashier. It isn't", employee.eS, EmployeeState.toCashier);	
 
-		assertEquals("Cashier should have 1 check in it. It doesn't.", cashier.checks.size(), 1);
+		// Step 2b - Going to Cashier (Scheduler/Action)
+		assertTrue("Employee's scheduler should have returned true, but didn't.", employee.pickAndExecuteAnAction());
 
-		assertFalse("Cashier's scheduler should have returned true, but didn't.", !cashier.pickAndExecuteAnAction());
+		// Check postconditions for Step 2b
+		assertEquals("EmployeeState == walking. It isn't", employee.eS, EmployeeState.walking);	
 
-		assertEquals(
-				"MockWaiter should have an empty event log after the Cashier's scheduler is called for the first time. Instead, the MockWaiter's event log reads: "
-						+ waiter.log.toString(), 0, waiter.log.size());
+		// Step 3a - Arrived at Cashier (Message)
+		employee.msgAtCashier();
 
-		assertEquals(
-				"MockCustomer should have an empty event log after the Cashier's scheduler is called for the first time. Instead, the MockCustomer's event log reads: "
-						+ waiter.log.toString(), 0, waiter.log.size());
+		// Check postconditions for Step 3a
+		assertEquals("EmployeeState == handing. It isn't", employee.eS, EmployeeState.handing);	
 
-		//step 2 of the test
-		cashier.msgCustomerPayment(customer, 15, customer.name);
+		// Step 3b -  Going to waiting area (Scheduler/Action)
+		assertTrue("Employee's scheduler should have returned true, but didn't.", employee.pickAndExecuteAnAction());
 
-		//check postconditions for step 2 / preconditions for step 3
-		assertTrue("Cashier's checks list should contain a check with state == paying. It doesn't.",
-				cashier.checks.get(0).cS == CheckState.paying);
+		// Check postconditions for Step 3b
+		assertEquals("EmployeeState == nothing. It isn't", employee.eS, EmployeeState.nothing);
+		assertTrue("Cashier should have received order from Employee. Cashier should have a log that reads: Received items. Instead it reads: " + cashier.log.toString(), cashier.log.getLastLoggedEvent().getMessage() == "Received items");
+		assertTrue("Employee's currentOrder should be null. It isn't.", employee.currentOrder == null);
+		assertTrue("Employee should have no orders in List orders. It doesn't.", employee.orders.size() == 0);
 
-		assertTrue("Cashier's checks list should contain a check of price = $15. It contains something else instead: $" 
-				+ cashier.checks.get(0).amount, cashier.checks.get(0).amount == 15);
+		// Step 3b -  Going to waiting area (Scheduler/Action)
+		assertTrue("Employee's scheduler should have returned false, but didn't.", !employee.pickAndExecuteAnAction());
 
-		assertTrue("Cashier's checks list should contain a check with the right customer in it. It doesn't.", 
-				cashier.checks.get(0).name.equals(customer.name));
-
-
-		//step 3
-		//NOTE: I called the scheduler in the assertTrue statement below (to succintly check the return value at the same time)
-		assertTrue("Cashier's scheduler should have returned true (needs to react to customer's ReadyToPay), but didn't.", 
-				cashier.pickAndExecuteAnAction());
-
-		//check postconditions for step 3 / preconditions for step 4
-
-		assertTrue("Cashier should contain a check with amount == 0. It contains something else instead: $" 
-				+ cashier.checks.get(0).amount, cashier.checks.get(0).amount == 0);
-
-		//check postconditions for step 4		
-		assertTrue("Cashier should contain a check with state == done. It doesn't.",
-				cashier.checks.get(0).cS == CheckState.paid);
-
-		//step 5 (Market Bill)
-		assertTrue("CashierBill should contain a bill with state == none. It doesn't.",
-				cashier.bills.get(0).bS == BillState.none);
-
-		assertTrue("CashierBill should contain a bill of price = $50. It contains something else instead: $" 
-				+ cashier.bills.get(0).amountDue, cashier.bills.get(0).amountDue == 50);
-
-		assertTrue("CashierBill should contain a bill with the right market in it. It doesn't.", 
-				cashier.bills.get(0).market.equals(market1));
-
-		assertFalse("Cashier's scheduler should have returned true, but didn't.", !cashier.pickAndExecuteAnAction());
-
-		assertEquals(
-				"MockMarket should have an empty event log after the Cashier's scheduler is called for the first time. Instead, the MockWaiter's event log reads: "
-						+ market1.log.toString(), 0, market1.log.size());
-
-		//check postconditions for step 6 / preconditions for step 7
-
-		assertTrue("CashierBill should contain amountPaid= $50. It contains something else instead: $" 
-				+ cashier.bills.get(0).amountPaid, cashier.bills.get(0).amountPaid == 50);
-
-		//check postconditions for step 4		
-		assertTrue("CashierBill should contain a bill with state == paid. It doesn't.",
-				cashier.bills.get(0).bS == BillState.paid);
-
-		assertFalse("Cashier's scheduler should have returned false (no actions left to do), but didn't.", 
-				cashier.pickAndExecuteAnAction());
-
-	}//end one normal customer scenario
+	} // End of Test 1	
 
 	/**
-	 * This tests when customer does not have enough money to pay. The cashier will reassure him that he can pay next time.
+	 * This tests the second normal scenario (Delivery order from cook) with more than one Restaurant
 	 */
-	public void testTwoCustomerNoMoney() {		
+	public void testTwoNormalCustomerMoreThanOneScenario2()
+	{
+		// Set up
+		employee.setCashier(cashier);
+		employee.working = true;
+		List<ItemOrder> test1Orders = new ArrayList<ItemOrder>(); // orders Lasagna and Horchata
+		Order test1Order = new Order(customer1, test1Orders);
+		test1Orders.add(new ItemOrder("Lasagna", 2));
+		test1Orders.add(new ItemOrder("Horchata", 5));
+		test1Order.price = 35;
+		List<ItemOrder> test2Orders = new ArrayList<ItemOrder>(); // orders Lasagna and Horchata
+		Order test2Order = new Order(customer2, test2Orders);
+		test2Orders.add(new ItemOrder("Pizza", 2));
+		test2Orders.add(new ItemOrder("Burger", 5));
+		test2Order.price = 50;
+		List<ItemOrder> test3Orders = new ArrayList<ItemOrder>(); // orders Lasagna and Horchata
+		Order test3Order = new Order(customer2, test2Orders);
+		test3Orders.add(new ItemOrder("Chicken", 5));
+		test3Orders.add(new ItemOrder("Salad", 5));
+		test3Order.price = 65;
+
+		// Check preconditions for Step 1a
+		assertEquals("Employee should have no orders in List orders. It doesn't.", employee.orders.size(), 0);		
+		assertEquals("EmployeeRole should have an empty event log before msgDeliverItems(...) is called. Instead, the Employee's event log reads: "
+				+ employee.log.toString(), 0, employee.log.size());
+
+		// Step 1a - Receiving first Order (Message)
+		employee.msgGetItems(test1Order);
+
+		// Check postconditions for Step 1a
+		assertEquals("Employee should have one order in List orders. It doesn't.", employee.orders.size(), 1);
+		assertTrue("Employee should have one order in List orders in which OrderState == none. It doesn't.", employee.orders.peek().getOS() == OrderState.none);
+		assertTrue("Employee should have one order in List orders NOT for delivery. It doesn't", employee.orders.peek().location == null);
+
+		// Check preconditions for Step 1b
+		assertEquals("MockCashier should have an empty log befor the scheduler is called. Instead the MockCashier's event log reads: " + cashier.log.toString(), 0, cashier.log.size());
+		assertEquals("MockCustomer should have an empty log befor the scheduler is called. Instead the MockRestCook's event log reads: " + customer1.log.toString(), 0, customer1.log.size());
+		assertTrue("Employee's state should be nothing. It isn't.", employee.eS == EmployeeState.nothing);
+		assertTrue("Current order is null. It isn't.", employee.currentOrder == null);
+
+		// Step 2a - Receiving second Order (Message)
+		employee.msgGetItems(test2Order);
+
+		// Check postconditions for Step 2a
+		assertEquals("Employee should have two orders in List orders. It doesn't.", employee.orders.size(), 2);
+		assertTrue("Employee should have two orders in List orders in which OrderState == none. It doesn't.", employee.orders.peek().getOS() == OrderState.none);
+		assertTrue("Employee should have two orders in List orders NOT for delivery. It doesn't", employee.orders.peek().location == null && employee.orders.peek().location == null);
+
+		// Step 1b - Retrieving items (Scheduler/Action)
+		assertTrue("Employee's scheduler should have returned true, but didn't.", employee.pickAndExecuteAnAction());	
+
+		// Check postconditions for Step 1b
+		assertEquals("EmployeeState == getting. It isn't", employee.eS, EmployeeState.getting);
+		assertTrue("Employee's current order should be test1Order. It isn't.", employee.currentOrder == test1Order);
+
+		// Step 3a - Receiving third Order (Message)
+		employee.msgGetItems(test3Order);
+
+		// Check postconditions for Step 3a
+		assertEquals("Employee should have two orders in List orders. It doesn't.", employee.orders.size(), 2);
+		assertTrue("Employee should have two orders in List orders in which OrderState == none. It doesn't.", employee.orders.peek().getOS() == OrderState.none);
+		assertTrue("Employee should have two orders in List orders NOT for delivery. It doesn't", employee.orders.peek().location == null);
+		assertTrue("Employee's current order should STILL be test1Order. It isn't.", employee.currentOrder == test1Order);
+
+		// Step 3b - Checking Scheduler (Scheduler)
+		assertFalse("Employee's scheduler should have returned false, but didn't.", employee.pickAndExecuteAnAction());
+		
+		// Step 1c - Items are now retrieved (Message)
+		employee.msgHaveItems();
+
+		// Check postconditions for Step 1c
+		assertEquals("EmployeeState == toCashier. It isn't", employee.eS, EmployeeState.toCashier);	
+
+		// Step 1d - Going to Cashier (Scheduler/Action)
+		assertTrue("Employee's scheduler should have returned true, but didn't.", employee.pickAndExecuteAnAction());
+
+		// Check postconditions for Step 1d
+		assertEquals("EmployeeState == walking. It isn't", employee.eS, EmployeeState.walking);	
+
+		// Step 1e - Arrived at Cashier (Message)
+		employee.msgAtCashier();
+		
+		// Check postconditions for Step 1e
+		assertEquals("EmployeeState == handing. It isn't", employee.eS, EmployeeState.handing);	
+
+		// Step 1f -  Going to waiting area (Scheduler/Action)
+		assertTrue("Employee's scheduler should have returned true, but didn't.", employee.pickAndExecuteAnAction());
+
+		// Check postconditions for Step 1f
+		assertEquals("EmployeeState == nothing. It isn't", employee.eS, EmployeeState.nothing);
+		assertTrue("Cashier should have received order from Employee. Cashier should have a log that reads: Received items. Instead it reads: " + cashier.log.toString(), cashier.log.getLastLoggedEvent().getMessage() == "Received items");
+		assertTrue("Employee's currentOrder should be null. It isn't.", employee.currentOrder == null);
+		assertTrue("Employee should have two orders in List orders. It doesn't.", employee.orders.size() == 2);
+		
+		// Step 2b - Retrieving items (Scheduler/Action)
+		assertTrue("Employee's scheduler should have returned true, but didn't.", employee.pickAndExecuteAnAction());	
+		
+		// Check postconditions for Step 2b
+		assertEquals("EmployeeState == getting. It isn't", employee.eS, EmployeeState.getting);
+		assertTrue("Employee's current order should NOW be test2Order. It isn't.", employee.currentOrder == test2Order);
+
+		// Step 2c - Items are now retrieved (Message)
+		employee.msgHaveItems();
 
-		//setUp() runs first before this test!
-		customer.cashier = cashier;//You can do almost anything in a unit test.			
-		market1.cashier = cashier;
-		market2.cashier = cashier;
+		// Check postconditions for Step 2c
+		assertEquals("EmployeeState == toCashier. It isn't", employee.eS, EmployeeState.toCashier);	
 
-		//check preconditions
-		assertEquals("Cashier should have 0 checks in it. It doesn't.",cashier.checks.size(), 0);		
-		assertEquals("CashierAgent should have an empty event log before the Cashier's HereIsBill is called. Instead, the Cashier's event log reads: "
-				+ cashier.log.toString(), 0, cashier.log.size());
+		// Step 2d - Going to Cashier (Scheduler/Action)
+		assertTrue("Employee's scheduler should have returned true, but didn't.", employee.pickAndExecuteAnAction());
 
-		//step 1 of the test
-		//Computing Check
-		cashier.msgComputeCheck(waiter, customer, "Steak", customer.name);//send the message from a waiter
+		// Check postconditions for Step 2d
+		assertEquals("EmployeeState == walking. It isn't", employee.eS, EmployeeState.walking);	
 
-		//check postconditions for step 1 and preconditions for step 2
+		// Step 2e - Arrived at Cashier (Message)
+		employee.msgAtCashier();
 
-		assertEquals("MockWaiter should have an empty event log before the Cashier's scheduler is called. Instead, the MockWaiter's event log reads: "
-				+ waiter.log.toString(), 0, waiter.log.size());
+		// Check postconditions for Step 2e
+		assertEquals("EmployeeState == handing. It isn't", employee.eS, EmployeeState.handing);	
 
-		assertEquals("Cashier's checks list should contain a check in it. It doesn't.", cashier.checks.size(), 1);
+		// Step 2f -  Going to waiting area (Scheduler/Action)
+		assertTrue("Employee's scheduler should have returned true, but didn't.", employee.pickAndExecuteAnAction());
+		
+		// Check postconditions for Step 2f
+		assertEquals("EmployeeState == nothing. It isn't", employee.eS, EmployeeState.nothing);
+		assertTrue("Cashier should have received order from Employee. Cashier should have a log that reads: Received items. Instead it reads: " + cashier.log.toString(), cashier.log.getLastLoggedEvent().getMessage() == "Received items");
+		assertTrue("Employee's currentOrder should be null. It isn't.", employee.currentOrder == null);
+		assertTrue("Employee should have one order in List orders. It doesn't.", employee.orders.size() == 1);
+		
+		// Step 3b - Retrieving items (Scheduler/Action)
+		assertTrue("Employee's scheduler should have returned true, but didn't.", employee.pickAndExecuteAnAction());
 
-		assertFalse("Cashier's scheduler should have returned true, but didn't.", !cashier.pickAndExecuteAnAction());
+		// Check postconditions for Step 3b
+		assertEquals("EmployeeState == getting. It isn't", employee.eS, EmployeeState.getting);
+		assertTrue("Employee's current order should NOW be test3Order. It isn't.", employee.currentOrder == test3Order);
 
-		assertEquals(
-				"MockWaiter should have an empty event log after the Cashier's scheduler is called for the first time. Instead, the MockWaiter's event log reads: "
-						+ waiter.log.toString(), 0, waiter.log.size());
+		// Step 3c - Items are now retrieved (Message)
+		employee.msgHaveItems();
 
-		assertEquals(
-				"MockCustomer should have an empty event log after the Cashier's scheduler is called for the first time. Instead, the MockCustomer's event log reads: "
-						+ waiter.log.toString(), 0, waiter.log.size());
+		// Check postconditions for Step 1c
+		assertEquals("EmployeeState == toCashier. It isn't", employee.eS, EmployeeState.toCashier);	
 
-		//step 2 of the test
-		cashier.msgCustomerPayment(customer, 10, customer.name);
+		// Step 3d - Going to Cashier (Scheduler/Action)
+		assertTrue("Employee's scheduler should have returned true, but didn't.", employee.pickAndExecuteAnAction());
 
-		//check postconditions for step 2 / preconditions for step 3
-		assertTrue("Cashier's checks list should contain a check with state == paying. It doesn't.",
-				cashier.checks.get(0).cS == CheckState.paying);
+		// Check postconditions for Step 1d
+		assertEquals("EmployeeState == walking. It isn't", employee.eS, EmployeeState.walking);	
 
-		assertTrue("Cashier's checks list should contain a check with price = $15. It contains something else instead: $" 
-				+ cashier.checks.get(0).amount, cashier.checks.get(0).amount == 15);
+		// Step 3e - Arrived at Cashier (Message)
+		employee.msgAtCashier();
 
-		assertTrue("Cashier's checks list should contain a check with the right customer in it. It doesn't.", 
-				cashier.checks.get(0).name.equals(customer.name));
+		// Check postconditions for Step 3e
+		assertEquals("EmployeeState == handing. It isn't", employee.eS, EmployeeState.handing);	
 
+		// Step 3f -  Going to waiting area (Scheduler/Action)
+		assertTrue("Employee's scheduler should have returned true, but didn't.", employee.pickAndExecuteAnAction());
 
-		//step 3
-		//NOTE: I called the scheduler in the assertTrue statement below (to succintly check the return value at the same time)
-		assertTrue("Cashier's scheduler should have returned true (needs to react to customer's ReadyToPay), but didn't.", 
-				cashier.pickAndExecuteAnAction());
+		// Check postconditions for Step 3f
+		assertEquals("EmployeeState == nothing. It isn't", employee.eS, EmployeeState.nothing);
+		assertTrue("Cashier should have received order from Employee. Cashier should have a log that reads: Received items. Instead it reads: " + cashier.log.toString(), cashier.log.getLastLoggedEvent().getMessage() == "Received items");
+		assertTrue("Employee's currentOrder should be null. It isn't.", employee.currentOrder == null);
+		assertTrue("Employee should have no orders in List orders. It doesn't.", employee.orders.size() == 0);
 
-		//check postconditions for step 3 / preconditions for step 4
+		// Check scheduler
+		assertFalse("Employee's scheduler should have returned false, but didn't.", employee.pickAndExecuteAnAction());
 
-		assertTrue("Cashier's checks list should contain a check with amount greater than 0. It contains something else instead: $" 
-				+ cashier.checks.get(0).amount, cashier.checks.get(0).amount > 0);
+	} // End of Test 2
 
-		//check postconditions for step 4		
-		assertTrue("Cashier's checks list should contain a check with state == owe. It doesn't.",
-				cashier.checks.get(0).cS == CheckState.owe);
-
-		assertTrue("MockCustomer's event log should not be empty. It is.",
-				customer.log.size()>0);
-
-		assertFalse("Cashier's scheduler should have returned false (no actions left to do), but didn't.", 
-				cashier.pickAndExecuteAnAction());
-	} // end of test two
-
-	/**
-	 * This tests when a customer pays with a surplus amount of money and needs to receive change.
-	 */
-	public void testThreeCustomerPaymentWithChange() {			
-
-		//setUp() runs first before this test!
-
-		customer.cashier = cashier;//You can do almost anything in a unit test.			
-		market1.cashier = cashier;
-		market2.cashier = cashier;
-		//check preconditions
-		assertEquals("Cashier should have 0 checks in it. It doesn't.",cashier.checks.size(), 0);		
-		assertEquals("CashierAgent should have an empty event log before the Cashier's ComputeCheck is called. Instead, the Cashier's event log reads: "
-				+ cashier.log.toString(), 0, cashier.log.size());
-
-		//step 1 of the test
-		//Computing Check
-		cashier.msgComputeCheck(waiter, customer, "Steak", customer.name);//send the message from a waiter
-
-		//check postconditions for step 1 and preconditions for step 2
-
-		assertEquals("MockWaiter should have an empty event log before the Cashier's scheduler is called. Instead, the MockWaiter's event log reads: "
-				+ waiter.log.toString(), 0, waiter.log.size());
-
-		assertEquals("Cashier should have 1 check in it. It doesn't.", cashier.checks.size(), 1);
-
-		assertFalse("Cashier's scheduler should have returned true, but didn't.", !cashier.pickAndExecuteAnAction());
-
-		assertEquals(
-				"MockWaiter should have an empty event log after the Cashier's scheduler is called for the first time. Instead, the MockWaiter's event log reads: "
-						+ waiter.log.toString(), 0, waiter.log.size());
-
-		assertEquals(
-				"MockCustomer should have an empty event log after the Cashier's scheduler is called for the first time. Instead, the MockCustomer's event log reads: "
-						+ waiter.log.toString(), 0, waiter.log.size());
-
-		//step 2 of the test
-		cashier.msgCustomerPayment(customer, 20, customer.name);
-
-		//check postconditions for step 2 / preconditions for step 3
-		assertTrue("Cashier's checks list should contain a check with state == paying. It doesn't.",
-				cashier.checks.get(0).cS == CheckState.paying);
-
-		assertTrue("Cashier's checks list should contain a check of price = $15. It contains something else instead: $" 
-				+ cashier.checks.get(0).amount, cashier.checks.get(0).amount == 15);
-
-		assertTrue("Cashier's checks list should contain a check with the right customer in it. It doesn't.", 
-				cashier.checks.get(0).name.equals(customer.name));
-
-
-		//step 3
-		//NOTE: I called the scheduler in the assertTrue statement below (to succintly check the return value at the same time)
-		assertTrue("Cashier's scheduler should have returned true (needs to react to customer's ReadyToPay), but didn't.", 
-				cashier.pickAndExecuteAnAction());
-
-		//check postconditions for step 3 / preconditions for step 4
-
-		assertTrue("Cashier should contain a check with amount == -$5 (change of $5). It contains something else instead: $" 
-				+ cashier.checks.get(0).amount, cashier.checks.get(0).amount == -5);
-
-		//check postconditions for step 4		
-		assertTrue("Cashier should contain a check with state == done. It doesn't.",
-				cashier.checks.get(0).cS == CheckState.paid);
-
-		assertFalse("Cashier's scheduler should have returned false (no actions left to do), but didn't.", 
-				cashier.pickAndExecuteAnAction());
-
-	} // end of test three
-
-	/**
-	 * This tests the first normal scenario when one market bills the cashier.
-	 */
-	public void testFourNormalMarketPayment() {
-
-		//setUp() runs first before this test!
-		customer.cashier = cashier;//You can do almost anything in a unit test.			
-		market1.cashier = cashier;
-		market2.cashier = cashier;
-		cashier.money = 100.00;
-
-		//check preconditions
-		assertEquals("Cashier should have 0 bills in it. It doesn't.",cashier.bills.size(), 0);		
-		assertEquals("CashierAgent should have an empty event log before the Cashier's message is called. Instead, the Cashier's event log reads: "
-				+ cashier.log.toString(), 0, cashier.log.size());
-
-		//step 1 of the test
-		//Receiving bill
-		cashier.msgHereIsBill(market1, 50, 0);//send the message from a market
-
-		//check postconditions for step 1 and preconditions for step 2
-
-		assertEquals("MockMarket should have an empty event log before the Cashier's scheduler is called. Instead, the MockMarket's event log reads: "
-				+ market1.log.toString(), 0, market1.log.size());
-
-		assertEquals("Cashier should have 1 bill in it. It doesn't.", cashier.bills.size(), 1);
-
-		//step 2
-		assertTrue("CashierBill should contain a bill with state == none. It doesn't.",
-				cashier.bills.get(0).bS == BillState.none);
-
-		assertTrue("CashierBill should contain a bill of price = $50. It contains something else instead: $" 
-				+ cashier.bills.get(0).amountDue, cashier.bills.get(0).amountDue == 50);
-
-		assertTrue("CashierBill should contain a bill with the right market in it. It doesn't.", 
-				cashier.bills.get(0).market.equals(market1));
-
-		assertFalse("Cashier's scheduler should have returned true, but didn't.", !cashier.pickAndExecuteAnAction());
-
-		assertEquals(
-				"MockMarket should have an empty event log after the Cashier's scheduler is called for the first time. Instead, the MockWaiter's event log reads: "
-						+ market1.log.toString(), 0, market1.log.size());
-
-		//check postconditions for step 3 / preconditions for step 4
-
-		assertTrue("CashierBill should contain amountPaid= $50. It contains something else instead: $" 
-				+ cashier.bills.get(0).amountPaid, cashier.bills.get(0).amountPaid == 50);
-
-		//check postconditions for step 4		
-		assertTrue("CashierBill should contain a bill with state == paid. It doesn't.",
-				cashier.bills.get(0).bS == BillState.paid);
-
-		assertFalse("Cashier's scheduler should have returned false (no actions left to do), but didn't.", 
-				cashier.pickAndExecuteAnAction());
-	} // end of test four
-
-	/**
-	 * This tests market billing from two separate markets
-	 */
-	public void testFivePayTwoMarkets() {
-
-		//setUp() runs first before this test!
-		customer.cashier = cashier;//You can do almost anything in a unit test.			
-		market1.cashier = cashier;
-		market2.cashier = cashier;
-		cashier.money = 150.00;
-
-		//check preconditions
-		assertEquals("Cashier should have 0 bills in it. It doesn't.",cashier.bills.size(), 0);		
-		assertEquals("CashierAgent should have an empty event log before the Cashier's message is called. Instead, the Cashier's event log reads: "
-				+ cashier.log.toString(), 0, cashier.log.size());
-
-		//step 1a of the test
-		//Receiving bill 1 from market1
-		cashier.msgHereIsBill(market1, 50, 0);//send the message from a market
-
-		//check postconditions for step 1a and preconditions for step 2
-
-		assertEquals("MockMarket should have an empty event log before the Cashier's scheduler is called. Instead, the MockMarket's event log reads: "
-				+ market1.log.toString(), 0, market1.log.size());
-
-		assertEquals("Cashier should have 1 bill in it. It doesn't.", cashier.bills.size(), 1);
-
-		//step 1b of the test
-		//Receiving bill 2 from market2
-		cashier.msgHereIsBill(market2, 70, 1);//send the message from a market
-
-		//check postconditions for step 1b and preconditions for step 2
-
-		assertEquals("MockMarket should have an empty event log before the Cashier's scheduler is called. Instead, the MockMarket's event log reads: "
-				+ market2.log.toString(), 0, market2.log.size());
-
-		assertEquals("Cashier should have 2 bills in it. It doesn't.", cashier.bills.size(), 2);
-
-		//step 2
-		assertTrue("Cashier's Bill 0 should have state == none. It doesn't.",
-				cashier.getBill(0).bS == BillState.none);
-
-		assertTrue("Cashier's Bill 1 should have state == none. It doesn't.",
-				cashier.getBill(1).bS == BillState.none);
-
-		assertTrue("Cashier's Bill 0 should contain price = $50. It contains something else instead: $" 
-				+ cashier.getBill(0).amountDue, cashier.getBill(0).amountDue == 50);
-
-		assertTrue("Cashier's Bill 1 should contain price = $70. It contains something else instead: $" 
-				+ cashier.getBill(1).amountDue, cashier.getBill(1).amountDue == 70);
-
-		assertTrue("Cashier's Bill 0 should contain a bill with market1. It doesn't.", 
-				cashier.getBill(0).market.equals(market1));
-
-		assertTrue("Cashier's Bill 1 should contain a bill with market2. It doesn't.", 
-				cashier.getBill(1).market.equals(market2));
-
-		assertFalse("Cashier's scheduler should have returned true, but didn't.", !cashier.pickAndExecuteAnAction());
-
-		assertEquals(
-				"MockMarket should have an empty event log after the Cashier's scheduler is called for the first time. Instead, the MockWaiter's event log reads: "
-						+ market1.log.toString(), 0, market1.log.size());
-
-		//check postconditions for step 3 / preconditions for step 4
-
-		assertTrue("CashierBill should contain amountPaid= $50. It contains something else instead: $" 
-				+ cashier.getBill(0).amountPaid, cashier.getBill(0).amountPaid == 50);
-
-		//check postconditions for step 4		
-		assertTrue("CashierBill should contain a bill with state == paid. It doesn't.",
-				cashier.getBill(0).bS == BillState.paid);
-
-		assertFalse("Cashier's scheduler should have returned true, but didn't.", !cashier.pickAndExecuteAnAction());
-
-		assertEquals(
-				"MockMarket should have an empty event log after the Cashier's scheduler is called for the first time. Instead, the MockWaiter's event log reads: "
-						+ market2.log.toString(), 0, market2.log.size());
-
-		//check postconditions for step 3 / preconditions for step 4
-
-		assertTrue("CashierBill should contain amountPaid= $70. It contains something else instead: $" 
-				+ cashier.getBill(1).amountPaid, cashier.getBill(1).amountPaid == 70);
-
-		//check postconditions for step 4		
-		assertTrue("CashierBill should contain a bill with state == paid. It doesn't.",
-				cashier.getBill(1).bS == BillState.paid);
-
-		assertFalse("Cashier's scheduler should have returned false (no actions left to do), but didn't.", 
-				cashier.pickAndExecuteAnAction());
-	} // end of test five
-
-	/**
-	 * This tests when the cashier cannot fulfill all payments.
-	 */
-	public void testSixCannotFulfillPayment() {
-
-		//setUp() runs first before this test!
-		customer.cashier = cashier;//You can do almost anything in a unit test.			
-		market1.cashier = cashier;
-		market2.cashier = cashier;
-		cashier.money = 40.00;
-
-		//check preconditions
-		assertEquals("Cashier should have 0 bills in it. It doesn't.",cashier.bills.size(), 0);		
-		assertEquals("CashierAgent should have an empty event log before the Cashier's message is called. Instead, the Cashier's event log reads: "
-				+ cashier.log.toString(), 0, cashier.log.size());
-
-		//step 1 of the test
-		//Receiving bill
-		cashier.msgHereIsBill(market1, 100, 0);//send the message from a market
-
-		//check postconditions for step 1 and preconditions for step 2
-
-		assertEquals("MockMarket should have an empty event log before the Cashier's scheduler is called. Instead, the MockMarket's event log reads: "
-				+ market1.log.toString(), 0, market1.log.size());
-
-		assertEquals("Cashier should have 1 bill in it. It doesn't.", cashier.bills.size(), 1);
-
-		//step 2
-		assertTrue("CashierBill should contain a bill with state == none. It doesn't.",
-				cashier.bills.get(0).bS == BillState.none);
-
-		assertTrue("CashierBill should contain a bill of price = $100. It contains something else instead: $" 
-				+ cashier.bills.get(0).amountDue, cashier.bills.get(0).amountDue == 100);
-
-		assertTrue("CashierBill should contain a bill with the right market in it. It doesn't.", 
-				cashier.bills.get(0).market.equals(market1));
-
-		assertFalse("Cashier's scheduler should have returned true, but didn't.", !cashier.pickAndExecuteAnAction());
-
-		assertEquals(
-				"MockMarket should have an empty event log after the Cashier's scheduler is called for the first time. Instead, the MockWaiter's event log reads: "
-						+ market1.log.toString(), 0, market1.log.size());
-
-		//check postconditions for step 3 / preconditions for step 4
-
-		assertTrue("CashierBill should contain amountPaid= $40. It contains something else instead: $" 
-				+ cashier.bills.get(0).amountPaid, cashier.bills.get(0).amountPaid == 40);
-
-		assertTrue("CashierBill should contain amountDue= $60. It contains something else instead: $" 
-				+ cashier.bills.get(0).amountDue, cashier.bills.get(0).amountDue == 60);
-
-		//check postconditions for step 4		
-		assertTrue("CashierBill should contain a bill with state == owe. It doesn't.",
-				cashier.bills.get(0).bS == BillState.owe);
-
-		assertFalse("Cashier's scheduler should have returned false (no actions left to do), but didn't.", 
-				cashier.pickAndExecuteAnAction());
-	} // end of test six
 }
