@@ -19,7 +19,6 @@ public class BankDepositorGui implements Gui {
 	}
 	
 	public void updatePosition() {
-		//System.out.println("AAAAAAAAAAAAAAA");
 		if (xPos < xDestination)
 			xPos++;
 		else if (xPos > xDestination)

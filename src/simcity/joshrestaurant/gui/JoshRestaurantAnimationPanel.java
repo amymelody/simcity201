@@ -5,6 +5,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Collections;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -24,7 +25,7 @@ public class JoshRestaurantAnimationPanel extends JPanel implements ActionListen
     private Dimension bufferSize;
     private Timer timer;
 
-    private List<Gui> guis = new ArrayList<Gui>();
+    private List<Gui> guis = Collections.synchronizedList(new ArrayList<Gui>());
 
     public JoshRestaurantAnimationPanel() {
     	setSize(WINDOWX, WINDOWY);
@@ -61,17 +62,18 @@ public class JoshRestaurantAnimationPanel extends JPanel implements ActionListen
         g2.fillRect(TABLEX+TABLEWIDTH*2, TABLEY, TABLEWIDTH, TABLEHEIGHT);
         g2.fillRect(TABLEX+TABLEWIDTH*4, TABLEY, TABLEWIDTH, TABLEHEIGHT);
 
+        synchronized(guis) {
+	        for(Gui gui : guis) {
+	            if (gui.isPresent()) {
+	                gui.updatePosition();
+	            }
+	        }
 
-        for(Gui gui : guis) {
-            if (gui.isPresent()) {
-                gui.updatePosition();
-            }
-        }
-
-        for(Gui gui : guis) {
-            if (gui.isPresent()) {
-                gui.draw(g2);
-            }
+	        for(Gui gui : guis) {
+	            if (gui.isPresent()) {
+	                gui.draw(g2);
+	            }
+	        }
         }
     }
 

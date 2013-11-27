@@ -321,10 +321,10 @@ public class PersonAgent extends Agent implements Person
 		time.hour = h;
 		time.minute = m;
 		//print(time.getDay().toString() + ", " + time.getHour() + ":" + time.getMinute());
-		if (time.getHour() == 9 && time.getMinute() == 0) {
-			money += 600;
-			print("$" + money);
-		}
+//		if (time.getHour() == 9 && time.getMinute() == 0) {
+//			money += 600;
+//			print("$" + money);
+//		}
 	//	if (time.getHour() == 8 && time.getMinute() == 0) {
 	//		state.ns = NourishmentState.gotHungry;
 	//	}
@@ -551,10 +551,10 @@ public class PersonAgent extends Agent implements Person
 			}
 		}
 		
-		if (!unitTesting && state.ts == TransportationState.walking && state.ls != LocationState.home && state.ls != LocationState.leavingHouse) {
-			goHome(); //if nothing left to do, go home and do whatever
-			return true;
-		}
+//		if (!unitTesting && state.ts == TransportationState.walking && state.ls != LocationState.home && state.ls != LocationState.leavingHouse) {
+//			goHome(); //if nothing left to do, go home and do whatever
+//			return true;
+//		}
 		
 		return false;
 	}

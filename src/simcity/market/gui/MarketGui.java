@@ -6,6 +6,10 @@ import simcity.CityDirectory;
 import simcity.gui.BuildingGui;
 import simcity.gui.BuildingsGui;
 import simcity.gui.CityGui;
+import simcity.market.MarketCashierRole;
+import simcity.market.MarketEmployeeRole;
+import simcity.market.MarketDelivererRole;
+import simcity.market.MarketCustomerRole;
 
 import java.awt.*;
 
@@ -15,7 +19,7 @@ import java.awt.*;
  */
 public class MarketGui extends BuildingGui
 {
-	private MarketAnimationPanel animationPanel;
+	MarketAnimationPanel animationPanel;
 	private MarketInputPanel inputPanel;
 	
 	private final int WINDOWX = 650;
@@ -30,8 +34,17 @@ public class MarketGui extends BuildingGui
 	{
 		super(n, bG, cD);
 		
+		MarketCashierRole cashier;
+		if (n.equals("market1")) {
+			cashier = cD.getMarketCashiers().get(0);
+		} else if (n.equals("market2")) {
+			cashier = cD.getMarketCashiers().get(1);
+		} else {
+			cashier = cD.getMarketCashiers().get(2);
+		}
+		
 		animationPanel = new MarketAnimationPanel();
-		inputPanel = new MarketInputPanel(this, n);
+		inputPanel = new MarketInputPanel(this, n, cashier);
 
 		//input panel
 		double inputFractionOfWindow = 150 / 650;
@@ -57,6 +70,18 @@ public class MarketGui extends BuildingGui
 	public void changeView(boolean visible) {
 		animationPanel.setVisible(visible);
 		inputPanel.setVisible(visible);
+	}
+	
+	public void addMarketEmployee(MarketEmployeeRole e) {
+		inputPanel.addEmployee(e);
+	}
+	
+	public void addMarketDeliverer(MarketDelivererRole d) {
+		inputPanel.addDeliverer(d);
+	}
+	
+	public void addMarketCustomer(MarketCustomerRole c) {
+		inputPanel.addCustomer(c);
 	}
 	
 }

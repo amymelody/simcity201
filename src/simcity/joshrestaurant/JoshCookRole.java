@@ -142,11 +142,11 @@ public class JoshCookRole extends RestCookRole {
 				leaveRestaurant();
 				return true;
 			}
-			/*if (orderedItems == false) {
+			if (orderedItems == false) {
 				orderedItems = true;
 				orderFoodFromMarket();
 				return true;
-			}*/
+			}
 			for (Food food : foods.values()) {
 				if (food.getState() == FoodState.ReceivedOrder) {
 					addFood(food);

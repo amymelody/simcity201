@@ -5,11 +5,18 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Vector;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+
+import simcity.bank.gui.BankManagerGui;
+import simcity.market.MarketDelivererRole;
+import simcity.market.MarketEmployeeRole;
+import simcity.market.MarketCustomerRole;
+import simcity.market.MarketCashierRole;
 
 public class MarketInputPanel extends JPanel implements ActionListener
 {
@@ -22,11 +29,20 @@ public class MarketInputPanel extends JPanel implements ActionListener
 	public JButton goBack;
 	private JPanel marketLabel = new JPanel();
     JLabel marketInfo = new JLabel();
+    private MarketCashierRole cashier;
+	private Vector<MarketEmployeeRole> employees = new Vector<MarketEmployeeRole>();
+	private Vector<MarketDelivererRole> deliverers = new Vector<MarketDelivererRole>();
+	private Vector<MarketCustomerRole> customers = new Vector<MarketCustomerRole>();
 	
-	public MarketInputPanel(MarketGui mG, String n)
+	public MarketInputPanel(MarketGui mG, String n, MarketCashierRole c)
 	{
 		name = n;
 		marketGui = mG;
+		cashier = c;
+		
+		MarketCashierGui cashierGui = new MarketCashierGui(cashier);
+		marketGui.animationPanel.addGui(cashierGui);
+		cashier.setGui(cashierGui);
 		
 		goBack = new JButton ("Top View");
 		goBack.setPreferredSize(new Dimension(10, 20));
@@ -73,5 +89,33 @@ public class MarketInputPanel extends JPanel implements ActionListener
 			marketGui.changeView(false);
 		}
 	
+	}
+	
+	public void setCashier(MarketCashierRole cashier) {
+		this.cashier = cashier;
+	}
+	
+	public void addEmployee(MarketEmployeeRole e) {
+		MarketEmployeeGui g = new MarketEmployeeGui(e);
+		marketGui.animationPanel.addGui(g);
+		e.setCashier(cashier);
+		e.setGui(g);
+		employees.add(e);
+	}
+	
+	public void addDeliverer(MarketDelivererRole d) {
+		MarketDelivererGui g = new MarketDelivererGui(d);
+		marketGui.animationPanel.addGui(g);
+		d.setCashier(cashier);
+		d.setGui(g);
+		deliverers.add(d);
+	}
+	
+	public void addCustomer(MarketCustomerRole c) {
+		MarketCustomerGui g = new MarketCustomerGui(c);
+		marketGui.animationPanel.addGui(g);
+		c.setCashier(cashier);
+		c.setGui(g);
+		customers.add(c);
 	}
 }

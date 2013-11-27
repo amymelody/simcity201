@@ -156,8 +156,7 @@ public class CityAnimationPanel extends JPanel implements ActionListener, MouseL
 			for(BuildingGui bG : buildings){
 				if(bG.getName().equals(e.getJobLocation())){
 					MarketGui g = (MarketGui)bG;
-					e.setMarketGui(g);
-					g.addMarketEmployeeGui(e.getGui());
+					g.addMarketEmployee(e);
 				}
 			}
 		}
@@ -168,8 +167,7 @@ public class CityAnimationPanel extends JPanel implements ActionListener, MouseL
 			for(BuildingGui bG : buildings){
 				if(bG.getName().equals(d.getJobLocation())){
 					MarketGui g = (MarketGui)bG;
-					d.setMarketGui(g);
-					g.addMarketEmployeeGui(d.getGui());
+					g.addMarketDeliverer(d);
 				}
 			}
 		}
@@ -180,8 +178,7 @@ public class CityAnimationPanel extends JPanel implements ActionListener, MouseL
 			for(BuildingGui bG : buildings){
 				if(bG.getName().equals(location)){
 					MarketGui g = (MarketGui)bG;
-					c.setMarketGui(g);
-					g.addMarketCustomerGui(c.getGui());
+					g.addMarketCustomer(c);
 				}
 			}
 		}
