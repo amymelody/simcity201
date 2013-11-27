@@ -15,9 +15,9 @@ public class MarketDelivererGui implements Gui {
 	private MarketDelivererRole role = null;
 	private String location;
 
-	private int xPos = -10, yPos = 10;//default Deliverer position
-	private int xDestination = -10, yDestination = 10;//default Deliverer destination
-	private int xHome = 200, yHome = 20; // Deliverer home position
+	private int xPos = -20, yPos = 20;//default Deliverer position
+	private int xDestination = -20, yDestination = 20;//default Deliverer destination
+	private int xHome = 400, yHome = 20; // Deliverer home position
 	
 	public enum GuiState {nothing, delivering, cashier, leaving}
 	public GuiState gS = GuiState.nothing;
@@ -61,7 +61,7 @@ public class MarketDelivererGui implements Gui {
 
 	public void draw(Graphics2D g) {
 		g.setColor(Color.GREEN);
-		g.fillRect(20, 20, xPos, yPos);
+		g.fillRect(xPos, yPos, 20, 20);
 	}
 
 	public boolean isPresent() {
@@ -80,7 +80,7 @@ public class MarketDelivererGui implements Gui {
 	/* Role Functions */
 	public void Deliver(String l) {
 		location = l;
-		xDestination = 510;
+		xDestination = 520;
 		yDestination = 20;
 		gS = GuiState.delivering;
 	}
@@ -91,13 +91,13 @@ public class MarketDelivererGui implements Gui {
 		dG.goBack();
 	}
 	public void Inside() {
-		xDestination = 70;
-		yDestination = 10;
+		xDestination = 140;
+		yDestination = 20;
 		gS = GuiState.cashier;
 	}
 	public void leave() {
-		xDestination = -10;
-		yDestination = 10;
+		xDestination = -20;
+		yDestination = 20;
 		gS = GuiState.leaving;
 	}
 }

@@ -18,27 +18,27 @@ import simcity.market.MarketEmployeeRole;
 public class MarketEmployeeGui implements Gui {
 	private MarketEmployeeRole role = null;
 
-	private int xPos = -10, yPos = 10;//default Employee position
-	private int xDestination = -10, yDestination = 10;//default Employee destination
-	private int xHome = 190, yHome = -20; // Employee home position
+	private int xPos = -20, yPos = 20;//default Employee position
+	private int xDestination = -20, yDestination = 20;//default Employee destination
+	private int xHome = 380, yHome = -20; // Employee home position
 	private List<ItemOrder> items;
 	private Queue<Point> destinations = new LinkedList<Point>();
 	private static Map<String, Point> foodLocations = new HashMap<String, Point>();
 	static {
-		foodLocations.put("Car", new Point(170, 10));
-		foodLocations.put("Salad", new Point(170, 20));
-		foodLocations.put("Steak", new Point(170, 40));
-		foodLocations.put("Pizza", new Point(170, 50));
-		foodLocations.put("Chicken", new Point(170, 70));
-		foodLocations.put("Spaghetti", new Point(170, 80));
-		foodLocations.put("Lasagna", new Point(170, 100));
-		foodLocations.put("Garlic Bread", new Point(170, 110));
-		foodLocations.put("Ribs", new Point(170, 130));
-		foodLocations.put("Burger", new Point(170, 140));
-		foodLocations.put("Enchiladas", new Point(170, 160));
-		foodLocations.put("Tacos", new Point(170, 170));
-		foodLocations.put("Pozole", new Point(170, 190));
-		foodLocations.put("Horchata", new Point(170, 200));
+		foodLocations.put("Car", new Point(340, 20));
+		foodLocations.put("Salad", new Point(340, 40));
+		foodLocations.put("Steak", new Point(340, 80));
+		foodLocations.put("Pizza", new Point(340, 100));
+		foodLocations.put("Chicken", new Point(340, 140));
+		foodLocations.put("Spaghetti", new Point(340, 160));
+		foodLocations.put("Lasagna", new Point(340, 200));
+		foodLocations.put("Garlic Bread", new Point(340, 220));
+		foodLocations.put("Ribs", new Point(340, 260));
+		foodLocations.put("Burger", new Point(340, 280));
+		foodLocations.put("Enchiladas", new Point(340, 320));
+		foodLocations.put("Tacos", new Point(340, 340));
+		foodLocations.put("Pozole", new Point(340, 380));
+		foodLocations.put("Horchata", new Point(340, 400));
 	}
 	public enum GuiState {nothing, gathering, cashier, leaving};
 	GuiState gS = GuiState.nothing;
@@ -83,7 +83,7 @@ public class MarketEmployeeGui implements Gui {
 
 	public void draw(Graphics2D g) {
 		g.setColor(Color.YELLOW);
-		g.fillRect(20, 20, xPos, yPos);
+		g.fillRect(xPos, yPos, 20, 20);
 	}
 
 	public boolean isPresent() {
@@ -110,13 +110,13 @@ public class MarketEmployeeGui implements Gui {
 		yDestination = destinations.peek().y;
 	}
 	public void GoToCashier() {
-		xDestination = 70;
-		yDestination = 10;
+		xDestination = 140;
+		yDestination = 20;
 		gS = GuiState.cashier;
 	}
 	public void leave() {
-		xDestination = -10;
-		yDestination = 10;
+		xDestination = -20;
+		yDestination = 20;
 		gS = GuiState.leaving;
 	}
 }
