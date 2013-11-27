@@ -13,9 +13,9 @@ import simcity.market.MarketCustomerRole;
 public class MarketCustomerGui implements Gui {
 	private MarketCustomerRole role = null;
 
-	private int xPos = -20, yPos = -20;//default Customer position
-	private int xDestination = -20, yDestination = -20;//default Customer destination
-	private int xHome = -20, yHome = -20; // Customer home position
+	private int xPos = -20, yPos = 20;//default Customer position
+	private int xDestination = -20, yDestination = 20;//default Customer destination
+	private int xHome = 20, yHome = 20; // Customer home position
 
 	public enum GuiState {nothing, toCashier, toWaiting, pickingUp, exiting};
 	GuiState gS = GuiState.nothing;
@@ -36,7 +36,7 @@ public class MarketCustomerGui implements Gui {
 		else if (yPos > yDestination)
 			yPos--;
 		if(xPos == xDestination && yPos == yDestination) {
-			if(xDestination == 40 && yDestination == 60) {
+			if(xDestination == 80 && yDestination == 20) {
 				if(gS == GuiState.toCashier) {
 					role.msgAtCashier();
 					gS = GuiState.nothing;
@@ -46,7 +46,7 @@ public class MarketCustomerGui implements Gui {
 					gS = GuiState.nothing;
 				}
 			}
-			else if(xDestination == -10 && yDestination == 10 && gS == GuiState.exiting) {
+			else if(xDestination == -20 && yDestination == 20 && gS == GuiState.exiting) {
 				role.msgOut();
 				gS = GuiState.nothing;
 			}
@@ -55,7 +55,7 @@ public class MarketCustomerGui implements Gui {
 
 	public void draw(Graphics2D g) {
 		g.setColor(Color.BLUE);
-		g.fillRect(20, 20, xPos, yPos);
+		g.fillRect(xPos, yPos, 20, 20);
 	}
 
 	public boolean isPresent() {
@@ -73,8 +73,8 @@ public class MarketCustomerGui implements Gui {
 	
 	/* Role Functions */
 	public void GoToCashier() {
-		xDestination = 40;
-		yDestination = 60;
+		xDestination = 80;
+		yDestination = 20;
 		gS = GuiState.toCashier;
 		
 	}
@@ -86,13 +86,13 @@ public class MarketCustomerGui implements Gui {
 		gS = GuiState.toWaiting;
 	}
 	public void PickUpItems() {
-		xDestination = 40;
-		yDestination = 60;
+		xDestination = 80;
+		yDestination = 20;
 		gS = GuiState.pickingUp;
 	}
 	public void ExitMarket() {
-		xDestination = -10;
-		yDestination = 10;
+		xDestination = -20;
+		yDestination = 20;
 		gS = GuiState.exiting;
 	}
 }

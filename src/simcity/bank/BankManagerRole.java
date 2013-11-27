@@ -12,7 +12,7 @@ import simcity.bank.interfaces.BankManager;
 import simcity.bank.interfaces.BankTeller;
 import simcity.role.JobRole;
 
-
+//Bank Manager Role
 public class BankManagerRole extends JobRole implements BankManager  {
 	
 	String name;
@@ -159,10 +159,12 @@ public class BankManagerRole extends JobRole implements BankManager  {
 	
 	public void msgMarketTransaction(BankDepositor c){
 		Do("Manager is adding market to a list of waiting customers");
+		//BankManagerRole changes
 		if(findCustomer(c) == null){
+			Do("No customer found, creating customer");
 			customers.add(new myCustomer(c, c.getName()));
 		}
-		else
+		Do("Finding customer and changing state");
 			findCustomer(c).cS = CustomerState.marketArrived;
 			waitingCustomers.add(c);
 		stateChanged();

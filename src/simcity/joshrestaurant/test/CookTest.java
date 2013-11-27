@@ -9,6 +9,7 @@ import simcity.joshrestaurant.JoshCashierRole.CheckState;
 import simcity.joshrestaurant.JoshCookRole.FoodState;
 import simcity.joshrestaurant.JoshCookRole;
 import simcity.joshrestaurant.test.mock.MockMarketCashier;
+import simcity.joshrestaurant.RevolvingStandMonitor;
 import junit.framework.*;
 
 public class CookTest extends TestCase
@@ -17,6 +18,7 @@ public class CookTest extends TestCase
 	PersonAgent cookP;
 	JoshCookRole cook;
 	MockMarketCashier cashier;
+	RevolvingStandMonitor stand = new RevolvingStandMonitor();
 	
 	public void setUp() throws Exception{
 		super.setUp();	
@@ -25,6 +27,7 @@ public class CookTest extends TestCase
 		cook.setPerson(cookP);
 		cashier = new MockMarketCashier("cashier");
 		cook.addMarket(cashier);
+		cook.setStand(stand);
 		
 		cook.msgStartShift();
 	}	

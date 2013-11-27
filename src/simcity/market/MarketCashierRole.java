@@ -117,25 +117,25 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 	}
 	private static Map<Integer, Point> chairLocations = new HashMap<Integer, Point>();
 	static {
-		chairLocations.put(1, new Point(40, 160));
-		chairLocations.put(2, new Point(10, 160));
-		chairLocations.put(3, new Point(40, 170));
-		chairLocations.put(4, new Point(10, 170));
-		chairLocations.put(5, new Point(40, 180));
-		chairLocations.put(6, new Point(10, 180));
-		chairLocations.put(7, new Point(40, 190));
-		chairLocations.put(8, new Point(10, 190));
-		chairLocations.put(9, new Point(40, 200));
-		chairLocations.put(10, new Point(10, 200));
-		chairLocations.put(11, new Point(40, 210));
-		chairLocations.put(12, new Point(10, 210));
-		chairLocations.put(13, new Point(40, 220));
-		chairLocations.put(14, new Point(10, 220));
-		chairLocations.put(15, new Point(40, 230));
-		chairLocations.put(16, new Point(10, 230));
-		chairLocations.put(17, new Point(30, 240));
-		chairLocations.put(18, new Point(20, 240));
-		chairLocations.put(19, new Point(10, 240));
+		chairLocations.put(1, new Point(80, 320));
+		chairLocations.put(2, new Point(40, 320));
+		chairLocations.put(3, new Point(80, 340));
+		chairLocations.put(4, new Point(20, 340));
+		chairLocations.put(5, new Point(80, 360));
+		chairLocations.put(6, new Point(20, 360));
+		chairLocations.put(7, new Point(80, 380));
+		chairLocations.put(8, new Point(20, 380));
+		chairLocations.put(9, new Point(80, 400));
+		chairLocations.put(20, new Point(20, 400));
+		chairLocations.put(11, new Point(80, 420));
+		chairLocations.put(12, new Point(20, 420));
+		chairLocations.put(13, new Point(80, 440));
+		chairLocations.put(14, new Point(20, 440));
+		chairLocations.put(15, new Point(80, 460));
+		chairLocations.put(16, new Point(20, 460));
+		chairLocations.put(17, new Point(60, 480));
+		chairLocations.put(18, new Point(40, 480));
+		chairLocations.put(19, new Point(20, 480));
 	}
 	Integer chairCnt = 1;
 	
@@ -163,7 +163,7 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 
 	// Cashier Status Data
 	int salary;
-	boolean working = false;
+	boolean working, start = false;
 
 
 	/* Messages */
@@ -171,6 +171,7 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 	// Start/End Shift
 	public void msgStartShift() {
 		working = true;
+		start = true;
 		stateChanged();
 	}
 	public void msgEndShift() {
@@ -317,6 +318,9 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 			leaveMarket();
 			return true;
 		}
+		if(start) {
+			startWork();
+		}
 		if(mS != MarketState.closed && working) {
 			synchronized(orders) {
 				for(Order o: orders) {
@@ -368,6 +372,9 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 
 
 	/* Actions */
+	private void startWork() {
+		gui.work();
+	}
 	private void leaveMarket() {
 		gui.leave();
 	}

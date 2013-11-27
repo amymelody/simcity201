@@ -55,6 +55,10 @@ public class JoshCashierRole extends RestCashierRole implements JoshCashier {
 		return cash;
 	}
 	
+	public void setCash(int c) {
+		cash = c;
+	}
+	
 	// Messages
 	
 	public void msgStartShift() {

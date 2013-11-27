@@ -45,6 +45,7 @@ public class PersonTest extends TestCase
 		busStop = new MockBusStop("busStop");
 		bus = new MockBus("bus");
 		car = new MockCar("car");
+		person.msgCreatedAccount();
 		person.msgIncome(400);
 		person.unitTesting = true;
 	}	
@@ -120,8 +121,6 @@ public class PersonTest extends TestCase
 		assertEquals("Person should have $400. It doesn't.", 400, person.getMoney());
 		
 		assertEquals("Person's location state should be outside. It isn't", LocationState.outside, person.state.getLState());
-	
-		person.msgCreatedAccount();
 		
 		person.msgExpense(300);
 		

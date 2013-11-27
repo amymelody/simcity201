@@ -10,10 +10,10 @@ import simcity.market.MarketCashierRole;
 public class MarketCashierGui implements Gui {
 	private MarketCashierRole role = null;
 
-	private int xPos = -10, yPos = 10; // initial Cashier position
-	private int xDestination = -10, yDestination = 10;// initial Cashier destination
-	private int xHome = 60, yHome = 10; // Cashier's Desk
-	private int xLeave = -10, yLeave = 10; // Cashier's Leaving
+	private int xPos = -20, yPos = 20; // initial Cashier position
+	private int xDestination = -20, yDestination = 20;// initial Cashier destination
+	private int xHome = 120, yHome = 20; // Cashier's Desk
+	private int xLeave = -20, yLeave = 20; // Cashier's Leaving
 	boolean leaving = false;
 
 	public MarketCashierGui(MarketCashierRole r) {
@@ -31,7 +31,7 @@ public class MarketCashierGui implements Gui {
 			yPos++;
 		else if (yPos > yDestination)
 			yPos--;
-		if(xPos == -10 && yPos == 10 && leaving) {
+		if(xPos == -20 && yPos == 20 && leaving) {
 			role.left();
 			leaving = false;
 		}
@@ -39,7 +39,7 @@ public class MarketCashierGui implements Gui {
 
 	public void draw(Graphics2D g) {
 		g.setColor(Color.RED);
-		g.fillRect(20, 20, xPos, yPos);
+		g.fillRect(xPos, yPos, 20, 20);
 	}
 
 	public boolean isPresent() {

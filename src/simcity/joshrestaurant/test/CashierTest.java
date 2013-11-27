@@ -31,6 +31,7 @@ public class CashierTest extends TestCase
 		market2 = new MockMarketDeliverer("mockmarket2");
 		
 		cashier.msgStartShift();
+		cashier.setCash(200);
 	}	
 	
 	public void testOneNormalCustomerScenario()
