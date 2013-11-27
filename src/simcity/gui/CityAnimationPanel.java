@@ -134,9 +134,7 @@ public class CityAnimationPanel extends JPanel implements ActionListener, MouseL
 			for(BuildingGui bG : buildings){
 				if(bG.getName().equals("bank1")){
 					BankGui g = (BankGui)bG;
-					d.setBankGui(g);
-					g.addBankDepositorGui(d.getGui());
-					
+					g.addBankDepositor(d);
 				}
 			}
 		}
@@ -147,8 +145,7 @@ public class CityAnimationPanel extends JPanel implements ActionListener, MouseL
 			for(BuildingGui bG : buildings){
 				if(bG.getName().equals("bank1")){
 					BankGui g = (BankGui)bG;
-					t.setBankGui(g);
-					g.addBankTellerGui(t.getGui());
+					g.addBankTeller(t);
 				}
 			}
 		}

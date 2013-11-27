@@ -23,7 +23,7 @@ public class MockHousingGui extends Mock implements HousingGuiInterface
 				boxes[i][j] = new MoveBox(j, i, j*20, i*20);
 				if(i == 0 || j == 0 || j == 13 || i == 24 || j == 24) //walls
 				{
-					if(!((i == 1 || i == 2 || i == 15 || i == 16 || i == 17 || i == 18 || i == 19) && j == 13) || !((i == 11 || i == 12 || i == 13) && j == 24)) //doors
+					if(!((i == 1 || i == 2 || i == 15 || i == 16 || i == 17 || i == 18 || i == 19) && j == 13) && !((i == 11 || i == 12 || i == 13) && j == 24)) //doors
 					{
 						boxes[i][j].setOpen(false);
 					}
@@ -86,7 +86,7 @@ public class MockHousingGui extends Mock implements HousingGuiInterface
 	@Override
 	public void setBox(List<MoveBox> borrowedBoxes)
 	{
-		log.add(new LoggedEvent(""));
+		log.add(new LoggedEvent("Received setBox. List size = " + borrowedBoxes.size()));
 	}
 
 }

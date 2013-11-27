@@ -2,7 +2,9 @@ package simcity.market;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 import java.util.concurrent.Semaphore;
 
 import simcity.role.JobRole;
@@ -51,7 +53,7 @@ public class MarketEmployeeRole extends JobRole implements MarketEmployee {
 
 
 	/* Accessors */
-	public List getOrders() {
+	public Queue getOrders() {
 		return orders;
 	}
 
@@ -67,16 +69,16 @@ public class MarketEmployeeRole extends JobRole implements MarketEmployee {
 	/* Data */
 
 	// List of Orders
-	public List<Order> orders =  Collections.synchronizedList(new ArrayList<Order>());
-	Order currentOrder = null;
+	public Queue<Order> orders =  new LinkedList<Order>();
+	public Order currentOrder = null;
 
 	// References to other roles
 	MarketCashier cashier;
 
 	// Employee Status
-	enum EmployeeState {nothing, getting, toCashier, walking, handing, done};
-	EmployeeState eS = EmployeeState.nothing;
-	boolean working;
+	public enum EmployeeState {nothing, getting, toCashier, walking, handing, done};
+	public EmployeeState eS = EmployeeState.nothing;
+	public boolean working;
 
 
 	/* Messages */
@@ -121,24 +123,23 @@ public class MarketEmployeeRole extends JobRole implements MarketEmployee {
 			return true;
 		}
 		else {
-			synchronized(orders) {
-				for(Order o: orders) {
-					if(o.oS == OrderState.handing && eS == EmployeeState.nothing && currentOrder == null) {
-						eS = EmployeeState.getting;
-						GetItems(o);
-						return true;
-					}
-				}
+			if(orders.size() != 0 && eS == EmployeeState.nothing && currentOrder == null) {
+				eS = EmployeeState.getting;
+				GetItems();
+				return true;
 			}
 			if(eS == EmployeeState.toCashier) {
 				eS = EmployeeState.walking;
 				WalktoCashier();
+				return true;
 			}
 			if(eS == EmployeeState.handing) {
-				eS = EmployeeState.done;
+				eS = EmployeeState.nothing;
 				HandItems();
+				return true;
 			}
 		}
+
 		return false;
 	}
 
@@ -147,10 +148,10 @@ public class MarketEmployeeRole extends JobRole implements MarketEmployee {
 	private void leaveMarket() {
 		gui.leave();
 	}
-	private void GetItems(Order o) {
+	private void GetItems() {
+		currentOrder = orders.poll();
 		if(!unitTest) {
-			DoGetItems(o.items); // animation
-			currentOrder = o;
+			DoGetItems(currentOrder.items); // animation
 			try {
 				animation.acquire();
 			} catch (InterruptedException e) {
@@ -174,6 +175,8 @@ public class MarketEmployeeRole extends JobRole implements MarketEmployee {
 		currentOrder.oS = OrderState.ready;
 		cashier.msgHereAreItems(currentOrder, this);
 		currentOrder = null;
+		eS = EmployeeState.nothing;
+		stateChanged();
 	}
 
 

@@ -12,7 +12,7 @@ import simcity.interfaces.Person;
 import simcity.interfaces.RestCustomer;
 import simcity.interfaces.MarketCustomer;
 import simcity.interfaces.Resident;
-import simcity.interfaces.BankDepositor;
+import simcity.bank.interfaces.BankDepositor;
 import simcity.interfaces.JobInterface;
 import simcity.interfaces.Bus;
 import simcity.interfaces.Car;
@@ -465,7 +465,7 @@ public class PersonAgent extends Agent implements Person
 				return true;
 			} 
 			if (state.ws == WorkingState.notWorking) {
-				if (money <= minBalance && haveBankAccount) {
+				if (money <= minBalance && haveBankAccount && state.ls != LocationState.bank) {
 					print("GOTOBANK");
 					if (state.ls == LocationState.home) {
 						leaveHouse();
@@ -523,7 +523,7 @@ public class PersonAgent extends Agent implements Person
 						return true;
 					} 
 				} 
-				if (money >= maxBalance) {
+				if (money >= maxBalance && state.ls != LocationState.bank) {
 					print("GOTOBANK");
 					if (state.ls == LocationState.home) {
 						leaveHouse();
@@ -755,6 +755,7 @@ public class PersonAgent extends Agent implements Person
 			if (!findRole(b.depositorRole)) {
 				BankDepositorRole d = city.BankDepositorFactory(b.depositorRole);
 				addRole(d, b.depositorRole);
+				cG.addBankDepositor(d);
 			}
 			synchronized(roles) {
 				for (MyRole mr : roles) {

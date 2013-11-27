@@ -7,6 +7,7 @@ import simcity.gui.BuildingGui;
 import simcity.gui.BuildingsGui;
 import simcity.gui.CityGui;
 import simcity.bank.BankDepositorRole;
+import simcity.bank.BankTellerRole;
 import simcity.bank.gui.BankAnimationPanel;
 import simcity.bank.gui.BankInputPanel;
 
@@ -18,7 +19,7 @@ import java.awt.*;
  */
 public class BankGui extends BuildingGui
 {
-	private BankAnimationPanel animationPanel;
+	BankAnimationPanel animationPanel;
 	private BankInputPanel inputPanel;
 	
 	private final int WINDOWX = 650;
@@ -34,7 +35,7 @@ public class BankGui extends BuildingGui
 		super(n, bG, cD);
 		
 		animationPanel = new BankAnimationPanel();
-		inputPanel = new BankInputPanel(n);
+		inputPanel = new BankInputPanel(this, cD.getBankManager());
 
 		//input panel
 		double inputFractionOfWindow = 150 / 650;
@@ -60,12 +61,12 @@ public class BankGui extends BuildingGui
 		inputPanel.setVisible(visible);
 	}
 	
-	public void addBankDepositorGui(BankDepositorGui bg){
-		animationPanel.addGui(bg);
+	public void addBankDepositor(BankDepositorRole d){
+		inputPanel.addDepositor(d);
 	}
 	
-	public void addBankTellerGui(BankTellerGui tg){
-		animationPanel.addGui(tg);
+	public void addBankTeller(BankTellerRole t){
+		inputPanel.addTeller(t);
 	}
 	
 	
