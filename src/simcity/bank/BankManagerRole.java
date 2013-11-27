@@ -141,20 +141,18 @@ public class BankManagerRole extends JobRole implements BankManager  {
 	public void msgTransaction(BankDepositor c){
 		Do("Manager is adding customer to a list of waiting customers");
 		if(findCustomer(c) == null){
-			Do("no customer found");
+			Do("no customer found, creating customer");
 			customers.add(new myCustomer(c, c.getName()));
-			customers.get(0).cS = CustomerState.arrived;
-			waitingCustomers.add(c);
-		}
-		while(findCustomer(c) != null){
+		}	
 			Do("Customer found");
 			findCustomer(c).cS = CustomerState.arrived;
 			waitingCustomers.add(c);
+			stateChanged();
+
 		}
 			
 		
-		stateChanged();
-	}
+	
 
 	
 	public void msgMarketTransaction(BankDepositor c){
