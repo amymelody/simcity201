@@ -52,4 +52,10 @@ public class MockResident extends Mock implements Resident
 	{
 		log.add(new LoggedEvent("Received msgImHome from Person. State.atHome"));
 	}
+
+	@Override
+	public void msgAtLocation()
+	{
+		log.add(new LoggedEvent("Received msgAtLocation"));
+	}
 }

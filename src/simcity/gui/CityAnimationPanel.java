@@ -14,6 +14,13 @@ import simcity.housing.ResidentRole;
 import simcity.housing.gui.HousingGui;
 import simcity.joshrestaurant.JoshCustomerRole;
 import simcity.market.gui.MarketCustomerGui;
+import simcity.market.gui.MarketGui;
+import simcity.market.gui.MarketEmployeeGui;
+import simcity.market.gui.MarketDelivererGui;
+import simcity.market.gui.MarketCustomerGui;
+import simcity.market.MarketEmployeeRole;
+import simcity.market.MarketDelivererRole;
+import simcity.market.MarketCustomerRole;
 import simcity.joshrestaurant.gui.JoshRestaurantGui;
 import simcity.RestWaiterRole;
 import simcity.joshrestaurant.JoshNormalWaiterRole;
@@ -146,6 +153,43 @@ public class CityAnimationPanel extends JPanel implements ActionListener, MouseL
 			}
 		}
 	}
+	
+	public void addMarketEmployee(MarketEmployeeRole e){
+		synchronized(buildings){
+			for(BuildingGui bG : buildings){
+				if(bG.getName().equals(e.getJobLocation())){
+					MarketGui g = (MarketGui)bG;
+					e.setMarketGui(g);
+					g.addMarketEmployeeGui(e.getGui());
+				}
+			}
+		}
+	}
+	
+	public void addMarketDeliverer(MarketDelivererRole d){
+		synchronized(buildings){
+			for(BuildingGui bG : buildings){
+				if(bG.getName().equals(d.getJobLocation())){
+					MarketGui g = (MarketGui)bG;
+					d.setMarketGui(g);
+					g.addMarketEmployeeGui(d.getGui());
+				}
+			}
+		}
+	}
+	
+	public void addMarketCustomer(MarketCustomerRole c, String location){
+		synchronized(buildings){
+			for(BuildingGui bG : buildings){
+				if(bG.getName().equals(location)){
+					MarketGui g = (MarketGui)bG;
+					c.setMarketGui(g);
+					g.addMarketCustomerGui(c.getGui());
+				}
+			}
+		}
+	}
+	
 	public void addResident(ResidentRole r, String homeName, String ownerHomeName) {
 		synchronized(buildings) {
 			for(BuildingGui bG: buildings) {

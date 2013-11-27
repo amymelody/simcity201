@@ -13,4 +13,6 @@ public interface Resident {
 	public abstract void msgGroceries(List<ItemOrder> g); //from Person
 	public abstract void msgLeave(); //from Person
 	public abstract void msgImHome(); //from Person
+	
+	public abstract void msgAtLocation(); //from gui
 }

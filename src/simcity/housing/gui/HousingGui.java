@@ -4,12 +4,14 @@ import simcity.CityDirectory;
 import simcity.gui.BuildingsGui;
 import simcity.gui.CityGui;
 import simcity.gui.BuildingGui;
+import simcity.interfaces.HousingGuiInterface;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 import java.util.concurrent.Semaphore;
 
-public class HousingGui extends BuildingGui
+public class HousingGui extends BuildingGui implements HousingGuiInterface
 {
 	private HousingAnimationPanel animationPanel;
 	private HousingInputPanel inputPanel;
