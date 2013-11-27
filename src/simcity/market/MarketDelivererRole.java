@@ -34,8 +34,9 @@ public class MarketDelivererRole extends JobRole implements MarketDeliverer {
 		super.setPerson(p);
 		name = p.getName();
 	}
-	public void setCashier(MarketCashier ch) {
+	public void setCashier(MarketCashier ch, int salary) {
 		cashier = ch;
+		ch.msgHired(this, salary);
 	}
 
 	/* Hacks */
@@ -72,7 +73,7 @@ public class MarketDelivererRole extends JobRole implements MarketDeliverer {
 	MarketCashier cashier;
 
 	// Deliverer Status
-	public enum DelivererState {nothing, going, arrived, goingBack, arrivedBack};
+	public enum DelivererState {startedWork, nothing, going, arrived, goingBack, arrivedBack};
 	public DelivererState dS = DelivererState.nothing;
 	public boolean working;
 
@@ -82,6 +83,7 @@ public class MarketDelivererRole extends JobRole implements MarketDeliverer {
 	// Start/End Shifts
 	public void msgStartShift() {
 		working = true;
+		dS = DelivererState.startedWork;
 		stateChanged();
 	}
 	public void msgEndShift() {
@@ -106,9 +108,6 @@ public class MarketDelivererRole extends JobRole implements MarketDeliverer {
 		}
 		stateChanged();
 	}
-	public void msgPay() {
-		person.msgEndShift();
-	}
 	/* Animation Messages */
 	public void msgArrived() {
 		animation.release();
@@ -129,6 +128,9 @@ public class MarketDelivererRole extends JobRole implements MarketDeliverer {
 			return true;
 		}
 		else {
+			if(dS == DelivererState.startedWork) {
+				letCashierKnowStart();
+			}
 			synchronized(orders) {
 				for(Order o: orders) {
 					if(currentOrder == null && o.oS == OrderState.newDelivery) {
@@ -155,7 +157,11 @@ public class MarketDelivererRole extends JobRole implements MarketDeliverer {
 
 
 	/* Actions */
+	private void letCashierKnowStart() {
+		cashier.msgOntheClock(this);
+	}
 	private void leaveMarket() {
+		cashier.msgOfftheClock(this);
 		gui.leave();
 	}
 	private void goToCustomer(Order o) {

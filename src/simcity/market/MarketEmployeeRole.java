@@ -14,6 +14,7 @@ import simcity.interfaces.MarketCashier;
 import simcity.interfaces.MarketCustomer;
 import simcity.interfaces.MarketEmployee;
 import simcity.interfaces.Person;
+import simcity.market.MarketDelivererRole.DelivererState;
 import simcity.market.Order.OrderState;
 import simcity.market.gui.MarketCustomerGui;
 import simcity.market.gui.MarketEmployeeGui;
@@ -33,8 +34,9 @@ public class MarketEmployeeRole extends JobRole implements MarketEmployee {
 	public String getName() {
 		return name;
 	}
-	public void setCashier(MarketCashier ch) {
+	public void setCashier(MarketCashier ch, int salary) {
 		cashier = ch;
+		ch.msgHired(this, salary);
 	}
 	public void setPerson(Person p) {
 		super.setPerson(p);
@@ -76,7 +78,7 @@ public class MarketEmployeeRole extends JobRole implements MarketEmployee {
 	MarketCashier cashier;
 
 	// Employee Status
-	public enum EmployeeState {nothing, getting, toCashier, walking, handing, done};
+	public enum EmployeeState {startedWork, nothing, getting, toCashier, walking, handing, done};
 	public EmployeeState eS = EmployeeState.nothing;
 	public boolean working;
 
@@ -86,6 +88,7 @@ public class MarketEmployeeRole extends JobRole implements MarketEmployee {
 	// Start/End Shifts
 	public void msgStartShift() {
 		working = true;
+		eS = EmployeeState.startedWork;
 		stateChanged();
 	}
 	public void msgEndShift() {
@@ -123,6 +126,9 @@ public class MarketEmployeeRole extends JobRole implements MarketEmployee {
 			return true;
 		}
 		else {
+			if(eS == EmployeeState.startedWork) {
+				letCashierKnow();
+			}
 			if(orders.size() != 0 && eS == EmployeeState.nothing && currentOrder == null) {
 				eS = EmployeeState.getting;
 				GetItems();
@@ -145,8 +151,12 @@ public class MarketEmployeeRole extends JobRole implements MarketEmployee {
 
 
 	/* Actions */
+	private void letCashierKnow() {
+		cashier.msgOntheClock(this);
+	}
 	private void leaveMarket() {
 		gui.leave();
+		cashier.msgOfftheClock(this);
 	}
 	private void GetItems() {
 		currentOrder = orders.poll();

@@ -51,7 +51,7 @@ public class MarketDelivererTest extends TestCase
 	public void testOneNormalCustomerScenario2()
 	{
 		// Set up
-		deliverer.setCashier(cashier);
+		deliverer.setCashier(cashier, 10);
 		deliverer.working = true;
 		List<ItemOrder> test1Orders = new ArrayList<ItemOrder>(); // orders Lasagna and Horchata
 		Order test1Order = new Order(rCook1, rCashier1, test1Orders, "Josh's Restaurant");
@@ -137,7 +137,7 @@ public class MarketDelivererTest extends TestCase
 	public void testTwoNormalCustomerOutOfSomeItemsScenario1()
 	{
 		// Set up
-		deliverer.setCashier(cashier);
+		deliverer.setCashier(cashier, 10);
 		deliverer.working = true;
 		List<ItemOrder> test2Orders = new ArrayList<ItemOrder>(); // orders Lasagna and Horchata
 		List<ItemOrder> test2IncompleteOrders = new ArrayList<ItemOrder>();
@@ -226,7 +226,7 @@ public class MarketDelivererTest extends TestCase
 	public void testThreeNormalCustomerMoreThanOneScenario2()
 	{
 		// Set up
-		deliverer.setCashier(cashier);
+		deliverer.setCashier(cashier, 10);
 		deliverer.working = true;
 		List<ItemOrder> test1Orders = new ArrayList<ItemOrder>(); // orders Lasagna and Horchata
 		List<ItemOrder> test2Orders = new ArrayList<ItemOrder>(); // orders Pizza and Burgers

@@ -207,7 +207,8 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 		synchronized(employees){
 			for(myEmployee me: employees) {
 				if(me.employee == e) {
-					me.working = true;
+					me.working = false;
+					marketMoney -= me.salary;
 				}
 			}
 		}
@@ -217,6 +218,7 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 			for(myDeliverer md: deliverers) {
 				if(md.deliverer == d) {
 					md.working = false;
+					marketMoney -= md.salary;
 				}
 			}
 		}
@@ -366,13 +368,11 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 	private void closeUp() {
 		synchronized(employees) {
 			for(myEmployee me: employees) {
-				me.employee.msgPay();
 				marketMoney -= me.salary;
 			}
 		}
 		synchronized(deliverers) {
 			for(myDeliverer md: deliverers) {
-				md.deliverer.msgPay();
 				marketMoney -= md.salary;
 			}
 		}
@@ -380,7 +380,6 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 		marketMoneySurplus = marketMoney - 100;
 		bank.msgMarketDeposit(marketMoneySurplus);
 		marketMoney = 100;
-		msgEndShift();
 	}
 
 	private void HandToEmployee(Order o) {
