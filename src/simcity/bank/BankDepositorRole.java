@@ -48,7 +48,7 @@ public class BankDepositorRole extends Role implements BankDepositor{
 	}
 	/* Animation */
 	private Semaphore customerAnimation = new Semaphore(0, true);
-	BankDepositorGui gui;
+	BankDepositorGui gui = new BankDepositorGui(this);
 	
 	/* Data */
 	
