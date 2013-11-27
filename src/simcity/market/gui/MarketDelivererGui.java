@@ -78,6 +78,10 @@ public class MarketDelivererGui implements Gui {
 	
 	
 	/* Role Functions */
+	public void work() {
+		xDestination = xHome;
+		yDestination = yHome;
+	}
 	public void Deliver(String l) {
 		location = l;
 		xDestination = 520;

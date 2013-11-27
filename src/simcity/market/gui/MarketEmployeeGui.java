@@ -100,6 +100,10 @@ public class MarketEmployeeGui implements Gui {
 	
 	
 	/* Role Functions */
+	public void work() {
+		xDestination = xHome;
+		yDestination = yHome;
+	}
 	public void GetItems(List<ItemOrder> i) {
 		items = i;
 		for(ItemOrder iO: i) {
