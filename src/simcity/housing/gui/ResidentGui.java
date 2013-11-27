@@ -7,23 +7,27 @@ import java.util.ArrayList;
 import java.util.List;
 
 import simcity.gui.Gui;
-import simcity.housing.ResidentRole;
+import simcity.interfaces.HousingGuiInterface;
+import simcity.interfaces.Resident;
+import simcity.mock.EventLog;
+import simcity.mock.LoggedEvent;
 
 public class ResidentGui implements Gui
 {
-	ResidentRole resident;
-	HousingGui gui;
+	Resident resident;
+	HousingGuiInterface gui;
 
 	private int xPos, yPos;
 	public int xDestination, yDestination;
-	private int xGoal, yGoal;
+	public int xGoal;
+	public int yGoal;
 	private int dimensions;
 	private int boxY, boxX;
-	private List<MoveBox> pastBoxes = new ArrayList<MoveBox>();
+	public List<MoveBox> pastBoxes = new ArrayList<MoveBox>();
 	private MoveBox currentBox;
 	private boolean exiting;
 
-	private enum Command
+	public enum Command
 	{
 		putFood,
 		getFood,
@@ -32,10 +36,12 @@ public class ResidentGui implements Gui
 		exit,
 		noCommand;
 	}
-	private Command pastCommand = Command.noCommand;
-	private Command command = Command.noCommand;
+	public Command pastCommand = Command.noCommand;
+	public Command command = Command.noCommand;
+
+	public EventLog log = new EventLog();
 	
-	public ResidentGui(ResidentRole r)
+	public ResidentGui(Resident r)
 	{
 		resident = r;
 		xPos = 500;
@@ -52,13 +58,15 @@ public class ResidentGui implements Gui
 		command = Command.noCommand;
 	}
 	
-	public void setGui(HousingGui gui)
+	public void setGui(HousingGuiInterface gui)
 	{
 		this.gui = gui;
 	}
 
 	public void updatePosition()
 	{
+		log.add(new LoggedEvent("Received updatePosition"));
+		
 		if(exiting)
 		{
 			if (xPos < 500)
@@ -144,7 +152,7 @@ public class ResidentGui implements Gui
         }
 	}
 	
-	public HousingGui getCurrentHouse()
+	public HousingGuiInterface getCurrentHouse()
 	{
 		return gui;
 	}
@@ -157,6 +165,8 @@ public class ResidentGui implements Gui
 
 	public void doGoToLocation(Point p, String purpose)
 	{
+		log.add(new LoggedEvent("Received doGoToLocation. String purpose = " + purpose));
+		
 		xGoal = (int) p.getX();
 		yGoal = (int) p.getY();
 
@@ -189,6 +199,8 @@ public class ResidentGui implements Gui
 	
 	public void findMoveBox()
 	{
+		log.add(new LoggedEvent("Received findMoveBox"));
+		
 		List<MoveBox> boxesToCheck = new ArrayList<MoveBox>();
 
 		if (xPos < xGoal)
@@ -205,141 +217,144 @@ public class ResidentGui implements Gui
 				boxesToCheck.add(gui.getBox(boxY, boxX - 1));
 			}
 		}
-		else if (yPos > yGoal)
+		if(boxX < 25)
 		{
-			if((boxY - 1) >= 0)
-			{
-				boxesToCheck.add(gui.getBox(boxY - 1, boxX));
-			}
-		}
-		if (yPos < yGoal)
-		{
-			if((boxY + 1) < 25)
-			{
-				boxesToCheck.add(gui.getBox(boxY + 1, boxX));
-			}
-		}
-
-		if (xPos == xGoal)
-		{
-			if((boxX + 1) < 25)
-			{
-				boxesToCheck.add(gui.getBox(boxY, boxX + 1));
-			}
-			if((boxX - 1) >= 0)
-			{
-				boxesToCheck.add(gui.getBox(boxY, boxX - 1));
-			}
-		}
-		if (yPos == yGoal)
-		{
-			if((boxY + 1) < 25)
-			{
-				boxesToCheck.add(gui.getBox(boxY + 1, boxX));
-			}
-			if((boxY - 1) >= 0)
-			{
-				boxesToCheck.add(gui.getBox(boxY - 1, boxX));
-			}
-		}
-		if(currentBox != null)
-		{
-			currentBox.setOpen(true);
-			boxesToCheck.add(currentBox);
-			pastBoxes.add(currentBox);
-			currentBox = null;
-		}
-		List<MoveBox> untouchedBoxes = new ArrayList<MoveBox>();
-		for(MoveBox b : boxesToCheck)
-		{
-			boolean untouched = true;
-			for(MoveBox pb : pastBoxes)
-			{
-				if(b == pb)
-				{
-					untouched = false;
-				}
-			}
-			if(untouched)
-			{
-				untouchedBoxes.add(b);
-			}
-		}
-		for(MoveBox b : untouchedBoxes)
-		{
-			if(b.getOpen())
-			{
-				b.setOpen(false);
-				boxX = b.getIndexX();
-				boxY = b.getIndexY();
-				currentBox = b;
-			}
-		}
-		if(currentBox == null)
-		{
-
-			gui.setBox(boxesToCheck);
-			boxesToCheck.clear();
-
-			if (yPos < yGoal)
+			if (yPos > yGoal)
 			{
 				if((boxY - 1) >= 0)
 				{
 					boxesToCheck.add(gui.getBox(boxY - 1, boxX));
 				}
 			}
-			else if (yPos > yGoal)
+			else if (yPos < yGoal)
 			{
 				if((boxY + 1) < 25)
 				{
 					boxesToCheck.add(gui.getBox(boxY + 1, boxX));
 				}
 			}
-			if (xPos < xGoal)
-			{
-				if((boxX - 1) >= 0)
-				{
-					boxesToCheck.add(gui.getBox(boxY, boxX - 1));
-				}
-			}
-			else if (xPos > xGoal)
-			{
-				if((boxX + 1) < 25)
-				{
-					boxesToCheck.add(gui.getBox(boxY, boxX + 1));
-				}
-			}
-			
-			untouchedBoxes.clear();
-			for(MoveBox b : boxesToCheck)
-			{
-				boolean untouched = true;
-				for(MoveBox pb : pastBoxes)
-				{
-					if(b == pb)
-					{
-						untouched = false;
-					}
-				}
-				if(untouched)
-				{
-					untouchedBoxes.add(b);
-				}
-			}
-			for(MoveBox b : untouchedBoxes)
-			{
-				if(b.getOpen())
-				{
-					b.setOpen(false);
-					boxX = b.getIndexX();
-					boxY = b.getIndexY();
-					currentBox = b;
-				}
-			}
 		}
-		boxesToCheck.remove(currentBox);
-		gui.setBox(boxesToCheck);
-		xDestination = currentBox.getX();
-		yDestination = currentBox.getY();
+//
+//		if (xPos == xGoal)
+//		{
+//			if((boxX + 1) < 25)
+//			{
+//				boxesToCheck.add(gui.getBox(boxY, boxX + 1));
+//			}
+//			if((boxX - 1) >= 0)
+//			{
+//				boxesToCheck.add(gui.getBox(boxY, boxX - 1));
+//			}
+//		}
+//		if (yPos == yGoal)
+//		{
+//			if((boxY + 1) < 25)
+//			{
+//				boxesToCheck.add(gui.getBox(boxY + 1, boxX));
+//			}
+//			if((boxY - 1) >= 0)
+//			{
+//				boxesToCheck.add(gui.getBox(boxY - 1, boxX));
+//			}
+//		}
+//		if(currentBox != null)
+//		{
+//			currentBox.setOpen(true);
+//			boxesToCheck.add(currentBox);
+//			pastBoxes.add(currentBox);
+//			currentBox = null;
+//		}
+//		List<MoveBox> untouchedBoxes = new ArrayList<MoveBox>();
+//		for(MoveBox b : boxesToCheck)
+//		{
+//			boolean untouched = true;
+//			for(MoveBox pb : pastBoxes)
+//			{
+//				if(b == pb)
+//				{
+//					untouched = false;
+//				}
+//			}
+//			if(untouched)
+//			{
+//				untouchedBoxes.add(b);
+//			}
+//		}
+//		for(MoveBox b : untouchedBoxes)
+//		{
+//			if(b.getOpen())
+//			{
+//				b.setOpen(false);
+//				boxX = b.getIndexX();
+//				boxY = b.getIndexY();
+//				currentBox = b;
+//			}
+//		}
+//		if(currentBox == null)
+//		{
+//
+//			gui.setBox(boxesToCheck);
+//			boxesToCheck.clear();
+//
+//			if (yPos < yGoal)
+//			{
+//				if((boxY - 1) >= 0)
+//				{
+//					boxesToCheck.add(gui.getBox(boxY - 1, boxX));
+//				}
+//			}
+//			else if (yPos > yGoal)
+//			{
+//				if((boxY + 1) < 25)
+//				{
+//					boxesToCheck.add(gui.getBox(boxY + 1, boxX));
+//				}
+//			}
+//			if (xPos < xGoal)
+//			{
+//				if((boxX - 1) >= 0)
+//				{
+//					boxesToCheck.add(gui.getBox(boxY, boxX - 1));
+//				}
+//			}
+//			else if (xPos > xGoal)
+//			{
+//				if((boxX + 1) < 25)
+//				{
+//					boxesToCheck.add(gui.getBox(boxY, boxX + 1));
+//				}
+//			}
+//			
+//			untouchedBoxes.clear();
+//			for(MoveBox b : boxesToCheck)
+//			{
+//				boolean untouched = true;
+//				for(MoveBox pb : pastBoxes)
+//				{
+//					if(b == pb)
+//					{
+//						untouched = false;
+//					}
+//				}
+//				if(untouched)
+//				{
+//					untouchedBoxes.add(b);
+//				}
+//			}
+//			for(MoveBox b : untouchedBoxes)
+//			{
+//				if(b.getOpen())
+//				{
+//					b.setOpen(false);
+//					boxX = b.getIndexX();
+//					boxY = b.getIndexY();
+//					currentBox = b;
+//				}
+//			}
+//		}
+//		boxesToCheck.remove(currentBox);
+//		gui.setBox(boxesToCheck);
+//		xDestination = currentBox.getX();
+//		yDestination = currentBox.getY();
 	}
 }
