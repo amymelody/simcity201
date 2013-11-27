@@ -88,6 +88,7 @@ public class MarketInputPanel extends JPanel
 		MarketEmployeeGui g = new MarketEmployeeGui(e);
 		marketGui.animationPanel.addGui(g);
 		e.setGui(g);
+		e.setCashier(cashier);
 		employees.add(e);
 	}
 	
@@ -95,6 +96,7 @@ public class MarketInputPanel extends JPanel
 		MarketDelivererGui g = new MarketDelivererGui(d);
 		marketGui.animationPanel.addGui(g);
 		d.setGui(g);
+		d.setCashier(cashier);
 		deliverers.add(d);
 	}
 	

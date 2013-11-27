@@ -256,7 +256,7 @@ public class CityCreationPanel extends JPanel implements ActionListener
 		Properties cityConfig = new Properties();
 		
 		try {
-		    cityConfig.load(this.getClass().getResourceAsStream("../restaurantConfig.properties"));
+		    cityConfig.load(this.getClass().getResourceAsStream("../marketConfig.properties"));
 		} catch(IOException e) {
 			e.printStackTrace();
 		} catch(IllegalArgumentException iae) {
@@ -351,20 +351,6 @@ public class CityCreationPanel extends JPanel implements ActionListener
 		int money;
 		boolean car;
 		for (PersonInfo pI : info) {
-			switch(pI.eco) {
-			case "poor":
-				money = 50;
-				break;
-			case "middle":
-				money = 250;
-				break;
-			case "rich":
-				money = 500;
-				break;
-			default:
-				money = 250;
-				break;
-			}
 			if (pI.car.equals("yes")) {
 				car = true;
 			} else {
@@ -379,7 +365,7 @@ public class CityCreationPanel extends JPanel implements ActionListener
 			System.out.println(pI.physical);
 			System.out.println(pI.housing);
 			System.out.println(pI.car);*/
-			inputPanel.addPerson(pI.name, pI.job, money, pI.start, pI.end, pI.eco, pI.physical, pI.housing, car, cityDirectory);
+			inputPanel.addPerson(pI.name, pI.job, pI.pay, pI.start, pI.end, pI.eco, pI.physical, pI.housing, car, cityDirectory);
 		}
 	}
 	
