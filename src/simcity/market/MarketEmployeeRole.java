@@ -157,6 +157,7 @@ public class MarketEmployeeRole extends JobRole implements MarketEmployee {
 	/* Actions */
 	private void letCashierKnow() {
 		cashier.msgOntheClock(this);
+		gui.work();
 	}
 	private void leaveMarket() {
 		gui.leave();

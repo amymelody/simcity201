@@ -162,6 +162,7 @@ public class MarketDelivererRole extends JobRole implements MarketDeliverer {
 	/* Actions */
 	private void letCashierKnowStart() {
 		cashier.msgOntheClock(this);
+		gui.work();
 	}
 	private void leaveMarket() {
 		cashier.msgOfftheClock(this);
