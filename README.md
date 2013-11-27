@@ -20,6 +20,7 @@ Please see the Wiki for instructions on running SimCity201.
 
 ###Not working components of v1
   + Transportation: There are no cars or buses because Alfred left in the middle of the project. Wilcynski said that we do not need to worry about this aspect of the project because of that.
+  + Bank returns a null pointer error halfway through running
   + 
 
 
