@@ -14,6 +14,7 @@ public class BusAgent extends Agent implements Bus {
 	public enum PassengerState {Waiting, Boarding, OnBus}
 	
 	private String name;
+	public String location; //hack used for unit testing
 	private BusState state;
 	public List<Passenger> passengers = Collections.synchronizedList(new ArrayList<Passenger>());
 	public List<MyBusStop> busStops = Collections.synchronizedList(new ArrayList<MyBusStop>());
@@ -28,7 +29,27 @@ public class BusAgent extends Agent implements Bus {
 	
 	private boolean nearLocation(String l) {
 		if (unitTesting) {
-			return true;
+			if (location.equals("apartments")) {
+				if (l.equals("apartment1")) {
+					return false;
+				}
+			}
+			if (location.equals("restaurants")) {
+				if (l.equals("joshRestaurant")) {
+					return true;
+				}
+			}
+			if (location.equals("markets")) {
+				if (l.equals("market3")) {
+					return true;
+				}
+			}
+			if (location.equals("houses")) {
+				if (l.equals("bank1")) {
+					return true;
+				}
+			}
+			return false;
 		}
 		return false;
 	}
@@ -46,11 +67,12 @@ public class BusAgent extends Agent implements Bus {
 
 	public void msgHereArePassengers(List<Person> passengers) {
 		log.add(new LoggedEvent("Received msgHereArePassengers"));
-		for (Person p : passengers) {
-			this.passengers.add(new Passenger(p, PassengerState.Waiting));
-		}
-		if (this.passengers.isEmpty()) {
+		if (passengers.isEmpty()) {
 			state = BusState.Leaving;
+		} else {
+			for (Person p : passengers) {
+				this.passengers.add(new Passenger(p, PassengerState.Waiting));
+			}
 		}
 		stateChanged();
 	}
@@ -116,7 +138,7 @@ public class BusAgent extends Agent implements Bus {
 	}
 
 	private void goToNextStop() {
-		for (int i=busStops.size()-1; i>=0; i--)
+		for (int i=busStops.size()-1; i>=0; i--) {
 			if (busStops.get(i).current) {
 				busStops.get(i).current = false;
 				if (i==busStops.size()-1) {
@@ -135,15 +157,7 @@ public class BusAgent extends Agent implements Bus {
 					busStops.get(i+1).busStop.msgGetPassengers(this);
 				}
 			}
-		
-//		synchronized(passengers) {
-//			for (Passenger p : passengers) {
-//				if (nearLocation(p.destination)){
-//					p.person.msgAtDestination(p.destination);
-//					passengers.remove(p);
-//				}
-//			}
-//		}
+		}
 		
 		for (int i=passengers.size()-1; i>=0; i--) {
 			if (nearLocation(passengers.get(i).destination)){
