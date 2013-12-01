@@ -21,6 +21,9 @@ Please see the Wiki for instructions on running SimCity201.
 ###Not working components of v1
   + Transportation: There are no cars or buses because Alfred left in the middle of the project. Wilcynski said that we do not need to worry about this aspect of the project because of that.
   + Bank returns a null pointer error halfway through running
+  + Reduced functionality: only one restaurant
+  + Restaurant works, but food is never put on plating area
+  + ResidentGui does not work in certain cases
   + 
 
 
@@ -30,6 +33,7 @@ Please see the Wiki for instructions on running SimCity201.
 
 ###Notes
   + For some reason, even though Anjali was unable to compile and run the program on her Mac, so she made changes on her teammates computers that were related to bank
-  + 
+  + Everyone worked super hard, everyone pulled their weight, Josh was an amazing team leader!
+  + Alfred was supposed to figure out movement in general and collisions, he left the project halfway through though
 
 

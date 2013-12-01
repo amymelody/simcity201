@@ -1,51 +1,55 @@
 package simcity;
 
-import java.util.List;
+import java.util.*;
 
 import simcity.agent.Agent;
+import simcity.interfaces.BusStop;
+import simcity.interfaces.Bus;
+import simcity.interfaces.Person;
+import simcity.mock.LoggedEvent;
 
-public class BusStopAgent extends Agent{
+public class BusStopAgent extends Agent implements BusStop {
 
-	private List<PersonAgent> waitingPassengers;
-	
-	
-	public enum AgentState {
+	private String name;
+	private Bus bus = null;
+	public List<Person> waitingPassengers = Collections.synchronizedList(new ArrayList<Person>());
 
-		 WaitingForBus
-	};
+	public BusStopAgent(String name) {
+		super();
+		this.name = name;
+	}
 
-	private AgentState state = AgentState.WaitingForBus;// The start state
+	//Messages
 
-	public enum AgentEvent {
+	public void msgWaitingForBus(Person p) {
+		log.add(new LoggedEvent("Received msgWaitingForBus"));
+		waitingPassengers.add(p);
+		stateChanged();
+	}
 
-		none, busCome
-		
-	};
+	public void msgGetPassengers(Bus b) {
+		log.add(new LoggedEvent("Received msgGetPassengers"));
+		bus = b;
+		stateChanged();
+	}
 
-	private AgentEvent event = AgentEvent.none;
-	
-	private BusAgent bus;
-	
-	@Override
+
+	//Scheduler
+
 	public boolean pickAndExecuteAnAction() {
-		if ( state == AgentState.WaitingForBus && event == AgentEvent.busCome){
-			for (PersonAgent agent: waitingPassengers){
-				bus.loadPassenger(agent);
-			}
-			waitingPassengers.clear();
+		if (bus != null) {
+			loadPassengers();
 			return true;
 		}
 		return false;
 	}
-	
-	public void msgBusCome(BusAgent bus){
-		this.bus = bus;
-		event = AgentEvent.busCome;
-		stateChanged();
-	}
 
-	public void msgWaitingForBus(PersonAgent personAgent) {
-		waitingPassengers.add(personAgent);
-	}
 
+	//Actions
+
+	public void loadPassengers() {
+		bus.msgHereArePassengers(waitingPassengers);
+		waitingPassengers.clear();
+		bus = null;
+	}
 }

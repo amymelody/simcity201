@@ -14,8 +14,6 @@ public abstract class BuildingGui
 {
 	String name;
 	protected CityDirectory cityDirectory;
-	protected MarketAnimationPanel animationPanel;
-	protected MarketInputPanel inputPanel;
 
 	/**
 	 * Constructor
@@ -27,10 +25,6 @@ public abstract class BuildingGui
 	}
 	public String getName() {
 		return name;
-	}
-	
-	public void changeCityView() {
-		cityGui.changeView();
 	}
 	
 	public abstract void changeView(boolean visible);

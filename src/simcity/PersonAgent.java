@@ -15,7 +15,6 @@ import simcity.interfaces.Resident;
 import simcity.bank.interfaces.BankDepositor;
 import simcity.interfaces.JobInterface;
 import simcity.interfaces.Bus;
-import simcity.interfaces.Car;
 import simcity.interfaces.BusStop;
 import simcity.mock.LoggedEvent;
 import simcity.role.Role;
@@ -38,7 +37,6 @@ public class PersonAgent extends Agent implements Person
 	private String name;
 	private boolean haveBankAccount;
 	private boolean rentDue;
-	private Car car;
 	private Bus bus;
 	private String destination;
 	public boolean unitTesting = false;
@@ -333,9 +331,10 @@ public class PersonAgent extends Agent implements Person
 //			money += 600;
 //			print("$" + money);
 //		}
-	//	if (time.getHour() == 8 && time.getMinute() == 0) {
-	//		state.ns = NourishmentState.gotHungry;
-	//	}
+		if (!unitTesting && time.getHour() == 8 && time.getMinute() == 0) {
+			print("Got hungry");
+			state.ns = NourishmentState.gotHungry;
+		}
 		stateChanged();
 	}
 
@@ -412,12 +411,7 @@ public class PersonAgent extends Agent implements Person
 		}
 		stateChanged();
 	}
-
-	public void msgBoughtCar(Car c) {
-		car = c;
-		stateChanged();
-	}
-
+	
 	public void msgIncome(int cash) {
 		log.add(new LoggedEvent("Received msgIncome"));
 		money += cash;
@@ -803,33 +797,26 @@ public class PersonAgent extends Agent implements Person
 	}
 
 	private void goToDestination(String d) {
-		/*if (car != null && !nearDestination(d) && state.ts != TransportationState.walkingFromVehicle) {
-			//gui.DoGoToCar();
-			state.ts = TransportationState.inCar;
+		if (takeBus(d) && state.ts != TransportationState.walkingFromVehicle) {
+			BusStop b = closestBusStop();
+			//gui.DoGoToBusStop(b);
+			state.ts = TransportationState.waitingForBus;
 			destination = d;
-			car.msgGoToDestination(this, d); //pass the destination to the car so it knows where to go
+			b.msgWaitingForBus(this);
 		} else {
-			if (takeBus(d) && state.ts != TransportationState.walkingFromVehicle) {
-				BusStop b = closestBusStop();
-				//gui.DoGoToBusStop(b);
-				state.ts = TransportationState.waitingForBus;
-				destination = d;
-				b.msgWaitingForBus(this);
-			} else {*/
-				state.ts = TransportationState.walking;
-				destination = d;
-				if (!unitTesting) {
-					gui.DoGoToDestination(city.getBuildingEntrance(d)); //just walk there
-					try {
-						atDestination.acquire();
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+			state.ts = TransportationState.walking;
+			destination = d;
+			if (!unitTesting) {
+				gui.DoGoToDestination(d); //just walk there
+				try {
+					atDestination.acquire();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
-				state.ls = LocationState.atDestination;
-			//}
-		//}
+			}
+			state.ls = LocationState.atDestination;
+		}
 	}
 	
 	

@@ -1,7 +1,8 @@
 package simcity.test.mock;
 
-import simcity.PersonAgent;
 import simcity.interfaces.BusStop;
+import simcity.interfaces.Person;
+import simcity.interfaces.Bus;
 import simcity.mock.LoggedEvent;
 import simcity.mock.Mock;
 
@@ -11,8 +12,12 @@ public class MockBusStop extends Mock implements BusStop {
 		super(name);
 	}
 	
-	public void msgWaitingForBus(PersonAgent person) {
+	public void msgWaitingForBus(Person person) {
 		log.add(new LoggedEvent("Received msgWaitingForBus"));
+	}
+	
+	public void msgGetPassengers(Bus b) {
+		log.add(new LoggedEvent("Received msgGetPassengers"));
 	}
 	
 	public String toString() {

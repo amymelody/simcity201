@@ -1,9 +1,11 @@
 package simcity.interfaces;
 
-import simcity.PersonAgent;
+import simcity.interfaces.Person;
 
 public interface BusStop {
 
-	public abstract void msgWaitingForBus(PersonAgent person);
+	public abstract void msgWaitingForBus(Person person);
+	
+	public abstract void msgGetPassengers(Bus b);
 
 }
