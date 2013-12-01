@@ -161,6 +161,7 @@ public class PersonTest extends TestCase
 	public void testGoToWork()
 	{
 		person.addRole(waiter, "restWaiterRole");
+		person.setPState("fit");
 		
 		Map<Day, Time> startShifts = new HashMap<Day, Time>();
 		startShifts.put(Day.Mon, new Time(Day.Mon, 9, 0));
@@ -183,7 +184,7 @@ public class PersonTest extends TestCase
 		
 		assertEquals("Person's transportation state should be walking. It isn't", TransportationState.walking, person.state.getTState());
 		
-		person.msgUpdateWatch(Day.Mon, 8, 30);
+		person.msgUpdateWatch(Day.Mon, 8, 0);
 		
 		assertTrue("Person should have logged \"Received msgUpdateWatch\" but didn't. His last event logged reads instead: " 
 				+ person.log.getLastLoggedEvent().toString(), person.log.containsString("Received msgUpdateWatch"));
@@ -360,6 +361,7 @@ public class PersonTest extends TestCase
 		person.addRole(resident, "residentRole");
 		person.addRole(depositor, "bank1DepositorRole");
 		person.addRole(waiter, "restWaiterRole");
+		person.setPState("fit");
 		
 		Map<Day, Time> startShifts = new HashMap<Day, Time>();
 		startShifts.put(Day.Mon, new Time(Day.Mon, 9, 0));
@@ -431,7 +433,7 @@ public class PersonTest extends TestCase
 		
 		assertEquals("Person's location state should be atDestination. It isn't", LocationState.atDestination, person.state.getLState());
 		
-		person.msgUpdateWatch(Day.Mon, 8, 30);
+		person.msgUpdateWatch(Day.Mon, 8, 0);
 		
 		assertTrue("Person should have logged \"Received msgUpdateWatch\" but didn't. His last event logged reads instead: " 
 				+ person.log.getLastLoggedEvent().toString(), person.log.containsString("Received msgUpdateWatch"));

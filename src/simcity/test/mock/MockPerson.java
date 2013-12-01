@@ -1,4 +1,4 @@
-package simcity.market.test.mock;
+package simcity.test.mock;
 
 import java.util.List;
 import java.util.Map;
@@ -116,13 +116,13 @@ public class MockPerson extends Mock implements Person {
 	@Override
 	public void msgBusIsHere(Bus b) {
 		// TODO Auto-generated method stub
-		log.add(new LoggedEvent("Bus is here"));
+		log.add(new LoggedEvent("Received msgBusIsHere"));
 	}
 
 	@Override
 	public void msgAtDestination(String d) {
 		// TODO Auto-generated method stub
-		log.add(new LoggedEvent("At destination"));
+		log.add(new LoggedEvent("Received msgAtDestination. Destination = " + d));
 	}
 
 	@Override
