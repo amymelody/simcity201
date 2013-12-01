@@ -84,11 +84,5 @@ public class MarketGui extends BuildingGui
 	public void addMarketCustomer(MarketCustomerRole c) {
 		inputPanel.addCustomer(c);
 	}
-
-	@Override
-	public void updateAnimation() {
-		// TODO Auto-generated method stub
-		//animationPanel.updatePosition();
-	}
 	
 }

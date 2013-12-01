@@ -254,11 +254,11 @@ public class CityCreationPanel extends JPanel //implements ActionListener
 //		}
 //	}
 	
-	public void readConfig() {
+	public void readConfig(String file) {
 		Properties cityConfig = new Properties();
 		
 		try {
-		    cityConfig.load(this.getClass().getResourceAsStream("../restaurantConfig.properties"));
+		    cityConfig.load(this.getClass().getResourceAsStream(file));
 		} catch(IOException e) {
 			e.printStackTrace();
 		} catch(IllegalArgumentException iae) {

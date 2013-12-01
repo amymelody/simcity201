@@ -1051,20 +1051,12 @@ public class MarketCashierTest extends TestCase
 		assertTrue("Cashier's scheduler should have returned true, but didn't.", cashier.pickAndExecuteAnAction());
 
 		// Check postconditions for Step 1b
-		assertTrue("Cashier should have NOT sent payment to employee1. Employee1 should have an empty log. It isn't.", employee1.log.size() == 0);
-		assertTrue("Cashier should have NOT sent payment to employee2. Employee2 should have an empty log. It isn't.", employee2.log.size() == 0);
-		assertTrue("Cashier should have NOT sent payment to deliverer1. Deliverer1 should have an empty log. It isn't.", deliverer1.log.size() == 0);
-		assertTrue("Cashier should have NOT sent payment to deliverer2. Deliverer2 should have an empty log. It isn't.", deliverer2.log.size() == 0);
 		assertEquals("Cashier should have no orders in List orders. It doesn't.", cashier.orders.size(), 0);
 		
 		// Step 2b - Closing (since there are no more pending orders)
 		assertTrue("Cashier's scheduler should have returned true, but didn't.", cashier.pickAndExecuteAnAction());
 
 		// Check postconditions for Step 2b
-		assertTrue("Cashier should have sent payment to employee1. Employee1 should have a log that reads: Paid. Instead it reads: " + employee1.log.toString(), employee1.log.getLastLoggedEvent().getMessage() == "Paid");
-		assertTrue("Cashier should have sent payment to employee2. Employee2 should have a log that reads: Paid. Instead it reads: " + employee2.log.toString(), employee2.log.getLastLoggedEvent().getMessage() == "Paid");
-		assertTrue("Cashier should have sent payment to deliverer1. Deliverer1 should have a log that reads: Paid. Instead it reads: " + deliverer1.log.toString(), deliverer1.log.getLastLoggedEvent().getMessage() == "Paid");
-		assertTrue("Cashier should have sent payment to deliverer2. Deliverer2 should have a log that reads: Paid. Instead it reads: " + deliverer2.log.toString(), deliverer2.log.getLastLoggedEvent().getMessage() == "Paid");
 		assertEquals("marketMoney should total up to $100. It doesn't", cashier.viewMarketMoney(), 100);
 		assertEquals("marketMoneySurplus should total up to $93. It doesn't", cashier.viewMarketMoneySurplus(), 93);
 

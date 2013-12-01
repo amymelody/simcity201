@@ -204,4 +204,10 @@ public class MockPerson extends Mock implements Person
 		// TODO Auto-generated method stub
 		return 0;
 	}
+
+	@Override
+	public String getHome() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

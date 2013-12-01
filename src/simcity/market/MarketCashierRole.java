@@ -391,7 +391,7 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 		}
 		marketMoney -= salary;
 		marketMoneySurplus = marketMoney - 100;
-		bank.msgMarketDeposit(marketMoneySurplus);
+		//bank.msgMarketDeposit(marketMoneySurplus);
 		marketMoney = 100;
 	}
 
