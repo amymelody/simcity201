@@ -46,7 +46,6 @@ public class CityDirectory
 {
 	Map<Integer, PersonInfo> personMap = new HashMap<Integer, PersonInfo>();
 	Map<String, BuildingInfo> buildingMap = new HashMap<String, BuildingInfo>();
-	private List<TrafficNode> trafficNodes = new ArrayList<TrafficNode>();
 	
 	//All job roles in the city
 	private Vector<JoshWaiterRole> joshWaiters = new Vector<JoshWaiterRole>();
@@ -180,6 +179,7 @@ public class CityDirectory
 				type = "restaurant";
 			}
 			loc = l;
+			orientation = o;
 		}
 	}
 	class HousingInfo
@@ -262,54 +262,6 @@ public class CityDirectory
 		addBuilding("bank1", "horizontal", new Point(bankX, bankY));
 		addBuilding("joshRestaurant", "horizontal", new Point(joshRestaurantX, joshRestaurantY));
 	
-		//add Traffic Nodes
-		trafficNodes.add(new TrafficNode(0,0));
-		trafficNodes.add(new TrafficNode(70,0));
-		trafficNodes.add(new TrafficNode(210,0));
-		trafficNodes.add(new TrafficNode(280,0));
-		trafficNodes.add(new TrafficNode(420,0));
-		trafficNodes.add(new TrafficNode(480,0));
-		trafficNodes.add(new TrafficNode(0,70));
-		trafficNodes.add(new TrafficNode(70,70));
-		trafficNodes.add(new TrafficNode(210,70));
-		trafficNodes.add(new TrafficNode(280,70));
-		trafficNodes.add(new TrafficNode(420,70));
-		trafficNodes.add(new TrafficNode(480,70));
-		trafficNodes.add(new TrafficNode(0,210));
-		trafficNodes.add(new TrafficNode(70,210));
-		trafficNodes.add(new TrafficNode(210,210));
-		trafficNodes.add(new TrafficNode(280,210));
-		trafficNodes.add(new TrafficNode(420,210));
-		trafficNodes.add(new TrafficNode(480,210));
-		trafficNodes.add(new TrafficNode(0,280));
-		trafficNodes.add(new TrafficNode(70,280));
-		trafficNodes.add(new TrafficNode(210,280));
-		trafficNodes.add(new TrafficNode(280,280));
-		trafficNodes.add(new TrafficNode(420,280));
-		trafficNodes.add(new TrafficNode(480,280));
-		trafficNodes.add(new TrafficNode(0,420));
-		trafficNodes.add(new TrafficNode(70,420));
-		trafficNodes.add(new TrafficNode(210,420));
-		trafficNodes.add(new TrafficNode(280,420));
-		trafficNodes.add(new TrafficNode(420,420));
-		trafficNodes.add(new TrafficNode(480,420));
-		trafficNodes.add(new TrafficNode(0,480));
-		trafficNodes.add(new TrafficNode(70,480));
-		trafficNodes.add(new TrafficNode(210,480));
-		trafficNodes.add(new TrafficNode(280,480));
-		trafficNodes.add(new TrafficNode(420,480));
-		trafficNodes.add(new TrafficNode(480,480));
-		
-		/*for (TrafficNode node : trafficNodes) {
-			for (TrafficNode n : trafficNodes) {
-				if (n.x == node.x && n.y != node.y) {
-					if (n.)
-				}
-				if (n.y == node.y && n.x != node.x) {
-					
-				}
-			}
-		}*/
 	}
 	
 	public ResidentRole ResidentFactory(String role) {
@@ -853,6 +805,10 @@ public class CityDirectory
 	
 	public Point getBuildingEntrance(String building) {
 		return buildingMap.get(building).loc;
+	}
+	
+	public String getBuildingOrientation(String building) {
+		return buildingMap.get(building).orientation;
 	}
 	
 	public void assignLandlord()

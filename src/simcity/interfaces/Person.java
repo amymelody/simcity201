@@ -39,8 +39,6 @@ public interface Person {
 
 	public abstract void msgReceivedItems(List<ItemOrder> items);
 
-	public abstract void msgBoughtCar(Car c);
-
 	public abstract void msgIncome(int cash);
 
 	public abstract void msgDoneEating();

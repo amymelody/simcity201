@@ -5,41 +5,153 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 
 import simcity.PersonAgent;
+import simcity.CityDirectory;
+import simcity.TrafficNode;
 
 public class PersonGui implements Gui {
 	private PersonAgent agent = null;
 	private CityGui gui;
+	private CityDirectory city;
 
 	private static final int width = 10;
 	private static final int height = 10;
 	private int xPos = 0, yPos = 0;//default Person position
-	private int xDestination = 0, yDestination = 0;//default Person destination
-	private int buildingX, buildingY;
+	private int xGoal = 0, yGoal = 0;//default Person destination
+	private TrafficNode currentNode;
+	private String destination;
 	
 	private enum Command {noCommand, GoToDestination};
 	private Command command=Command.noCommand;
 
-	public PersonGui(PersonAgent p, CityGui g) {
+	public PersonGui(PersonAgent p, CityGui g, CityDirectory c) {
 		agent = p;
 		gui = g;
+		city = c;
+		currentNode = gui.getTrafficNodes().get(0);
 	}
 
 	public void updatePosition() {
 		
-		if (xPos < xDestination)
-			xPos++;
-		else if (xPos > xDestination)
-			xPos--;
+		if (city != null && destination != null && xPos == currentNode.x && yPos == currentNode.y) {
+			if (city.getBuildingOrientation(destination).equals("horizontal")) {
+				if (yGoal < yPos) {
+					currentNode = currentNode.getNorthNeighbor();
+				} else if (yGoal > yPos) {
+					currentNode = currentNode.getSouthNeighbor();
+				} else if (xGoal < xPos) {
+					currentNode = currentNode.getWestNeighbor();
+				} else {
+					currentNode = currentNode.getEastNeighbor();
+				}
+			}
+			if (city.getBuildingOrientation(destination).equals("vertical")) {
+				if (xGoal < xPos) {
+					currentNode = currentNode.getWestNeighbor();
+				} else if (xGoal > xPos) {
+					currentNode = currentNode.getEastNeighbor();
+				} else if (yGoal < yPos) {
+					currentNode = currentNode.getNorthNeighbor();
+				} else {
+					currentNode = currentNode.getSouthNeighbor();
+				}
+			}
+		}
+		
+		if (xPos < currentNode.x && xPos != xGoal) {
+			xPos+=10;
+		} else if (xPos > currentNode.x && xPos != xGoal) {
+			xPos-=10;
+		}
+		
+		if (yPos < currentNode.y && yPos != yGoal) {
+			yPos+=10;
+		} else if (yPos > currentNode.y && yPos != yGoal) {
+			yPos-=10;
+		}
+		
+		if (xPos < currentNode.x && xPos != xGoal) {
+			if (gui.getMoveBox(xPos+10, yPos).getOpen()) {
+				gui.setBox(xPos, yPos, true);
+				xPos+=10;
+				gui.setBox(xPos, yPos, false);
+			} else if (gui.getMoveBox(xPos, yPos+10) != null && gui.getMoveBox(xPos, yPos+10).getOpen()) {
+				gui.setBox(xPos, yPos, true);
+				yPos+=10;
+				gui.setBox(xPos, yPos, false);
+			} else if (gui.getMoveBox(xPos-10, yPos) != null && gui.getMoveBox(xPos-10, yPos).getOpen()) {
+				gui.setBox(xPos, yPos, true);
+				xPos-=10;
+				gui.setBox(xPos, yPos, false);
+			} else if (gui.getMoveBox(xPos, yPos-10) != null && gui.getMoveBox(xPos, yPos-10).getOpen()) {
+				gui.setBox(xPos, yPos, true);
+				yPos-=10;
+				gui.setBox(xPos, yPos, false);
+			}
+		}
+		else if (xPos > currentNode.x && xPos != xGoal) {
+			if (gui.getMoveBox(xPos-10, yPos).getOpen()) {
+				gui.setBox(xPos, yPos, true);
+				xPos-=10;
+				gui.setBox(xPos, yPos, false);
+			} else if (gui.getMoveBox(xPos, yPos-10) != null && gui.getMoveBox(xPos, yPos-10).getOpen()) {
+				gui.setBox(xPos, yPos, true);
+				yPos-=10;
+				gui.setBox(xPos, yPos, false);
+			} else if (gui.getMoveBox(xPos+10, yPos) != null && gui.getMoveBox(xPos+10, yPos).getOpen()) {
+				gui.setBox(xPos, yPos, true);
+				xPos+=10;
+				gui.setBox(xPos, yPos, false);
+			} else if (gui.getMoveBox(xPos, yPos+10) != null && gui.getMoveBox(xPos, yPos+10).getOpen()) {
+				gui.setBox(xPos, yPos, true);
+				yPos+=10;
+				gui.setBox(xPos, yPos, false);
+			}
+		}
 
-		if (yPos < yDestination)
-			yPos++;
-		else if (yPos > yDestination)
-			yPos--;
+		if (yPos < currentNode.y && yPos != yGoal) {
+			if (gui.getMoveBox(xPos, yPos+10).getOpen()) {
+				gui.setBox(xPos, yPos, true);
+				yPos+=10;
+				gui.setBox(xPos, yPos, false);
+			} else if (gui.getMoveBox(xPos-10, yPos) != null && gui.getMoveBox(xPos-10, yPos).getOpen()) {
+				gui.setBox(xPos, yPos, true);
+				xPos-=10;
+				gui.setBox(xPos, yPos, false);
+			} else if (gui.getMoveBox(xPos, yPos-10) != null && gui.getMoveBox(xPos, yPos-10).getOpen()) {
+				gui.setBox(xPos, yPos, true);
+				yPos-=10;
+				gui.setBox(xPos, yPos, false);
+			} else if (gui.getMoveBox(xPos+10, yPos) != null && gui.getMoveBox(xPos+10, yPos).getOpen()) {
+				gui.setBox(xPos, yPos, true);
+				xPos+=10;
+				gui.setBox(xPos, yPos, false);
+			}
+		}
+		else if (yPos > currentNode.y && yPos != yGoal) {
+			if (gui.getMoveBox(xPos, yPos-10).getOpen()) {
+				gui.setBox(xPos, yPos, true);
+				yPos-=10;
+				gui.setBox(xPos, yPos, false);
+			} else if (gui.getMoveBox(xPos+10, yPos) != null && gui.getMoveBox(xPos+10, yPos).getOpen()) {
+				gui.setBox(xPos, yPos, true);
+				xPos+=10;
+				gui.setBox(xPos, yPos, false);
+			} else if (gui.getMoveBox(xPos, yPos+10) != null && gui.getMoveBox(xPos, yPos+10).getOpen()) {
+				gui.setBox(xPos, yPos, true);
+				yPos+=10;
+				gui.setBox(xPos, yPos, false);
+			} else if (gui.getMoveBox(xPos-10, yPos) != null && gui.getMoveBox(xPos-10, yPos).getOpen()) {
+				gui.setBox(xPos, yPos, true);
+				xPos-=10;
+				gui.setBox(xPos, yPos, false);
+			}
+		}
 		
 		
 		
-		if (xPos == xDestination && yPos == yDestination) {
+		if (xPos == xGoal && yPos == yGoal) {
         	if (command == Command.GoToDestination) {
+        		gui.setBox(xPos, yPos, true);
         		agent.msgAtDestination();
         	}
         	command = Command.noCommand;
@@ -53,11 +165,10 @@ public class PersonGui implements Gui {
 		}
 	}
 	
-	public void DoGoToDestination(Point p) {
-		buildingX = p.x;
-		buildingY = p.y;
-		xDestination = buildingX;
-		yDestination = buildingY;
+	public void DoGoToDestination(String d) {
+		destination = d;
+		xGoal = city.getBuildingEntrance(d).x;
+		yGoal = city.getBuildingEntrance(d).y;
 		command = Command.GoToDestination;
 	}
 

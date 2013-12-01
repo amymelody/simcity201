@@ -33,9 +33,9 @@ public class CityInputPanel extends JPanel implements ActionListener
 	private Vector<JRadioButtonMenuItem> configs = new Vector<JRadioButtonMenuItem>();
 	private ButtonGroup configGroup = new ButtonGroup();
 	private JLabel scenario = new JLabel("CHOOSE A SCENARIO");
-	private JRadioButtonMenuItem button1 = new JRadioButtonMenuItem("Config File 1");
-	private JRadioButtonMenuItem button2 = new JRadioButtonMenuItem("Config File 2");
-	private JRadioButtonMenuItem button3 = new JRadioButtonMenuItem("Config File 3");
+	private JRadioButtonMenuItem button1 = new JRadioButtonMenuItem("Restaurant Config");
+	private JRadioButtonMenuItem button2 = new JRadioButtonMenuItem("Market Config");
+	private JRadioButtonMenuItem button3 = new JRadioButtonMenuItem("Jobs Config");
 	private JButton goButton = new JButton("Run Scenario");
     
 //    @Override
@@ -102,15 +102,15 @@ public class CityInputPanel extends JPanel implements ActionListener
 		{
 			if(button1.isSelected())
 			{
-//    				creationPanel.readConfig("../config1.properties");
+				creationPanel.readConfig("../restaurantConfig.properties");
 			}
 			else if(button2.isSelected())
 			{
-//    				creationPanel.readConfig("../config2.properties");
+				creationPanel.readConfig("../marketConfig.properties");
 			}
 			else if(button3.isSelected())
 			{
-//    				creationPanel.readConfig("../config3.properties");
+			creationPanel.readConfig("../jobsConfig.properties");
 			}
 		}
 //    	for (JButton b : personList)
@@ -132,7 +132,7 @@ public class CityInputPanel extends JPanel implements ActionListener
     public void addPerson(String name, String job, int pay, int startShift, int endShift, String eco, String physical, String housing, boolean car, CityDirectory c) 
     {
 		PersonAgent p = new PersonAgent(name);
-		PersonGui g = new PersonGui(p, gui);
+		PersonGui g = new PersonGui(p, gui, c);
 		p.setCityDirectory(c);
 		p.setCityGui(gui);
 		p.setGui(g);

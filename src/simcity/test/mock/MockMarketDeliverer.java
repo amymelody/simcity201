@@ -40,7 +40,6 @@ public class MockMarketDeliverer extends Mock implements MarketDeliverer {
 		log.add(new LoggedEvent("Received payment"));
 	}
 
-	@Override
 	public void msgPay() {
 		log.add(new LoggedEvent("Paid"));
 	}

@@ -17,6 +17,12 @@ public class MockResidentRole extends Role implements Resident {
 		log.add(new LoggedEvent("Received msgGroceries"));
 	}
 	
+	public void msgAmountOwed(int a) {};
+	
+	public void msgRentDue() {};
+	
+	public void msgAtLocation() {};
+	
 	public void msgImHome() {
 		log.add(new LoggedEvent("Received msgImHome"));
 	}

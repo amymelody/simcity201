@@ -8,6 +8,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Semaphore;
 
 import simcity.CityDirectory;
 import simcity.market.gui.MarketGui;
@@ -17,6 +18,7 @@ import simcity.bank.gui.BankGui;
 import simcity.housing.LandlordRole;
 import simcity.housing.ResidentRole;
 import simcity.housing.gui.HousingGui;
+import simcity.housing.gui.MoveBox;
 import simcity.joshrestaurant.gui.JoshRestaurantGui;
 import simcity.joshrestaurant.JoshCustomerRole;
 import simcity.joshrestaurant.JoshWaiterRole;
@@ -27,6 +29,7 @@ import simcity.market.MarketEmployeeRole;
 import simcity.market.MarketDelivererRole;
 import simcity.RestWaiterRole;
 import simcity.RestCustomerRole;
+import simcity.TrafficNode;
 
 /**
  * Main GUI class.
@@ -43,6 +46,10 @@ public class CityGui extends JFrame
 	private final int WINDOWY = 500;
 	private final int BUFFERTOP = 50;
 	private final int BUFFERSIDE = 15;
+	
+	private MoveBox[][] boxes = new MoveBox[50][50];
+	//private Semaphore[][] boxBlock = new Semaphore[50][50];
+	private List<TrafficNode> trafficNodes = new ArrayList<TrafficNode>();
 
 	/**
 	 * Constructor
@@ -71,8 +78,137 @@ public class CityGui extends JFrame
 		animationPanel.setMinimumSize(animDim);
 		animationPanel.setMaximumSize(animDim);
 		add(animationPanel, frameLayout.CENTER);
+		
+		//create move boxes
+		for (int i = 0; i < 50; i++) {
+			for(int j = 0; j < 50; j++) {
+				boxes[i][j] = new MoveBox(j, i, j*10, i*10);
+			}
+		}
+		
+		//intersections
+		for (int i=0; i<3; i++) {
+			for (int j=0; j<3; j++) {
+				for (int x=2; x<6; x++) {
+					for (int y=2; y<6; y++) {
+						boxes[i*21 + x][j*21 + y].setOpen(false);
+					}
+				}
+			}
+		}
+		
+		//horizontal roads
+		for (int i=0; i<2; i++) {
+			for (int j=0; j<3; j++) {
+				for (int x=8; x<21; x++) {
+					for (int y=2; y<6; y++) {
+						boxes[i*21 + x][j*21 + y].setOpen(false);
+					}
+				}
+			}
+		}
+		
+		//vertical roads
+		for (int i=0; i<3; i++) {
+			for (int j=0; j<2; j++) {
+				for (int x=2; x<6; x++) {
+					for (int y=8; y<21; y++) {
+						boxes[i*21 + x][j*21 + y].setOpen(false);
+					}
+				}
+			}
+		}
+		
+		//buildings
+		for (int i=0; i<2; i++) {
+			for (int j=0; j<2; j++) {
+				for (int x=8; x<21; x++) {
+					for (int y=8; y<21; y++) {
+						boxes[i*21 + x][j*21 + y].setOpen(false);
+					}
+				}
+			}
+		}
+		
+		//add Traffic Nodes
+		trafficNodes.add(new TrafficNode(0,0));
+		trafficNodes.add(new TrafficNode(70,0));
+		trafficNodes.add(new TrafficNode(210,0));
+		trafficNodes.add(new TrafficNode(280,0));
+		trafficNodes.add(new TrafficNode(420,0));
+		trafficNodes.add(new TrafficNode(480,0));
+		trafficNodes.add(new TrafficNode(0,70));
+		trafficNodes.add(new TrafficNode(70,70));
+		trafficNodes.add(new TrafficNode(210,70));
+		trafficNodes.add(new TrafficNode(280,70));
+		trafficNodes.add(new TrafficNode(420,70));
+		trafficNodes.add(new TrafficNode(480,70));
+		trafficNodes.add(new TrafficNode(0,210));
+		trafficNodes.add(new TrafficNode(70,210));
+		trafficNodes.add(new TrafficNode(210,210));
+		trafficNodes.add(new TrafficNode(280,210));
+		trafficNodes.add(new TrafficNode(420,210));
+		trafficNodes.add(new TrafficNode(480,210));
+		trafficNodes.add(new TrafficNode(0,280));
+		trafficNodes.add(new TrafficNode(70,280));
+		trafficNodes.add(new TrafficNode(210,280));
+		trafficNodes.add(new TrafficNode(280,280));
+		trafficNodes.add(new TrafficNode(420,280));
+		trafficNodes.add(new TrafficNode(480,280));
+		trafficNodes.add(new TrafficNode(0,420));
+		trafficNodes.add(new TrafficNode(70,420));
+		trafficNodes.add(new TrafficNode(210,420));
+		trafficNodes.add(new TrafficNode(280,420));
+		trafficNodes.add(new TrafficNode(420,420));
+		trafficNodes.add(new TrafficNode(480,420));
+		trafficNodes.add(new TrafficNode(0,480));
+		trafficNodes.add(new TrafficNode(70,480));
+		trafficNodes.add(new TrafficNode(210,480));
+		trafficNodes.add(new TrafficNode(280,480));
+		trafficNodes.add(new TrafficNode(420,480));
+		trafficNodes.add(new TrafficNode(480,480));
+		
+		for (TrafficNode node : trafficNodes) {
+			for (TrafficNode n : trafficNodes) {
+				if (n.x == node.x && n.y != node.y) {
+					if ((node.y + 140 >= n.y && n.y > node.y) || (node.y - 140 <= n.y && n.y < node.y)) {
+						node.addNeighbor(n);
+					}
+				}
+				if (n.y == node.y && n.x != node.x) {
+					if ((node.x + 140 >= n.x && n.x > node.x) || (node.x - 140 <= n.x && n.x < node.x)) {
+						node.addNeighbor(n);
+					}
+				}
+			}
+		}
 	}
 
+	public List<TrafficNode> getTrafficNodes() {
+		return trafficNodes;
+	}
+	
+	public MoveBox getMoveBox(int x, int y) {
+		for (int i=0; i<50; i++) {
+			for (int j=0; j<50; j++) {
+				if (boxes[i][j].getX() == x && boxes[i][j].getY() == y) {
+					return boxes[i][j];
+				}
+			}
+		}
+		return null;
+	}
+	
+	public void setBox(int x, int y, boolean open) {
+		for (int i=0; i<50; i++) {
+			for (int j=0; j<50; j++) {
+				if (boxes[i][j].getX() == x && boxes[i][j].getY() == y) {
+					boxes[i][j].setOpen(open);
+				}
+			}
+		}
+	}
+	
 	public void addGui(PersonGui g) {
 		animationPanel.addGui(g);
 	}
