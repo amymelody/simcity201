@@ -1,11 +1,13 @@
 package simcity;
 
 import java.util.*;
+import java.util.concurrent.Semaphore;
 
 import simcity.agent.Agent;
 import simcity.interfaces.Person;
 import simcity.interfaces.Bus;
 import simcity.interfaces.BusStop;
+import simcity.gui.BusGui;
 import simcity.mock.LoggedEvent;
 
 public class BusAgent extends Agent implements Bus {
@@ -15,10 +17,12 @@ public class BusAgent extends Agent implements Bus {
 	
 	private String name;
 	public String location; //hack used for unit testing
-	private BusState state;
+	private BusState state = BusState.Leaving;
 	public List<Passenger> passengers = Collections.synchronizedList(new ArrayList<Passenger>());
 	public List<MyBusStop> busStops = Collections.synchronizedList(new ArrayList<MyBusStop>());
 	public boolean unitTesting;
+	private BusGui busGui;
+	private Semaphore atStop = new Semaphore(0,true);
 	
 	public BusAgent(String name) {
 		super();
@@ -58,12 +62,25 @@ public class BusAgent extends Agent implements Bus {
 		return state;
 	}
 	
+	public String getName() {
+		return name;
+	}
+	
 	public void addBusStop(BusStop b, boolean c) {
 		busStops.add(new MyBusStop(b,c));
+	}
+	
+	public void setGui(BusGui g) {
+		busGui = g;
 	}
 
 
 	//Messages
+	
+	public void msgAtStop() {
+		atStop.release();
+		stateChanged();
+	}
 
 	public void msgHereArePassengers(List<Person> passengers) {
 		log.add(new LoggedEvent("Received msgHereArePassengers"));
@@ -143,16 +160,28 @@ public class BusAgent extends Agent implements Bus {
 				busStops.get(i).current = false;
 				if (i==busStops.size()-1) {
 					busStops.get(0).current = true;
-//					if (!unitTesting) {
-//						DoGoToStop(busStops.get(0));
-//					}
+					if (!unitTesting) {
+						busGui.DoGoToStop(busStops.get(0).busStop);
+						try {
+							atStop.acquire();
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
 					state = BusState.AtStop;
 					busStops.get(0).busStop.msgGetPassengers(this);
 				} else {
 					busStops.get(i+1).current = true;
-//					if (!unitTesting) {
-//						DoGoToStop(busStops.get(i+1));
-//					}
+					if (!unitTesting) {
+						busGui.DoGoToStop(busStops.get(i+1).busStop);
+						try {
+							atStop.acquire();
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
 					state = BusState.AtStop;
 					busStops.get(i+1).busStop.msgGetPassengers(this);
 				}

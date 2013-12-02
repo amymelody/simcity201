@@ -370,6 +370,7 @@ public class CityCreationPanel extends JPanel //implements ActionListener
 			inputPanel.addPerson(pI.name, pI.job, pI.pay, pI.start, pI.end, pI.eco, pI.physical, pI.housing, car, cityDirectory);
 		}
 		cityDirectory.assignLandlord();
+		inputPanel.startBus();
 	}
 	
 	private class PersonInfo {

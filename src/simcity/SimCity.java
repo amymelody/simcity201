@@ -23,9 +23,7 @@ public class SimCity
         bg.setVisible(true);
         bg.setResizable(true);
         bg.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        
-      // cg.readConfig();
-        
+    
         System.out.println("City");
     }
 }

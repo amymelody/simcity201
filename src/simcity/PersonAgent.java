@@ -213,8 +213,10 @@ public class PersonAgent extends Agent implements Person
 		roles.add(new MyRole(r, n));
 	}
 	
-	public void addBusStop(BusStop b) {
-		busStops.add(b);
+	public void addBusStops(List<BusStop> stops) {
+		for (BusStop b : stops) {
+			busStops.add(b);
+		}
 	}
 	
 	private boolean wantToGoToRestaurant() {
@@ -797,7 +799,7 @@ public class PersonAgent extends Agent implements Person
 	}
 
 	private void goToDestination(String d) {
-		if (takeBus(d) && state.ts != TransportationState.walkingFromVehicle) {
+		if (unitTesting && takeBus(d) && state.ts != TransportationState.walkingFromVehicle) {
 			BusStop b = closestBusStop();
 			//gui.DoGoToBusStop(b);
 			state.ts = TransportationState.waitingForBus;

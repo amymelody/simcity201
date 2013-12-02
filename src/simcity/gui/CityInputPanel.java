@@ -2,6 +2,9 @@ package simcity.gui;
 
 import simcity.Day;
 import simcity.PersonAgent;
+import simcity.BusStopAgent;
+import simcity.BusAgent;
+import simcity.interfaces.BusStop;
 import simcity.Time;
 import simcity.CityDirectory;
 
@@ -18,6 +21,8 @@ public class CityInputPanel extends JPanel implements ActionListener
 	static final int TIMERINCR = 1500;
 	
 	private Vector<PersonAgent> people = new Vector<PersonAgent>();
+	private List<BusStop> busStops = new ArrayList<BusStop>();
+	BusAgent bus;
 	
 	private CityDirectory cityDirectory;
 	private BuildingGui buildingGui;
@@ -53,6 +58,30 @@ public class CityInputPanel extends JPanel implements ActionListener
 		buildingGui = bg;
 		creationPanel = new CityCreationPanel(this, cityDirectory);
 		gui = g;
+		
+		bus = new BusAgent("bus");
+		BusGui busGui = new BusGui(bus, gui, cityDirectory);
+		bus.setGui(busGui);
+		gui.addGui(busGui);
+		
+		BusStopAgent stop1 = new BusStopAgent("busStop1");
+		BusStopAgent stop2 = new BusStopAgent("busStop2");
+		BusStopAgent stop3 = new BusStopAgent("busStop3");
+		BusStopAgent stop4 = new BusStopAgent("busStop4");
+		busStops.add(stop1);
+		busStops.add(stop2);
+		busStops.add(stop3);
+		busStops.add(stop4);
+		bus.addBusStop(stop1, true);
+		bus.addBusStop(stop2, false);
+		bus.addBusStop(stop3, false);
+		bus.addBusStop(stop4, false);
+		
+		stop1.startThread();
+		stop2.startThread();
+		stop3.startThread();
+		stop4.startThread();
+		
 //        setLayout(new BoxLayout(this, 0));
 		
 		int rows = 5;
@@ -129,12 +158,17 @@ public class CityInputPanel extends JPanel implements ActionListener
     	
     }
     
+    public void startBus() {
+    	bus.startThread();
+    }
+    
     public void addPerson(String name, String job, int pay, int startShift, int endShift, String eco, String physical, String housing, boolean car, CityDirectory c) 
     {
 		PersonAgent p = new PersonAgent(name);
 		PersonGui g = new PersonGui(p, gui, c);
 		p.setCityDirectory(c);
 		p.setCityGui(gui);
+		p.addBusStops(busStops);
 		p.setGui(g);
 		gui.addGui(g);
 		
@@ -179,9 +213,5 @@ public class CityInputPanel extends JPanel implements ActionListener
 //        personList.add(temp);
 //        view.add(temp);
 //        validate();
-    }
-    
-    public void readConfig() {
-    	creationPanel.readConfig();
     }
 }

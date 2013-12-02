@@ -94,6 +94,10 @@ public class CityAnimationPanel extends JPanel implements ActionListener, MouseL
 		guis.add(g);
 	}
 	
+	public void addGui(BusGui g) {
+		guis.add(g);
+	}
+	
 	public void addBuilding(BuildingGui bG) {
 		buildings.add(bG);
 	}

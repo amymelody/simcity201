@@ -212,6 +212,10 @@ public class CityGui extends JFrame
 	public void addGui(PersonGui g) {
 		animationPanel.addGui(g);
 	}
+	
+	public void addGui(BusGui g) {
+		animationPanel.addGui(g);
+	}
 
 	public void addRestCustomer(RestCustomerRole c) {
 		animationPanel.addRestCustomer(c);
@@ -247,9 +251,5 @@ public class CityGui extends JFrame
 	
 	public void addBankTeller(BankTellerRole t) {
 		animationPanel.addBankTeller(t);
-	}
-	
-	public void readConfig() {
-		inputPanel.readConfig();
 	}
 }
