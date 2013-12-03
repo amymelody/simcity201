@@ -18,74 +18,75 @@ public class JoshRestaurantAnimationPanel extends JPanel implements ActionListen
 	static final int TABLEY = 250;
 	static final int TABLEWIDTH = 50;
 	static final int TABLEHEIGHT = 50;
-	
-    private final int WINDOWX = 500;
-    private final int WINDOWY = 500;
-    private Image bufferImage;
-    private Dimension bufferSize;
-    private Timer timer;
 
-    private List<Gui> guis = Collections.synchronizedList(new ArrayList<Gui>());
+	private final int WINDOWX = 500;
+	private final int WINDOWY = 500;
+	private Image bufferImage;
+	private Dimension bufferSize;
+	private Timer timer;
 
-    public JoshRestaurantAnimationPanel() {
-    	setSize(WINDOWX, WINDOWY);
-        setVisible(true);
-        
-        bufferSize = this.getSize();
- 
-    	timer = new Timer(8, this );
-    	timer.start();
-    }
+	private List<Gui> guis = Collections.synchronizedList(new ArrayList<Gui>());
+
+	public JoshRestaurantAnimationPanel() {
+		setSize(WINDOWX, WINDOWY);
+		setVisible(true);
+
+		bufferSize = this.getSize();
+
+		timer = new Timer(8, this );
+		timer.start();
+	}
 
 	public void actionPerformed(ActionEvent e) {
+		synchronized(guis) {
+			for(Gui gui : guis) {
+				if (gui.isPresent()) {
+					gui.updatePosition();
+				}
+			}
+		}
 		repaint();  //Will have paintComponent called
 	}
-	
+
 	public void pauseAnimation() {
 		timer.stop();
 	}
-	
+
 	public void resumeAnimation() {
 		timer.start();
 	}
 
-    public void paintComponent(Graphics g) {
-        Graphics2D g2 = (Graphics2D)g;
+	public void paintComponent(Graphics g) {
+		Graphics2D g2 = (Graphics2D)g;
 
-        //Clear the screen by painting a rectangle the size of the frame
-        g2.setColor(getBackground());
-        g2.fillRect(0, 0, WINDOWX, WINDOWY );
+		//Clear the screen by painting a rectangle the size of the frame
+		g2.setColor(getBackground());
+		g2.fillRect(0, 0, WINDOWX, WINDOWY );
 
-        //Here are the tables
-        g2.setColor(Color.ORANGE);
-        g2.fillRect(TABLEX, TABLEY, TABLEWIDTH, TABLEHEIGHT);//200 and 250 need to be table params
-        g2.fillRect(TABLEX+TABLEWIDTH*2, TABLEY, TABLEWIDTH, TABLEHEIGHT);
-        g2.fillRect(TABLEX+TABLEWIDTH*4, TABLEY, TABLEWIDTH, TABLEHEIGHT);
+		//Here are the tables
+		g2.setColor(Color.ORANGE);
+		g2.fillRect(TABLEX, TABLEY, TABLEWIDTH, TABLEHEIGHT);//200 and 250 need to be table params
+		g2.fillRect(TABLEX+TABLEWIDTH*2, TABLEY, TABLEWIDTH, TABLEHEIGHT);
+		g2.fillRect(TABLEX+TABLEWIDTH*4, TABLEY, TABLEWIDTH, TABLEHEIGHT);
 
-        synchronized(guis) {
-	        for(Gui gui : guis) {
-	            if (gui.isPresent()) {
-	                gui.updatePosition();
-	            }
-	        }
+		synchronized(guis) {
+			for(Gui gui : guis) {
+				if (gui.isPresent()) {
+					gui.draw(g2);
+				}
+			}
+		}
+	}
 
-	        for(Gui gui : guis) {
-	            if (gui.isPresent()) {
-	                gui.draw(g2);
-	            }
-	        }
-        }
-    }
+	public void addGui(JoshCustomerGui gui) {
+		guis.add(gui);
+	}
 
-    public void addGui(JoshCustomerGui gui) {
-        guis.add(gui);
-    }
+	public void addGui(JoshWaiterGui gui) {
+		guis.add(gui);
+	}
 
-    public void addGui(JoshWaiterGui gui) {
-        guis.add(gui);
-    }
-    
-    public void addGui(JoshCookGui gui) {
-        guis.add(gui);
-    }
+	public void addGui(JoshCookGui gui) {
+		guis.add(gui);
+	}
 }
