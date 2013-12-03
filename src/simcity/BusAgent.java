@@ -15,6 +15,7 @@ public class BusAgent extends Agent implements Bus {
 	public enum BusState {AtStop, Leaving}
 	public enum PassengerState {Waiting, Boarding, OnBus}
 	
+	private static final int nearDistance = 180;
 	private String name;
 	public String location; //hack used for unit testing
 	private BusState state = BusState.Leaving;
@@ -23,6 +24,8 @@ public class BusAgent extends Agent implements Bus {
 	public boolean unitTesting;
 	private BusGui busGui;
 	private Semaphore atStop = new Semaphore(0,true);
+	
+	private CityDirectory city;
 	
 	public BusAgent(String name) {
 		super();
@@ -55,6 +58,10 @@ public class BusAgent extends Agent implements Bus {
 			}
 			return false;
 		}
+		
+		if (Math.abs(busGui.getXPos()-city.getBuildingEntrance(l).x) <= nearDistance && Math.abs(busGui.getYPos()-city.getBuildingEntrance(l).y) <= nearDistance) {
+			return true;
+		}
 		return false;
 	}
 	
@@ -72,6 +79,10 @@ public class BusAgent extends Agent implements Bus {
 	
 	public void setGui(BusGui g) {
 		busGui = g;
+	}
+	
+	public void setCityDirectory(CityDirectory c) {
+		city = c;
 	}
 
 
@@ -185,13 +196,16 @@ public class BusAgent extends Agent implements Bus {
 					state = BusState.AtStop;
 					busStops.get(i+1).busStop.msgGetPassengers(this);
 				}
+				break;
 			}
 		}
 		
 		for (int i=passengers.size()-1; i>=0; i--) {
-			if (nearLocation(passengers.get(i).destination)){
-				passengers.get(i).person.msgAtDestination(passengers.get(i).destination);
-				passengers.remove(passengers.get(i));
+			if (passengers.get(i).destination != null) {
+				if (nearLocation(passengers.get(i).destination)){
+					passengers.get(i).person.msgAtDestination(passengers.get(i).destination);
+					passengers.remove(passengers.get(i));
+				}
 			}
 		}
 	}

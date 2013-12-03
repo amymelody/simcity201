@@ -76,6 +76,7 @@ public class CityInputPanel extends JPanel implements ActionListener
 		bus.addBusStop(stop2, false);
 		bus.addBusStop(stop3, false);
 		bus.addBusStop(stop4, false);
+		bus.setCityDirectory(cityDirectory);
 		
 		stop1.startThread();
 		stop2.startThread();

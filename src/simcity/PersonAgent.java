@@ -46,6 +46,7 @@ public class PersonAgent extends Agent implements Person
 	
 	private PersonGui gui;
 	private Semaphore atDestination = new Semaphore(0,true);
+	private Semaphore onBus = new Semaphore(0,true);
 	
 	public List<BusStop> busStops = Collections.synchronizedList(new ArrayList<BusStop>());
 	public List<ItemOrder> foodNeeded = Collections.synchronizedList(new ArrayList<ItemOrder>());
@@ -234,7 +235,29 @@ public class PersonAgent extends Agent implements Person
 	}
 	
 	private BusStop closestBusStop() {
-		return busStops.get(0);
+		int distance = 100000000;
+		BusStop temp = busStops.get(0);
+		for (BusStop b : busStops) {
+			int sum = Math.abs(gui.getXPos()-city.getBuildingEntrance(b.getName()).x) + Math.abs(gui.getYPos()-city.getBuildingEntrance(b.getName()).y);
+			if (sum < distance) {
+				distance = sum;
+				temp = b;
+			}
+		}
+		return temp;
+	}
+	
+	private BusStop closestBusStop(String destination) {
+		int distance = 100000000;
+		BusStop temp = busStops.get(0);
+		for (BusStop b : busStops) {
+			int sum = Math.abs(city.getBuildingEntrance(destination).x-city.getBuildingEntrance(b.getName()).x) + Math.abs(city.getBuildingEntrance(destination).y-city.getBuildingEntrance(b.getName()).y);
+			if (sum < distance) {
+				distance = sum;
+				temp = b;
+			}
+		}
+		return temp;
 	}
 	
 	private boolean nearDestination(String destination) {
@@ -320,6 +343,11 @@ public class PersonAgent extends Agent implements Person
 
 	public void msgAtDestination() {
 		atDestination.release();
+		stateChanged();
+	}
+	
+	public void msgOnBus() {
+		onBus.release();
 		stateChanged();
 	}
 	
@@ -575,6 +603,13 @@ public class PersonAgent extends Agent implements Person
 	}
 	
 	private void boardBus() {
+		gui.DoBoardBus(closestBusStop().getName(), closestBusStop(destination).getName());
+		try {
+			onBus.acquire();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		bus.msgComingAboard(this, destination);
 		bus = null;
 		state.ts = TransportationState.ridingBus;
@@ -778,6 +813,9 @@ public class PersonAgent extends Agent implements Person
 	private void goToWork() {
 		if (state.ls != LocationState.atDestination || (destination != null && !destination.equals(job.location))) { 
 			print("I'm going to work");
+			if (destination != null && !destination.equals(job.location)) {
+				state.ts = TransportationState.walking;
+			}
 			goToDestination(job.location);
 		} else {
 			synchronized(roles) {
@@ -799,13 +837,24 @@ public class PersonAgent extends Agent implements Person
 	}
 
 	private void goToDestination(String d) {
-		if (unitTesting && takeBus(d) && state.ts != TransportationState.walkingFromVehicle) {
+		if (takeBus(d) && state.ts != TransportationState.walkingFromVehicle) {
 			BusStop b = closestBusStop();
-			//gui.DoGoToBusStop(b);
+			print("I'm taking the bus. Going to " + b.getName());
+			if (!unitTesting) {
+				gui.DoGoToDestination(b.getName()); //just walk there
+				try {
+					atDestination.acquire();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			print("At the bus stop");
 			state.ts = TransportationState.waitingForBus;
 			destination = d;
 			b.msgWaitingForBus(this);
 		} else {
+			print("I'm walking there");
 			state.ts = TransportationState.walking;
 			destination = d;
 			if (!unitTesting) {

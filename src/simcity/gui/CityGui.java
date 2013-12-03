@@ -48,7 +48,6 @@ public class CityGui extends JFrame
 	private final int BUFFERSIDE = 15;
 	
 	private MoveBox[][] boxes = new MoveBox[50][50];
-	//private Semaphore[][] boxBlock = new Semaphore[50][50];
 	private List<TrafficNode> trafficNodes = new ArrayList<TrafficNode>();
 
 	/**
@@ -86,38 +85,38 @@ public class CityGui extends JFrame
 			}
 		}
 		
-		//intersections
-		for (int i=0; i<3; i++) {
-			for (int j=0; j<3; j++) {
-				for (int x=2; x<6; x++) {
-					for (int y=2; y<6; y++) {
-						boxes[i*21 + x][j*21 + y].setOpen(false);
-					}
-				}
-			}
-		}
-		
-		//horizontal roads
-		for (int i=0; i<2; i++) {
-			for (int j=0; j<3; j++) {
-				for (int x=8; x<21; x++) {
-					for (int y=2; y<6; y++) {
-						boxes[i*21 + x][j*21 + y].setOpen(false);
-					}
-				}
-			}
-		}
-		
-		//vertical roads
-		for (int i=0; i<3; i++) {
-			for (int j=0; j<2; j++) {
-				for (int x=2; x<6; x++) {
-					for (int y=8; y<21; y++) {
-						boxes[i*21 + x][j*21 + y].setOpen(false);
-					}
-				}
-			}
-		}
+//		//intersections
+//		for (int i=0; i<3; i++) {
+//			for (int j=0; j<3; j++) {
+//				for (int x=2; x<6; x++) {
+//					for (int y=2; y<6; y++) {
+//						boxes[i*21 + x][j*21 + y].setOpen(false);
+//					}
+//				}
+//			}
+//		}
+//		
+//		//horizontal roads
+//		for (int i=0; i<2; i++) {
+//			for (int j=0; j<3; j++) {
+//				for (int x=8; x<21; x++) {
+//					for (int y=2; y<6; y++) {
+//						boxes[i*21 + x][j*21 + y].setOpen(false);
+//					}
+//				}
+//			}
+//		}
+//		
+//		//vertical roads
+//		for (int i=0; i<3; i++) {
+//			for (int j=0; j<2; j++) {
+//				for (int x=2; x<6; x++) {
+//					for (int y=8; y<21; y++) {
+//						boxes[i*21 + x][j*21 + y].setOpen(false);
+//					}
+//				}
+//			}
+//		}
 		
 		//buildings
 		for (int i=0; i<2; i++) {

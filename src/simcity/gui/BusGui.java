@@ -59,30 +59,70 @@ public class BusGui implements Gui {
 		if (destination != null) {
 			if (destination.equals("busStop1")) {
 				if (xPos > xGoal) {
-					xPos-=10;
+					if (gui.getMoveBox(xPos-20, yPos).getOpen() && gui.getMoveBox(xPos-10, yPos).getOpen()
+							&& gui.getMoveBox(xPos-20, yPos+10).getOpen() && gui.getMoveBox(xPos-10, yPos+10).getOpen()
+							&& gui.getMoveBox(xPos-20, yPos+20).getOpen() && gui.getMoveBox(xPos-10, yPos+20).getOpen()
+							&& gui.getMoveBox(xPos-20, yPos+30).getOpen() && gui.getMoveBox(xPos-10, yPos+30).getOpen()) {
+						xPos-=20;
+					}
 				} else if (yPos > yGoal) {
-					yPos-=10;
+					if (gui.getMoveBox(xPos, yPos-20).getOpen() && gui.getMoveBox(xPos, yPos-10).getOpen()
+							&& gui.getMoveBox(xPos+10, yPos-20).getOpen() && gui.getMoveBox(xPos+10, yPos-10).getOpen()
+							&& gui.getMoveBox(xPos-10, yPos-20).getOpen() && gui.getMoveBox(xPos-10, yPos-10).getOpen()
+							&& gui.getMoveBox(xPos-20, yPos-20).getOpen() && gui.getMoveBox(xPos-20, yPos-10).getOpen()) {
+						yPos-=20;
+					}
 				} 
 			}
 			if (destination.equals("busStop2")) {
 				if (yPos > yGoal) {
-					yPos-=10;
+					if (gui.getMoveBox(xPos, yPos-20).getOpen() && gui.getMoveBox(xPos, yPos-10).getOpen()
+							&& gui.getMoveBox(xPos+10, yPos-20).getOpen() && gui.getMoveBox(xPos+10, yPos-10).getOpen()
+							&& gui.getMoveBox(xPos-10, yPos-20).getOpen() && gui.getMoveBox(xPos-10, yPos-10).getOpen()
+							&& gui.getMoveBox(xPos-20, yPos-20).getOpen() && gui.getMoveBox(xPos-20, yPos-10).getOpen()) {
+						yPos-=20;
+					}
 				} else if (xPos < xGoal) {
-					xPos+=10;
+					if (gui.getMoveBox(xPos+20, yPos).getOpen() && gui.getMoveBox(xPos+30, yPos).getOpen()
+							&& gui.getMoveBox(xPos+20, yPos+10).getOpen() && gui.getMoveBox(xPos+30, yPos+10).getOpen()
+							&& gui.getMoveBox(xPos+20, yPos-10).getOpen() && gui.getMoveBox(xPos+30, yPos-10).getOpen()
+							&& gui.getMoveBox(xPos+20, yPos-20).getOpen() && gui.getMoveBox(xPos+30, yPos-20).getOpen()) {
+						xPos+=20;
+					}
 				} 
 			}
 			if (destination.equals("busStop3")) {
 				if (xPos < xGoal) {
-					xPos+=10;
+					if (gui.getMoveBox(xPos+20, yPos).getOpen() && gui.getMoveBox(xPos+30, yPos).getOpen()
+							&& gui.getMoveBox(xPos+20, yPos+10).getOpen() && gui.getMoveBox(xPos+30, yPos+10).getOpen()
+							&& gui.getMoveBox(xPos+20, yPos-10).getOpen() && gui.getMoveBox(xPos+30, yPos-10).getOpen()
+							&& gui.getMoveBox(xPos+20, yPos-20).getOpen() && gui.getMoveBox(xPos+30, yPos-20).getOpen()) {
+						xPos+=20;
+					}
 				} else if (yPos < yGoal) {
-					yPos+=10;
+					if (gui.getMoveBox(xPos, yPos+20).getOpen() && gui.getMoveBox(xPos, yPos+30).getOpen()
+							&& gui.getMoveBox(xPos+10, yPos+20).getOpen() && gui.getMoveBox(xPos+10, yPos+30).getOpen()
+							&& gui.getMoveBox(xPos+20, yPos+20).getOpen() && gui.getMoveBox(xPos+20, yPos+30).getOpen()
+							&& gui.getMoveBox(xPos+30, yPos+20).getOpen() && gui.getMoveBox(xPos+30, yPos+30).getOpen()) {
+						yPos+=20;
+					}
 				}
 			}
 			if (destination.equals("busStop4")) {
 				if (yPos < yGoal) {
-					yPos+=10;
+					if (gui.getMoveBox(xPos, yPos+20).getOpen() && gui.getMoveBox(xPos, yPos+30).getOpen()
+							&& gui.getMoveBox(xPos+10, yPos+20).getOpen() && gui.getMoveBox(xPos+10, yPos+30).getOpen()
+							&& gui.getMoveBox(xPos+20, yPos+20).getOpen() && gui.getMoveBox(xPos+20, yPos+30).getOpen()
+							&& gui.getMoveBox(xPos+30, yPos+20).getOpen() && gui.getMoveBox(xPos+30, yPos+30).getOpen()) {
+						yPos+=20;
+					}
 				} else if (xPos > xGoal) {
-					xPos-=10;
+					if (gui.getMoveBox(xPos-20, yPos).getOpen() && gui.getMoveBox(xPos-10, yPos).getOpen()
+							&& gui.getMoveBox(xPos-20, yPos+10).getOpen() && gui.getMoveBox(xPos-10, yPos+10).getOpen()
+							&& gui.getMoveBox(xPos-20, yPos+20).getOpen() && gui.getMoveBox(xPos-10, yPos+20).getOpen()
+							&& gui.getMoveBox(xPos-20, yPos+30).getOpen() && gui.getMoveBox(xPos-10, yPos+30).getOpen()) {
+						xPos-=20;
+					}
 				}
 			}
 		}
@@ -184,17 +224,17 @@ public class BusGui implements Gui {
 	public void DoGoToStop(BusStop b) {
 		destination = b.getName();
 		if (destination.equals("busStop1")) {
-			xGoal = city.getBuildingEntrance(b.getName()).x-20;
+			xGoal = city.getBuildingEntrance(b.getName()).x-30;
 			yGoal = city.getBuildingEntrance(b.getName()).y;
 		} else if (destination.equals("busStop2")) {
 			xGoal = city.getBuildingEntrance(b.getName()).x;
-			yGoal = city.getBuildingEntrance(b.getName()).y-20;
+			yGoal = city.getBuildingEntrance(b.getName()).y-30;
 		} else if (destination.equals("busStop3")) {
-			xGoal = city.getBuildingEntrance(b.getName()).x+20;
+			xGoal = city.getBuildingEntrance(b.getName()).x+30;
 			yGoal = city.getBuildingEntrance(b.getName()).y;
 		} else {
 			xGoal = city.getBuildingEntrance(b.getName()).x;
-			yGoal = city.getBuildingEntrance(b.getName()).y+20;
+			yGoal = city.getBuildingEntrance(b.getName()).y+30;
 		}
  		command = Command.GoToDestination;
 	}
