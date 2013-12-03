@@ -163,7 +163,7 @@ public class CityInputPanel extends JPanel implements ActionListener
     	bus.startThread();
     }
     
-    public void addPerson(String name, String job, int pay, int startShift, int endShift, String eco, String physical, String housing, boolean car, CityDirectory c) 
+    public void addPerson(String name, String job, int pay, int startShift, int endShift, String eco, String physical, String housing, CityDirectory c, boolean t) 
     {
 		PersonAgent p = new PersonAgent(name);
 		PersonGui g = new PersonGui(p, gui, c);
@@ -194,12 +194,8 @@ public class CityInputPanel extends JPanel implements ActionListener
 		p.msgYoureHired(job, pay, startShifts, endShifts);
 		p.setEState(eco);
 		p.setPState(physical);
-		if(car)
-		{
-//			CarAgent tempCar = new CarAgent(p)
-//			cars.add(tempCar);
-//			p.msgBoughtCar(tempCar);
-		}
+		p.setTestingAnimation(t);
+		
 		people.add(p);
 		cityDirectory.addPerson(p, p.getJobLocation(), housing);
 		p.startThread();

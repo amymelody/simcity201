@@ -42,6 +42,7 @@ public class PersonAgent extends Agent implements Person
 	private Bus bus;
 	private String destination;
 	public boolean unitTesting = false;
+	private boolean testingAnimation;
 	
 	private CityDirectory city;
 	private CityGui cG;
@@ -125,6 +126,10 @@ public class PersonAgent extends Agent implements Person
 	
 	public void setOwnerHome(String home) {
 		houses.get(1).location = home;
+	}
+	
+	public void setTestingAnimation(boolean t) {
+		testingAnimation = t;
 	}
 	
 	public String getName() {
@@ -269,9 +274,9 @@ public class PersonAgent extends Agent implements Person
 	}
 	
 	private boolean takeBus(String destination) {
-		if (job != null && destination.equals(job.location) && (time.plus(30)).greaterThanOrEqualTo(job.startShifts.get(time.getDay())) && !time.greaterThanOrEqualTo(job.endShifts.get(time.getDay()))) {
-			return true;
-		}
+//		if (job != null && destination.equals(job.location) && (time.plus(30)).greaterThanOrEqualTo(job.startShifts.get(time.getDay())) && !time.greaterThanOrEqualTo(job.endShifts.get(time.getDay()))) {
+//			return true;
+//		}
 		/*if (nearDestination(destination)) {
 			return false;
 		}*/
@@ -578,10 +583,10 @@ public class PersonAgent extends Agent implements Person
 			}
 		}
 		
-//		if (!unitTesting && state.ts == TransportationState.walking && state.ls != LocationState.home && state.ls != LocationState.leavingHouse) {
-//			goHome(); //if nothing left to do, go home and do whatever
-//			return true;
-//		}
+		if (!unitTesting && state.ts == TransportationState.walking && state.ls != LocationState.home && state.ls != LocationState.leavingHouse) {
+			goHome(); //if nothing left to do, go home and do whatever
+			return true;
+		}
 		
 		return false;
 	}

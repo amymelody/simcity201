@@ -268,7 +268,15 @@ public class CityCreationPanel extends JPanel //implements ActionListener
 		List<PersonInfo> info = new ArrayList<PersonInfo>();
 		int numPeople = 9;
 		int index = 0;
+		boolean testingAnimation = true;
 		for(String key : cityConfig.stringPropertyNames()) {
+			if (key.equals("testingAnimation")) {
+				if (cityConfig.getProperty(key).equals("true")) {
+					testingAnimation = true;
+				} else if (cityConfig.getProperty(key).equals("false")) {
+					testingAnimation = false;
+				}
+			}
 			if (key.contains("name")) {
 				numPeople++;
 			}
@@ -340,24 +348,11 @@ public class CityCreationPanel extends JPanel //implements ActionListener
 					}
 				}
 			}
-			if (key.contains("car")) {
-				for (PersonInfo pI : info) {
-					if (key.contains(Integer.toString(pI.id))) {
-						pI.car = cityConfig.getProperty(key);
-						break;
-					}
-				}
-			}
 	    }
 		
 		int money;
 		boolean car;
 		for (PersonInfo pI : info) {
-			if (pI.car.equals("yes")) {
-				car = true;
-			} else {
-				car = false;
-			}
 			/*System.out.println(pI.name);
 			System.out.println(pI.job);
 			System.out.println(pI.pay);
@@ -367,7 +362,7 @@ public class CityCreationPanel extends JPanel //implements ActionListener
 			System.out.println(pI.physical);
 			System.out.println(pI.housing);
 			System.out.println(pI.car);*/
-			inputPanel.addPerson(pI.name, pI.job, pI.pay, pI.start, pI.end, pI.eco, pI.physical, pI.housing, car, cityDirectory);
+			inputPanel.addPerson(pI.name, pI.job, pI.pay, pI.start, pI.end, pI.eco, pI.physical, pI.housing, cityDirectory, testingAnimation);
 		}
 		cityDirectory.assignLandlord();
 		inputPanel.startBus();
