@@ -41,6 +41,13 @@ public class BankAnimationPanel extends JPanel implements ActionListener {
 	}
 
 	public void actionPerformed(ActionEvent e){
+		synchronized(guis) {
+			for(Gui gui : guis) {
+				if (gui.isPresent()) {
+					gui.updatePosition();
+				}
+			}
+		}
 		repaint();
 	}
 	
