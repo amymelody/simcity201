@@ -4,6 +4,8 @@ import simcity.Day;
 import simcity.PersonAgent;
 import simcity.BusStopAgent;
 import simcity.BusAgent;
+import simcity.trace.AlertLog;
+import simcity.trace.AlertTag;
 import simcity.interfaces.BusStop;
 import simcity.Time;
 import simcity.CityDirectory;
@@ -18,7 +20,7 @@ import java.util.List;
 
 public class CityInputPanel extends JPanel implements ActionListener
 {
-	static final int TIMERINCR = 1500;
+	static final int TIMERINCR = 1300;
 	
 	private Vector<PersonAgent> people = new Vector<PersonAgent>();
 	private List<BusStop> busStops = new ArrayList<BusStop>();
@@ -123,8 +125,11 @@ public class CityInputPanel extends JPanel implements ActionListener
 
     public void actionPerformed(ActionEvent e)
     {
-    	time = time.plus(30);
-    	for (PersonAgent p : people) {
+    	if (!people.isEmpty()) {
+	    	time = time.plus(30);
+	    	AlertLog.getInstance().logInfo(AlertTag.GENERAL_CITY, "City", time.getDay().toString() + ", " + time.getHour() + ":" + time.getMinute());
+    	}
+	    for (PersonAgent p : people) {
     		p.msgUpdateWatch(time.getDay(), time.getHour(), time.getMinute());
     	}
     	

@@ -7,6 +7,8 @@ import java.awt.Point;
 import simcity.PersonAgent;
 import simcity.CityDirectory;
 import simcity.TrafficNode;
+import simcity.trace.AlertLog;
+import simcity.trace.AlertTag;
 
 public class PersonGui implements Gui {
 	private PersonAgent agent = null;
@@ -63,15 +65,15 @@ public class PersonGui implements Gui {
 			currentNode = gui.getClosestNode(xPos,yPos);
 			if (!(xPos == currentNode.x && yPos == currentNode.y)) {
 				if (xPos == currentNode.x) {
-					if (yGoal < yPos) {
+					if (yGoal < yPos && yPos < currentNode.y) {
 						currentNode = currentNode.getNorthNeighbor();
-					} else if (yGoal > yPos) {
+					} else if (yGoal > yPos && yPos > currentNode.y) {
 						currentNode = currentNode.getSouthNeighbor();
 					}
 				} else if (yPos == currentNode.y) {
-					if (xGoal < xPos) {
+					if (xGoal < xPos && xPos < currentNode.x) {
 						currentNode = currentNode.getWestNeighbor();
-					} else if (xGoal > xPos) {
+					} else if (xGoal > xPos && xPos > currentNode.x) {
 						currentNode = currentNode.getEastNeighbor();
 					}
 				}

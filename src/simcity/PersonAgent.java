@@ -77,8 +77,6 @@ public class PersonAgent extends Agent implements Person
 		super();
 		this.name = name;
 		
-		AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "I have been created");	
-		
 		haveBankAccount = false;
 		rentDue = false;
 		destination = null;
@@ -365,15 +363,14 @@ public class PersonAgent extends Agent implements Person
 		time.day = d;
 		time.hour = h;
 		time.minute = m;
-		//AlertLog.getInstance().logMessage(AlertTag.PERSON, name, time.getDay().toString() + ", " + time.getHour() + ":" + time.getMinute());
 //		if (time.getHour() == 9 && time.getMinute() == 0) {
 //			money += 600;
 //			AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "$" + money);
 //		}
-		if (!unitTesting && time.getHour() == 8 && time.getMinute() == 0) {
-			AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "Got hungry");
-			state.ns = NourishmentState.gotHungry;
-		}
+//		if (!unitTesting && time.getHour() == 8 && time.getMinute() == 0) {
+//			AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "Got hungry");
+//			state.ns = NourishmentState.gotHungry;
+//		}
 		stateChanged();
 	}
 
@@ -847,7 +844,7 @@ public class PersonAgent extends Agent implements Person
 	}
 
 	private void goToDestination(String d) {
-		if (takeBus(d) && state.ts != TransportationState.walkingFromVehicle) {
+		if (unitTesting && takeBus(d) && state.ts != TransportationState.walkingFromVehicle) {
 			BusStop b = closestBusStop();
 			AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "I'm taking the bus. Going to " + b.getName());
 			if (!unitTesting) {

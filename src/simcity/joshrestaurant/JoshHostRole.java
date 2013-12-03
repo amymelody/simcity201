@@ -4,6 +4,8 @@ import java.util.*;
 
 import simcity.interfaces.Person;
 import simcity.RestHostRole;
+import simcity.trace.AlertLog;
+import simcity.trace.AlertTag;
 
 /**
  * Restaurant Host Agent
@@ -239,7 +241,7 @@ public class JoshHostRole extends RestHostRole {
 	}
 
 	private void callWaiter(JoshWaiterRole waiter, MyCustomer mc, Table table) {
-		print(waiter + ", please bring " + mc.cust + " to " + table);
+		AlertLog.getInstance().logMessage(AlertTag.JOSH_RESTAURANT, name, waiter + ", please bring " + mc.cust + " to " + table);
 		waiter.msgPleaseSeatCustomer(mc.cust, table.getTableNumber());
 		synchronized(tables) {
 			for (Table t : tables) {
@@ -252,13 +254,13 @@ public class JoshHostRole extends RestHostRole {
 	}
 	
 	private void canGoOnBreak(MyWaiter mw) {
-		print(mw.getWaiter() + ", you can go on break.");
+		AlertLog.getInstance().logMessage(AlertTag.JOSH_RESTAURANT, name, mw.getWaiter() + ", you can go on break.");
 		mw.getWaiter().msgCanGoOnBreak();
 		mw.setState(WaiterState.AboutToGoOnBreak);
 	}
 	
 	private void cantGoOnBreak(MyWaiter mw) {
-		print(mw.getWaiter() + ", you can't go on break.");
+		AlertLog.getInstance().logMessage(AlertTag.JOSH_RESTAURANT, name, mw.getWaiter() + ", you can't go on break.");
 		mw.getWaiter().msgCantGoOnBreak();
 		mw.setState(WaiterState.OnTheJob);
 	}
@@ -272,7 +274,7 @@ public class JoshHostRole extends RestHostRole {
 	}
 	
 	private void tellCustomer(MyCustomer mc) {
-		print(mc.cust + ", the restaurant is full");
+		AlertLog.getInstance().logMessage(AlertTag.JOSH_RESTAURANT, name, mc.cust + ", the restaurant is full");
 		mc.cust.msgRestaurantIsFull();
 		mc.waiting = false;
 	}

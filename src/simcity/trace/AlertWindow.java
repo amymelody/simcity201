@@ -73,10 +73,11 @@ public class AlertWindow extends JFrame {
 		tracePanel.showAlertsWithLevel(AlertLevel.INFO);		//THESE PRINT BLUE
 		tracePanel.showAlertsWithLevel(AlertLevel.MESSAGE);		//THESE SHOULD BE THE MOST COMMON AND PRINT BLACK
 		
-		tracePanel.hideAlertsWithLevel(AlertLevel.DEBUG);
+		tracePanel.showAlertsWithLevel(AlertLevel.DEBUG);
 		
 		tracePanel.hideAlertsWithTag(AlertTag.PERSON);
 		tracePanel.hideAlertsWithTag(AlertTag.BANK_CUSTOMER);
+		tracePanel.hideAlertsWithTag(AlertTag.GENERAL_CITY);
 		
 		tracePanel.hideAlertsWithTag(AlertTag.BUS_STOP);
 		//
@@ -101,7 +102,8 @@ public class AlertWindow extends JFrame {
 		TracePanel tp;	//Hack so I can easily call showAlertsWithLevel for this demo.
 		
 		JButton messagesButton;		
-		JButton errorButton;		
+		JButton errorButton;	
+		JButton generalCityTagButton;
 		JButton bankCustTagButton;
 		JButton personTagButton;
 		JButton joshRestaurantTagButton;
@@ -110,6 +112,7 @@ public class AlertWindow extends JFrame {
 			this.tp = tracePanel;
 			messagesButton = new JButton("Hide Level: MESSAGE");
 			errorButton = new JButton("Show Level: ERROR");
+			generalCityTagButton = new JButton("Show Tag: GENERAL_CITY");
 			personTagButton = new JButton("Show Tag: PERSON");
 			bankCustTagButton = new JButton("Show Tag: BANK_CUSTOMER");
 			joshRestaurantTagButton = new JButton("Show Tag: JOSH_RESTAURANT");
@@ -136,6 +139,18 @@ public class AlertWindow extends JFrame {
 					} else if (errorButton.getText().equals("Hide Level: ERROR")) {
 						tracePanel.hideAlertsWithLevel(AlertLevel.ERROR);
 						errorButton.setText("Show Level: ERROR");
+					}
+				}
+			});
+			generalCityTagButton.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					if (generalCityTagButton.getText().equals("Show Tag: GENERAL_CITY")) {
+						tracePanel.showAlertsWithTag(AlertTag.GENERAL_CITY);
+						generalCityTagButton.setText("Hide Tag: GENERAL_CITY");
+					} else if (generalCityTagButton.getText().equals("Hide Tag: GENERAL_CITY")) {
+						tracePanel.hideAlertsWithTag(AlertTag.GENERAL_CITY);
+						generalCityTagButton.setText("Show Tag: GENERAL_CITY");
 					}
 				}
 			});
@@ -178,6 +193,7 @@ public class AlertWindow extends JFrame {
 			this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 			this.add(messagesButton);
 			this.add(errorButton);
+			this.add(generalCityTagButton);
 			this.add(personTagButton);
 			this.add(bankCustTagButton);
 			this.add(joshRestaurantTagButton);

@@ -6,6 +6,8 @@ import simcity.joshrestaurant.interfaces.JoshCustomer;
 import simcity.joshrestaurant.interfaces.JoshWaiter;
 import simcity.joshrestaurant.interfaces.JoshCashier;
 import simcity.mock.LoggedEvent;
+import simcity.trace.AlertLog;
+import simcity.trace.AlertTag;
 import simcity.interfaces.Person;
 
 import java.util.*;
@@ -144,7 +146,7 @@ public class JoshCashierRole extends RestCashierRole implements JoshCashier {
 	}
 	
 	private void giveToWaiter(Check c) {
-		print(c.waiter + ", here is the check for " + c.cust);
+		AlertLog.getInstance().logMessage(AlertTag.JOSH_RESTAURANT, name, c.waiter + ", here is the check for " + c.cust);
 		c.setState(CheckState.GivenToWaiter);
 		c.waiter.msgHereIsCheck(c.cust, c.charge);
 	}
@@ -152,10 +154,10 @@ public class JoshCashierRole extends RestCashierRole implements JoshCashier {
 	private void giveCustomerChange(Check c) {
 		int change = c.payment - c.charge;
 		if (change >= 0) {
-			print(c.cust + ", here is your change of $" + change);
+			AlertLog.getInstance().logMessage(AlertTag.JOSH_RESTAURANT, name, c.cust + ", here is your change of $" + change);
 			cash += c.charge;
 		} else {
-			print(c.cust + ", thank you for eating at our restaurant. Please pay $" + -change + " next time you rotten cheapskate.");
+			AlertLog.getInstance().logMessage(AlertTag.JOSH_RESTAURANT, name, c.cust + ", thank you for eating at our restaurant. Please pay $" + -change + " next time you rotten cheapskate.");
 			cash += c.payment;
 		}
 		c.setState(CheckState.Done);
@@ -164,7 +166,7 @@ public class JoshCashierRole extends RestCashierRole implements JoshCashier {
 	
 	private void payBill(Bill bill) {
 		cash -= bill.charge;
-		print("Paying bill. Cash = $" + cash);
+		AlertLog.getInstance().logMessage(AlertTag.JOSH_RESTAURANT, name, "Paying bill. Cash = $" + cash);
 		bill.deliverer.msgPayment(this, bill.charge);
 		bills.remove(bill);
 	}

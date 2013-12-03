@@ -5,6 +5,8 @@ import simcity.joshrestaurant.gui.JoshCustomerGui;
 import simcity.joshrestaurant.interfaces.JoshCustomer;
 import simcity.RestCustomerRole;
 import simcity.interfaces.Person;
+import simcity.trace.AlertLog;
+import simcity.trace.AlertTag;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -104,7 +106,7 @@ public class JoshCustomerRole extends RestCustomerRole implements JoshCustomer {
 	// Messages
 
 	public void gotHungry() {
-		print("I'm hungry");
+		AlertLog.getInstance().logMessage(AlertTag.JOSH_RESTAURANT, name, "I'm hungry");
 		event = AgentEvent.gotHungry;
 		cash = person.getMoney();
 		stateChanged();
@@ -123,7 +125,7 @@ public class JoshCustomerRole extends RestCustomerRole implements JoshCustomer {
 		waiter = w;
 		menu = m;
 		this.tableNumber = tableNumber;
-		print("Received msgFollowMe");
+		AlertLog.getInstance().logMessage(AlertTag.JOSH_RESTAURANT, name, "Received msgFollowMe");
 		event = AgentEvent.followWaiter;
 		stateChanged();
 	}
@@ -335,7 +337,7 @@ public class JoshCustomerRole extends RestCustomerRole implements JoshCustomer {
 				choice = menu.randomItem();
 			} while (menu.getPrice(choice) > cash && !name.equals("cheapskate"));
 		}
-		print("I would like to order " + choice);
+		AlertLog.getInstance().logMessage(AlertTag.JOSH_RESTAURANT, name, "I would like to order " + choice);
 		customerGui.order();
 		try {
 			doneOrdering.acquire();
@@ -350,7 +352,7 @@ public class JoshCustomerRole extends RestCustomerRole implements JoshCustomer {
 		Do("Eating Food");
 		timer.schedule(new TimerTask() {
 			public void run() {
-				print("Done eating " + choice);
+				AlertLog.getInstance().logMessage(AlertTag.JOSH_RESTAURANT, name, "Done eating " + choice);
 				person.msgDoneEating();
 				event = AgentEvent.doneEating;
 				stateChanged();
