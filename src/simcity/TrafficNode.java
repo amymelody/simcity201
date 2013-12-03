@@ -6,11 +6,14 @@ import java.util.LinkedList;
 //it is a point that has its neihbous (the places it can move next)
 public class TrafficNode extends Point{
 	
-	//neighbors nodes
 	private LinkedList<TrafficNode> neighbors;
+	public int x2;
+	public int y2;
 
 	public TrafficNode(int x, int y) {
 		super(x,y);
+		x2 = x+20;
+		y2 = y+20;
 		neighbors = new LinkedList<TrafficNode>();
 	}
 

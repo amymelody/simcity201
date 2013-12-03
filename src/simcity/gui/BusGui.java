@@ -127,87 +127,6 @@ public class BusGui implements Gui {
 			}
 		}
 		
-//		
-//		if (xPos < currentNode.x && xPos != xGoal) {
-//			if (gui.getMoveBox(xPos+10, yPos).getOpen()) {
-//				gui.setBox(xPos, yPos, true);
-//				xPos+=10;
-//				gui.setBox(xPos, yPos, false);
-//			} else if (gui.getMoveBox(xPos, yPos+10) != null && gui.getMoveBox(xPos, yPos+10).getOpen()) {
-//				gui.setBox(xPos, yPos, true);
-//				yPos+=10;
-//				gui.setBox(xPos, yPos, false);
-//			} else if (gui.getMoveBox(xPos-10, yPos) != null && gui.getMoveBox(xPos-10, yPos).getOpen()) {
-//				gui.setBox(xPos, yPos, true);
-//				xPos-=10;
-//				gui.setBox(xPos, yPos, false);
-//			} else if (gui.getMoveBox(xPos, yPos-10) != null && gui.getMoveBox(xPos, yPos-10).getOpen()) {
-//				gui.setBox(xPos, yPos, true);
-//				yPos-=10;
-//				gui.setBox(xPos, yPos, false);
-//			}
-//		}
-//		else if (xPos > currentNode.x && xPos != xGoal) {
-//			if (gui.getMoveBox(xPos-10, yPos).getOpen()) {
-//				gui.setBox(xPos, yPos, true);
-//				xPos-=10;
-//				gui.setBox(xPos, yPos, false);
-//			} else if (gui.getMoveBox(xPos, yPos-10) != null && gui.getMoveBox(xPos, yPos-10).getOpen()) {
-//				gui.setBox(xPos, yPos, true);
-//				yPos-=10;
-//				gui.setBox(xPos, yPos, false);
-//			} else if (gui.getMoveBox(xPos+10, yPos) != null && gui.getMoveBox(xPos+10, yPos).getOpen()) {
-//				gui.setBox(xPos, yPos, true);
-//				xPos+=10;
-//				gui.setBox(xPos, yPos, false);
-//			} else if (gui.getMoveBox(xPos, yPos+10) != null && gui.getMoveBox(xPos, yPos+10).getOpen()) {
-//				gui.setBox(xPos, yPos, true);
-//				yPos+=10;
-//				gui.setBox(xPos, yPos, false);
-//			}
-//		}
-//
-//		if (yPos < currentNode.y && yPos != yGoal) {
-//			if (gui.getMoveBox(xPos, yPos+10).getOpen()) {
-//				gui.setBox(xPos, yPos, true);
-//				yPos+=10;
-//				gui.setBox(xPos, yPos, false);
-//			} else if (gui.getMoveBox(xPos-10, yPos) != null && gui.getMoveBox(xPos-10, yPos).getOpen()) {
-//				gui.setBox(xPos, yPos, true);
-//				xPos-=10;
-//				gui.setBox(xPos, yPos, false);
-//			} else if (gui.getMoveBox(xPos, yPos-10) != null && gui.getMoveBox(xPos, yPos-10).getOpen()) {
-//				gui.setBox(xPos, yPos, true);
-//				yPos-=10;
-//				gui.setBox(xPos, yPos, false);
-//			} else if (gui.getMoveBox(xPos+10, yPos) != null && gui.getMoveBox(xPos+10, yPos).getOpen()) {
-//				gui.setBox(xPos, yPos, true);
-//				xPos+=10;
-//				gui.setBox(xPos, yPos, false);
-//			}
-//		}
-//		else if (yPos > currentNode.y && yPos != yGoal) {
-//			if (gui.getMoveBox(xPos, yPos-10).getOpen()) {
-//				gui.setBox(xPos, yPos, true);
-//				yPos-=10;
-//				gui.setBox(xPos, yPos, false);
-//			} else if (gui.getMoveBox(xPos+10, yPos) != null && gui.getMoveBox(xPos+10, yPos).getOpen()) {
-//				gui.setBox(xPos, yPos, true);
-//				xPos+=10;
-//				gui.setBox(xPos, yPos, false);
-//			} else if (gui.getMoveBox(xPos, yPos+10) != null && gui.getMoveBox(xPos, yPos+10).getOpen()) {
-//				gui.setBox(xPos, yPos, true);
-//				yPos+=10;
-//				gui.setBox(xPos, yPos, false);
-//			} else if (gui.getMoveBox(xPos-10, yPos) != null && gui.getMoveBox(xPos-10, yPos).getOpen()) {
-//				gui.setBox(xPos, yPos, true);
-//				xPos-=10;
-//				gui.setBox(xPos, yPos, false);
-//			}
-//		}
-//		
-//		
-//		
 		if (xPos == xGoal && yPos == yGoal) {
         	if (command == Command.GoToDestination) {
         		agent.msgAtStop();
@@ -227,14 +146,14 @@ public class BusGui implements Gui {
 			xGoal = city.getBuildingEntrance(b.getName()).x-30;
 			yGoal = city.getBuildingEntrance(b.getName()).y;
 		} else if (destination.equals("busStop2")) {
-			xGoal = city.getBuildingEntrance(b.getName()).x;
+			xGoal = city.getBuildingEntrance(b.getName()).x-10;
 			yGoal = city.getBuildingEntrance(b.getName()).y-30;
 		} else if (destination.equals("busStop3")) {
-			xGoal = city.getBuildingEntrance(b.getName()).x+30;
-			yGoal = city.getBuildingEntrance(b.getName()).y;
+			xGoal = city.getBuildingEntrance(b.getName()).x+20;
+			yGoal = city.getBuildingEntrance(b.getName()).y-10;
 		} else {
 			xGoal = city.getBuildingEntrance(b.getName()).x;
-			yGoal = city.getBuildingEntrance(b.getName()).y+30;
+			yGoal = city.getBuildingEntrance(b.getName()).y+20;
 		}
  		command = Command.GoToDestination;
 	}

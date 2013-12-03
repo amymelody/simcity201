@@ -574,10 +574,10 @@ public class PersonAgent extends Agent implements Person
 			}
 		}
 		
-		if (!unitTesting && state.ts == TransportationState.walking && state.ls != LocationState.home && state.ls != LocationState.leavingHouse) {
-			goHome(); //if nothing left to do, go home and do whatever
-			return true;
-		}
+//		if (!unitTesting && state.ts == TransportationState.walking && state.ls != LocationState.home && state.ls != LocationState.leavingHouse) {
+//			goHome(); //if nothing left to do, go home and do whatever
+//			return true;
+//		}
 		
 		return false;
 	}
@@ -603,6 +603,7 @@ public class PersonAgent extends Agent implements Person
 	}
 	
 	private void boardBus() {
+		print(destination);
 		gui.DoBoardBus(closestBusStop().getName(), closestBusStop(destination).getName());
 		try {
 			onBus.acquire();

@@ -89,12 +89,12 @@ public class CityDirectory
 	private static final int joshRestaurantY = 280;
 	private static final int busStop1X = 70;
 	private static final int busStop1Y = 80;
-	private static final int busStop2X = 400;
+	private static final int busStop2X = 410;
 	private static final int busStop2Y = 70;
-	private static final int busStop3X = 410;
-	private static final int busStop3Y = 400;
+	private static final int busStop3X = 420;
+	private static final int busStop3Y = 410;
 	private static final int busStop4X = 80;
-	private static final int busStop4Y = 410;
+	private static final int busStop4Y = 420;
 	
 	class PersonInfo
 	{

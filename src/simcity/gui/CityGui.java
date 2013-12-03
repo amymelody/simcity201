@@ -19,6 +19,7 @@ import simcity.housing.LandlordRole;
 import simcity.housing.ResidentRole;
 import simcity.housing.gui.HousingGui;
 import simcity.housing.gui.MoveBox;
+import simcity.interfaces.BusStop;
 import simcity.joshrestaurant.gui.JoshRestaurantGui;
 import simcity.joshrestaurant.JoshCustomerRole;
 import simcity.joshrestaurant.JoshWaiterRole;
@@ -185,6 +186,19 @@ public class CityGui extends JFrame
 
 	public List<TrafficNode> getTrafficNodes() {
 		return trafficNodes;
+	}
+	
+	public TrafficNode getClosestNode(int x, int y) {
+		int distance = 100000000;
+		TrafficNode temp = trafficNodes.get(0);
+		for (TrafficNode t : trafficNodes) {
+			int sum = Math.abs(x-t.x) + Math.abs(y-t.y);
+			if (sum < distance) {
+				distance = sum;
+				temp = t;
+			}
+		}
+		return temp;
 	}
 	
 	public MoveBox getMoveBox(int x, int y) {

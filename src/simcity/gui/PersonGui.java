@@ -33,7 +33,7 @@ public class PersonGui implements Gui {
 
 	public void updatePosition() {
 		
-		if (city != null && destination != null && xPos == currentNode.x && yPos == currentNode.y) {
+		if (city != null && destination != null && currentNode != null && xPos == currentNode.x && yPos == currentNode.y) {
 			if (city.getBuildingOrientation(destination).equals("horizontal")) {
 				if (yGoal < yPos) {
 					currentNode = currentNode.getNorthNeighbor();
@@ -54,6 +54,25 @@ public class PersonGui implements Gui {
 					currentNode = currentNode.getNorthNeighbor();
 				} else {
 					currentNode = currentNode.getSouthNeighbor();
+				}
+			}
+		}
+		
+		if (city != null && destination != null && currentNode == null) {
+			currentNode = gui.getClosestNode(xPos,yPos);
+			if (!(xPos == currentNode.x && yPos == currentNode.y)) {
+				if (xPos == currentNode.x) {
+					if (yGoal < yPos) {
+						currentNode = currentNode.getNorthNeighbor();
+					} else if (yGoal > yPos) {
+						currentNode = currentNode.getSouthNeighbor();
+					}
+				} else if (yPos == currentNode.y) {
+					if (xGoal < xPos) {
+						currentNode = currentNode.getWestNeighbor();
+					} else if (xGoal > xPos) {
+						currentNode = currentNode.getEastNeighbor();
+					}
 				}
 			}
 		}
@@ -92,7 +111,7 @@ public class PersonGui implements Gui {
 //			}
 //		}
 		
-		if (destination != null) {
+		if (destination != null && currentNode != null) {
 			if (xPos < currentNode.x && xPos != xGoal) {
 				if (gui.getMoveBox(xPos+10, yPos).getOpen()) {
 					gui.setBox(xPos, yPos, true);
@@ -177,11 +196,13 @@ public class PersonGui implements Gui {
         	if (command == Command.GoToDestination) {
         		gui.setBox(xPos, yPos, true);
         		destination = null;
+        		currentNode = null;
         		agent.msgAtDestination();
         	}
         	if (command == Command.BoardBus) {
         		gui.setBox(xPos, yPos, true);
         		destination = null;
+        		currentNode = null;
         		xPos = city.getBuildingEntrance(goalStop).x;
         		yPos = city.getBuildingEntrance(goalStop).y;
         		xGoal = xPos;
@@ -193,10 +214,10 @@ public class PersonGui implements Gui {
 	}
 
 	public void draw(Graphics2D g) {
-		//if (command != Command.noCommand) { 
+		if (command != Command.noCommand) { 
 			g.setColor(Color.BLUE);
 			g.fillRect(xPos, yPos, width, height);
-		//}
+		}
 	}
 	
 	public void DoGoToDestination(String d) {
