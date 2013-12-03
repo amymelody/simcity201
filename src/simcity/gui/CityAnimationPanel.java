@@ -66,6 +66,11 @@ public class CityAnimationPanel extends JPanel implements ActionListener, MouseL
 	}
 
 	public void actionPerformed(ActionEvent e) {
+		for(Gui gui : guis) {
+			if (gui.isPresent()) {
+				gui.updatePosition();
+			}
+		}
 		repaint();  //Will have paintComponent called
 	}
 
@@ -75,13 +80,7 @@ public class CityAnimationPanel extends JPanel implements ActionListener, MouseL
 		//background
 		g2.drawImage(bg, 0, 0, null);
 		
-		synchronized(guis) {
-			for(Gui gui : guis) {
-				if (gui.isPresent()) {
-					gui.updatePosition();
-				}
-			}
-	
+		synchronized(guis) {	
 			for(Gui gui : guis) {
 				if (gui.isPresent()) {
 					gui.draw(g2);
