@@ -45,7 +45,7 @@ public class CityGui extends JFrame
 
 	private final int WINDOWX = 650;
 	private final int WINDOWY = 500;
-	private final int BUFFERTOP = 50;
+	private final int BUFFERTOP = 20;
 	private final int BUFFERSIDE = 15;
 	
 	private MoveBox[][] boxes = new MoveBox[50][50];
