@@ -844,7 +844,7 @@ public class PersonAgent extends Agent implements Person
 	}
 
 	private void goToDestination(String d) {
-		if (unitTesting && takeBus(d) && state.ts != TransportationState.walkingFromVehicle) {
+		if (takeBus(d) && state.ts != TransportationState.walkingFromVehicle) {
 			BusStop b = closestBusStop();
 			AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "I'm taking the bus. Going to " + b.getName());
 			if (!unitTesting) {

@@ -75,7 +75,7 @@ public class AlertWindow extends JFrame {
 		
 		tracePanel.showAlertsWithLevel(AlertLevel.DEBUG);
 		
-		tracePanel.hideAlertsWithTag(AlertTag.PERSON);
+		tracePanel.showAlertsWithTag(AlertTag.PERSON);
 		tracePanel.hideAlertsWithTag(AlertTag.BANK_CUSTOMER);
 		tracePanel.hideAlertsWithTag(AlertTag.GENERAL_CITY);
 		

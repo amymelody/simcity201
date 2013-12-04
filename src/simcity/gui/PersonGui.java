@@ -17,67 +17,94 @@ public class PersonGui implements Gui {
 
 	private static final int width = 10;
 	private static final int height = 10;
-	private int xPos = 0, yPos = 0;//default Person position (280,210)
+	private int xPos = 0, yPos = 0;//default Person position
 	private int xGoal = xPos, yGoal = yPos;//default Person destination
 	private TrafficNode currentNode;
 	private String destination;
 	private String goalStop;
+	private Direction direction = Direction.Right;
 	
 	private enum Command {noCommand, GoToDestination, BoardBus};
+	private enum Direction {Left, Right, Up, Down};
 	private Command command=Command.noCommand;
 
 	public PersonGui(PersonAgent p, CityGui g, CityDirectory c) {
 		agent = p;
 		gui = g;
 		city = c;
-		//currentNode = gui.getTrafficNodes().get(15);
 		currentNode = gui.getTrafficNodes().get(0);
 	}
 
 	public void updatePosition() {
 		
-		if (city != null && destination != null && currentNode != null && xPos == currentNode.x && yPos == currentNode.y) {
+		if (city != null && destination != null && currentNode != null && (xPos == currentNode.x || xPos == currentNode.x2) && (yPos == currentNode.y || yPos == currentNode.y2)) {
 			if (city.getBuildingOrientation(destination).equals("horizontal")) {
-				if (yGoal < yPos) {
+				if (yGoal < currentNode.y && yGoal < currentNode.y2) {
 					currentNode = currentNode.getNorthNeighbor();
-				} else if (yGoal > yPos) {
+					direction = Direction.Up;
+				} else if (yGoal > currentNode.y && yGoal > currentNode.y2) {
 					currentNode = currentNode.getSouthNeighbor();
-				} else if (xGoal < xPos) {
+					direction = Direction.Down;
+				} else if (xGoal < currentNode.x && xGoal < currentNode.x2) {
 					currentNode = currentNode.getWestNeighbor();
+					direction = Direction.Left;
 				} else {
 					currentNode = currentNode.getEastNeighbor();
+					direction = Direction.Right;
 				}
 			}
 			if (city.getBuildingOrientation(destination).equals("vertical")) {
-				if (xGoal < xPos) {
+				if (xGoal < currentNode.x && xGoal < currentNode.x2) {
 					currentNode = currentNode.getWestNeighbor();
-				} else if (xGoal > xPos) {
+					direction = Direction.Left;
+				} else if (xGoal > currentNode.x && xGoal > currentNode.x2) {
 					currentNode = currentNode.getEastNeighbor();
-				} else if (yGoal < yPos) {
+					direction = Direction.Right;
+				} else if (yGoal < currentNode.y && yGoal < currentNode.y2) {
 					currentNode = currentNode.getNorthNeighbor();
+					direction = Direction.Up;
 				} else {
 					currentNode = currentNode.getSouthNeighbor();
+					direction = Direction.Down;
 				}
 			}
+//			AlertLog.getInstance().logDebug(AlertTag.PERSON, agent.getName(), direction.toString());
+//			AlertLog.getInstance().logDebug(AlertTag.PERSON, agent.getName(), currentNode.x + ", " + currentNode.y);
 		}
 		
 		if (city != null && destination != null && currentNode == null) {
 			currentNode = gui.getClosestNode(xPos,yPos);
-			if (!(xPos == currentNode.x && yPos == currentNode.y)) {
-				if (xPos == currentNode.x) {
+			if (!((xPos == currentNode.x || xPos == currentNode.x2) && (yPos == currentNode.y || yPos == currentNode.y2))) {
+				if (xPos == currentNode.x || xPos == currentNode.x2) {
 					if (yGoal < yPos && yPos < currentNode.y) {
 						currentNode = currentNode.getNorthNeighbor();
+						direction = Direction.Up;
 					} else if (yGoal > yPos && yPos > currentNode.y) {
 						currentNode = currentNode.getSouthNeighbor();
+						direction = Direction.Down;
 					}
-				} else if (yPos == currentNode.y) {
+					if (yPos < currentNode.y) {
+						direction = Direction.Down;
+					} else {
+						direction = Direction.Up;
+					}
+				} else if (yPos == currentNode.y || yPos == currentNode.y2) {
 					if (xGoal < xPos && xPos < currentNode.x) {
 						currentNode = currentNode.getWestNeighbor();
+						direction = Direction.Left;
 					} else if (xGoal > xPos && xPos > currentNode.x) {
 						currentNode = currentNode.getEastNeighbor();
+						direction = Direction.Right;
+					}
+					if (xPos < currentNode.x) {
+						direction = Direction.Right;
+					} else {
+						direction = Direction.Left;
 					}
 				}
 			}
+//			AlertLog.getInstance().logDebug(AlertTag.PERSON, agent.getName(), direction.toString());
+//			AlertLog.getInstance().logDebug(AlertTag.PERSON, agent.getName(), currentNode.x + ", " + currentNode.y);
 		}
 		
 		if (destination == null) {
@@ -115,85 +142,91 @@ public class PersonGui implements Gui {
 //		}
 		
 		if (destination != null && currentNode != null) {
-			if (xPos < currentNode.x && xPos != xGoal) {
-				if (gui.getMoveBox(xPos+10, yPos).getOpen()) {
-					gui.setBox(xPos, yPos, true);
-					xPos+=10;
-					gui.setBox(xPos, yPos, false);
-				} else if (gui.getMoveBox(xPos, yPos+10) != null && gui.getMoveBox(xPos, yPos+10).getOpen()) {
-					gui.setBox(xPos, yPos, true);
-					yPos+=10;
-					gui.setBox(xPos, yPos, false);
-				} else if (gui.getMoveBox(xPos-10, yPos) != null && gui.getMoveBox(xPos-10, yPos).getOpen()) {
-					gui.setBox(xPos, yPos, true);
-					xPos-=10;
-					gui.setBox(xPos, yPos, false);
-				} else if (gui.getMoveBox(xPos, yPos-10) != null && gui.getMoveBox(xPos, yPos-10).getOpen()) {
-					gui.setBox(xPos, yPos, true);
-					yPos-=10;
-					gui.setBox(xPos, yPos, false);
-				}
-			}
-			else if (xPos > currentNode.x && xPos != xGoal) {
-				if (gui.getMoveBox(xPos-10, yPos).getOpen()) {
-					gui.setBox(xPos, yPos, true);
-					xPos-=10;
-					gui.setBox(xPos, yPos, false);
-				} else if (gui.getMoveBox(xPos, yPos-10) != null && gui.getMoveBox(xPos, yPos-10).getOpen()) {
-					gui.setBox(xPos, yPos, true);
-					yPos-=10;
-					gui.setBox(xPos, yPos, false);
-				} else if (gui.getMoveBox(xPos+10, yPos) != null && gui.getMoveBox(xPos+10, yPos).getOpen()) {
-					gui.setBox(xPos, yPos, true);
-					xPos+=10;
-					gui.setBox(xPos, yPos, false);
-				} else if (gui.getMoveBox(xPos, yPos+10) != null && gui.getMoveBox(xPos, yPos+10).getOpen()) {
-					gui.setBox(xPos, yPos, true);
-					yPos+=10;
-					gui.setBox(xPos, yPos, false);
-				}
-			}
-	
-			if (yPos < currentNode.y && yPos != yGoal) {
+			//AlertLog.getInstance().logDebug(AlertTag.PERSON, agent.getName(), direction.toString());
+			boolean ok = true;
+			if (direction == Direction.Right && yPos == currentNode.y) {
 				if (gui.getMoveBox(xPos, yPos+10).getOpen()) {
 					gui.setBox(xPos, yPos, true);
 					yPos+=10;
-					gui.setBox(xPos, yPos, false);
-				} else if (gui.getMoveBox(xPos-10, yPos) != null && gui.getMoveBox(xPos-10, yPos).getOpen()) {
 					gui.setBox(xPos, yPos, true);
-					xPos-=10;
-					gui.setBox(xPos, yPos, false);
-				} else if (gui.getMoveBox(xPos, yPos-10) != null && gui.getMoveBox(xPos, yPos-10).getOpen()) {
-					gui.setBox(xPos, yPos, true);
-					yPos-=10;
-					gui.setBox(xPos, yPos, false);
-				} else if (gui.getMoveBox(xPos+10, yPos) != null && gui.getMoveBox(xPos+10, yPos).getOpen()) {
-					gui.setBox(xPos, yPos, true);
-					xPos+=10;
-					gui.setBox(xPos, yPos, false);
+					ok = true;
+				} else {
+					ok = false;
 				}
-			}
-			else if (yPos > currentNode.y && yPos != yGoal) {
+			} else if (direction == Direction.Left && yPos == currentNode.y2) {
 				if (gui.getMoveBox(xPos, yPos-10).getOpen()) {
 					gui.setBox(xPos, yPos, true);
 					yPos-=10;
-					gui.setBox(xPos, yPos, false);
-				} else if (gui.getMoveBox(xPos+10, yPos) != null && gui.getMoveBox(xPos+10, yPos).getOpen()) {
 					gui.setBox(xPos, yPos, true);
-					xPos+=10;
-					gui.setBox(xPos, yPos, false);
-				} else if (gui.getMoveBox(xPos, yPos+10) != null && gui.getMoveBox(xPos, yPos+10).getOpen()) {
-					gui.setBox(xPos, yPos, true);
-					yPos+=10;
-					gui.setBox(xPos, yPos, false);
-				} else if (gui.getMoveBox(xPos-10, yPos) != null && gui.getMoveBox(xPos-10, yPos).getOpen()) {
+					ok = true;
+				} else {
+					ok = false;
+				}
+			} else if (direction == Direction.Down && xPos == currentNode.x2) {
+				if (gui.getMoveBox(xPos-10, yPos).getOpen()) {
 					gui.setBox(xPos, yPos, true);
 					xPos-=10;
-					gui.setBox(xPos, yPos, false);
+					gui.setBox(xPos, yPos, true);
+					ok = true;
+				} else {
+					ok = false;
+				}
+			} else if (direction == Direction.Up && xPos == currentNode.x) {
+				if (gui.getMoveBox(xPos+10, yPos).getOpen()) {
+					gui.setBox(xPos, yPos, true);
+					xPos+=10;
+					gui.setBox(xPos, yPos, true);
+					ok = true;
+				} else {
+					ok = false;
+				}
+			}
+			if (ok) {
+				if (direction == Direction.Right && xPos < currentNode.x) {
+					if (gui.getMoveBox(xPos+10, yPos).getOpen()) {
+						gui.setBox(xPos, yPos, true);
+						xPos+=10;
+						gui.setBox(xPos, yPos, false);
+					}
+				}
+				else if (direction == Direction.Left && xPos > currentNode.x) {
+					if (gui.getMoveBox(xPos-10, yPos).getOpen()) {
+						gui.setBox(xPos, yPos, true);
+						xPos-=10;
+						gui.setBox(xPos, yPos, false);
+					}
+				}
+		
+				if (direction == Direction.Down && yPos < currentNode.y) {
+					if (gui.getMoveBox(xPos, yPos+10).getOpen()) {
+						gui.setBox(xPos, yPos, true);
+						yPos+=10;
+						gui.setBox(xPos, yPos, false);
+					}
+				}
+				else if (direction == Direction.Up && yPos > currentNode.y) {
+					if (gui.getMoveBox(xPos, yPos-10).getOpen()) {
+						gui.setBox(xPos, yPos, true);
+						yPos-=10;
+						gui.setBox(xPos, yPos, false);
+					}
 				}
 			}
 		}
 		
+		if (direction == Direction.Right && xPos == xGoal && yPos == yGoal+10) {
+			gui.setBox(xPos,  yPos,  true);
+			yPos -= 10;
+		} else if (direction == Direction.Left && xPos == xGoal && yPos == yGoal-10) {
+			gui.setBox(xPos,  yPos,  true);
+			yPos += 10;
+		} else if (direction == Direction.Up && yPos == yGoal && xPos == xGoal+10) {
+			gui.setBox(xPos,  yPos,  true);
+			xPos -= 10;
+		} else if (direction == Direction.Down && yPos == yGoal && xPos == xGoal-10) {
+			gui.setBox(xPos,  yPos,  true);
+			xPos += 10;
+		} 
 		
 		if (xPos == xGoal && yPos == yGoal) {
         	if (command == Command.GoToDestination) {

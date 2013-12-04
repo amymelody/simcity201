@@ -170,7 +170,7 @@ public class CityInputPanel extends JPanel implements ActionListener
     
     public void addPerson(String name, String job, int pay, int startShift, int endShift, String eco, String physical, String housing, CityDirectory c, boolean t) 
     {
-		PersonAgent p = new PersonAgent(name);
+    	PersonAgent p = new PersonAgent(name);
 		PersonGui g = new PersonGui(p, gui, c);
 		p.setCityDirectory(c);
 		p.setCityGui(gui);

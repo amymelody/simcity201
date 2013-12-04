@@ -432,7 +432,7 @@ public class JoshSharedDataWaiterRole extends JoshWaiterRole implements JoshWait
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		Do("What would you like to order?");
+		AlertLog.getInstance().logMessage(AlertTag.JOSH_RESTAURANT, name, "What would you like to order?");
 		mc.getCust().msgWhatWouldYouLike();
 		mc.setState(CustomerState.Asked);
 	}
@@ -445,7 +445,7 @@ public class JoshSharedDataWaiterRole extends JoshWaiterRole implements JoshWait
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		Do("I'm sorry, we're out of that menu item. Would you like to order something else?");
+		AlertLog.getInstance().logMessage(AlertTag.JOSH_RESTAURANT, name, "I'm sorry, we're out of that menu item. Would you like to order something else?");
 		mc.getCust().msgWantSomethingElse(menu);
 		mc.setState(CustomerState.Asked);
 	}
@@ -488,7 +488,7 @@ public class JoshSharedDataWaiterRole extends JoshWaiterRole implements JoshWait
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		Do("Here is your order.");
+		AlertLog.getInstance().logMessage(AlertTag.JOSH_RESTAURANT, name, "Here is your order.");
 		mc.getCust().msgHereIsFood(mc.getChoice());
 		cashier.msgProduceCheck(this, mc.getCust(), mc.choice);
 		mc.setState(CustomerState.Eating);
@@ -509,7 +509,7 @@ public class JoshSharedDataWaiterRole extends JoshWaiterRole implements JoshWait
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		Do("Here is your check. The charge is $" + mc.charge);
+		AlertLog.getInstance().logMessage(AlertTag.JOSH_RESTAURANT, name, "Here is your check. The charge is $" + mc.charge);
 		AlertLog.getInstance().logMessage(AlertTag.JOSH_RESTAURANT, name, mc.getCust() + " leaving table " + mc.getTable());
 		mc.getCust().msgHereIsCheck(mc.charge);
 		mc.setState(CustomerState.Leaving);

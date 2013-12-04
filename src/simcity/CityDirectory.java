@@ -74,11 +74,11 @@ public class CityDirectory
 	private static final int house3X = 210;
 	private static final int house3Y = 100;
 	private static final int market1X = 280;
-	private static final int market1Y = 280;
+	private static final int market1Y = 290;
 	private static final int market2X = 210;
-	private static final int market2Y = 280;
+	private static final int market2Y = 290;
 	private static final int market3X = 70;
-	private static final int market3Y = 420;
+	private static final int market3Y = 410;
 	private static final int bankX = 190;
 	private static final int bankY = 210;
 	private static final int apartment1X = 300;
@@ -86,7 +86,7 @@ public class CityDirectory
 	private static final int apartment2X = 400;
 	private static final int apartment2Y = 70;
 	private static final int joshRestaurantX = 420;
-	private static final int joshRestaurantY = 280;
+	private static final int joshRestaurantY = 290;
 	private static final int busStop1X = 70;
 	private static final int busStop1Y = 80;
 	private static final int busStop2X = 410;
@@ -268,7 +268,7 @@ public class CityDirectory
 		addBuilding("apartment26", "horizontal", new Point(apartment2X, apartment2Y));
 		addBuilding("apartment27", "horizontal", new Point(apartment2X, apartment2Y));
 		addBuilding("bank1", "horizontal", new Point(bankX, bankY));
-		addBuilding("joshRestaurant", "horizontal", new Point(joshRestaurantX, joshRestaurantY));
+		addBuilding("joshRestaurant", "vertical", new Point(joshRestaurantX, joshRestaurantY));
 		addBuilding("busStop1", "vertical", new Point(busStop1X, busStop1Y));
 		addBuilding("busStop2", "horizontal", new Point(busStop2X, busStop2Y));
 		addBuilding("busStop3", "vertical", new Point(busStop3X, busStop3Y));

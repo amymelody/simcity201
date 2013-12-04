@@ -132,51 +132,51 @@ public class CityGui extends JFrame
 		
 		//add Traffic Nodes
 		trafficNodes.add(new TrafficNode(0,0));
-		trafficNodes.add(new TrafficNode(70,0));
+		trafficNodes.add(new TrafficNode(60,0));
 		trafficNodes.add(new TrafficNode(210,0));
-		trafficNodes.add(new TrafficNode(280,0));
+		trafficNodes.add(new TrafficNode(270,0));
 		trafficNodes.add(new TrafficNode(420,0));
 		trafficNodes.add(new TrafficNode(480,0));
-		trafficNodes.add(new TrafficNode(0,70));
-		trafficNodes.add(new TrafficNode(70,70));
-		trafficNodes.add(new TrafficNode(210,70));
-		trafficNodes.add(new TrafficNode(280,70));
-		trafficNodes.add(new TrafficNode(420,70));
-		trafficNodes.add(new TrafficNode(480,70));
+		trafficNodes.add(new TrafficNode(0,60));
+		trafficNodes.add(new TrafficNode(60,60));
+		trafficNodes.add(new TrafficNode(210,60));
+		trafficNodes.add(new TrafficNode(270,60));
+		trafficNodes.add(new TrafficNode(420,60));
+		trafficNodes.add(new TrafficNode(480,60));
 		trafficNodes.add(new TrafficNode(0,210));
-		trafficNodes.add(new TrafficNode(70,210));
+		trafficNodes.add(new TrafficNode(60,210));
 		trafficNodes.add(new TrafficNode(210,210));
-		trafficNodes.add(new TrafficNode(280,210));
+		trafficNodes.add(new TrafficNode(270,210));
 		trafficNodes.add(new TrafficNode(420,210));
 		trafficNodes.add(new TrafficNode(480,210));
-		trafficNodes.add(new TrafficNode(0,280));
-		trafficNodes.add(new TrafficNode(70,280));
-		trafficNodes.add(new TrafficNode(210,280));
-		trafficNodes.add(new TrafficNode(280,280));
-		trafficNodes.add(new TrafficNode(420,280));
-		trafficNodes.add(new TrafficNode(480,280));
+		trafficNodes.add(new TrafficNode(0,270));
+		trafficNodes.add(new TrafficNode(60,270));
+		trafficNodes.add(new TrafficNode(210,270));
+		trafficNodes.add(new TrafficNode(270,270));
+		trafficNodes.add(new TrafficNode(420,270));
+		trafficNodes.add(new TrafficNode(480,270));
 		trafficNodes.add(new TrafficNode(0,420));
-		trafficNodes.add(new TrafficNode(70,420));
+		trafficNodes.add(new TrafficNode(60,420));
 		trafficNodes.add(new TrafficNode(210,420));
-		trafficNodes.add(new TrafficNode(280,420));
+		trafficNodes.add(new TrafficNode(270,420));
 		trafficNodes.add(new TrafficNode(420,420));
 		trafficNodes.add(new TrafficNode(480,420));
 		trafficNodes.add(new TrafficNode(0,480));
-		trafficNodes.add(new TrafficNode(70,480));
+		trafficNodes.add(new TrafficNode(60,480));
 		trafficNodes.add(new TrafficNode(210,480));
-		trafficNodes.add(new TrafficNode(280,480));
+		trafficNodes.add(new TrafficNode(270,480));
 		trafficNodes.add(new TrafficNode(420,480));
 		trafficNodes.add(new TrafficNode(480,480));
 		
 		for (TrafficNode node : trafficNodes) {
 			for (TrafficNode n : trafficNodes) {
 				if (n.x == node.x && n.y != node.y) {
-					if ((node.y + 140 >= n.y && n.y > node.y) || (node.y - 140 <= n.y && n.y < node.y)) {
+					if ((node.y + 150 >= n.y && n.y > node.y) || (node.y - 150 <= n.y && n.y < node.y)) {
 						node.addNeighbor(n);
 					}
 				}
 				if (n.y == node.y && n.x != node.x) {
-					if ((node.x + 140 >= n.x && n.x > node.x) || (node.x - 140 <= n.x && n.x < node.x)) {
+					if ((node.x + 150 >= n.x && n.x > node.x) || (node.x - 150 <= n.x && n.x < node.x)) {
 						node.addNeighbor(n);
 					}
 				}
