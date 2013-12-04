@@ -113,7 +113,7 @@ public class CityInputPanel extends JPanel implements ActionListener
 //        personPane.setViewportView(view);
 //        add(personPane);
         
-        time = new Time(Day.Sun, 4, 0);
+        time = new Time(Day.Sun, 3, 0);
         timer = new Timer(TIMERINCR, this );
     	timer.start();
         

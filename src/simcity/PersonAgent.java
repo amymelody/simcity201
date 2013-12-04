@@ -63,6 +63,7 @@ public class PersonAgent extends Agent implements Person
 	public List<Bank> banks = Collections.synchronizedList(new ArrayList<Bank>());
 	public List<Housing> houses = Collections.synchronizedList(new ArrayList<Housing>());
 
+	private static final int nearDistance = 180;
 	private Job job;
 	private Time time = new Time(Day.Sun, 0, 0);
 
@@ -281,16 +282,19 @@ public class PersonAgent extends Agent implements Person
 	}
 	
 	private boolean nearDestination(String destination) {
+		if (Math.abs(gui.getXPos()-city.getBuildingEntrance(destination).x) <= nearDistance && Math.abs(gui.getYPos()-city.getBuildingEntrance(destination).y) <= nearDistance) {
+			return true;
+		}
 		return false;
 	}
 	
 	private boolean takeBus(String destination) {
-		if (job != null && destination.equals(job.location) && (time.plus(30)).greaterThanOrEqualTo(job.startShifts.get(time.getDay())) && !time.greaterThanOrEqualTo(job.endShifts.get(time.getDay()))) {
-			return true;
-		}
-		/*if (nearDestination(destination)) {
+//		if (job != null && destination.equals(job.location) && (time.plus(30)).greaterThanOrEqualTo(job.startShifts.get(time.getDay())) && !time.greaterThanOrEqualTo(job.endShifts.get(time.getDay()))) {
+//			return true;
+//		}
+		if (nearDestination(destination)) {
 			return false;
-		}*/
+		}
 		if (state.ps == PhysicalState.fit) {
 			return false;
 		}
@@ -386,7 +390,7 @@ public class PersonAgent extends Agent implements Person
 				foodNeeded.add(new ItemOrder("chicken",2));
 				AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "Food is low");
 			}
-			if (name.equals("hungryResident")) {
+			if (name.equals("hungryResident") || name.equals("restCustomer")) {
 				AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "Got hungry");
 				state.ns = NourishmentState.gotHungry;
 			}
@@ -511,7 +515,7 @@ public class PersonAgent extends Agent implements Person
 	
 	public boolean pickAndExecuteAnAction() {
 		if (state.ts == TransportationState.walking || state.ts == TransportationState.walkingFromVehicle) {
-			if (job != null && state.ws == WorkingState.notWorking && !job.startShifts.get(time.getDay()).isEqualTo(job.endShifts.get(time.getDay())) && (time.plus(60)).greaterThanOrEqualTo(job.startShifts.get(time.getDay())) && !time.greaterThanOrEqualTo(job.endShifts.get(time.getDay()))) { //if an hour before your shift starts
+			if (job != null && state.ws == WorkingState.notWorking && !job.startShifts.get(time.getDay()).isEqualTo(job.endShifts.get(time.getDay())) && (time.plus(90)).greaterThanOrEqualTo(job.startShifts.get(time.getDay())) && !time.greaterThanOrEqualTo(job.endShifts.get(time.getDay()))) { //if an hour before your shift starts
 				if (state.ls == LocationState.home) {
 					leaveHouse();
 					return true;
@@ -520,7 +524,7 @@ public class PersonAgent extends Agent implements Person
 					return true;
 				}
 			}
-			if (state.ws == WorkingState.working && time.greaterThanOrEqualTo(job.endShifts.get(time.getDay()) ) && !job.role.equals("landlord")) { //if your shift ends
+			if (state.ws == WorkingState.working && time.greaterThanOrEqualTo(job.endShifts.get(time.getDay()) ) && !job.role.equals("landlordRole")) { //if your shift ends
 				endShift();
 				return true;
 			} 
