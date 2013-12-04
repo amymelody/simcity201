@@ -42,7 +42,9 @@ public class CityInputPanel extends JPanel implements ActionListener
 	private JLabel scenario = new JLabel("CHOOSE A SCENARIO");
 	private JRadioButtonMenuItem button1 = new JRadioButtonMenuItem("Restaurant Config");
 	private JRadioButtonMenuItem button2 = new JRadioButtonMenuItem("Market Config");
-	private JRadioButtonMenuItem button3 = new JRadioButtonMenuItem("Jobs Config");
+	private JRadioButtonMenuItem button3 = new JRadioButtonMenuItem("Landlord Config");
+	private JRadioButtonMenuItem button4 = new JRadioButtonMenuItem("Bank Config");
+	private JRadioButtonMenuItem button5 = new JRadioButtonMenuItem("Housing Config");
 	private JButton goButton = new JButton("Run Scenario");
     
 //    @Override
@@ -87,7 +89,7 @@ public class CityInputPanel extends JPanel implements ActionListener
 		
 //        setLayout(new BoxLayout(this, 0));
 		
-		int rows = 5;
+		int rows = 7;
 		int columns = 1;
 		int buffer = 10;
 		view.setLayout(new GridLayout(rows, columns, buffer, buffer)); //view. maybe ought to be deleted
@@ -99,6 +101,10 @@ public class CityInputPanel extends JPanel implements ActionListener
 		add(button2);
 		configGroup.add(button3);
 		add(button3);
+		configGroup.add(button4);
+		add(button4);
+		configGroup.add(button5);
+		add(button5);
 		goButton.addActionListener(this);
 		add(goButton);
 //        add(creationPanel);
@@ -145,7 +151,15 @@ public class CityInputPanel extends JPanel implements ActionListener
 			}
 			else if(button3.isSelected())
 			{
-			creationPanel.readConfig("../jobsConfig.properties");
+			creationPanel.readConfig("../landlordConfig.properties");
+			}
+			else if(button4.isSelected())
+			{
+			creationPanel.readConfig("../bankConfig.properties");
+			}
+			else if(button5.isSelected())
+			{
+			creationPanel.readConfig("../housingConfig.properties");
 			}
 		}
 //    	for (JButton b : personList)
@@ -168,7 +182,7 @@ public class CityInputPanel extends JPanel implements ActionListener
     	bus.startThread();
     }
     
-    public void addPerson(String name, String job, int pay, int startShift, int endShift, String eco, String physical, String housing, CityDirectory c, boolean t) 
+    public void addPerson(String name, String job, int pay, int startShift, int endShift, String eco, String physical, String housing, CityDirectory c, boolean tA, boolean uB, boolean gH) 
     {
     	PersonAgent p = new PersonAgent(name);
 		PersonGui g = new PersonGui(p, gui, c);
@@ -199,7 +213,9 @@ public class CityInputPanel extends JPanel implements ActionListener
 		p.msgYoureHired(job, pay, startShifts, endShifts);
 		p.setEState(eco);
 		p.setPState(physical);
-		p.setTestingAnimation(t);
+		p.setTestingAnimation(tA);
+		p.setUsingBus(uB);
+		p.setGoingHome(gH);
 		
 		people.add(p);
 		cityDirectory.addPerson(p, p.getJobLocation(), housing);

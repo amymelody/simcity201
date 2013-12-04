@@ -3,28 +3,15 @@ package simcity.gui;
 import javax.swing.*;
 
 import java.awt.*;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Semaphore;
 
 import simcity.CityDirectory;
-import simcity.market.gui.MarketGui;
 import simcity.bank.BankDepositorRole;
 import simcity.bank.BankTellerRole;
-import simcity.bank.gui.BankGui;
 import simcity.housing.LandlordRole;
 import simcity.housing.ResidentRole;
-import simcity.housing.gui.HousingGui;
 import simcity.housing.gui.MoveBox;
-import simcity.interfaces.BusStop;
-import simcity.joshrestaurant.gui.JoshRestaurantGui;
-import simcity.joshrestaurant.JoshCustomerRole;
-import simcity.joshrestaurant.JoshWaiterRole;
-import simcity.joshrestaurant.JoshNormalWaiterRole;
-import simcity.joshrestaurant.JoshSharedDataWaiterRole;
 import simcity.market.MarketCustomerRole;
 import simcity.market.MarketEmployeeRole;
 import simcity.market.MarketDelivererRole;

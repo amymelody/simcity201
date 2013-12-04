@@ -48,6 +48,7 @@ public class PersonTest extends TestCase
 		person.setEState("rich");
 		person.msgCreatedAccount();
 		person.unitTesting = true;
+		person.setUsingBus(true);
 	}	
 	
 	public void testRestaurantCustomer()

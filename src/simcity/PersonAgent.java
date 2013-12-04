@@ -43,6 +43,8 @@ public class PersonAgent extends Agent implements Person
 	private String destination;
 	public boolean unitTesting = false;
 	private boolean testingAnimation;
+	private boolean usingBus;
+	private boolean goingHome;
 	
 	private CityDirectory city;
 	private CityGui cG;
@@ -120,14 +122,25 @@ public class PersonAgent extends Agent implements Person
 	
 	public void setHome(String home) {
 		houses.get(0).location = home;
+		if (job != null && job.location.equals("home")) {
+			job.location = home;
+		}
 	}
 	
 	public void setOwnerHome(String home) {
 		houses.get(1).location = home;
 	}
 	
-	public void setTestingAnimation(boolean t) {
-		testingAnimation = t;
+	public void setTestingAnimation(boolean tA) {
+		testingAnimation = tA;
+	}
+	
+	public void setUsingBus(boolean uB) {
+		usingBus = uB;
+	}
+	
+	public void setGoingHome(boolean gH) {
+		goingHome = gH;
 	}
 	
 	public String getName() {
@@ -194,7 +207,7 @@ public class PersonAgent extends Agent implements Person
 			state.es = EconomicState.middle;
 			money = 250;
 			minBalance = 100;
-			maxBalance = 1000;
+			maxBalance = 400;
 			break;
 		}
 	}
@@ -272,9 +285,9 @@ public class PersonAgent extends Agent implements Person
 	}
 	
 	private boolean takeBus(String destination) {
-//		if (job != null && destination.equals(job.location) && (time.plus(30)).greaterThanOrEqualTo(job.startShifts.get(time.getDay())) && !time.greaterThanOrEqualTo(job.endShifts.get(time.getDay()))) {
-//			return true;
-//		}
+		if (job != null && destination.equals(job.location) && (time.plus(30)).greaterThanOrEqualTo(job.startShifts.get(time.getDay())) && !time.greaterThanOrEqualTo(job.endShifts.get(time.getDay()))) {
+			return true;
+		}
 		/*if (nearDestination(destination)) {
 			return false;
 		}*/
@@ -363,10 +376,21 @@ public class PersonAgent extends Agent implements Person
 		time.day = d;
 		time.hour = h;
 		time.minute = m;
-//		if (time.getHour() == 9 && time.getMinute() == 0) {
-//			money += 600;
-//			AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "$" + money);
-//		}
+		if (time.getHour() == 7 && time.getMinute() == 0) {
+			if (name.equals("bankDepositor")) {
+				money += 600;
+				AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "$" + money);
+			}
+			if (name.equals("marketCustomer")) {
+				foodNeeded.add(new ItemOrder("steak",2));
+				foodNeeded.add(new ItemOrder("chicken",2));
+				AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "Food is low");
+			}
+			if (name.equals("hungryResident")) {
+				AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "Got hungry");
+				state.ns = NourishmentState.gotHungry;
+			}
+		}
 //		if (!unitTesting && time.getHour() == 8 && time.getMinute() == 0) {
 //			AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "Got hungry");
 //			state.ns = NourishmentState.gotHungry;
@@ -580,7 +604,7 @@ public class PersonAgent extends Agent implements Person
 			}
 		}
 		
-		if (!unitTesting && state.ts == TransportationState.walking && state.ls != LocationState.home && state.ls != LocationState.leavingHouse) {
+		if (!unitTesting && goingHome && state.ts == TransportationState.walking && state.ls != LocationState.home && state.ls != LocationState.leavingHouse) {
 			goHome(); //if nothing left to do, go home and do whatever
 			return true;
 		}
@@ -819,7 +843,7 @@ public class PersonAgent extends Agent implements Person
 
 	private void goToWork() {
 		if (state.ls != LocationState.atDestination || (destination != null && !destination.equals(job.location))) { 
-			AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "I'm going to work");
+			AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "I'm going to work at " + job.location);
 			if (destination != null && !destination.equals(job.location)) {
 				state.ts = TransportationState.walking;
 			}
@@ -844,7 +868,7 @@ public class PersonAgent extends Agent implements Person
 	}
 
 	private void goToDestination(String d) {
-		if (takeBus(d) && state.ts != TransportationState.walkingFromVehicle) {
+		if (usingBus && takeBus(d) && state.ts != TransportationState.walkingFromVehicle) {
 			BusStop b = closestBusStop();
 			AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "I'm taking the bus. Going to " + b.getName());
 			if (!unitTesting) {

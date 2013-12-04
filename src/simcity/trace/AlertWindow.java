@@ -113,7 +113,7 @@ public class AlertWindow extends JFrame {
 			messagesButton = new JButton("Hide Level: MESSAGE");
 			errorButton = new JButton("Show Level: ERROR");
 			generalCityTagButton = new JButton("Show Tag: GENERAL_CITY");
-			personTagButton = new JButton("Show Tag: PERSON");
+			personTagButton = new JButton("Hide Tag: PERSON");
 			bankCustTagButton = new JButton("Show Tag: BANK_CUSTOMER");
 			joshRestaurantTagButton = new JButton("Show Tag: JOSH_RESTAURANT");
 			
