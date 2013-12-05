@@ -35,12 +35,7 @@ import simcity.jesusrestaurant.JesusCashierRole;
 import simcity.jesusrestaurant.JesusHostRole;
 import simcity.jesusrestaurant.JesusCustomerRole;
 import simcity.jesusrestaurant.JesusCookRole;
-import simcity.jesusrestaurant.JesusWaiterRole;
-import simcity.alfredrestaurant.AlfredCashierRole;
-import simcity.alfredrestaurant.AlfredHostRole;
-import simcity.alfredrestaurant.AlfredCustomerRole;
-import simcity.alfredrestaurant.AlfredCookRole;
-import simcity.alfredrestaurant.AlfredWaiterRole;*/
+import simcity.jesusrestaurant.JesusWaiterRole;*/
 
 public class CityDirectory
 {
@@ -51,16 +46,15 @@ public class CityDirectory
 	private Vector<JoshWaiterRole> joshWaiters = new Vector<JoshWaiterRole>();
 	private Vector<MarketEmployeeRole> market1Employees = new Vector<MarketEmployeeRole>();
 	private Vector<MarketEmployeeRole> market2Employees = new Vector<MarketEmployeeRole>();
-	private Vector<MarketEmployeeRole> market3Employees = new Vector<MarketEmployeeRole>();
 	private Vector<MarketDelivererRole> market1Deliverers = new Vector<MarketDelivererRole>();
 	private Vector<MarketDelivererRole> market2Deliverers = new Vector<MarketDelivererRole>();
-	private Vector<MarketDelivererRole> market3Deliverers = new Vector<MarketDelivererRole>();
 	private Vector<BankTellerRole> bank1Tellers = new Vector<BankTellerRole>();
+	private Vector<BankTellerRole> bank2Tellers = new Vector<BankTellerRole>();
 	private Vector<LandlordRole> landlords = new Vector<LandlordRole>();
 	private MarketCashierRole market1Cashier = new MarketCashierRole();
 	private MarketCashierRole market2Cashier = new MarketCashierRole();
-	private MarketCashierRole market3Cashier = new MarketCashierRole();
 	private BankManagerRole bank1Manager = new BankManagerRole();
+	private BankManagerRole bank2Manager = new BankManagerRole();
 	private JoshCashierRole joshCashier = new JoshCashierRole();
 	private JoshCookRole joshCook = new JoshCookRole();
 	private JoshHostRole joshHost = new JoshHostRole();
@@ -73,20 +67,32 @@ public class CityDirectory
 	private static final int house2Y = 70;
 	private static final int house3X = 210;
 	private static final int house3Y = 100;
-	private static final int market1X = 280;
-	private static final int market1Y = 290;
-	private static final int market2X = 210;
-	private static final int market2Y = 290;
-	private static final int market3X = 70;
-	private static final int market3Y = 410;
-	private static final int bankX = 190;
-	private static final int bankY = 210;
+	private static final int house4X = 180;
+	private static final int house4Y = 210;
+	private static final int market1X = 370;
+	private static final int market1Y = 280;
+	private static final int market2X = 370;
+	private static final int market2Y = 420;
+	private static final int bank1X = 330;
+	private static final int bank1Y = 280;
+	private static final int bank2X = 330;
+	private static final int bank2Y = 420;
 	private static final int apartment1X = 300;
 	private static final int apartment1Y = 70;
 	private static final int apartment2X = 400;
 	private static final int apartment2Y = 70;
-	private static final int joshRestaurantX = 420;
-	private static final int joshRestaurantY = 290;
+	private static final int apartment3X = 80;
+	private static final int apartment3Y = 280;
+	private static final int apartment4X = 190;
+	private static final int apartment4Y = 280;
+	private static final int joshRestaurantX = 280;
+	private static final int joshRestaurantY = 300;
+	private static final int cherysRestaurantX = 420;
+	private static final int cherysRestaurantY = 300;
+	private static final int jesusRestaurantX = 280;
+	private static final int jesusRestaurantY = 400;
+	private static final int anjaliRestaurantX = 420;
+	private static final int anjaliRestaurantY = 400;
 	private static final int busStop1X = 70;
 	private static final int busStop1Y = 80;
 	private static final int busStop2X = 410;
@@ -112,13 +118,21 @@ public class CityDirectory
 			job = p.getJob();
 			jobBuilding = jobB;
 			homeBuilding = homeB;
-			if(homeBuilding == "apartment10" || homeBuilding == "apartment11" || homeBuilding == "apartment12" || homeBuilding == "apartment13" || homeBuilding == "apartment14" || homeBuilding == "apartment15" || homeBuilding == "apartment16" || homeBuilding == "apartment17")
+			if(homeBuilding == "apartment10" || homeBuilding == "apartment11" || homeBuilding == "apartment12" || homeBuilding == "apartment13" || homeBuilding == "apartment14" || homeBuilding == "apartment15" || homeBuilding == "apartment16" || homeBuilding == "apartment17" || homeBuilding == "apartment18" || homeBuilding == "apartment19" || homeBuilding == "apartment110" || homeBuilding == "apartment111" || homeBuilding == "apartment112" || homeBuilding == "apartment113")
 			{
 				apartment1ResIDs.add(ID);
 			}
-			else if(homeBuilding == "apartment20" || homeBuilding == "apartment21" || homeBuilding == "apartment22" || homeBuilding == "apartment23" || homeBuilding == "apartment24" || homeBuilding == "apartment25" || homeBuilding == "apartment26" || homeBuilding == "apartment27")
+			else if(homeBuilding == "apartment20" || homeBuilding == "apartment21" || homeBuilding == "apartment22" || homeBuilding == "apartment23" || homeBuilding == "apartment24" || homeBuilding == "apartment25" || homeBuilding == "apartment26" || homeBuilding == "apartment27" || homeBuilding == "apartment28" || homeBuilding == "apartment29" || homeBuilding == "apartment210" || homeBuilding == "apartment211" || homeBuilding == "apartment212" || homeBuilding == "apartment213")
 			{
 				apartment2ResIDs.add(ID);
+			}
+			else if(homeBuilding == "apartment30" || homeBuilding == "apartment31" || homeBuilding == "apartment32" || homeBuilding == "apartment33" || homeBuilding == "apartment34" || homeBuilding == "apartment35" || homeBuilding == "apartment36" || homeBuilding == "apartment37" || homeBuilding == "apartment38" || homeBuilding == "apartment39" || homeBuilding == "apartment310" || homeBuilding == "apartment311" || homeBuilding == "apartment312" || homeBuilding == "apartment313")
+			{
+				apartment3ResIDs.add(ID);
+			}
+			else if(homeBuilding == "apartment40" || homeBuilding == "apartment41" || homeBuilding == "apartment42" || homeBuilding == "apartment43" || homeBuilding == "apartment44" || homeBuilding == "apartment45" || homeBuilding == "apartment46" || homeBuilding == "apartment47" || homeBuilding == "apartment48" || homeBuilding == "apartment49" || homeBuilding == "apartment410" || homeBuilding == "apartment411" || homeBuilding == "apartment412" || homeBuilding == "apartment413")
+			{
+				apartment4ResIDs.add(ID);
 			}
 		}
 	}
@@ -134,9 +148,9 @@ public class CityDirectory
 		BuildingInfo(String n, String o, Point l)
 		{
 			name = n;
-			if(n == "bank")
+			if(n == "bank1" || n == "bank2")
 			{
-				type = n;
+				type = "bank";
 			}
 			else if(n == "house1")
 			{
@@ -158,31 +172,31 @@ public class CityDirectory
 				type = "housing";
 				residential = new HousingInfo("house", 4);
 			}
-			else if(n == "house5")
-			{
-				type = "housing";
-				residential = new HousingInfo("house", 5);
-			}
-			else if(n == "house6")
-			{
-				type = "housing";
-				residential = new HousingInfo("house", 6);
-			}
-			else if(n == "apartment1" || n == "apartment10" || n == "apartment11" || n == "apartment12" || n == "apartment13" || n == "apartment14" || n == "apartment15" || n == "apartment16" || n == "apartment17")
+			else if(n == "apartment1" || n == "apartment10" || n == "apartment11" || n == "apartment12" || n == "apartment13" || n == "apartment14" || n == "apartment15" || n == "apartment16" || n == "apartment17" || n == "apartment18" || n == "apartment19" || n == "apartment110" || n == "apartment111" || n == "apartment112" || n == "apartment113")
 			{
 				type = "housing";
 				residential = new HousingInfo("apartment", 1);
 			}
-			else if(n == "apartment2" || n == "apartment20" || n == "apartment21" || n == "apartment22" || n == "apartment23" || n == "apartment24" || n == "apartment25" || n == "apartment26" || n == "apartment27")
+			else if(n == "apartment2" || n == "apartment20" || n == "apartment21" || n == "apartment22" || n == "apartment23" || n == "apartment24" || n == "apartment25" || n == "apartment26" || n == "apartment27" || n == "apartment28" || n == "apartment29" || n == "apartment210" || n == "apartment211" || n == "apartment212" || n == "apartment213")
 			{
 				type = "housing";
 				residential = new HousingInfo("apartment", 2);
 			}
-			else if(n == "market1" || n == "market2" || n == "market3")
+			else if(n == "apartment3" || n == "apartment30" || n == "apartment31" || n == "apartment32" || n == "apartment33" || n == "apartment34" || n == "apartment35" || n == "apartment36" || n == "apartment37" || n == "apartment38" || n == "apartment39" || n == "apartment310" || n == "apartment311" || n == "apartment312" || n == "apartment313")
+			{
+				type = "housing";
+				residential = new HousingInfo("apartment", 3);
+			}
+			else if(n == "apartment4" || n == "apartment40" || n == "apartment41" || n == "apartment42" || n == "apartment43" || n == "apartment44" || n == "apartment45" || n == "apartment46" || n == "apartment47" || n == "apartment48" || n == "apartment49" || n == "apartment410" || n == "apartment411" || n == "apartment412" || n == "apartment413")
+			{
+				type = "housing";
+				residential = new HousingInfo("apartment", 4);
+			}
+			else if(n == "market1" || n == "market2")
 			{
 				type = "market";
 			}
-			else if(n == "anjaliRestaurant" || n == "alfredRestaurant" || n == "cherysRestaurant" || n == "jesusRestaurant" || n == "joshRestaurant")
+			else if(n == "anjaliRestaurant" || n == "cherysRestaurant" || n == "jesusRestaurant" || n == "joshRestaurant")
 			{
 				type = "restaurant";
 			}
@@ -204,12 +218,13 @@ public class CityDirectory
 	}
 	List<Integer> apartment1ResIDs;
 	List<Integer> apartment2ResIDs;
+	List<Integer> apartment3ResIDs;
+	List<Integer> apartment4ResIDs;
 	
 	public ArrayList<MarketCashierRole> getMarketCashiers() {
 		ArrayList<MarketCashierRole> cashiers = new ArrayList<MarketCashierRole>();
 		cashiers.add(market1Cashier);
 		cashiers.add(market2Cashier);
-		cashiers.add(market3Cashier);
 		return cashiers;
 	}
 	
@@ -233,11 +248,13 @@ public class CityDirectory
 	{
 		apartment1ResIDs = new ArrayList<Integer>();
 		apartment2ResIDs = new ArrayList<Integer>();
+		apartment3ResIDs = new ArrayList<Integer>();
+		apartment4ResIDs = new ArrayList<Integer>();
 		
 		market1Cashier.setJobLocation("market1");
 		market2Cashier.setJobLocation("market2");
-		market3Cashier.setJobLocation("market3");
 		bank1Manager.setJobLocation("bank1");
+		bank2Manager.setJobLocation("bank2");
 		joshCashier.setJobLocation("joshRestaurant");
 		joshCook.setJobLocation("joshRestaurant");
 		joshHost.setJobLocation("joshRestaurant");
@@ -246,9 +263,9 @@ public class CityDirectory
 		addBuilding("house1", "vertical", new Point(house1X, house1Y));
 		addBuilding("house2", "horizontal", new Point(house2X, house2Y));
 		addBuilding("house3", "vertical", new Point(house3X, house3Y));
-		addBuilding("market1", "vertical", new Point(market1X, market1Y));
-		addBuilding("market2", "vertical", new Point(market2X, market2Y));
-		addBuilding("market3", "vertical", new Point(market3X, market3Y));
+		addBuilding("house4", "horizontal", new Point(house4X, house4Y));
+		addBuilding("market1", "horizontal", new Point(market1X, market1Y));
+		addBuilding("market2", "horizontal", new Point(market2X, market2Y));
 		addBuilding("apartment1", "horizontal", new Point(apartment1X, apartment1Y));
 		addBuilding("apartment10", "horizontal", new Point(apartment1X, apartment1Y));
 		addBuilding("apartment11", "horizontal", new Point(apartment1X, apartment1Y));
@@ -258,6 +275,12 @@ public class CityDirectory
 		addBuilding("apartment15", "horizontal", new Point(apartment1X, apartment1Y));
 		addBuilding("apartment16", "horizontal", new Point(apartment1X, apartment1Y));
 		addBuilding("apartment17", "horizontal", new Point(apartment1X, apartment1Y));
+		addBuilding("apartment18", "horizontal", new Point(apartment1X, apartment1Y));
+		addBuilding("apartment19", "horizontal", new Point(apartment1X, apartment1Y));
+		addBuilding("apartment110", "horizontal", new Point(apartment1X, apartment1Y));
+		addBuilding("apartment111", "horizontal", new Point(apartment1X, apartment1Y));
+		addBuilding("apartment112", "horizontal", new Point(apartment1X, apartment1Y));
+		addBuilding("apartment113", "horizontal", new Point(apartment1X, apartment1Y));
 		addBuilding("apartment2", "horizontal", new Point(apartment2X, apartment2Y));
 		addBuilding("apartment20", "horizontal", new Point(apartment2X, apartment2Y));
 		addBuilding("apartment21", "horizontal", new Point(apartment2X, apartment2Y));
@@ -267,8 +290,48 @@ public class CityDirectory
 		addBuilding("apartment25", "horizontal", new Point(apartment2X, apartment2Y));
 		addBuilding("apartment26", "horizontal", new Point(apartment2X, apartment2Y));
 		addBuilding("apartment27", "horizontal", new Point(apartment2X, apartment2Y));
-		addBuilding("bank1", "horizontal", new Point(bankX, bankY));
+		addBuilding("apartment28", "horizontal", new Point(apartment2X, apartment2Y));
+		addBuilding("apartment29", "horizontal", new Point(apartment2X, apartment2Y));
+		addBuilding("apartment210", "horizontal", new Point(apartment2X, apartment2Y));
+		addBuilding("apartment211", "horizontal", new Point(apartment2X, apartment2Y));
+		addBuilding("apartment212", "horizontal", new Point(apartment2X, apartment2Y));
+		addBuilding("apartment213", "horizontal", new Point(apartment2X, apartment2Y));
+		addBuilding("apartment3", "horizontal", new Point(apartment3X, apartment3Y));
+		addBuilding("apartment30", "horizontal", new Point(apartment3X, apartment3Y));
+		addBuilding("apartment31", "horizontal", new Point(apartment3X, apartment3Y));
+		addBuilding("apartment32", "horizontal", new Point(apartment3X, apartment3Y));
+		addBuilding("apartment33", "horizontal", new Point(apartment3X, apartment3Y));
+		addBuilding("apartment34", "horizontal", new Point(apartment3X, apartment3Y));
+		addBuilding("apartment35", "horizontal", new Point(apartment3X, apartment3Y));
+		addBuilding("apartment36", "horizontal", new Point(apartment3X, apartment3Y));
+		addBuilding("apartment37", "horizontal", new Point(apartment3X, apartment3Y));
+		addBuilding("apartment38", "horizontal", new Point(apartment3X, apartment3Y));
+		addBuilding("apartment39", "horizontal", new Point(apartment3X, apartment3Y));
+		addBuilding("apartment310", "horizontal", new Point(apartment3X, apartment3Y));
+		addBuilding("apartment311", "horizontal", new Point(apartment3X, apartment3Y));
+		addBuilding("apartment312", "horizontal", new Point(apartment3X, apartment3Y));
+		addBuilding("apartment313", "horizontal", new Point(apartment3X, apartment3Y));
+		addBuilding("apartment4", "horizontal", new Point(apartment4X, apartment4Y));
+		addBuilding("apartment40", "horizontal", new Point(apartment4X, apartment4Y));
+		addBuilding("apartment41", "horizontal", new Point(apartment4X, apartment4Y));
+		addBuilding("apartment42", "horizontal", new Point(apartment4X, apartment4Y));
+		addBuilding("apartment43", "horizontal", new Point(apartment4X, apartment4Y));
+		addBuilding("apartment44", "horizontal", new Point(apartment4X, apartment4Y));
+		addBuilding("apartment45", "horizontal", new Point(apartment4X, apartment4Y));
+		addBuilding("apartment46", "horizontal", new Point(apartment4X, apartment4Y));
+		addBuilding("apartment47", "horizontal", new Point(apartment4X, apartment4Y));
+		addBuilding("apartment48", "horizontal", new Point(apartment4X, apartment4Y));
+		addBuilding("apartment49", "horizontal", new Point(apartment4X, apartment4Y));
+		addBuilding("apartment410", "horizontal", new Point(apartment4X, apartment4Y));
+		addBuilding("apartment411", "horizontal", new Point(apartment4X, apartment4Y));
+		addBuilding("apartment412", "horizontal", new Point(apartment4X, apartment4Y));
+		addBuilding("apartment413", "horizontal", new Point(apartment4X, apartment4Y));
+		addBuilding("bank1", "horizontal", new Point(bank1X, bank1Y));
+		addBuilding("bank2", "horizontal", new Point(bank2X, bank2Y));
 		addBuilding("joshRestaurant", "vertical", new Point(joshRestaurantX, joshRestaurantY));
+		addBuilding("cherysRestaurant", "vertical", new Point(cherysRestaurantX, cherysRestaurantY));
+		addBuilding("jesusRestaurant", "vertical", new Point(jesusRestaurantX, jesusRestaurantY));
+		addBuilding("anjaliRestaurant", "vertical", new Point(anjaliRestaurantX, anjaliRestaurantY));
 		addBuilding("busStop1", "vertical", new Point(busStop1X, busStop1Y));
 		addBuilding("busStop2", "horizontal", new Point(busStop2X, busStop2Y));
 		addBuilding("busStop3", "vertical", new Point(busStop3X, busStop3Y));
@@ -308,8 +371,6 @@ public class CityDirectory
 			return new MarketCustomerRole();
 		case "market2CustomerRole":
 			return new MarketCustomerRole();
-		case "market3CustomerRole":
-			return new MarketCustomerRole();
 		default:
 			return null;
 		}
@@ -318,6 +379,8 @@ public class CityDirectory
 	public BankDepositorRole BankDepositorFactory(String role) {
 		switch(role) {
 		case "bank1DepositorRole":
+			return new BankDepositorRole();
+		case "bank2DepositorRole":
 			return new BankDepositorRole();
 		default:
 			return null;
@@ -366,49 +429,32 @@ public class CityDirectory
 	public void addMarketDeliverer(MarketDelivererRole d) {
 		int num1 = getNumPeople("marketDelivererRole","market1");
 		int num2 = getNumPeople("marketDelivererRole","market2");
-		int num3 = getNumPeople("marketDelivererRole","market3");
-	//	System.out.println(num1);
-	//	System.out.println(num2);
-	//	System.out.println(num3);
 		int num = num1;
 		if (num > num2) {
 			num = num2;
 		}
-		if (num > num3) {
-			num = num3;
-		}
 		if (num == num1) {
 			d.setJobLocation("market1");
 			market1Deliverers.add(d);
-		} else if (num == num2) {
+		} else {
 			d.setJobLocation("market2");
 			market2Deliverers.add(d);
-		} else {
-			d.setJobLocation("market3");
-			market3Deliverers.add(d);
 		}
 	}
 	
 	public void addMarketEmployee(MarketEmployeeRole e) {
 		int num1 = getNumPeople("marketEmployeeRole","market1");
 		int num2 = getNumPeople("marketEmployeeRole","market2");
-		int num3 = getNumPeople("marketEmployeeRole","market3");
 		int num = num1;
 		if (num > num2) {
 			num = num2;
 		}
-		if (num > num3) {
-			num = num3;
-		}
 		if (num == num1) {
 			e.setJobLocation("market1");
 			market1Employees.add(e);
-		} else if (num == num2) {
+		} else {
 			e.setJobLocation("market2");
 			market2Employees.add(e);
-		} else {
-			e.setJobLocation("market3");
-			market3Employees.add(e);
 		}
 	}
 	
@@ -470,21 +516,15 @@ public class CityDirectory
 	public MarketCashierRole pickMarketCashier() {
 		int num1 = getNumPeople("marketCashierRole","market1");
 		int num2 = getNumPeople("marketCashierRole","market2");
-		int num3 = getNumPeople("marketCashierRole","market3");
 		int num = num1;
 		if (num > num2) {
 			num = num2;
 		}
-		if (num > num3) {
-			num = num3;
-		}
 		if (num == num1) {
 			return market1Cashier;
-		} else if (num == num2) {
-			return market2Cashier;
 		} else {
-			return market3Cashier;
-		}
+			return market2Cashier;
+		} 
 	}
 	
 	public BankManagerRole pickBankManager() {
@@ -748,6 +788,14 @@ public class CityDirectory
 				{
 					return apartment2ResIDs.size();
 				}
+				if(building.equals("apartment3"))
+				{
+					return apartment3ResIDs.size();
+				}
+				if(building.equals("apartment4"))
+				{
+					return apartment4ResIDs.size();
+				}
 				if (buildingMap.get(building).residential.residentID == -1) {
 					return 0;
 				}
@@ -768,9 +816,6 @@ public class CityDirectory
 			if (building.equals("market2")) {
 				return market2Employees.size();
 			}
-			if (building.equals("market3")) {
-				return market3Employees.size();
-			}
 		}
 		if(role.equals("marketDelivererRole")) {
 			if (building.equals("market1")) {
@@ -778,9 +823,6 @@ public class CityDirectory
 			}
 			if (building.equals("market2")) {
 				return market2Deliverers.size();
-			}
-			if (building.equals("market3")) {
-				return market3Deliverers.size();
 			}
 		}
 		if(role.equals("marketCashierRole")) {
@@ -794,15 +836,6 @@ public class CityDirectory
 				return num;
 			}
 			if (building.equals("market2")) {
-				int num = 0;
-				for (PersonInfo p : personMap.values()) {
-					if (p.job.equals(role) && p.jobBuilding.equals(building)) {
-						num++;
-					}
-				}
-				return num;
-			}
-			if (building.equals("market3")) {
 				int num = 0;
 				for (PersonInfo p : personMap.values()) {
 					if (p.job.equals(role) && p.jobBuilding.equals(building)) {

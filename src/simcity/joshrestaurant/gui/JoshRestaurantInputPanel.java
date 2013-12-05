@@ -47,9 +47,10 @@ public class JoshRestaurantInputPanel extends JPanel
     		markets.add(c);
     	}
 		
-		cook.addMarket(markets.get(0));
-		cook.addMarket(markets.get(1));
-		cook.addMarket(markets.get(2));
+    	for (MarketCashierRole c : markets) {
+    		cook.addMarket(c);
+    	}
+    	
 		cook.setHost(host);
 		cook.setStand(stand);
         

@@ -99,14 +99,13 @@ public class PersonAgent extends Agent implements Person
 		restaurants.add(new Restaurant("joshRestaurant", "italian", "joshCustomerRole"));
 		restaurants.add(new Restaurant("cherysRestaurant", "blah", "cherysCustomerRole"));
 		restaurants.add(new Restaurant("jesusRestaurant", "bleh", "jesusCustomerRole"));
-		restaurants.add(new Restaurant("alfredRestaurant", "bluh", "alfredCustomerRole"));
 		restaurants.add(new Restaurant("anjaliRestaurant", "blih", "anjaliCustomerRole"));
 		
 		markets.add(new Market("market1", "market1CustomerRole"));
 		markets.add(new Market("market2", "market2CustomerRole"));
-		markets.add(new Market("market3", "market3CustomerRole"));
 		
 		banks.add(new Bank("bank1", "bank1DepositorRole"));
+		banks.add(new Bank("bank2", "bank2DepositorRole"));
 	}
 	
 	public void setCityDirectory(CityDirectory c) {
