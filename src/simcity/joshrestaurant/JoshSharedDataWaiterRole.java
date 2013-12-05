@@ -49,16 +49,16 @@ public class JoshSharedDataWaiterRole extends JoshWaiterRole implements JoshWait
 		super();
 		working = false;
 		
-		prices.put("steak", 16);
-		prices.put("chicken", 11);
-		prices.put("salad", 6);
-		prices.put("pizza", 9);
+		prices.put("Steak", 16);
+		prices.put("Chicken", 11);
+		prices.put("Salad", 6);
+		prices.put("Pizza", 9);
 		
 		menu = new JoshMenu();
-		menu.addItem("steak", prices.get("steak"));
-		menu.addItem("chicken", prices.get("chicken"));
-		menu.addItem("salad", prices.get("salad"));
-		menu.addItem("pizza", prices.get("pizza"));
+		menu.addItem("Steak", prices.get("Steak"));
+		menu.addItem("Chicken", prices.get("Chicken"));
+		menu.addItem("Salad", prices.get("Salad"));
+		menu.addItem("Pizza", prices.get("Pizza"));
 	}
 	
 	public void setPerson(Person p) {
