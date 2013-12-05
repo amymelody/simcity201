@@ -148,8 +148,8 @@ public class JoshCookRole extends RestCookRole {
 				leaveRestaurant();
 				return true;
 			}
-			//if (unitTesting == true && orderedItems == false) {
-			if (orderedItems == false) {
+			if (unitTesting == true && orderedItems == false) {
+	//		if (orderedItems == false) {
 				orderedItems = true;
 				orderFoodFromMarket();
 				return true;
@@ -220,8 +220,8 @@ public class JoshCookRole extends RestCookRole {
 		
 		foods.get(o.choice).setAmount(foods.get(o.choice).getAmount()-1);
 		AlertLog.getInstance().logMessage(AlertTag.JOSH_RESTAURANT, name, foods.get(o.choice).type + " inventory: " + foods.get(o.choice).amount);
-		//if (unitTesting && foods.get(o.choice).amount <= foods.get(o.choice).low && foods.get(o.choice).state == FoodState.Enough) {
-		if (foods.get(o.choice).amount <= foods.get(o.choice).low && foods.get(o.choice).state == FoodState.Enough) {
+		if (unitTesting && foods.get(o.choice).amount <= foods.get(o.choice).low && foods.get(o.choice).state == FoodState.Enough) {
+//		if (foods.get(o.choice).amount <= foods.get(o.choice).low && foods.get(o.choice).state == FoodState.Enough) {
 			foods.get(o.choice).setState(FoodState.MustBeOrdered);
 		}
 	}
@@ -234,7 +234,7 @@ public class JoshCookRole extends RestCookRole {
 	}
 	
 	private void orderFoodFromMarket() {
-//		if (unitTesting) {
+		if (unitTesting) {
 			for (Food food : foods.values()) {
 				if ((food.getState() == FoodState.MustBeOrdered || food.getState() == FoodState.Enough) && food.amount <= food.low) {
 					itemOrders.add(new ItemOrder(food.type, food.capacity - food.amount));
@@ -256,7 +256,7 @@ public class JoshCookRole extends RestCookRole {
 			markets.get(index).market.msgIWantDelivery(this, cashier, itemOrders, location);
 			markets.get(index).incrementOrderedFrom();
 			itemOrders.clear();
-//		}
+		}
 	}
 	
 	private void addFood(Food f) {
