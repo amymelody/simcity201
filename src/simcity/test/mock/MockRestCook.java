@@ -43,7 +43,7 @@ public class MockRestCook extends Mock implements RestCook {
 	}
 
 	@Override
-	public void addMarket(simcity.interfaces.MarketCashier m) {
+	public void addMarket(simcity.interfaces.MarketCashier m, String n) {
 		// TODO Auto-generated method stub
 		
 	}

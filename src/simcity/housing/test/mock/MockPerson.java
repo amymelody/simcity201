@@ -183,6 +183,13 @@ public class MockPerson extends Mock implements Person
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	@Override
+	public boolean businessOpen(String b)
+	{
+		// TODO Auto-generated method stub
+		return false;
+	}
 
 	@Override
 	public void stateChanged()

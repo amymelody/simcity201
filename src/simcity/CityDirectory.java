@@ -5,6 +5,8 @@ import java.util.*;
 
 import simcity.housing.ResidentRole;
 import simcity.role.JobRole;
+import simcity.trace.AlertLog;
+import simcity.trace.AlertTag;
 import simcity.housing.LandlordRole;
 import simcity.bank.BankManagerRole;
 import simcity.bank.BankTellerRole;
@@ -118,19 +120,19 @@ public class CityDirectory
 			job = p.getJob();
 			jobBuilding = jobB;
 			homeBuilding = homeB;
-			if(homeBuilding == "apartment10" || homeBuilding == "apartment11" || homeBuilding == "apartment12" || homeBuilding == "apartment13" || homeBuilding == "apartment14" || homeBuilding == "apartment15" || homeBuilding == "apartment16" || homeBuilding == "apartment17" || homeBuilding == "apartment18" || homeBuilding == "apartment19" || homeBuilding == "apartment110" || homeBuilding == "apartment111" || homeBuilding == "apartment112" || homeBuilding == "apartment113")
+			if(homeBuilding.equals("apartment10") || homeBuilding.equals("apartment11") || homeBuilding.equals("apartment12") || homeBuilding.equals("apartment13") || homeBuilding.equals("apartment14") || homeBuilding.equals("apartment15") || homeBuilding.equals("apartment16") || homeBuilding.equals("apartment17") || homeBuilding.equals("apartment18") || homeBuilding.equals("apartment19") || homeBuilding.equals("apartment110") || homeBuilding.equals("apartment111") || homeBuilding.equals("apartment112") || homeBuilding.equals("apartment113"))
 			{
 				apartment1ResIDs.add(ID);
 			}
-			else if(homeBuilding == "apartment20" || homeBuilding == "apartment21" || homeBuilding == "apartment22" || homeBuilding == "apartment23" || homeBuilding == "apartment24" || homeBuilding == "apartment25" || homeBuilding == "apartment26" || homeBuilding == "apartment27" || homeBuilding == "apartment28" || homeBuilding == "apartment29" || homeBuilding == "apartment210" || homeBuilding == "apartment211" || homeBuilding == "apartment212" || homeBuilding == "apartment213")
+			else if(homeBuilding.equals("apartment20") || homeBuilding.equals("apartment21") || homeBuilding.equals("apartment22") || homeBuilding.equals("apartment23") || homeBuilding.equals("apartment24") || homeBuilding.equals("apartment25") || homeBuilding.equals("apartment26") || homeBuilding.equals("apartment27") || homeBuilding.equals("apartment28") || homeBuilding.equals("apartment29") || homeBuilding.equals("apartment210") || homeBuilding.equals("apartment211") || homeBuilding.equals("apartment212") || homeBuilding.equals("apartment213"))
 			{
 				apartment2ResIDs.add(ID);
 			}
-			else if(homeBuilding == "apartment30" || homeBuilding == "apartment31" || homeBuilding == "apartment32" || homeBuilding == "apartment33" || homeBuilding == "apartment34" || homeBuilding == "apartment35" || homeBuilding == "apartment36" || homeBuilding == "apartment37" || homeBuilding == "apartment38" || homeBuilding == "apartment39" || homeBuilding == "apartment310" || homeBuilding == "apartment311" || homeBuilding == "apartment312" || homeBuilding == "apartment313")
+			else if(homeBuilding.equals("apartment30") || homeBuilding.equals("apartment31") || homeBuilding.equals("apartment32") || homeBuilding.equals("apartment33") || homeBuilding.equals("apartment34") || homeBuilding.equals("apartment35") || homeBuilding.equals("apartment36") || homeBuilding.equals("apartment37") || homeBuilding.equals("apartment38") || homeBuilding.equals("apartment39") || homeBuilding.equals("apartment310") || homeBuilding.equals("apartment311") || homeBuilding.equals("apartment312") || homeBuilding.equals("apartment313"))
 			{
 				apartment3ResIDs.add(ID);
 			}
-			else if(homeBuilding == "apartment40" || homeBuilding == "apartment41" || homeBuilding == "apartment42" || homeBuilding == "apartment43" || homeBuilding == "apartment44" || homeBuilding == "apartment45" || homeBuilding == "apartment46" || homeBuilding == "apartment47" || homeBuilding == "apartment48" || homeBuilding == "apartment49" || homeBuilding == "apartment410" || homeBuilding == "apartment411" || homeBuilding == "apartment412" || homeBuilding == "apartment413")
+			else if(homeBuilding.equals("apartment40") || homeBuilding.equals("apartment41") || homeBuilding.equals("apartment42") || homeBuilding.equals("apartment43") || homeBuilding.equals("apartment44") || homeBuilding.equals("apartment45") || homeBuilding.equals("apartment46") || homeBuilding.equals("apartment47") || homeBuilding.equals("apartment48") || homeBuilding.equals("apartment49") || homeBuilding.equals("apartment410") || homeBuilding.equals("apartment411") || homeBuilding.equals("apartment412") || homeBuilding.equals("apartment413"))
 			{
 				apartment4ResIDs.add(ID);
 			}
@@ -228,8 +230,11 @@ public class CityDirectory
 		return cashiers;
 	}
 	
-	public BankManagerRole  getBankManager() {
-		return bank1Manager;
+	public ArrayList<BankManagerRole>  getBankManagers() {
+		ArrayList<BankManagerRole> managers = new ArrayList<BankManagerRole>();
+		managers.add(bank1Manager);
+		managers.add(bank2Manager);
+		return managers;
 	}
 	
 	public JoshCashierRole getJoshCashier() {
@@ -459,8 +464,19 @@ public class CityDirectory
 	}
 	
 	public void addBankTeller(BankTellerRole t) {
-		t.setJobLocation("bank1");
-		bank1Tellers.add(t);
+		int num1 = getNumPeople("bankTellerRole","bank1");
+		int num2 = getNumPeople("bankTellerRole","bank2");
+		int num = num1;
+		if (num > num2) {
+			num = num2;
+		}
+		if (num == num1) {
+			t.setJobLocation("bank1");
+			bank1Tellers.add(t);
+		} else {
+			t.setJobLocation("bank2");
+			bank2Tellers.add(t);
+		}
 	}
 	
 	public RestWaiterRole addRestWaiter(String role) {
@@ -528,7 +544,17 @@ public class CityDirectory
 	}
 	
 	public BankManagerRole pickBankManager() {
-		return bank1Manager;
+		int num1 = getNumPeople("bankManagerRole","bank1");
+		int num2 = getNumPeople("bankManagerRole","bank2");
+		int num = num1;
+		if (num > num2) {
+			num = num2;
+		}
+		if (num == num1) {
+			return bank1Manager;
+		} else {
+			return bank2Manager;
+		} 
 	}
 	
 	public RestCashierRole pickRestCashier() {
@@ -631,6 +657,7 @@ public class CityDirectory
 	{
 		buildingMap.put(name, new BuildingInfo(name, orientation, loc));
 	}
+	
 	public void addPerson(PersonAgent p, String jobB, String homeB)
 	{
 		String housing;
@@ -638,40 +665,7 @@ public class CityDirectory
 			int num1 = getNumPeople("residentRole", "house1");
 			int num2 = getNumPeople("residentRole", "house2");
 			int num3 = getNumPeople("residentRole", "house3");
-			int num = num1;
-			if (num > num2) {
-				num = num2;
-			}
-			if (num > num3) {
-				num = num3;
-			}
-			if (num == num1) {
-				housing = "house1";
-			}
-			else if (num == num2) {
-				housing = "house2";
-			}
-			else {
-				housing = "house3";
-			}
-		} else {
-			renters.add(p);
-			int num1 = getNumPeople("residentRole", "apartment10");
-			int num3 = getNumPeople("residentRole", "apartment11");
-			int num5 = getNumPeople("residentRole", "apartment12");
-			int num7 = getNumPeople("residentRole", "apartment13");
-			int num9 = getNumPeople("residentRole", "apartment14");
-			int num11 = getNumPeople("residentRole", "apartment15");
-			int num13 = getNumPeople("residentRole", "apartment16");
-			int num15 = getNumPeople("residentRole", "apartment17");
-			int num2 = getNumPeople("residentRole", "apartment20");
-			int num4 = getNumPeople("residentRole", "apartment21");
-			int num6 = getNumPeople("residentRole", "apartment22");
-			int num8 = getNumPeople("residentRole", "apartment23");
-			int num10 = getNumPeople("residentRole", "apartment24");
-			int num12 = getNumPeople("residentRole", "apartment25");
-			int num14 = getNumPeople("residentRole", "apartment26");
-			int num16 = getNumPeople("residentRole", "apartment27");
+			int num4 = getNumPeople("residentRole", "house4");
 			int num = num1;
 			if (num > num2) {
 				num = num2;
@@ -682,90 +676,43 @@ public class CityDirectory
 			if (num > num4) {
 				num = num4;
 			}
-			if (num > num5) {
-				num = num5;
+			if (num == num1) {
+				housing = "house1";
 			}
-			if (num > num6) {
-				num = num6;
+			else if (num == num2) {
+				housing = "house2";
 			}
-			if (num > num7) {
-				num = num7;
+			else if (num == num3) {
+				housing = "house3";
 			}
-			if (num > num8) {
-				num = num8;
+			else {
+				housing = "house4";
 			}
-			if (num > num9) {
-				num = num9;
+		} else {
+			renters.add(p);
+			int num1 = getNumPeople("residentRole", "apartment1");
+			int num2 = getNumPeople("residentRole", "apartment2");
+			int num3 = getNumPeople("residentRole", "apartment3");
+			int num4 = getNumPeople("residentRole", "apartment4");
+			int num = num1;
+			if (num > num2) {
+				num = num2;
 			}
-			if (num > num10) {
-				num = num10;
+			if (num > num3) {
+				num = num3;
 			}
-			if (num > num11) {
-				num = num11;
-			}
-			if (num > num12) {
-				num = num12;
-			}
-			if (num > num13) {
-				num = num13;
-			}
-			if (num > num14) {
-				num = num14;
-			}
-			if (num > num15) {
-				num = num15;
-			}
-			if (num > num16) {
-				num = num16;
+			if (num > num4) {
+				num = num4;
 			}
 			
 			if (num == num1) {
-				housing = "apartment10";
-			}
-			else if (num == num2) {
-				housing = "apartment20";
-			}
-			else if (num == num3) {
-				housing = "apartment11";
-			}
-			else if (num == num4) {
-				housing = "apartment21";
-			}
-			else if (num == num5) {
-				housing = "apartment12";
-			}
-			else if (num == num6) {
-				housing = "apartment22";
-			}
-			else if (num == num7) {
-				housing = "apartment13";
-			}
-			else if (num == num8) {
-				housing = "apartment23";
-			}
-			else if (num == num9) {
-				housing = "apartment14";
-			}
-			else if (num == num10) {
-				housing = "apartment24";
-			}
-			else if (num == num11) {
-				housing = "apartment15";
-			}
-			else if (num == num12) {
-				housing = "apartment25";
-			}
-			else if (num == num13) {
-				housing = "apartment16";
-			}
-			else if (num == num14) {
-				housing = "apartment26";
-			}
-			else if (num == num15) {
-				housing = "apartment17";
-			}
-			else {
-				housing = "apartment27";
+				housing = "apartment1" + num;
+			} else if (num == num2) {
+				housing = "apartment2" + num;
+			} else if (num == num3) {
+				housing = "apartment3" + num;
+			} else {
+				housing = "apartment4" + num;
 			}
 		}
 		int iD = getNumPeople("residentRole", housing);

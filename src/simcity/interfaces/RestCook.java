@@ -11,7 +11,7 @@ public interface RestCook {
 	
 	public abstract void msgEndShift();
 	
-	public abstract void addMarket(MarketCashier m);
+	public abstract void addMarket(MarketCashier m, String n);
 	
 	public abstract void msgHereIsOrder(JoshWaiterRole waiter, String choice, int table);
 	

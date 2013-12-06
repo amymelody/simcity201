@@ -6,6 +6,7 @@ import simcity.mock.LoggedEvent;
 import simcity.ItemOrder;
 import simcity.RestCookRole;
 import simcity.joshrestaurant.gui.JoshCookGui;
+import simcity.role.JobRole;
 import simcity.trace.AlertLog;
 import simcity.trace.AlertTag;
 import simcity.interfaces.Person;
@@ -88,8 +89,8 @@ public class JoshCookRole extends RestCookRole {
 		cookGui = g;
 	}
 	
-	public void addMarket(MarketCashier m) {
-		markets.add(new MyMarket(m));
+	public void addMarket(MarketCashier m, String n) {
+		markets.add(new MyMarket(m, n));
 	}
 	
 	// Messages
@@ -148,8 +149,8 @@ public class JoshCookRole extends RestCookRole {
 				leaveRestaurant();
 				return true;
 			}
-			if (unitTesting == true && orderedItems == false) {
-	//		if (orderedItems == false) {
+	//		if (unitTesting == true && orderedItems == false) {
+			if (orderedItems == false) {
 				orderedItems = true;
 				orderFoodFromMarket();
 				return true;
@@ -220,8 +221,8 @@ public class JoshCookRole extends RestCookRole {
 		
 		foods.get(o.choice).setAmount(foods.get(o.choice).getAmount()-1);
 		AlertLog.getInstance().logMessage(AlertTag.JOSH_RESTAURANT, name, foods.get(o.choice).type + " inventory: " + foods.get(o.choice).amount);
-		if (unitTesting && foods.get(o.choice).amount <= foods.get(o.choice).low && foods.get(o.choice).state == FoodState.Enough) {
-//		if (foods.get(o.choice).amount <= foods.get(o.choice).low && foods.get(o.choice).state == FoodState.Enough) {
+//		if (unitTesting && foods.get(o.choice).amount <= foods.get(o.choice).low && foods.get(o.choice).state == FoodState.Enough) {
+		if (foods.get(o.choice).amount <= foods.get(o.choice).low && foods.get(o.choice).state == FoodState.Enough) {
 			foods.get(o.choice).setState(FoodState.MustBeOrdered);
 		}
 	}
@@ -234,7 +235,7 @@ public class JoshCookRole extends RestCookRole {
 	}
 	
 	private void orderFoodFromMarket() {
-		if (unitTesting) {
+//		if (unitTesting) {
 			for (Food food : foods.values()) {
 				if ((food.getState() == FoodState.MustBeOrdered || food.getState() == FoodState.Enough) && food.amount <= food.low) {
 					itemOrders.add(new ItemOrder(food.type, food.capacity - food.amount));
@@ -244,19 +245,22 @@ public class JoshCookRole extends RestCookRole {
 			int index = markets.size()-1;
 			if (markets.size() > 1) {
 				for (int i = markets.size()-2; i>=0; i--) {
-					if (markets.get(i).orderedFrom <= markets.get(index).orderedFrom) {
-							index = i;
+					if (markets.get(i).orderedFrom <= markets.get(index).orderedFrom && (unitTesting || person.businessOpen(markets.get(i).marketName))) {
+						index = i;
 					}
 				}
 			}
-			AlertLog.getInstance().logMessage(AlertTag.JOSH_RESTAURANT, name, "I am ordering from " + markets.get(index).market.getName());
-			for (ItemOrder io : itemOrders) {
-				AlertLog.getInstance().logMessage(AlertTag.JOSH_RESTAURANT, name, "I need " + io.getAmount() + " " + io.getFoodItem() + "s");
+			
+			if (person.businessOpen(markets.get(index).marketName)) {
+				AlertLog.getInstance().logMessage(AlertTag.JOSH_RESTAURANT, name, "I am ordering from " + markets.get(index).market.getName());
+				for (ItemOrder io : itemOrders) {
+					AlertLog.getInstance().logMessage(AlertTag.JOSH_RESTAURANT, name, "I need " + io.getAmount() + " " + io.getFoodItem() + "s");
+				}
+				markets.get(index).market.msgIWantDelivery(this, cashier, itemOrders, location);
+				markets.get(index).incrementOrderedFrom();
+				itemOrders.clear();
 			}
-			markets.get(index).market.msgIWantDelivery(this, cashier, itemOrders, location);
-			markets.get(index).incrementOrderedFrom();
-			itemOrders.clear();
-		}
+//		}
 	}
 	
 	private void addFood(Food f) {
@@ -274,10 +278,12 @@ public class JoshCookRole extends RestCookRole {
 	private class MyMarket {
 		MarketCashier market;
 		int orderedFrom;
+		String marketName;
 		
-		MyMarket(MarketCashier m) {
+		MyMarket(MarketCashier m, String n) {
 			market = m;
 			orderedFrom = 0;
+			marketName = n;
 		}
 		
 		public void incrementOrderedFrom() {

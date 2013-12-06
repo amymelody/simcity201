@@ -49,6 +49,10 @@ public class PersonTest extends TestCase
 		person.msgCreatedAccount();
 		person.unitTesting = true;
 		person.setUsingBus(true);
+		
+		person.setBusinessClosed("joshRestaurant", false);
+		person.setBusinessClosed("bank1", false);
+		person.setBusinessClosed("market1", false);
 	}	
 	
 	public void testRestaurantCustomer()

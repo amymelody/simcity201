@@ -26,7 +26,7 @@ public class CookTest extends TestCase
 		cook = new JoshCookRole();
 		cook.setPerson(cookP);
 		cashier = new MockMarketCashier("cashier");
-		cook.addMarket(cashier);
+		cook.addMarket(cashier, "market1");
 		cook.setStand(stand);
 		
 		cook.unitTesting = true;
@@ -36,8 +36,8 @@ public class CookTest extends TestCase
 	public void testNormativeScenario() {
 		
 		List<ItemOrder> orders = new ArrayList<ItemOrder>();
-		orders.add(new ItemOrder("steak",2));
-		orders.add(new ItemOrder("chicken",2));
+		orders.add(new ItemOrder("Steak",2));
+		orders.add(new ItemOrder("Chicken",2));
 		
 		assertEquals("Cashier should have an empty event log. Instead, the Cashier's event log reads: "
 				+ cashier.log.toString(), 0, cook.log.size());
@@ -49,9 +49,9 @@ public class CookTest extends TestCase
 	
 		assertTrue("Cook's scheduler should have returned true (it should call orderFoodFromMarket), but didn't.", cook.pickAndExecuteAnAction());
 		
-		assertTrue("Cook's steak should have state == Ordered. It doesn't.", cook.foods.get("steak").getState() == FoodState.Ordered);
+		assertTrue("Cook's Steak should have state == Ordered. It doesn't.", cook.foods.get("Steak").getState() == FoodState.Ordered);
 		
-		assertTrue("Cook's chicken should have state == Ordered. It doesn't.", cook.foods.get("chicken").getState() == FoodState.Ordered);
+		assertTrue("Cook's Chicken should have state == Ordered. It doesn't.", cook.foods.get("Chicken").getState() == FoodState.Ordered);
 		
 		assertTrue("Cashier should have logged \"Received msgIWantDelivery from cook. Location = joshRestaurant\" but didn't. His last event logged reads instead: " 
 				+ cashier.log.getLastLoggedEvent().toString(), cashier.log.containsString("Received msgIWantDelivery from cook. Location = joshRestaurant"));
@@ -63,9 +63,9 @@ public class CookTest extends TestCase
 		assertTrue("Cook should have logged \"Received msgHereIsWhatICanFulfill\" but didn't. His last event logged reads instead: " 
 				+ cook.log.getLastLoggedEvent().toString(), cook.log.containsString("Received msgHereIsWhatICanFulfill"));
 		
-		assertTrue("Cook's steak should have state == WaitingForOrder. It doesn't.", cook.foods.get("steak").getState() == FoodState.WaitingForOrder);
+		assertTrue("Cook's Steak should have state == WaitingForOrder. It doesn't.", cook.foods.get("Steak").getState() == FoodState.WaitingForOrder);
 		
-		assertTrue("Cook's chicken should have state == WaitingForOrder. It doesn't.", cook.foods.get("chicken").getState() == FoodState.WaitingForOrder);
+		assertTrue("Cook's Chicken should have state == WaitingForOrder. It doesn't.", cook.foods.get("Chicken").getState() == FoodState.WaitingForOrder);
 		
 		assertFalse("Cook's scheduler should have returned false, but didn't.", cook.pickAndExecuteAnAction());
 		
@@ -74,13 +74,13 @@ public class CookTest extends TestCase
 		assertTrue("Cook should have logged \"Received msgDelivery\" but didn't. His last event logged reads instead: " 
 				+ cook.log.getLastLoggedEvent().toString(), cook.log.containsString("Received msgDelivery"));
 		
-		assertTrue("Cook's steak should have state == ReceivedOrder. It doesn't.", cook.foods.get("steak").getState() == FoodState.ReceivedOrder);
+		assertTrue("Cook's Steak should have state == ReceivedOrder. It doesn't.", cook.foods.get("Steak").getState() == FoodState.ReceivedOrder);
 		
-		assertTrue("Cook's chicken should have state == ReceivedOrder. It doesn't.", cook.foods.get("chicken").getState() == FoodState.ReceivedOrder);
+		assertTrue("Cook's Chicken should have state == ReceivedOrder. It doesn't.", cook.foods.get("Chicken").getState() == FoodState.ReceivedOrder);
 		
-		assertEquals("Cook's steak should have an amount of 3. It doesn't.", 3, cook.foods.get("steak").getAmount());
+		assertEquals("Cook's Steak should have an amount of 3. It doesn't.", 3, cook.foods.get("Steak").getAmount());
 		
-		assertEquals("Cook's chicken should have an amount of 3. It doesn't.", 3, cook.foods.get("chicken").getAmount());
+		assertEquals("Cook's Chicken should have an amount of 3. It doesn't.", 3, cook.foods.get("Chicken").getAmount());
 		
 	}
 }

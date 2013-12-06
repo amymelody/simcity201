@@ -48,7 +48,11 @@ public class JoshRestaurantInputPanel extends JPanel
     	}
 		
     	for (MarketCashierRole c : markets) {
-    		cook.addMarket(c);
+    		if (c.getJobLocation().equals("market1")) {
+    			cook.addMarket(c,"market1");
+    		} else {
+    			cook.addMarket(c,"market2");
+    		}
     	}
     	
 		cook.setHost(host);
