@@ -16,6 +16,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import javax.swing.BoxLayout;
+import java.awt.GridLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -41,7 +42,7 @@ public class AlertWindow extends JFrame {
 	TracePanel tracePanel;
 	//================================================================================
 	
-	private final int WINDOWX = 1100;
+	private final int WINDOWX = 1300;
 	private final int WINDOWY = 200;
 	private final int BUFFERTOP = 530;
 	private final int BUFFERSIDE = 15;
@@ -76,7 +77,7 @@ public class AlertWindow extends JFrame {
 		tracePanel.showAlertsWithLevel(AlertLevel.DEBUG);
 		
 		tracePanel.showAlertsWithTag(AlertTag.PERSON);
-		tracePanel.hideAlertsWithTag(AlertTag.BANK_CUSTOMER);
+		tracePanel.hideAlertsWithTag(AlertTag.BANK);
 		tracePanel.hideAlertsWithTag(AlertTag.GENERAL_CITY);
 		
 		tracePanel.hideAlertsWithTag(AlertTag.BUS_STOP);
@@ -104,7 +105,7 @@ public class AlertWindow extends JFrame {
 		JButton messagesButton;		
 		JButton errorButton;	
 		JButton generalCityTagButton;
-		JButton bankCustTagButton;
+		JButton bankTagButton;
 		JButton personTagButton;
 		JButton joshRestaurantTagButton;
 		
@@ -114,7 +115,7 @@ public class AlertWindow extends JFrame {
 			errorButton = new JButton("Show Level: ERROR");
 			generalCityTagButton = new JButton("Show Tag: GENERAL_CITY");
 			personTagButton = new JButton("Hide Tag: PERSON");
-			bankCustTagButton = new JButton("Show Tag: BANK_CUSTOMER");
+			bankTagButton = new JButton("Show Tag: BANK");
 			joshRestaurantTagButton = new JButton("Show Tag: JOSH_RESTAURANT");
 			
 			
@@ -166,15 +167,15 @@ public class AlertWindow extends JFrame {
 					}
 				}
 			});
-			bankCustTagButton.addActionListener(new ActionListener() {
+			bankTagButton.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					if (bankCustTagButton.getText().equals("Show Tag: BANK_CUSTOMER")) {
-						tracePanel.showAlertsWithTag(AlertTag.BANK_CUSTOMER);
-						bankCustTagButton.setText("Hide Tag: BANK_CUSTOMER");
-					} else if (bankCustTagButton.getText().equals("Hide Tag: BANK_CUSTOMER")) {
-						tracePanel.hideAlertsWithTag(AlertTag.BANK_CUSTOMER);
-						bankCustTagButton.setText("Show Tag: BANK_CUSTOMER");
+					if (bankTagButton.getText().equals("Show Tag: BANK")) {
+						tracePanel.showAlertsWithTag(AlertTag.BANK);
+						bankTagButton.setText("Hide Tag: BANK");
+					} else if (bankTagButton.getText().equals("Hide Tag: BANK")) {
+						tracePanel.hideAlertsWithTag(AlertTag.BANK);
+						bankTagButton.setText("Show Tag: BANK");
 					}
 				}
 			});
@@ -190,12 +191,12 @@ public class AlertWindow extends JFrame {
 					}
 				}
 			});
-			this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+			this.setLayout(new GridLayout(6,3));
 			this.add(messagesButton);
 			this.add(errorButton);
 			this.add(generalCityTagButton);
 			this.add(personTagButton);
-			this.add(bankCustTagButton);
+			this.add(bankTagButton);
 			this.add(joshRestaurantTagButton);
 			this.setMinimumSize(new Dimension(50, 600));
 		}

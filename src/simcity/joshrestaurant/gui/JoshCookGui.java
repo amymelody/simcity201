@@ -25,10 +25,10 @@ public class JoshCookGui implements Gui{
 
 	public JoshCookGui(JoshCookRole c){
 		
-		foodSymbols.put("steak", "St");
-		foodSymbols.put("chicken", "C");
-		foodSymbols.put("pizza", "P");
-		foodSymbols.put("salad", "Sa");
+		foodSymbols.put("Steak", "St");
+		foodSymbols.put("Chicken", "C");
+		foodSymbols.put("Pizza", "P");
+		foodSymbols.put("Salad", "Sa");
 	}
 
 	public void updatePosition() {

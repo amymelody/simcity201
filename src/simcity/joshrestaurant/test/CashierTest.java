@@ -47,7 +47,7 @@ public class CashierTest extends TestCase
 						+ cashier.log.toString(), 0, cashier.log.size());
 		
 		//step 1: Receive message to produce check
-		cashier.msgProduceCheck(waiter, customer, "steak");
+		cashier.msgProduceCheck(waiter, customer, "Steak");
 
 		//check postconditions for step 1 and preconditions for step 2
 		assertTrue("Cashier should have logged \"Received msgProduceCheck\" but didn't. His last event logged reads instead: " 
@@ -120,7 +120,7 @@ public class CashierTest extends TestCase
 						+ cashier.log.toString(), 0, cashier.log.size());
 		
 		//step 1: Receive message to produce check
-		cashier.msgProduceCheck(waiter, customer, "steak");
+		cashier.msgProduceCheck(waiter, customer, "Steak");
 
 		//check postconditions for step 1 and preconditions for step 2
 		assertTrue("Cashier should have logged \"Received msgProduceCheck\" but didn't. His last event logged reads instead: " 
@@ -181,7 +181,7 @@ public class CashierTest extends TestCase
 		assertFalse("Cashier's scheduler should have returned false (nothing left to do), but didn't.", cashier.pickAndExecuteAnAction());
 		
 		//step 5: Receive message to produce check
-		cashier.msgProduceCheck(waiter, customer, "chicken");
+		cashier.msgProduceCheck(waiter, customer, "Chicken");
 
 		//check postconditions for step 1 and preconditions for step 2
 		assertTrue("Cashier should have logged \"Received msgProduceCheck\" but didn't. His last event logged reads instead: " 
@@ -362,7 +362,7 @@ public class CashierTest extends TestCase
 						+ cashier.log.toString(), 0, cashier.log.size());
 		
 		//step 1: Receive message to produce check
-		cashier.msgProduceCheck(waiter, customer, "steak");
+		cashier.msgProduceCheck(waiter, customer, "Steak");
 
 		//check postconditions for step 1 and preconditions for step 2
 		assertTrue("Cashier should have logged \"Received msgProduceCheck\" but didn't. His last event logged reads instead: " 
@@ -466,8 +466,8 @@ public class CashierTest extends TestCase
 						+ cashier.log.toString(), 0, cashier.log.size());
 		
 		//step 1: Receive messages to produce checks
-		cashier.msgProduceCheck(waiter, customer, "steak");
-		cashier.msgProduceCheck(waiter, customer2, "salad");
+		cashier.msgProduceCheck(waiter, customer, "Steak");
+		cashier.msgProduceCheck(waiter, customer2, "Salad");
 
 		//check postconditions for step 1 and preconditions for step 2
 		assertTrue("Cashier should have logged \"Received msgProduceCheck\" but didn't. His last event logged reads instead: " 

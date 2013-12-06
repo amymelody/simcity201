@@ -5,8 +5,6 @@ import java.awt.*;
 import simcity.CityDirectory;
 import simcity.BusAgent;
 import simcity.interfaces.BusStop;
-import simcity.PersonAgent;
-import simcity.TrafficNode;
 
 
 public class BusGui implements Gui {
@@ -17,7 +15,7 @@ public class BusGui implements Gui {
 	private static final int width = 20;
 	private static final int height = 20;
 	private int xPos = 40, yPos = 80;
-	private int xGoal = 40, yGoal = 80;
+	private int xGoal = xPos, yGoal = yPos;
 	private String destination;
 	
 	private enum Command {noCommand, GoToDestination};
@@ -27,6 +25,22 @@ public class BusGui implements Gui {
 		agent = b;
 		gui = g;
 		city = c;
+		
+		if (agent.getCurrentStop().getName().equals("busStop1")) {
+			xPos = 40;
+			yPos = 80;
+		} else if (agent.getCurrentStop().getName().equals("busStop2")) {
+			xPos = 400;
+			yPos = 40;
+		} else if (agent.getCurrentStop().getName().equals("busStop3")) {
+			xPos = 440;
+			yPos = 400;
+		} else if (agent.getCurrentStop().getName().equals("busStop4")) {
+			xPos = 80;
+			yPos = 440;
+		}
+		xGoal = xPos;
+		yGoal = yPos;
 	}
 
 	public void updatePosition() {

@@ -20,11 +20,11 @@ import java.util.List;
 
 public class CityInputPanel extends JPanel implements ActionListener
 {
-	static final int TIMERINCR = 1300;
+	static final int TIMERINCR = 1400;
 	
 	private Vector<PersonAgent> people = new Vector<PersonAgent>();
 	private List<BusStop> busStops = new ArrayList<BusStop>();
-	BusAgent bus;
+	private List<BusAgent> buses = new ArrayList<BusAgent>();
 	
 	private CityDirectory cityDirectory;
 	private BuildingGui buildingGui;
@@ -63,10 +63,10 @@ public class CityInputPanel extends JPanel implements ActionListener
 		creationPanel = new CityCreationPanel(this, cityDirectory);
 		gui = g;
 		
-		bus = new BusAgent("bus");
-		BusGui busGui = new BusGui(bus, gui, cityDirectory);
-		bus.setGui(busGui);
-		gui.addGui(busGui);
+		BusAgent bus1 = new BusAgent("bus1");
+		BusAgent bus2 = new BusAgent("bus2");
+		buses.add(bus1);
+		buses.add(bus2);
 		
 		BusStopAgent stop1 = new BusStopAgent("busStop1");
 		BusStopAgent stop2 = new BusStopAgent("busStop2");
@@ -76,11 +76,21 @@ public class CityInputPanel extends JPanel implements ActionListener
 		busStops.add(stop2);
 		busStops.add(stop3);
 		busStops.add(stop4);
-		bus.addBusStop(stop1, true);
-		bus.addBusStop(stop2, false);
-		bus.addBusStop(stop3, false);
-		bus.addBusStop(stop4, false);
-		bus.setCityDirectory(cityDirectory);
+		bus1.addBusStop(stop1, true);
+		bus1.addBusStop(stop2, false);
+		bus1.addBusStop(stop3, false);
+		bus1.addBusStop(stop4, false);
+		bus2.addBusStop(stop1, false);
+		bus2.addBusStop(stop2, false);
+		bus2.addBusStop(stop3, true);
+		bus2.addBusStop(stop4, false);
+		
+		for (BusAgent b : buses) {
+			b.setCityDirectory(cityDirectory);
+			BusGui busGui = new BusGui(b, gui, cityDirectory);
+			b.setGui(busGui);
+			gui.addGui(busGui);
+		}
 		
 		stop1.startThread();
 		stop2.startThread();
@@ -113,7 +123,7 @@ public class CityInputPanel extends JPanel implements ActionListener
 //        personPane.setViewportView(view);
 //        add(personPane);
         
-        time = new Time(Day.Sun, 3, 0);
+        time = new Time(Day.Mon, 3, 0);
         timer = new Timer(TIMERINCR, this );
     	timer.start();
         
@@ -179,7 +189,9 @@ public class CityInputPanel extends JPanel implements ActionListener
     }
     
     public void startBus() {
-    	bus.startThread();
+    	for (BusAgent b : buses) {
+    		b.startThread();
+    	}
     }
     
     public void addPerson(String name, String job, int pay, int startShift, int endShift, String eco, String physical, String housing, CityDirectory c, boolean tA, boolean uB, boolean gH) 

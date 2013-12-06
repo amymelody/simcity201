@@ -89,11 +89,13 @@ public class JoshHostRole extends RestHostRole {
 	// Messages
 	
 	public void msgStartShift() {
+	//	person.businessIsClosed(getJobLocation(), false);
 		working = true;
 		stateChanged();
 	}
 	
 	public void msgEndShift() {
+	//	person.businessIsClosed(getJobLocation(), true);
 		working = false;
 		stateChanged();
 	}
