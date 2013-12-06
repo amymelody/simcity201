@@ -6,6 +6,7 @@ import simcity.CityDirectory;
 import simcity.gui.BuildingGui;
 import simcity.gui.BuildingsGui;
 import simcity.gui.CityGui;
+import simcity.bank.BankManagerRole;
 import simcity.bank.BankDepositorRole;
 import simcity.bank.BankTellerRole;
 import simcity.bank.gui.BankAnimationPanel;
@@ -34,8 +35,15 @@ public class BankGui extends BuildingGui
 	{
 		super(n, bG, cD);
 		
+		BankManagerRole manager;
+		if (n.equals("bank1")) {
+			manager = cD.getBankManagers().get(0);
+		} else {
+			manager = cD.getBankManagers().get(1);
+		} 
+		
 		animationPanel = new BankAnimationPanel();
-		inputPanel = new BankInputPanel(this, cD.getBankManager());
+		inputPanel = new BankInputPanel(this, manager);
 
 		//input panel
 		double inputFractionOfWindow = 150 / 650;

@@ -34,10 +34,10 @@ public class JoshCashierRole extends RestCashierRole implements JoshCashier {
 		working = false;
 		cash = 1000;
 		
-		prices.put("steak", 16);
-		prices.put("chicken", 11);
-		prices.put("salad", 6);
-		prices.put("pizza", 9);
+		prices.put("Steak", 16);
+		prices.put("Chicken", 11);
+		prices.put("Salad", 6);
+		prices.put("Pizza", 9);
 	}
 	
 	public void setPerson(Person p) {

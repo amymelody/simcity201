@@ -18,7 +18,7 @@ public class PersonGui implements Gui {
 
 	private static final int width = 10;
 	private static final int height = 10;
-	private int xPos = 0, yPos = 0;//default Person position
+	private int xPos = 60, yPos = 0;//default Person position
 	private int xGoal = xPos, yGoal = yPos;//default Person destination
 	private TrafficNode currentNode;
 	private String destination;
@@ -34,7 +34,7 @@ public class PersonGui implements Gui {
 		agent = p;
 		gui = g;
 		city = c;
-		currentNode = gui.getTrafficNodes().get(0);
+		currentNode = gui.getTrafficNodes().get(1);
 	}
 
 	public void updatePosition() {

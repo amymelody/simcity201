@@ -6,6 +6,7 @@ import simcity.mock.LoggedEvent;
 import simcity.ItemOrder;
 import simcity.RestCookRole;
 import simcity.joshrestaurant.gui.JoshCookGui;
+import simcity.role.JobRole;
 import simcity.trace.AlertLog;
 import simcity.trace.AlertTag;
 import simcity.interfaces.Person;
@@ -34,10 +35,10 @@ public class JoshCookRole extends RestCookRole {
 	private boolean working;
 	private String location = "joshRestaurant";
 	
-	Food steak = new Food("steak", 15, 3, 1, 1);
-	Food chicken = new Food("chicken", 20, 3, 1, 1);
-	Food salad = new Food("salad", 5, 3, 2, 1);
-	Food pizza = new Food("pizza", 10, 3, 3, 1);
+	Food steak = new Food("Steak", 15, 3, 1, 1);
+	Food chicken = new Food("Chicken", 20, 3, 1, 1);
+	Food salad = new Food("Salad", 5, 3, 2, 1);
+	Food pizza = new Food("Pizza", 10, 3, 3, 1);
 	
 	public Map<String, Food> foods = new HashMap<String, Food>();
 
@@ -49,10 +50,10 @@ public class JoshCookRole extends RestCookRole {
 		working = false;
 		orderedItems = false;
 		
-		foods.put("steak", steak);
-		foods.put("chicken", chicken);
-		foods.put("salad", salad);
-		foods.put("pizza", pizza);
+		foods.put("Steak", steak);
+		foods.put("Chicken", chicken);
+		foods.put("Salad", salad);
+		foods.put("Pizza", pizza);
 	}
 	
 	public void setPerson(Person p) {
@@ -88,8 +89,8 @@ public class JoshCookRole extends RestCookRole {
 		cookGui = g;
 	}
 	
-	public void addMarket(MarketCashier m) {
-		markets.add(new MyMarket(m));
+	public void addMarket(MarketCashier m, String n) {
+		markets.add(new MyMarket(m, n));
 	}
 	
 	// Messages
@@ -111,6 +112,9 @@ public class JoshCookRole extends RestCookRole {
 	
 	public void msgHereIsWhatICanFulfill(List<ItemOrder> orders, boolean canFulfill) {
 		log.add(new LoggedEvent("Received msgHereIsWhatICanFulfill"));
+		if (canFulfill == false) {
+			AlertLog.getInstance().logMessage(AlertTag.JOSH_RESTAURANT, name, "Oh you can't fulfill this order");
+		}
 		for (Food f : foods.values()) {
 			if (f.state == FoodState.Ordered) {
 				f.state = FoodState.MustBeOrdered;
@@ -145,7 +149,8 @@ public class JoshCookRole extends RestCookRole {
 				leaveRestaurant();
 				return true;
 			}
-			if (unitTesting == true && orderedItems == false) {
+	//		if (unitTesting == true && orderedItems == false) {
+			if (orderedItems == false) {
 				orderedItems = true;
 				orderFoodFromMarket();
 				return true;
@@ -216,7 +221,8 @@ public class JoshCookRole extends RestCookRole {
 		
 		foods.get(o.choice).setAmount(foods.get(o.choice).getAmount()-1);
 		AlertLog.getInstance().logMessage(AlertTag.JOSH_RESTAURANT, name, foods.get(o.choice).type + " inventory: " + foods.get(o.choice).amount);
-		if (unitTesting && foods.get(o.choice).amount <= foods.get(o.choice).low && foods.get(o.choice).state == FoodState.Enough) {
+//		if (unitTesting && foods.get(o.choice).amount <= foods.get(o.choice).low && foods.get(o.choice).state == FoodState.Enough) {
+		if (foods.get(o.choice).amount <= foods.get(o.choice).low && foods.get(o.choice).state == FoodState.Enough) {
 			foods.get(o.choice).setState(FoodState.MustBeOrdered);
 		}
 	}
@@ -229,7 +235,7 @@ public class JoshCookRole extends RestCookRole {
 	}
 	
 	private void orderFoodFromMarket() {
-		if (unitTesting) {
+//		if (unitTesting) {
 			for (Food food : foods.values()) {
 				if ((food.getState() == FoodState.MustBeOrdered || food.getState() == FoodState.Enough) && food.amount <= food.low) {
 					itemOrders.add(new ItemOrder(food.type, food.capacity - food.amount));
@@ -239,19 +245,22 @@ public class JoshCookRole extends RestCookRole {
 			int index = markets.size()-1;
 			if (markets.size() > 1) {
 				for (int i = markets.size()-2; i>=0; i--) {
-					if (markets.get(i).orderedFrom <= markets.get(index).orderedFrom) {
-							index = i;
+					if (markets.get(i).orderedFrom <= markets.get(index).orderedFrom && (unitTesting || person.businessOpen(markets.get(i).marketName))) {
+						index = i;
 					}
 				}
 			}
-			AlertLog.getInstance().logMessage(AlertTag.JOSH_RESTAURANT, name, "I am ordering from " + markets.get(index).market.getName());
-			for (ItemOrder io : itemOrders) {
-				AlertLog.getInstance().logMessage(AlertTag.JOSH_RESTAURANT, name, "I need " + io.getAmount() + " " + io.getFoodItem() + "s");
+			
+			if (person.businessOpen(markets.get(index).marketName)) {
+				AlertLog.getInstance().logMessage(AlertTag.JOSH_RESTAURANT, name, "I am ordering from " + markets.get(index).market.getName());
+				for (ItemOrder io : itemOrders) {
+					AlertLog.getInstance().logMessage(AlertTag.JOSH_RESTAURANT, name, "I need " + io.getAmount() + " " + io.getFoodItem() + "s");
+				}
+				markets.get(index).market.msgIWantDelivery(this, cashier, itemOrders, location);
+				markets.get(index).incrementOrderedFrom();
+				itemOrders.clear();
 			}
-			markets.get(index).market.msgIWantDelivery(this, cashier, itemOrders, location);
-			markets.get(index).incrementOrderedFrom();
-			itemOrders.clear();
-		}
+//		}
 	}
 	
 	private void addFood(Food f) {
@@ -269,10 +278,12 @@ public class JoshCookRole extends RestCookRole {
 	private class MyMarket {
 		MarketCashier market;
 		int orderedFrom;
+		String marketName;
 		
-		MyMarket(MarketCashier m) {
+		MyMarket(MarketCashier m, String n) {
 			market = m;
 			orderedFrom = 0;
+			marketName = n;
 		}
 		
 		public void incrementOrderedFrom() {
