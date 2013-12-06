@@ -6,6 +6,8 @@ import simcity.mock.LoggedEvent;
 import simcity.ItemOrder;
 import simcity.RestCookRole;
 import simcity.joshrestaurant.gui.JoshCookGui;
+import simcity.trace.AlertLog;
+import simcity.trace.AlertTag;
 import simcity.interfaces.Person;
 import simcity.interfaces.MarketCashier;
 
@@ -128,7 +130,7 @@ public class JoshCookRole extends RestCookRole {
 		}
 		for (ItemOrder o : temp) {
 			foods.get(o.getFoodItem()).amount += o.getAmount();
-			print(o.getFoodItem() + " inventory: " + foods.get(o.getFoodItem()).amount);
+			AlertLog.getInstance().logMessage(AlertTag.JOSH_RESTAURANT, name, o.getFoodItem() + " inventory: " + foods.get(o.getFoodItem()).amount);
 			foods.get(o.getFoodItem()).state = FoodState.ReceivedOrder;
 		}
 		stateChanged();
@@ -189,14 +191,14 @@ public class JoshCookRole extends RestCookRole {
 	private void retrieveOrderFromStand() {
 		Order order = stand.remove();
 		if (order != null) {
-			print("Picking up order from stand");
+			AlertLog.getInstance().logMessage(AlertTag.JOSH_RESTAURANT, name, "Picking up order from stand");
 			orders.add(order);
 		}
 	}
 
 	private void cookIt(Order o) {
 		if (foods.get(o.choice).getAmount() == 0) {
-			print("We're out of " + o.choice);
+			AlertLog.getInstance().logMessage(AlertTag.JOSH_RESTAURANT, name, "We're out of " + o.choice);
 			o.waiter.msgOutOfFood(o.choice, o.table);
 			o.setState(OrderState.Finished);
 			return;
@@ -213,14 +215,14 @@ public class JoshCookRole extends RestCookRole {
 		foods.get(o.choice).getCookingTime() * 400);
 		
 		foods.get(o.choice).setAmount(foods.get(o.choice).getAmount()-1);
-		print(foods.get(o.choice).type + " inventory: " + foods.get(o.choice).amount);
+		AlertLog.getInstance().logMessage(AlertTag.JOSH_RESTAURANT, name, foods.get(o.choice).type + " inventory: " + foods.get(o.choice).amount);
 		if (unitTesting && foods.get(o.choice).amount <= foods.get(o.choice).low && foods.get(o.choice).state == FoodState.Enough) {
 			foods.get(o.choice).setState(FoodState.MustBeOrdered);
 		}
 	}
 	
 	private void plateIt(Order o) {
-		print(o.choice + " is done");
+		AlertLog.getInstance().logMessage(AlertTag.JOSH_RESTAURANT, name, o.choice + " is done");
 		cookGui.DoPlateFood(o.choice);
 		o.getWaiter().msgOrderDone(o.getChoice(), o.getTable());
 		o.setState(OrderState.Finished);
@@ -242,9 +244,9 @@ public class JoshCookRole extends RestCookRole {
 					}
 				}
 			}
-			print("I am ordering from " + markets.get(index).market.getName());
+			AlertLog.getInstance().logMessage(AlertTag.JOSH_RESTAURANT, name, "I am ordering from " + markets.get(index).market.getName());
 			for (ItemOrder io : itemOrders) {
-				print("I need " + io.getAmount() + " " + io.getFoodItem() + "s");
+				AlertLog.getInstance().logMessage(AlertTag.JOSH_RESTAURANT, name, "I need " + io.getAmount() + " " + io.getFoodItem() + "s");
 			}
 			markets.get(index).market.msgIWantDelivery(this, cashier, itemOrders, location);
 			markets.get(index).incrementOrderedFrom();

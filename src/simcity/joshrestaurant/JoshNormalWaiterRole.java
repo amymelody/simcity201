@@ -1,11 +1,13 @@
 package simcity.joshrestaurant;
 
-import simcity.RestWaiterRole;
+import simcity.joshrestaurant.JoshSharedDataWaiterRole.WaiterState;
 import simcity.joshrestaurant.gui.JoshWaiterGui;
 import simcity.joshrestaurant.gui.JoshCookGui;
 import simcity.joshrestaurant.interfaces.JoshWaiter;
 import simcity.joshrestaurant.interfaces.JoshCustomer;
 import simcity.interfaces.Person;
+import simcity.trace.AlertLog;
+import simcity.trace.AlertTag;
 
 import java.util.*;
 import java.util.concurrent.Semaphore;
@@ -114,6 +116,7 @@ public class JoshNormalWaiterRole extends JoshWaiterRole implements JoshWaiter {
 	// Messages
 	
 	public void msgStartShift() {
+		state = WaiterState.GoingToWork;
 		working = true;
 		stateChanged();
 	}
@@ -160,7 +163,7 @@ public class JoshNormalWaiterRole extends JoshWaiterRole implements JoshWaiter {
 	public void msgIWantToLeave(JoshCustomerRole cust) {
 		for (MyCustomer mc : customers) {
 			if (mc.getCust() == cust) {
-				print(mc.getCust() + " leaving table " + mc.getTable());
+				AlertLog.getInstance().logMessage(AlertTag.JOSH_RESTAURANT, name, mc.getCust() + " leaving table " + mc.getTable());
 				mc.setState(CustomerState.Leaving);
 				stateChanged();
 				return;
@@ -370,13 +373,13 @@ public class JoshNormalWaiterRole extends JoshWaiterRole implements JoshWaiter {
 	}
 	
 	private void wantToGoOnBreak() {
-		print(host + ", I want to go on break.");
+		AlertLog.getInstance().logMessage(AlertTag.JOSH_RESTAURANT, name, host + ", I want to go on break.");
 		host.msgWantToGoOnBreak(this);
 		state = WaiterState.OnTheJob;
 	}
 	
 	private void goOnBreak() {
-		print(host + ", I'm going on break.");
+		AlertLog.getInstance().logMessage(AlertTag.JOSH_RESTAURANT, name, host + ", I'm going on break.");
 		host.msgGoingOnBreak(this);
 		state = WaiterState.OnBreak;
 		returningHome = true;
@@ -391,7 +394,7 @@ public class JoshNormalWaiterRole extends JoshWaiterRole implements JoshWaiter {
 	}
 	
 	private void goOffBreak() {
-		print(host + ", I'm going off break.");
+		AlertLog.getInstance().logMessage(AlertTag.JOSH_RESTAURANT, name, host + ", I'm going off break.");
 		host.msgGoingOffBreak(this);
 		state = WaiterState.OnTheJob;
 	}
@@ -425,7 +428,7 @@ public class JoshNormalWaiterRole extends JoshWaiterRole implements JoshWaiter {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		Do("What would you like to order?");
+		AlertLog.getInstance().logMessage(AlertTag.JOSH_RESTAURANT, name, "What would you like to order?");
 		mc.getCust().msgWhatWouldYouLike();
 		mc.setState(CustomerState.Asked);
 	}
@@ -438,7 +441,7 @@ public class JoshNormalWaiterRole extends JoshWaiterRole implements JoshWaiter {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		Do("I'm sorry, we're out of that menu item. Would you like to order something else?");
+		AlertLog.getInstance().logMessage(AlertTag.JOSH_RESTAURANT, name, "I'm sorry, we're out of that menu item. Would you like to order something else?");
 		mc.getCust().msgWantSomethingElse(menu);
 		mc.setState(CustomerState.Asked);
 	}
@@ -452,13 +455,13 @@ public class JoshNormalWaiterRole extends JoshWaiterRole implements JoshWaiter {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		print("Here is the order for table " + mc.getTable() + ": " + mc.getChoice());
+		AlertLog.getInstance().logMessage(AlertTag.JOSH_RESTAURANT, name, "Here is the order for table " + mc.getTable() + ": " + mc.getChoice());
 		cook.msgHereIsOrder(this, mc.getChoice(), mc.getTable());
 		waiterGui.DoReturnHome();
 	}
 	
 	private void retrieveOrder(MyCustomer mc) {
-		print("Retrieving order for table " + mc.getTable());
+		AlertLog.getInstance().logMessage(AlertTag.JOSH_RESTAURANT, name, "Retrieving order for table " + mc.getTable());
 		waiterGui.DoGoToPlatingArea();
 		try {
 			atCook.acquire();
@@ -467,7 +470,7 @@ public class JoshNormalWaiterRole extends JoshWaiterRole implements JoshWaiter {
 			e.printStackTrace();
 		}
 		cookGui.DoRemoveFood(mc.getChoice());
-		print("Delivering " + mc.getChoice() + " to table " + mc.getTable());
+		AlertLog.getInstance().logMessage(AlertTag.JOSH_RESTAURANT, name, "Delivering " + mc.getChoice() + " to table " + mc.getTable());
 		waiterGui.DoDeliverFood(mc.getChoice());
 		mc.setState(CustomerState.ReadyToEat);
 	}
@@ -480,7 +483,7 @@ public class JoshNormalWaiterRole extends JoshWaiterRole implements JoshWaiter {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		Do("Here is your order.");
+		AlertLog.getInstance().logMessage(AlertTag.JOSH_RESTAURANT, name, "Here is your order.");
 		mc.getCust().msgHereIsFood(mc.getChoice());
 		cashier.msgProduceCheck(this, mc.getCust(), mc.choice);
 		mc.setState(CustomerState.Eating);
@@ -501,15 +504,15 @@ public class JoshNormalWaiterRole extends JoshWaiterRole implements JoshWaiter {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		Do("Here is your check. The charge is $" + mc.charge);
-		print(mc.getCust() + " leaving table " + mc.getTable());
+		AlertLog.getInstance().logMessage(AlertTag.JOSH_RESTAURANT, name, "Here is your check. The charge is $" + mc.charge);
+		AlertLog.getInstance().logMessage(AlertTag.JOSH_RESTAURANT, name, mc.getCust() + " leaving table " + mc.getTable());
 		mc.getCust().msgHereIsCheck(mc.charge);
 		mc.setState(CustomerState.Leaving);
 		waiterGui.DoReturnHome();
 	}
 
 	private void DoSeatCustomer(MyCustomer mc) {
-		print("Seating " + mc.getCust() + " at table " + mc.getTable());
+		AlertLog.getInstance().logMessage(AlertTag.JOSH_RESTAURANT, name, "Seating " + mc.getCust() + " at table " + mc.getTable());
 		waiterGui.DoGoToTable(mc.getTable()); 
 
 	}

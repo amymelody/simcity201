@@ -1,11 +1,13 @@
 package simcity;
 
 import java.util.*;
+import java.util.concurrent.Semaphore;
 
 import simcity.agent.Agent;
 import simcity.interfaces.Person;
 import simcity.interfaces.Bus;
 import simcity.interfaces.BusStop;
+import simcity.gui.BusGui;
 import simcity.mock.LoggedEvent;
 
 public class BusAgent extends Agent implements Bus {
@@ -13,11 +15,17 @@ public class BusAgent extends Agent implements Bus {
 	public enum BusState {AtStop, Leaving}
 	public enum PassengerState {Waiting, Boarding, OnBus}
 	
+	private static final int nearDistance = 180;
 	private String name;
-	private BusState state;
+	public String location; //hack used for unit testing
+	private BusState state = BusState.Leaving;
 	public List<Passenger> passengers = Collections.synchronizedList(new ArrayList<Passenger>());
 	public List<MyBusStop> busStops = Collections.synchronizedList(new ArrayList<MyBusStop>());
 	public boolean unitTesting;
+	private BusGui busGui;
+	private Semaphore atStop = new Semaphore(0,true);
+	
+	private CityDirectory city;
 	
 	public BusAgent(String name) {
 		super();
@@ -28,6 +36,30 @@ public class BusAgent extends Agent implements Bus {
 	
 	private boolean nearLocation(String l) {
 		if (unitTesting) {
+			if (location.equals("apartments")) {
+				if (l.equals("apartment1")) {
+					return false;
+				}
+			}
+			if (location.equals("restaurants")) {
+				if (l.equals("joshRestaurant")) {
+					return true;
+				}
+			}
+			if (location.equals("markets")) {
+				if (l.equals("market3")) {
+					return true;
+				}
+			}
+			if (location.equals("houses")) {
+				if (l.equals("bank1")) {
+					return true;
+				}
+			}
+			return false;
+		}
+		
+		if (Math.abs(busGui.getXPos()-city.getBuildingEntrance(l).x) <= nearDistance && Math.abs(busGui.getYPos()-city.getBuildingEntrance(l).y) <= nearDistance) {
 			return true;
 		}
 		return false;
@@ -37,20 +69,38 @@ public class BusAgent extends Agent implements Bus {
 		return state;
 	}
 	
+	public String getName() {
+		return name;
+	}
+	
 	public void addBusStop(BusStop b, boolean c) {
 		busStops.add(new MyBusStop(b,c));
+	}
+	
+	public void setGui(BusGui g) {
+		busGui = g;
+	}
+	
+	public void setCityDirectory(CityDirectory c) {
+		city = c;
 	}
 
 
 	//Messages
+	
+	public void msgAtStop() {
+		atStop.release();
+		stateChanged();
+	}
 
 	public void msgHereArePassengers(List<Person> passengers) {
 		log.add(new LoggedEvent("Received msgHereArePassengers"));
-		for (Person p : passengers) {
-			this.passengers.add(new Passenger(p, PassengerState.Waiting));
-		}
-		if (this.passengers.isEmpty()) {
+		if (passengers.isEmpty()) {
 			state = BusState.Leaving;
+		} else {
+			for (Person p : passengers) {
+				this.passengers.add(new Passenger(p, PassengerState.Waiting));
+			}
 		}
 		stateChanged();
 	}
@@ -116,39 +166,46 @@ public class BusAgent extends Agent implements Bus {
 	}
 
 	private void goToNextStop() {
-		for (int i=busStops.size()-1; i>=0; i--)
+		for (int i=busStops.size()-1; i>=0; i--) {
 			if (busStops.get(i).current) {
 				busStops.get(i).current = false;
 				if (i==busStops.size()-1) {
 					busStops.get(0).current = true;
-//					if (!unitTesting) {
-//						DoGoToStop(busStops.get(0));
-//					}
+					if (!unitTesting) {
+						busGui.DoGoToStop(busStops.get(0).busStop);
+						try {
+							atStop.acquire();
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
 					state = BusState.AtStop;
 					busStops.get(0).busStop.msgGetPassengers(this);
 				} else {
 					busStops.get(i+1).current = true;
-//					if (!unitTesting) {
-//						DoGoToStop(busStops.get(i+1));
-//					}
+					if (!unitTesting) {
+						busGui.DoGoToStop(busStops.get(i+1).busStop);
+						try {
+							atStop.acquire();
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
 					state = BusState.AtStop;
 					busStops.get(i+1).busStop.msgGetPassengers(this);
 				}
+				break;
 			}
-		
-//		synchronized(passengers) {
-//			for (Passenger p : passengers) {
-//				if (nearLocation(p.destination)){
-//					p.person.msgAtDestination(p.destination);
-//					passengers.remove(p);
-//				}
-//			}
-//		}
+		}
 		
 		for (int i=passengers.size()-1; i>=0; i--) {
-			if (nearLocation(passengers.get(i).destination)){
-				passengers.get(i).person.msgAtDestination(passengers.get(i).destination);
-				passengers.remove(passengers.get(i));
+			if (passengers.get(i).destination != null) {
+				if (nearLocation(passengers.get(i).destination)){
+					passengers.get(i).person.msgAtDestination(passengers.get(i).destination);
+					passengers.remove(passengers.get(i));
+				}
 			}
 		}
 	}

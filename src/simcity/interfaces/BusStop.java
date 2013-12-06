@@ -8,4 +8,5 @@ public interface BusStop {
 	
 	public abstract void msgGetPassengers(Bus b);
 
+	public abstract String getName();
 }

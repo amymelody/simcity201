@@ -18,6 +18,10 @@ public class BusStopAgent extends Agent implements BusStop {
 		super();
 		this.name = name;
 	}
+	
+	public String getName() {
+		return name;
+	}
 
 	//Messages
 

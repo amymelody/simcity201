@@ -5,6 +5,8 @@ import simcity.joshrestaurant.gui.JoshCustomerGui;
 import simcity.joshrestaurant.interfaces.JoshCustomer;
 import simcity.RestCustomerRole;
 import simcity.interfaces.Person;
+import simcity.trace.AlertLog;
+import simcity.trace.AlertTag;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -104,7 +106,7 @@ public class JoshCustomerRole extends RestCustomerRole implements JoshCustomer {
 	// Messages
 
 	public void gotHungry() {
-		print("I'm hungry");
+		AlertLog.getInstance().logMessage(AlertTag.JOSH_RESTAURANT, name, "I'm hungry");
 		event = AgentEvent.gotHungry;
 		cash = person.getMoney();
 		stateChanged();
@@ -114,7 +116,7 @@ public class JoshCustomerRole extends RestCustomerRole implements JoshCustomer {
 		if (name.equals("impatient")) {
 			event = AgentEvent.gotImpatient;
 		} else {
-			Do("I'll wait for a table to open");
+			AlertLog.getInstance().logMessage(AlertTag.JOSH_RESTAURANT, name, "I'll wait for a table to open");
 		}
 		stateChanged();
 	}
@@ -123,7 +125,7 @@ public class JoshCustomerRole extends RestCustomerRole implements JoshCustomer {
 		waiter = w;
 		menu = m;
 		this.tableNumber = tableNumber;
-		print("Received msgFollowMe");
+		AlertLog.getInstance().logMessage(AlertTag.JOSH_RESTAURANT, name, "Received msgFollowMe");
 		event = AgentEvent.followWaiter;
 		stateChanged();
 	}
@@ -296,34 +298,34 @@ public class JoshCustomerRole extends RestCustomerRole implements JoshCustomer {
 	}
 
 	private void requestSeat() {
-		Do("Table for 1");
+		AlertLog.getInstance().logMessage(AlertTag.JOSH_RESTAURANT, name, "Table for 1");
 		host.msgIWantFood(this);
 	}
 	
 	private void leaveAndNotifyHost() {
-		Do("I don't want to wait. Leaving restaurant");
+		AlertLog.getInstance().logMessage(AlertTag.JOSH_RESTAURANT, name, "I don't want to wait. Leaving restaurant");
 		customerGui.DoExitRestaurant();
 		host.msgImLeaving(this);
 	}
 
 	private void SitDown() {
-		Do("Being seated. Going to table");
+		AlertLog.getInstance().logMessage(AlertTag.JOSH_RESTAURANT, name, "Being seated. Going to table");
 		customerGui.DoGoToSeat(tableNumber);
 	}
 	
 	private void tellWaiter() {
-		Do("This food is too expensive. I'm leaving.");
+		AlertLog.getInstance().logMessage(AlertTag.JOSH_RESTAURANT, name, "This food is too expensive. I'm leaving.");
 		waiter.msgIWantToLeave(this);
 		event = AgentEvent.toldWaiter;
 	}
 	
 	private void leaveRestaurant() {
-		Do("Leaving restaurant");
+		AlertLog.getInstance().logMessage(AlertTag.JOSH_RESTAURANT, name, "Leaving restaurant");
 		customerGui.DoExitRestaurant();
 	}
 	
 	private void callWaiter() {
-		Do("I'm ready to order.");
+		AlertLog.getInstance().logMessage(AlertTag.JOSH_RESTAURANT, name, "I'm ready to order.");
 		waiter.msgReadyToOrder(this);
 	}
 	
@@ -335,7 +337,7 @@ public class JoshCustomerRole extends RestCustomerRole implements JoshCustomer {
 				choice = menu.randomItem();
 			} while (menu.getPrice(choice) > cash && !name.equals("cheapskate"));
 		}
-		print("I would like to order " + choice);
+		AlertLog.getInstance().logMessage(AlertTag.JOSH_RESTAURANT, name, "I would like to order " + choice);
 		customerGui.order();
 		try {
 			doneOrdering.acquire();
@@ -347,10 +349,10 @@ public class JoshCustomerRole extends RestCustomerRole implements JoshCustomer {
 	}
 
 	private void EatFood() {
-		Do("Eating Food");
+		AlertLog.getInstance().logMessage(AlertTag.JOSH_RESTAURANT, name, "Eating Food");
 		timer.schedule(new TimerTask() {
 			public void run() {
-				print("Done eating " + choice);
+				AlertLog.getInstance().logMessage(AlertTag.JOSH_RESTAURANT, name, "Done eating " + choice);
 				person.msgDoneEating();
 				event = AgentEvent.doneEating;
 				stateChanged();
@@ -360,12 +362,12 @@ public class JoshCustomerRole extends RestCustomerRole implements JoshCustomer {
 	}
 	
 	private void askForCheck() {
-		Do("Check please.");
+		AlertLog.getInstance().logMessage(AlertTag.JOSH_RESTAURANT, name, "Check please.");
 		waiter.msgDoneEating(this);
 	}
 
 	private void leaveTable() {
-		Do("Going to cashier");
+		AlertLog.getInstance().logMessage(AlertTag.JOSH_RESTAURANT, name, "Going to cashier");
 		customerGui.DoGoToCashier();
 		try {
 			atCashier.acquire();
@@ -377,7 +379,7 @@ public class JoshCustomerRole extends RestCustomerRole implements JoshCustomer {
 		if (cash < payment) {
 			payment = cash;
 		}
-		Do("Paying $" + payment);
+		AlertLog.getInstance().logMessage(AlertTag.JOSH_RESTAURANT, name, "Paying $" + payment);
 		cashier.msgPayment(this, payment);
 		cash -= payment;
 		person.msgExpense(payment);

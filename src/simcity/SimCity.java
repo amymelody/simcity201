@@ -1,10 +1,14 @@
 package simcity;
 
-import javax.swing.JFrame;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+
+import javax.swing.*;
 
 import simcity.gui.BuildingGui;
 import simcity.gui.BuildingsGui;
 import simcity.gui.CityGui;
+import simcity.trace.AlertWindow;
 
 public class SimCity
 {
@@ -23,9 +27,13 @@ public class SimCity
         bg.setVisible(true);
         bg.setResizable(true);
         bg.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        
-      // cg.readConfig();
-        
-        System.out.println("City");
+    
+        AlertWindow aw = new AlertWindow();
+		aw.setTitle("Alerts");
+		aw.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		aw.setResizable(false);
+		aw.setVisible(true);
+
+		aw.start();
     }
 }

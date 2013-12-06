@@ -2,6 +2,11 @@ package simcity.gui;
 
 import simcity.Day;
 import simcity.PersonAgent;
+import simcity.BusStopAgent;
+import simcity.BusAgent;
+import simcity.trace.AlertLog;
+import simcity.trace.AlertTag;
+import simcity.interfaces.BusStop;
 import simcity.Time;
 import simcity.CityDirectory;
 
@@ -15,9 +20,11 @@ import java.util.List;
 
 public class CityInputPanel extends JPanel implements ActionListener
 {
-	static final int TIMERINCR = 1500;
+	static final int TIMERINCR = 1300;
 	
 	private Vector<PersonAgent> people = new Vector<PersonAgent>();
+	private List<BusStop> busStops = new ArrayList<BusStop>();
+	BusAgent bus;
 	
 	private CityDirectory cityDirectory;
 	private BuildingGui buildingGui;
@@ -35,7 +42,9 @@ public class CityInputPanel extends JPanel implements ActionListener
 	private JLabel scenario = new JLabel("CHOOSE A SCENARIO");
 	private JRadioButtonMenuItem button1 = new JRadioButtonMenuItem("Restaurant Config");
 	private JRadioButtonMenuItem button2 = new JRadioButtonMenuItem("Market Config");
-	private JRadioButtonMenuItem button3 = new JRadioButtonMenuItem("Jobs Config");
+	private JRadioButtonMenuItem button3 = new JRadioButtonMenuItem("Landlord Config");
+	private JRadioButtonMenuItem button4 = new JRadioButtonMenuItem("Bank Config");
+	private JRadioButtonMenuItem button5 = new JRadioButtonMenuItem("Housing Config");
 	private JButton goButton = new JButton("Run Scenario");
     
 //    @Override
@@ -53,9 +62,34 @@ public class CityInputPanel extends JPanel implements ActionListener
 		buildingGui = bg;
 		creationPanel = new CityCreationPanel(this, cityDirectory);
 		gui = g;
+		
+		bus = new BusAgent("bus");
+		BusGui busGui = new BusGui(bus, gui, cityDirectory);
+		bus.setGui(busGui);
+		gui.addGui(busGui);
+		
+		BusStopAgent stop1 = new BusStopAgent("busStop1");
+		BusStopAgent stop2 = new BusStopAgent("busStop2");
+		BusStopAgent stop3 = new BusStopAgent("busStop3");
+		BusStopAgent stop4 = new BusStopAgent("busStop4");
+		busStops.add(stop1);
+		busStops.add(stop2);
+		busStops.add(stop3);
+		busStops.add(stop4);
+		bus.addBusStop(stop1, true);
+		bus.addBusStop(stop2, false);
+		bus.addBusStop(stop3, false);
+		bus.addBusStop(stop4, false);
+		bus.setCityDirectory(cityDirectory);
+		
+		stop1.startThread();
+		stop2.startThread();
+		stop3.startThread();
+		stop4.startThread();
+		
 //        setLayout(new BoxLayout(this, 0));
 		
-		int rows = 5;
+		int rows = 7;
 		int columns = 1;
 		int buffer = 10;
 		view.setLayout(new GridLayout(rows, columns, buffer, buffer)); //view. maybe ought to be deleted
@@ -67,6 +101,10 @@ public class CityInputPanel extends JPanel implements ActionListener
 		add(button2);
 		configGroup.add(button3);
 		add(button3);
+		configGroup.add(button4);
+		add(button4);
+		configGroup.add(button5);
+		add(button5);
 		goButton.addActionListener(this);
 		add(goButton);
 //        add(creationPanel);
@@ -75,7 +113,7 @@ public class CityInputPanel extends JPanel implements ActionListener
 //        personPane.setViewportView(view);
 //        add(personPane);
         
-        time = new Time(Day.Sun, 4, 0);
+        time = new Time(Day.Sun, 3, 0);
         timer = new Timer(TIMERINCR, this );
     	timer.start();
         
@@ -93,8 +131,11 @@ public class CityInputPanel extends JPanel implements ActionListener
 
     public void actionPerformed(ActionEvent e)
     {
-    	time = time.plus(30);
-    	for (PersonAgent p : people) {
+    	if (!people.isEmpty()) {
+	    	time = time.plus(30);
+	    	AlertLog.getInstance().logInfo(AlertTag.GENERAL_CITY, "City", time.getDay().toString() + ", " + time.getHour() + ":" + time.getMinute());
+    	}
+	    for (PersonAgent p : people) {
     		p.msgUpdateWatch(time.getDay(), time.getHour(), time.getMinute());
     	}
     	
@@ -110,7 +151,15 @@ public class CityInputPanel extends JPanel implements ActionListener
 			}
 			else if(button3.isSelected())
 			{
-			creationPanel.readConfig("../jobsConfig.properties");
+			creationPanel.readConfig("../landlordConfig.properties");
+			}
+			else if(button4.isSelected())
+			{
+			creationPanel.readConfig("../bankConfig.properties");
+			}
+			else if(button5.isSelected())
+			{
+			creationPanel.readConfig("../housingConfig.properties");
 			}
 		}
 //    	for (JButton b : personList)
@@ -129,12 +178,17 @@ public class CityInputPanel extends JPanel implements ActionListener
     	
     }
     
-    public void addPerson(String name, String job, int pay, int startShift, int endShift, String eco, String physical, String housing, boolean car, CityDirectory c) 
+    public void startBus() {
+    	bus.startThread();
+    }
+    
+    public void addPerson(String name, String job, int pay, int startShift, int endShift, String eco, String physical, String housing, CityDirectory c, boolean tA, boolean uB, boolean gH) 
     {
-		PersonAgent p = new PersonAgent(name);
+    	PersonAgent p = new PersonAgent(name);
 		PersonGui g = new PersonGui(p, gui, c);
 		p.setCityDirectory(c);
 		p.setCityGui(gui);
+		p.addBusStops(busStops);
 		p.setGui(g);
 		gui.addGui(g);
 		
@@ -159,12 +213,10 @@ public class CityInputPanel extends JPanel implements ActionListener
 		p.msgYoureHired(job, pay, startShifts, endShifts);
 		p.setEState(eco);
 		p.setPState(physical);
-		if(car)
-		{
-//			CarAgent tempCar = new CarAgent(p)
-//			cars.add(tempCar);
-//			p.msgBoughtCar(tempCar);
-		}
+		p.setTestingAnimation(tA);
+		p.setUsingBus(uB);
+		p.setGoingHome(gH);
+		
 		people.add(p);
 		cityDirectory.addPerson(p, p.getJobLocation(), housing);
 		p.startThread();
@@ -179,9 +231,5 @@ public class CityInputPanel extends JPanel implements ActionListener
 //        personList.add(temp);
 //        view.add(temp);
 //        validate();
-    }
-    
-    public void readConfig() {
-    	creationPanel.readConfig();
     }
 }

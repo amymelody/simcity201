@@ -15,6 +15,6 @@ public interface BankDepositor {
 	
 	public abstract void msgTransactionComplete();
 
-	
+	public abstract String getName();
 	
 }

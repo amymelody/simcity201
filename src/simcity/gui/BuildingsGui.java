@@ -30,8 +30,8 @@ public class BuildingsGui extends JFrame
 	private CityGui cityGui;
 	private final int WINDOWX = 650;
 	private final int WINDOWY = 500;
-	private final int BUFFERTOP = 50;
-	private final int BUFFERSIDE = 700;
+	private final int BUFFERTOP = 20;
+	private final int BUFFERSIDE = 680;
 
 	/**
 	 * Constructor

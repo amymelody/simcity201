@@ -33,7 +33,7 @@ public abstract class Role
         return person;
     }
     
-    protected String getName()
+    public String getName()
     {
         return StringUtil.shortName(this);
     }
