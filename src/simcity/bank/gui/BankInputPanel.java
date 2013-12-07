@@ -10,17 +10,21 @@ import simcity.bank.BankDepositorRole;
 
 public class BankInputPanel extends JPanel 
 {
+	public String name;
+	public BankGui bankGui;
+	
 	private BankManagerRole manager;
+	private BankManagerGui managerGui;
 	private Vector<BankTellerRole> tellers = new Vector<BankTellerRole>();
 	private Vector<BankDepositorRole> depositors = new Vector<BankDepositorRole>();
-	private BankGui gui;
 	
-	public BankInputPanel(BankGui g, BankManagerRole m) {
-		gui = g;
-		manager = m;
+	
+	public BankInputPanel(BankGui g, BankManagerRole c) {
+		bankGui = g;
+		manager = c;
 		
 		BankManagerGui managerGui = new BankManagerGui(manager);
-		gui.animationPanel.addGui(managerGui);
+		bankGui.animationPanel.addGui(managerGui);
 		manager.setGui(managerGui);
 	}
 	
@@ -30,7 +34,7 @@ public class BankInputPanel extends JPanel
 	
 	public void addTeller(BankTellerRole t) {
 		BankTellerGui g = new BankTellerGui(t);
-		gui.animationPanel.addGui(g);
+		bankGui.animationPanel.addGui(g);
 		t.setManager(manager);
 		t.setGui(g);
 		tellers.add(t);
@@ -39,7 +43,7 @@ public class BankInputPanel extends JPanel
 	
 	public void addDepositor(BankDepositorRole d) {
 		BankDepositorGui g = new BankDepositorGui(d);
-		gui.animationPanel.addGui(g);
+		bankGui.animationPanel.addGui(g);
 		d.setManager(manager);
 		d.setGui(g);
 		depositors.add(d);

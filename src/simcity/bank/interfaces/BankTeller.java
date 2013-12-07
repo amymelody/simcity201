@@ -11,12 +11,14 @@ public abstract void msgEndShift();
 
 public abstract void msgPay();
 
-public abstract void msgHelpCustomer(BankDepositor c, int cash);
+public abstract void msgHelpCustomer(BankDepositor c);
 
-public abstract void msgMakeWithdrawal(BankDepositor c, int transaction);
 
-public abstract void msgMakeDeposit(BankDepositor c, int transaction);
+public abstract void msgTransactionComplete(BankDepositor c, int cashInBank);
 
-public abstract void msgTransactionComplete(BankDepositor c);
+public abstract void msgMakeRequest(BankDepositor c,
+		int transactionAmount);
+
+public abstract void msgTransactionDenied(BankDepositor c);
 	
 }

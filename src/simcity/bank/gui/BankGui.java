@@ -9,6 +9,7 @@ import simcity.gui.CityGui;
 import simcity.bank.BankManagerRole;
 import simcity.bank.BankDepositorRole;
 import simcity.bank.BankTellerRole;
+import simcity.bank.BankManagerRole;
 import simcity.bank.gui.BankAnimationPanel;
 import simcity.bank.gui.BankInputPanel;
 

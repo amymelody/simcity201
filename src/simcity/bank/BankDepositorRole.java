@@ -61,7 +61,7 @@ public class BankDepositorRole extends Role implements BankDepositor{
 	BankManager manager;
 	
 	// Customer Status Data
-	public enum CustomerState {entered, makingDeposit, makingWithdrawal, makingTransaction, beingHelped, leaving, atManager, atTeller, out};
+	public enum CustomerState {entered, makingRequest, makingTransaction, beingHelped, leaving, atManager, atTeller, out};
 	CustomerState cS;
 	public CustomerState getCustomerState(){
 		return cS;
@@ -83,7 +83,7 @@ public class BankDepositorRole extends Role implements BankDepositor{
 	/* Messages */
 	public void msgMakeDeposit(int cash){
 		//Do("Person taking on role of bank depositor");
-		System.out.println("lsoser");
+		System.out.println("Bank depositor role taken on");
 		cS = CustomerState.makingTransaction;
 		transactionAmount = cash;
 		stateChanged();
@@ -104,15 +104,13 @@ public class BankDepositorRole extends Role implements BankDepositor{
 		transactionAmount = 0-cash;
 		stateChanged();
 	}
+	public void msgGoToTellerDesk(){
+		gui.GoToTeller();
+	}
 	public void msgMakeRequest(BankTeller t){
 		Do("Bank customer received message from teller to make a request");
 		this.teller = t;
-		if(transactionAmount < 0){
-			cS = CustomerState.makingWithdrawal;
-		}
-		if(transactionAmount >= 0){
-			cS = CustomerState.makingDeposit;
-		}
+		cS = CustomerState.makingRequest;
 		stateChanged();
 	}
 	
@@ -121,6 +119,7 @@ public class BankDepositorRole extends Role implements BankDepositor{
 		cS = CustomerState.leaving;
 		stateChanged();
 	}
+	
 	public void msgTransactionComplete(){
 		Do("Bank customer received confirmation that his transaction is complete");
 		cS = CustomerState.leaving;
@@ -138,36 +137,23 @@ public class BankDepositorRole extends Role implements BankDepositor{
 	
 	
 	/*Animation messages*/
-	public void msgAtManager(){
+	public void msgAtDestination(){
 		customerAnimation.release();
-		cS = CustomerState.atManager;
-		stateChanged();
+		
 	}
 	
-	public void msgAtTeller(){
-		customerAnimation.release();
-		cS = CustomerState.atTeller;
-		stateChanged();
-	}
-	public void msgLeft(){
-		customerAnimation.release();
-		cS = CustomerState.out;
-		stateChanged();
-	}
+	
 	/* Scheduler */
 	public boolean pickAndExecuteAnAction() {
 		if(cS == CustomerState.makingTransaction) {
 			MakeTransaction();
 			return true;
 		}
-		if(cS == CustomerState.makingWithdrawal){
-			MakeWithdrawal();
+		if(cS == CustomerState.makingRequest){
+			MakeTellerRequest();
 			return true;
 		}
-		if(cS == CustomerState.makingDeposit){
-			MakeDeposit();
-			return true;
-		}
+		
 		if(cS == CustomerState.leaving){
 			Leaving();
 			return true;
@@ -192,26 +178,12 @@ public class BankDepositorRole extends Role implements BankDepositor{
 		manager.msgTransaction(this);
 		cS = CustomerState.beingHelped; 
 	}
-	public void MakeWithdrawal(){
-		DoGoToTeller();
-		try {
-			customerAnimation.acquire();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		teller.msgMakeWithdrawal(this, transactionAmount);
+	public void MakeTellerRequest(){
+		
+		teller.msgMakeRequest(this, transactionAmount);
 		cS = CustomerState.beingHelped;
 	}
-	public void MakeDeposit(){
-		DoGoToTeller();
-		try {
-			customerAnimation.acquire();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		teller.msgMakeDeposit(this, transactionAmount);
-		cS = CustomerState.beingHelped;
-	}
+	
 	public void Leaving(){
 		Do("Goodbye.");
 		DoLeaveBank();
