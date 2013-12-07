@@ -1190,7 +1190,7 @@ public class PersonAgent extends Agent implements Person
 		Bank(String l, String r) {
 			location = l;
 			depositorRole = r;
-			closed = true;
+			closed = false;
 		}
 		String depositorRole;
 		String location;

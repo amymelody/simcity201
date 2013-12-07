@@ -17,6 +17,10 @@ public class MockBankDepositorRole extends Role implements BankDepositor {
 	public void msgTransactionComplete() {
 	}
 	
+	public void msgGoToTellerDesk() {
+		
+	}
+	
 	public void msgCannotMakeTransaction() {};
 	
 	public void msgMakeRequest(BankTeller t) {};
