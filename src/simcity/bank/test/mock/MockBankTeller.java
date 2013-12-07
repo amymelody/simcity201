@@ -38,23 +38,28 @@ public class MockBankTeller extends Mock implements BankTeller {
 
 	}
 	
-	public void msgHelpCustomer(BankDepositor c, int cash){
+	public void msgHelpCustomer(BankDepositor c){
 		
 		log.add(new LoggedEvent("Received message from manager to work with customer"));
 	}
 	
-	public void msgMakeWithdrawal(BankDepositor c, int cash){
-		log.add(new LoggedEvent("Received message from Bank customer to make a withdrawal"));
-
-	}
-	public void msgMakeDeposit(BankDepositor c, int cash){
-		log.add(new LoggedEvent("Received message from Bank customer to make a deposit"));
-
-	}
-	
-	public void msgTransactionComplete(BankDepositor c){
+	public void msgTransactionComplete(BankDepositor c, int cashInBank){
 			log.add(new LoggedEvent("Received message from manager that transaction was successful"));
 
+		
+	}
+
+	
+	
+	@Override
+	public void msgMakeRequest(BankDepositor c, int transactionAmount) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void msgTransactionDenied(BankDepositor c) {
+		// TODO Auto-generated method stub
 		
 	}
 	

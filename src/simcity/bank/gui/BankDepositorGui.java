@@ -14,10 +14,21 @@ public class BankDepositorGui implements Gui {
 	private int xDestination = -20, yDestination = -20;
 	private int xHome = 20, yHome = 20;
 	BankGui gui;
-	public BankDepositorGui(BankDepositorRole r){
-		this.role =r;
-	}
 	
+	
+	
+
+	public BankDepositorGui(BankDepositorRole d) {
+		this.role = d;
+		xPos = -20;
+		yPos = -20;
+		xDestination = -20;
+		yDestination = -20;
+		this.gui = gui;
+		}
+
+
+
 	public void updatePosition() {
 		if (xPos < xDestination)
 			xPos++;
@@ -29,14 +40,10 @@ public class BankDepositorGui implements Gui {
 		else if (yPos > yDestination)
 			yPos--;
 		if(xPos == xDestination && yPos == yDestination){
-			if(xDestination == 38 && yDestination == 38){
-				role.msgAtManager();
-			}
-				else if(xDestination == 52 && yDestination == 52){
-					role.msgAtTeller();
+			{
+				if(releaseIt){
+					AtDestination();
 				}
-				else if(xDestination == -20 && yDestination == -20){
-					role.msgLeft();
 			
 				}
 				
@@ -67,8 +74,8 @@ public class BankDepositorGui implements Gui {
 		releaseIt = true;
 	}
 	public void GoToTeller(){
-		xDestination = 52;
-		yDestination = 52;
+		xDestination = 100;
+		yDestination = 200;
 		releaseIt = true;
 	}
 	
@@ -78,6 +85,7 @@ public class BankDepositorGui implements Gui {
 		releaseIt = true;
 	}
 	public void AtDestination(){
+		role.msgAtDestination();
 		releaseIt = false;
 	}
 

@@ -47,6 +47,12 @@ public class MockBankDepositor extends Mock implements BankDepositor {
 		log.add(new LoggedEvent("Received message from teller that transaction was successful."));
 		
 	}
+
+	@Override
+	public void msgGoToTellerDesk() {
+		// TODO Auto-generated method stub
+		
+	}
 	
 	
 }

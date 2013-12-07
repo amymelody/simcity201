@@ -17,6 +17,11 @@ public class BankTellerGui implements Gui {
 	BankGui gui;
 	public BankTellerGui(BankTellerRole r){
 		this.role = r;
+		xPos = -20;
+		yPos = -20;
+		xDestination = 100;
+		yDestination = 200;
+		this.gui = gui;
 	}
 	
 	public void updatePosition() {
@@ -29,6 +34,15 @@ public class BankTellerGui implements Gui {
 			yPos++;
 		else if (yPos > yDestination)
 			yPos--;
+		if(xPos == xDestination && yPos == yDestination){
+			{
+				if(releaseIt){
+					AtDestination();
+				}
+			
+				}
+				
+			}
 	}
 	
 	public void draw(Graphics2D g){
@@ -50,7 +64,7 @@ public class BankTellerGui implements Gui {
 	}
 	
 	public void GoToManager(){
-		xDestination = 40;
+		xDestination = 38;
 		yDestination = 40;
 		releaseIt = true;
 	}
@@ -58,11 +72,24 @@ public class BankTellerGui implements Gui {
 	public void ExitBank(){
 		xDestination = -20;
 		yDestination = -20;
+		releaseIt = true;
 	}
 	
 	public void GoToCustomer(){
 		xDestination = 50;
 		yDestination = 50;
+		releaseIt = true;
+		
+	}
+	public void GoToDesk(){
+		xDestination = 110;
+		yDestination = 200;
+		releaseIt = true;
+		
+	}
+	public void AtDestination(){
+		releaseIt = false;
+		role.msgAtDestination();
 		
 	}
 	

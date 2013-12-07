@@ -31,12 +31,11 @@ public class BankTellerRole extends JobRole implements BankTeller   {
 		CustomerState cS;
 		String name;
 		int money;
+		int request;
 		
-		myCustomer(BankDepositor c, CustomerState state, int cashInBank){
+		myCustomer(BankDepositor c, CustomerState state){
 			this.c = c;
 			this.cS = state;
-			this.name = c.getName();
-			this.money = cashInBank;
 			
 		}
 		public CustomerState getCustomerState(){
@@ -72,6 +71,7 @@ public class BankTellerRole extends JobRole implements BankTeller   {
 	
 	public void setManager(BankManager manager){
 		this.manager = manager;
+		manager.msgHired(this, person.getSalary());
 	}
 	public void setDepositor(BankDepositor depositor){
 		this.depositor = depositor;
@@ -86,6 +86,9 @@ public class BankTellerRole extends JobRole implements BankTeller   {
 
 ////MESSAGES/////
 
+	public void msgAtDestination(){
+		tellerAnimation.release();
+	}
 	public void msgStartShift(){
 		working = true;
 	}
@@ -95,32 +98,27 @@ public class BankTellerRole extends JobRole implements BankTeller   {
 	public void msgPay(){
 		person.msgEndShift();
 	}
-public void msgHelpCustomer(BankDepositor c, int cash){
+public void msgHelpCustomer(BankDepositor c){
 	Do("Teller is assigned to customer");
-	customers.add(new myCustomer(c, CustomerState.waitingForTeller, cash));
+	customers.add(new myCustomer(c, CustomerState.waitingForTeller));
 	stateChanged();
 }
 
-public void msgMakeWithdrawal(BankDepositor c, int transaction){
-	Do("Teller is processing withdrawal");
-	if(findCustomer(c).money<transaction){
-		findCustomer(c).cS = CustomerState.broke;
-	}
-	else{
-		findCustomer(c).money += -transaction;
+public void msgMakeRequest(BankDepositor c, int transaction){
+		findCustomer(c).request = transaction;
 		findCustomer(c).cS = CustomerState.makingRequest;
-	}
-	stateChanged();
+		stateChanged();
 }
-public void msgMakeDeposit(BankDepositor c, int transaction){
-	Do("Teller is processing deposit");
-	findCustomer(c).money += transaction;
-	findCustomer(c).cS = CustomerState.makingRequest;
-	stateChanged();
-}
-public void msgTransactionComplete(BankDepositor c){
+
+public void msgTransactionComplete(BankDepositor c, int newCash){
 	Do("Teller received confirmation from manager that transaction was successful");
+	findCustomer(c).money = newCash;
 	findCustomer(c).cS = CustomerState.transactionComplete;
+	stateChanged();
+}
+public void msgTransactionDenied(BankDepositor c){
+	Do("Sorry, your transaction was denied because you do not have enough funds to make this deposit");
+	findCustomer(c).cS = CustomerState.broke;
 	stateChanged();
 }
 
@@ -134,7 +132,7 @@ public boolean pickAndExecuteAnAction(){
 	}
 	for(myCustomer j : customers){
 		if(j.getCustomerState() == CustomerState.broke){
-			noMoney(j.c);
+			transactionDenied(j.c);
 		}
 	}
 	for(myCustomer x : customers){
@@ -144,36 +142,47 @@ public boolean pickAndExecuteAnAction(){
 	}
 	for(myCustomer l : customers){
 		if(l.getCustomerState() == CustomerState.transactionComplete){
-			transactionComplete(l.c);
+			transactionComplete(l.c, l.money);
 		}
 	}
+
+	
 	return false;
 }
 
 ///ACTIONS////
 private void helpCustomer(BankDepositor c){
-	gui.GoToCustomer();
+	gui.GoToManager();
+	try {
+		tellerAnimation.acquire();
+	} catch (InterruptedException e) {
+		e.printStackTrace();
+	}
+	gui.GoToDesk();
+	c.msgGoToTellerDesk();
 	try {
 		tellerAnimation.acquire();
 	} catch (InterruptedException e) {
 		e.printStackTrace();
 	}
 	c.msgMakeRequest(this);
+	
 }
-private void noMoney(BankDepositor c){
+
+private void makeTransaction(BankDepositor c){
+	manager.msgProcessTransaction(this, c, findCustomer(c).request);
+}
+
+private void transactionComplete(BankDepositor c, int newCash){
+	Do("Your new bank balance is: $" + newCash);
+	c.msgTransactionComplete();
+}
+
+private void transactionDenied(BankDepositor c){
 	
 	c.msgCannotMakeTransaction();
 	
 }
-private void makeTransaction(BankDepositor c){
-	manager.msgProcessTransaction(this, c, findCustomer(c).money);
-}
-
-private void transactionComplete(BankDepositor c){
-	c.msgTransactionComplete();
-	Do("Your new bank balance is: $" + findCustomer(c).money);
-}
-
 private myCustomer findCustomer(BankDepositor c){
 	
 	for(myCustomer mc : customers){
