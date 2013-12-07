@@ -420,7 +420,7 @@ public class PersonAgent extends Agent implements Person
 				}
 			}
 		}
-		if (building.contains("restaurant")) {
+		if (building.contains("Restaurant")) {
 			for (Restaurant r : restaurants) {
 				if (r.location.equals(building)) {
 					r.closed = closed;
