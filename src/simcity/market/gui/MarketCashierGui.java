@@ -23,14 +23,14 @@ public class MarketCashierGui implements Gui {
 
 	public void updatePosition() {
 		if (xPos < xDestination)
-			xPos++;
+			xPos+=20;
 		else if (xPos > xDestination)
-			xPos--;
+			xPos-=20;
 
 		if (yPos < yDestination)
-			yPos++;
+			yPos+=20;
 		else if (yPos > yDestination)
-			yPos--;
+			yPos-=20;
 		if(xPos == -20 && yPos == 20 && leaving) {
 			role.left();
 			leaving = false;

@@ -35,20 +35,20 @@ public class InventoryList {
 	public static final Map<String, MarketItem> inventory = new HashMap<String, MarketItem>();
 	
 	public InventoryList() {
-		inventory.put("Car", new MarketItem("Car", 1000, 0));
-		inventory.put("Salad", new MarketItem("Salad", 3, 0));
-		inventory.put("Steak", new MarketItem("Steak", 10, 0));
-		inventory.put("Pizza", new MarketItem("Pizza", 5, 0));
-		inventory.put("Chicken", new MarketItem("Chicken", 10, 0));
-		inventory.put("Spaghetti", new MarketItem("Spaghetti", 8, 0));
-		inventory.put("Lasagna", new MarketItem("Lasagna", 10, 0));
-		inventory.put("Garlic Bread", new MarketItem("Garlic Bread", 5, 0));
-		inventory.put("Ribs", new MarketItem("Ribs", 10, 0));
-		inventory.put("Burger", new MarketItem("Burger", 8, 0));
-		inventory.put("Enchiladas", new MarketItem("Enchiladas", 10, 0));
-		inventory.put("Tacos", new MarketItem("Tacos", 5, 0));
-		inventory.put("Pozole", new MarketItem("Pozole", 8, 0));
-		inventory.put("Horchata", new MarketItem("Horchata", 3, 0));
+		inventory.put("Car", new MarketItem("Car", 1000, 10));
+		inventory.put("Salad", new MarketItem("Salad", 3, 10));
+		inventory.put("Steak", new MarketItem("Steak", 10, 10));
+		inventory.put("Pizza", new MarketItem("Pizza", 5, 10));
+		inventory.put("Chicken", new MarketItem("Chicken", 10, 10));
+		inventory.put("Spaghetti", new MarketItem("Spaghetti", 8, 10));
+		inventory.put("Lasagna", new MarketItem("Lasagna", 10, 10));
+		inventory.put("Garlic Bread", new MarketItem("Garlic Bread", 5, 10));
+		inventory.put("Ribs", new MarketItem("Ribs", 10, 10));
+		inventory.put("Burger", new MarketItem("Burger", 8, 10));
+		inventory.put("Enchiladas", new MarketItem("Enchiladas", 10, 10));
+		inventory.put("Tacos", new MarketItem("Tacos", 5, 10));
+		inventory.put("Pozole", new MarketItem("Pozole", 8, 10));
+		inventory.put("Horchata", new MarketItem("Horchata", 3, 10));
 	}
 	
 	public Integer getPrice(String foodItem) {

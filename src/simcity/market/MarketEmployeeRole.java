@@ -99,6 +99,7 @@ public class MarketEmployeeRole extends JobRole implements MarketEmployee {
 	// Normative Scenarios
 	public void msgGetItems(Order o) {
 		orders.add(o);
+		eS = EmployeeState.nothing;
 		stateChanged();
 	}
 	public void msgPay() {

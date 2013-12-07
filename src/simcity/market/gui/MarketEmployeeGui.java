@@ -20,7 +20,7 @@ public class MarketEmployeeGui implements Gui {
 
 	private int xPos = -20, yPos = 20;//default Employee position
 	private int xDestination = -20, yDestination = 20;//default Employee destination
-	private int xHome = 380, yHome = -20; // Employee home position
+	private int xHome = 380, yHome = 20; // Employee home position
 	private List<ItemOrder> items;
 	private Queue<Point> destinations = new LinkedList<Point>();
 	private static Map<String, Point> foodLocations = new HashMap<String, Point>();
@@ -50,14 +50,14 @@ public class MarketEmployeeGui implements Gui {
 
 	public void updatePosition() {
 		if (xPos < xDestination)
-			xPos++;
+			xPos+=20;
 		else if (xPos > xDestination)
-			xPos--;
+			xPos-=20;
 
 		if (yPos < yDestination)
-			yPos++;
+			yPos+=20;
 		else if (yPos > yDestination)
-			yPos--;
+			yPos-=20;
 		if(xPos == xDestination && yPos == yDestination) {
 			if(gS == GuiState.gathering) {
 				destinations.poll();
@@ -66,7 +66,8 @@ public class MarketEmployeeGui implements Gui {
 					yDestination = destinations.peek().y;
 				}
 				else {
-					GoToCashier();
+					role.msgHaveItems();
+					gS = GuiState.nothing;
 				}
 			}
 			if(gS == GuiState.cashier) {

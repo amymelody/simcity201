@@ -420,7 +420,7 @@ public class PersonAgent extends Agent implements Person
 				}
 			}
 		}
-		if (building.contains("restaurant")) {
+		if (building.contains("Restaurant")) {
 			for (Restaurant r : restaurants) {
 				if (r.location.equals(building)) {
 					r.closed = closed;
@@ -502,8 +502,9 @@ public class PersonAgent extends Agent implements Person
 				AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "$" + money);
 			}
 			if (name.equals("marketCustomer")) {
-				foodNeeded.add(new ItemOrder("steak",2));
-				foodNeeded.add(new ItemOrder("chicken",2));
+				foodNeeded.add(new ItemOrder("Steak",2));
+				foodNeeded.add(new ItemOrder("Pozole",2));
+				foodNeeded.add(new ItemOrder("Chicken",2));
 				AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "Food is low");
 			}
 			if (name.equals("hungryResident") || name.equals("restCustomer")) {
@@ -589,6 +590,7 @@ public class PersonAgent extends Agent implements Person
 		for (ItemOrder i : items) {
 			groceries.add(i);
 		}
+		foodNeeded.clear();
 		stateChanged();
 	}
 	
@@ -961,7 +963,6 @@ public class PersonAgent extends Agent implements Person
 							mr.active = true;
 							state.ls = LocationState.market;
 							c.msgOrderItems(foodNeeded);
-							foodNeeded.clear();
 						}
 						return;
 					}
