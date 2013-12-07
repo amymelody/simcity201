@@ -11,6 +11,8 @@ import simcity.interfaces.HousingGuiInterface;
 import simcity.interfaces.Resident;
 import simcity.mock.EventLog;
 import simcity.mock.LoggedEvent;
+import simcity.trace.AlertLog;
+import simcity.trace.AlertTag;
 
 public class ResidentGui implements Gui
 {
@@ -28,6 +30,8 @@ public class ResidentGui implements Gui
 	public List<MoveBox> pastBoxes = new ArrayList<MoveBox>();
 	public MoveBox currentBox;
 	private boolean exiting;
+	private boolean arrived;
+	private boolean error;
 
 	public enum Command
 	{
@@ -58,6 +62,7 @@ public class ResidentGui implements Gui
 		exiting = false;
 		pastCommand = Command.noCommand;
 		command = Command.noCommand;
+		error = false;
 	}
 	
 	public void setGui(HousingGuiInterface gui)
@@ -89,15 +94,19 @@ public class ResidentGui implements Gui
 				pastCommand = Command.noCommand;
 				command = Command.noCommand;
 				currentBox = null;
+				error = false;
 				
 				resident.msgAtLocation();
 			}
 		}
 		else
 		{
-			if(xPos == xDestination && yPos == yDestination && (xDestination != xGoal || yDestination != yGoal))
+			if(!error)
 			{
-				findMoveBox();
+				if(xPos == xDestination && yPos == yDestination && (xDestination != xGoal || yDestination != yGoal))
+				{
+					findMoveBox();
+				}
 			}
 			
 			if (xPos < xDestination)
@@ -127,7 +136,11 @@ public class ResidentGui implements Gui
 				}
 				else
 				{
-					resident.msgAtLocation();
+					if(!arrived)
+					{
+						resident.msgAtLocation();
+						arrived = true;
+					}
 				}
 			}
 		}
@@ -137,20 +150,25 @@ public class ResidentGui implements Gui
 	{
 		g.setColor(Color.BLUE);
 		g.fillRect(xPos, yPos, dimensions, dimensions);
-        if(pastCommand == Command.getFood || command == Command.putFood)
+        if((pastCommand == Command.getFood || command == Command.putFood) && !arrived)
         {
 	        g.setColor(Color.WHITE);
 	        g.fillOval(xPos, yPos, dimensions - 1, dimensions - 1);
         }
-        if(pastCommand == Command.cook)
+        else if((pastCommand == Command.getFood || command == Command.putFood) && arrived)
+        {
+	        g.setColor(Color.WHITE);
+	        g.fillOval(xPos - 20, yPos, dimensions - 1, dimensions - 1);
+        }
+        if((pastCommand == Command.cook) && !arrived)
         {
 	        g.setColor(Color.YELLOW);
 	        g.fillOval(xPos, yPos, dimensions - 1, dimensions - 1);
         }
-        if(pastCommand == Command.eat)
+        else if((command == Command.eat) && arrived)
         {
-	        g.setColor(Color.GREEN);
-	        g.fillOval(xPos, yPos, dimensions + 19, dimensions - 1);
+	        g.setColor(Color.YELLOW);
+	        g.fillOval(xPos + 20, yPos, dimensions - 1, dimensions - 1);
         }
 	}
 	
@@ -169,9 +187,16 @@ public class ResidentGui implements Gui
 	{
 		log.add(new LoggedEvent("Received doGoToLocation. String purpose = " + purpose));
 		
+		arrived = false;
 		xGoal = (int) p.getX();
 		yGoal = (int) p.getY();
-
+		//Specifically just for move hack
+		if(error)
+		{
+			xDestination = xGoal;
+			yDestination = yGoal;
+		}
+		
 		pastCommand = command;
 		if(purpose.equals("Put food"))
 		{
@@ -193,7 +218,7 @@ public class ResidentGui implements Gui
 		{
 			command = Command.exit;
 		}
-		else
+		if(purpose.equals(""))
 		{
 			command = Command.noCommand;
 		}
@@ -360,7 +385,17 @@ public class ResidentGui implements Gui
 		}
 		boxesToCheck.remove(currentBox);
 		gui.setBox(boxesToCheck);
-		xDestination = currentBox.getX();
-		yDestination = currentBox.getY();
+		if(currentBox == null)
+		{
+			error = true;
+			xDestination = xGoal;
+			yDestination = yGoal;
+			
+		}
+		else
+		{
+			xDestination = currentBox.getX();
+			yDestination = currentBox.getY();
+		}
 	}
 }

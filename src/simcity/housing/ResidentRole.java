@@ -7,10 +7,14 @@ import simcity.interfaces.Resident;
 import simcity.mock.EventLog;
 import simcity.mock.LoggedEvent;
 import simcity.role.Role;
+import simcity.trace.AlertLog;
+import simcity.trace.AlertTag;
 import simcity.ItemOrder;
 import java.awt.Point;
 import java.util.*;
 import java.util.concurrent.Semaphore;
+import simcity.trace.AlertLog;
+import simcity.trace.AlertTag;
 
 public class ResidentRole extends Role implements Resident
 {
@@ -30,6 +34,8 @@ public class ResidentRole extends Role implements Resident
 		talkToLandlord,
 		payLandlord,
 		eat,
+		preparing,
+		eating,
 		getGroceries,
 		putAwayGroceries,
 		leave;
@@ -48,6 +54,7 @@ public class ResidentRole extends Role implements Resident
 	private HousingGui home;
 	private HousingGui landlordHome;
 	private ResidentGui gui;
+	private boolean sitting = false;
 
 	public ResidentRole()
 	{
@@ -56,9 +63,9 @@ public class ResidentRole extends Role implements Resident
 		foodInFridge.add(new ItemOrder("Pizza", 1));
 		foodInFridge.add(new ItemOrder("Chicken", 1));
 		foodInFridge.add(new ItemOrder("Steak", 1));
-		locations.put("Fridge", new Point(220, 140));
+		locations.put("Fridge", new Point(200, 140));
 		locations.put("Stove", new Point(60, 140));
-		locations.put("Table", new Point(100, 340));
+		locations.put("Table", new Point(80, 340));
 		locations.put("Sofa", new Point(360, 240));
 		locations.put("Doorway", new Point(480, 240));
 		locations.put("Exit", new Point(480, 260));
@@ -86,11 +93,13 @@ public class ResidentRole extends Role implements Resident
 //Messages
 	public void msgRentDue() //from Landlord
 	{
+		AlertLog.getInstance().logMessage(AlertTag.BANK, name, "received msgRentDue");
 		log.add(new LoggedEvent("Received msgRentDue from Landlord. Setting person.rentDue"));
 		person.setRentDue(true);
 	}
 	public void msgAtLandlord() //from Person
 	{
+		AlertLog.getInstance().logMessage(AlertTag.BANK, name, "received msgAtLandlord");
 		log.add(new LoggedEvent("Received msgAtLandlord from Person. State.atLandlord, Command.talkToLandlord"));
 		state = ResidentState.atLandlord;
 		gui.setGui(landlordHome);
@@ -99,6 +108,7 @@ public class ResidentRole extends Role implements Resident
 	}
 	public void msgAmountOwed(int r) //from Landlord
 	{
+		AlertLog.getInstance().logMessage(AlertTag.BANK, name, "received msgAmountOwed. Rent = $" + r);
 		log.add(new LoggedEvent("Received msgAmountOwed from Landlord. Rent = $" + r + ", Command.payLandlord"));
 		commands.add(Command.payLandlord);
 		rent = r;
@@ -106,13 +116,14 @@ public class ResidentRole extends Role implements Resident
 	}
 	public void msgEat() //from Person
 	{
-		log.add(new LoggedEvent("Received msgEat from Person. Command.eat and maintenanceSchedule--"));
+		AlertLog.getInstance().logMessage(AlertTag.BANK, name, "received msgEat");
+		log.add(new LoggedEvent("Received msgEat from Person. Command.eat"));
 		commands.add(Command.eat);
-		maintenanceSchedule--;
 		stateChanged();
 	}
 	public void msgGroceries(List<ItemOrder> g) //from Person
 	{
+		AlertLog.getInstance().logMessage(AlertTag.BANK, name, "received msgGroceries. Number of grocery items = " + g.size());
 		log.add(new LoggedEvent("Received msgGroceries from Person. Number of grocery items = " + g.size() + ", Command.putAwayGroceries"));
 		commands.add(Command.putAwayGroceries);
 		groceries = g;
@@ -120,12 +131,14 @@ public class ResidentRole extends Role implements Resident
 	}
 	public void msgLeave() //from Person
 	{
+		AlertLog.getInstance().logMessage(AlertTag.BANK, name, "received msgLeave");
 		log.add(new LoggedEvent("Received msgLeave from Person. Command.leave"));
 		commands.add(Command.leave);
 		stateChanged();
 	}
 	public void msgImHome() //from Person
 	{
+		AlertLog.getInstance().logMessage(AlertTag.BANK, name, "received msgImHome");
 		log.add(new LoggedEvent("Received msgImHome from Person. State.atHome"));
 		state = ResidentState.atHome;
 		gui.setGui(home);
@@ -146,6 +159,7 @@ public class ResidentRole extends Role implements Resident
     		{
     			if(c == Command.putAwayGroceries)
     			{
+        			sitting = false;
     				putGroceriesInFridge(c);
         	    	return true;
     			}
@@ -154,6 +168,7 @@ public class ResidentRole extends Role implements Resident
     		{
     			if(c == Command.eat)
     			{
+        			sitting = false;
     				prepareFood(c);
         	    	return true;
     			}
@@ -162,20 +177,27 @@ public class ResidentRole extends Role implements Resident
     		{
     			if(c == Command.leave)
     			{
+        			sitting = false;
     				leaveHousing(c);
         	    	return true;
     			}
     		}
     		if(maintenanceSchedule <= 0)
     		{
+    			sitting = false;
     			clean();
     	    	return true;
     		}
-    		goToLocation(locations.get("Sofa"), "");
+    		if(commands.size() == 0 && !sitting)
+    		{
+    			sitting = true;
+    			goToLocation(locations.get("Sofa"), "");
+    		}
         	return false;
 		}
     	if(state == ResidentState.atLandlord)
 		{
+			sitting = false;
     		for(Command c : commands)
     		{
     			if(c == Command.talkToLandlord)
@@ -240,7 +262,10 @@ public class ResidentRole extends Role implements Resident
 	private void prepareFood(Command c)
 	{
 		commands.remove(c);
+		final Command com = Command.preparing;
+		commands.add(com);
 		goToLocation(locations.get("Fridge"), "Get food");
+		
 		ItemOrder food = foodInFridge.get(random.nextInt(foodInFridge.size()));
 		final List<ItemOrder> groceryList = new ArrayList<ItemOrder>();
 		for(ItemOrder i : foodInFridge)
@@ -264,7 +289,7 @@ public class ResidentRole extends Role implements Resident
 		goToLocation(locations.get("Stove"), "Cook");
 		if(unitTesting)
 		{
-			eat(groceryList);
+			eat(groceryList, com);
 		}
 		else
 		{
@@ -272,102 +297,55 @@ public class ResidentRole extends Role implements Resident
 				{
 					public void run()
 					{
-						eat(groceryList);
-					}
-				}, 10000);
-		}
-	}
-	public void eat(final List<ItemOrder> gList)
-	{
-		goToLocation(locations.get("Table"), "Eat");
-		if(unitTesting)
-		{
-			groceryCheck(gList);
-		}
-		else
-		{
-			timer.schedule(new TimerTask() 
-				{
-					public void run()
-					{
-						groceryCheck(gList);
+						eat(groceryList, com);
 					}
 				}, 5000);
 		}
 	}
-	public void groceryCheck(List<ItemOrder> gList)
+	public void eat(final List<ItemOrder> gList, Command c)
 	{
+		commands.remove(c);
+		final Command com = Command.eating;
+		commands.add(com);
+		goToLocation(locations.get("Table"), "Eat");
+		if(unitTesting)
+		{
+			groceryCheck(gList, com);
+		}
+		else
+		{
+			timer.schedule(new TimerTask() 
+				{
+					public void run()
+					{
+						groceryCheck(gList, com);
+					}
+				}, 2000);
+		}
+	}
+	public void groceryCheck(List<ItemOrder> gList, Command c)
+	{
+		commands.remove(c);
 		person.msgDoneEating();
 		if(gList.size() > 0)
 		{
 			person.msgFoodLow(gList);
 		}
+		maintenanceSchedule--;
 		stateChanged();
 	}
 	private void clean()
 	{
 		goToLocation(locations.get("Fridge"), "");
-		Do("Cleaning Fridge");
-		if(unitTesting)
-		{
-			goToLocation(locations.get("Stove"), "");
-		}
-		else
-		{
-			timer.schedule(new TimerTask() 
-				{
-					public void run()
-					{
-						goToLocation(locations.get("Stove"), "");
-					}
-				}, 1000);
-		}
-		Do("Cleaning Stove");
-		if(unitTesting)
-		{
-			goToLocation(locations.get("Table"), "");
-		}
-		else
-		{
-			timer.schedule(new TimerTask() 
-				{
-					public void run()
-					{
-						goToLocation(locations.get("Table"), "");
-					}
-				}, 1000);
-		}
-		Do("Cleaning Table");
-		if(unitTesting)
-		{
-			goToLocation(locations.get("Sofa"), "");
-		}
-		else
-		{
-			timer.schedule(new TimerTask() 
-				{
-					public void run()
-					{
-						goToLocation(locations.get("Sofa"), "");
-					}
-				}, 1000);
-		}
-		Do("Cleaning Sofa");
-		if(unitTesting)
-		{
-			goToLocation(locations.get("Doorway"), "");
-		}
-		else
-		{
-			timer.schedule(new TimerTask() 
-				{
-					public void run()
-					{
-						goToLocation(locations.get("Doorway"), "");
-					}
-				}, 1000);
-		}
-		Do("Cleaning Door");
+		AlertLog.getInstance().logMessage(AlertTag.BANK, name, "CLEANING FRIDGE");
+		goToLocation(locations.get("Stove"), "");
+		AlertLog.getInstance().logMessage(AlertTag.BANK, name, "CLEANING STOVE");
+		goToLocation(locations.get("Table"), "");
+		AlertLog.getInstance().logMessage(AlertTag.BANK, name, "CLEANING TABLE");
+		goToLocation(locations.get("Sofa"), "");
+		AlertLog.getInstance().logMessage(AlertTag.BANK, name, "CLEANING SOFA");
+		goToLocation(locations.get("Doorway"), "");
+		AlertLog.getInstance().logMessage(AlertTag.BANK, name, "CLEANING DOOR");
 		maintenanceSchedule = 3;
 		stateChanged();
 	}
@@ -384,6 +362,7 @@ public class ResidentRole extends Role implements Resident
 	{
 		if(!unitTesting)
 		{
+			AlertLog.getInstance().logMessage(AlertTag.BANK, name, "Doing " + s);
 			gui.doGoToLocation(p, s);
 			try
 			{

@@ -99,10 +99,8 @@ public class HousingGui extends BuildingGui implements HousingGuiInterface
 		boxes[11][14].setOpen(false); //tv
 		boxes[12][14].setOpen(false);
 		boxes[13][14].setOpen(false);
-		boxes[11][18].setOpen(false); //sofa
-		boxes[11][19].setOpen(false);
+		boxes[11][19].setOpen(false); //sofa
 		boxes[12][19].setOpen(false);
-		boxes[13][18].setOpen(false);
 		boxes[13][19].setOpen(false);
 		
 		for(int i = 0; i < 25; i++)
