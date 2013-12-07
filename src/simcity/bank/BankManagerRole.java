@@ -78,7 +78,7 @@ public class BankManagerRole extends JobRole implements BankManager  {
 	int bankMoney = 100;
 	private BankTeller teller;
 	private BankDepositor depositor;
-	// Cashier Status Data
+	//Teller data
 	int salary;
 	boolean working;
 	private myCustomer cust;
@@ -96,10 +96,9 @@ public class BankManagerRole extends JobRole implements BankManager  {
 	/* Messages */
 	
 	// Worker interactions (hiring, enter/exit shift, etc.)
-	public void msgHired(BankTeller t) {
-		Do("Manager has hired teller");
-		addTeller(t);
-	}
+	
+	
+	
 
 	public void msgStartShift() {
 		working = true;
@@ -123,7 +122,13 @@ public class BankManagerRole extends JobRole implements BankManager  {
 			}
 		}
 	
-
+	public void msgHired(BankTeller t) {
+		Do("Manager has hired teller");
+		addTeller(t);
+	}
+	
+	
+	
 	public void msgDoneForTheDay() {
 		bS = BankState.closing;
 	}
@@ -141,10 +146,10 @@ public class BankManagerRole extends JobRole implements BankManager  {
 	public void msgTransaction(BankDepositor c){
 		Do("Manager is adding customer to a list of waiting customers");
 		if(findCustomer(c) == null){
-			Do("no customer found, creating customer");
-			customers.add(new myCustomer(c, c.getName()));
+			Do("Customer does not have an account in bank, creating account");
+			customers.add(new myCustomer(c));
 		}	
-			Do("Customer found");
+			Do("Manager has accessed customer account");
 			findCustomer(c).cS = CustomerState.arrived;
 			waitingCustomers.add(c);
 			stateChanged();
@@ -157,10 +162,10 @@ public class BankManagerRole extends JobRole implements BankManager  {
 	
 	public void msgMarketTransaction(BankDepositor c){
 		Do("Manager is adding market to a list of waiting customers");
-		//BankManagerRole changes MAKE THE DAMN CHANGE
+		//BankManagerRole changes 
 		if(findCustomer(c) == null){
 			Do("No customer found, creating customer");
-			customers.add(new myCustomer(c, c.getName()));
+			customers.add(new myCustomer(c));
 		}
 		Do("Finding customer and changing state");
 			findCustomer(c).cS = CustomerState.marketArrived;
@@ -168,13 +173,29 @@ public class BankManagerRole extends JobRole implements BankManager  {
 		stateChanged();
 	}
 	
-	public void msgProcessTransaction(BankTeller t, BankDepositor c, int money){
+	public void msgProcessTransaction(BankTeller t, BankDepositor c, int transactionRequest){
 		Do("Bank manager is processing transaction");
 		teller = t;
-		findCustomer(c).cashInBank += money;
-		bankMoney += money;
-		findCustomer(c).cS = CustomerState.transactionProcessed;
-		stateChanged();
+		//Making withdrawal
+		if(transactionRequest < 0){
+			if(findCustomer(c).cashInBank < transactionRequest){
+				findCustomer(c).cS = CustomerState.transactionDenied;
+			}
+			else{
+				findCustomer(c).cashInBank = findCustomer(c).cashInBank - transactionRequest;
+				bankMoney = bankMoney - transactionRequest;
+				findCustomer(c).cS = CustomerState.transactionProcessed;
+				stateChanged();
+			}
+		}
+		//Making deposit
+		if(transactionRequest > 0){
+			findCustomer(c).cashInBank += transactionRequest;
+			bankMoney += transactionRequest;
+			findCustomer(c).cS = CustomerState.transactionProcessed;
+			stateChanged();
+		}
+		
 	}
 	public boolean pickAndExecuteAnAction() {
 		synchronized(customers){
@@ -183,6 +204,11 @@ public class BankManagerRole extends JobRole implements BankManager  {
 					
 					helpCustomer(waitingCustomers.get(0), findTeller());
 					return true;
+				}
+			}
+			for(myCustomer k : customers){
+				if(k.cS == CustomerState.transactionDenied){
+					transactionDenied(k.customer);
 				}
 			}
 			for(myCustomer x : customers){
@@ -239,13 +265,16 @@ public class BankManagerRole extends JobRole implements BankManager  {
 	private void helpCustomer(BankDepositor c, BankTeller t){
 		Do("Manager is finding a teller to help the customer");
 		waitingCustomers.remove(c);
-		t.msgHelpCustomer(c, findCustomer(c).cashInBank);
+		t.msgHelpCustomer(c);
 	}
 	
-	
+	private void transactionDenied(BankDepositor c){
+		Do("Manager has denid transaction, not enough funds");
+		teller.msgTransactionDenied(c);
+	}
 	private void transactionComplete(BankDepositor c) {
 		Do("Manager has successfully processed transaction");
-		teller.msgTransactionComplete(c);
+		teller.msgTransactionComplete(c, findCustomer(c).cashInBank);
 	}
 	
 	
@@ -261,19 +290,17 @@ public class BankManagerRole extends JobRole implements BankManager  {
 		String name;
 		CustomerState cS;
 
-	// 0 means deposit, 1 means withdrawal
-		myCustomer(BankDepositor c, String n){
-			cashInBank = 0;
-			name = n;
-			
+		myCustomer(BankDepositor c){
+			cashInBank = 0;			
 			
 		}
+		
 		public CustomerState getCustomerState(){
 			return cS;
 		}
 		
 	}
-	public enum CustomerState{marketArrived, arrived, marketHelped, beingHelped, marketLeaving, leaving, marketTransactionComplete, transactionProcessed};
+	public enum CustomerState{marketArrived, arrived, marketHelped, beingHelped, marketLeaving, leaving, marketTransactionComplete, transactionProcessed, transactionDenied};
 	
 
 	private myCustomer findCustomer(BankDepositor c){

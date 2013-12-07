@@ -15,10 +15,11 @@ public class BankManagerGui implements Gui {
 	private int xPos = 40, yPos = 40;
 	private int xDestination = 40, yDestination = 40;
 	private int xHome = -20, yHome = -20;
+	boolean releaseIt = false;
 	BankGui gui;
 	public BankManagerGui(BankManagerRole r){
 		this.role = r;
-		xPos = 40;
+		xPos = 45;
 		yPos = 40;
 		xDestination = 45;
 		yDestination = 40;
@@ -36,6 +37,7 @@ public class BankManagerGui implements Gui {
 			yPos++;
 		else if (yPos > yDestination)
 			yPos--;
+		
 	}
 	
 	public void draw(Graphics2D g){
