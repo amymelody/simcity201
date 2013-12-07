@@ -190,6 +190,11 @@ public class MockPerson extends Mock implements Person
 		// TODO Auto-generated method stub
 		return false;
 	}
+	
+	@Override
+	public void businessIsClosed(String b, boolean c)
+	{
+	}
 
 	@Override
 	public void stateChanged()

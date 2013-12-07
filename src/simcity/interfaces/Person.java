@@ -77,5 +77,7 @@ public interface Person {
 	
 	public abstract boolean businessOpen(String b);
 	
+	public abstract void businessIsClosed(String b, boolean c);
+	
 	public abstract void stateChanged();
 }

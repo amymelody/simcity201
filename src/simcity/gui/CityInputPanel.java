@@ -76,13 +76,13 @@ public class CityInputPanel extends JPanel implements ActionListener
 		busStops.add(stop2);
 		busStops.add(stop3);
 		busStops.add(stop4);
-		bus1.addBusStop(stop1, true);
+		bus1.addBusStop(stop1, false);
 		bus1.addBusStop(stop2, false);
 		bus1.addBusStop(stop3, false);
-		bus1.addBusStop(stop4, false);
+		bus1.addBusStop(stop4, true);
 		bus2.addBusStop(stop1, false);
-		bus2.addBusStop(stop2, false);
-		bus2.addBusStop(stop3, true);
+		bus2.addBusStop(stop2, true);
+		bus2.addBusStop(stop3, false);
 		bus2.addBusStop(stop4, false);
 		
 		for (BusAgent b : buses) {
@@ -188,8 +188,9 @@ public class CityInputPanel extends JPanel implements ActionListener
     	
     }
     
-    public void startBus() {
+    public void startBus(boolean bNN) {
     	for (BusAgent b : buses) {
+    		b.setNonNorm(bNN);
     		b.startThread();
     	}
     }
@@ -243,5 +244,11 @@ public class CityInputPanel extends JPanel implements ActionListener
 //        personList.add(temp);
 //        view.add(temp);
 //        validate();
+    }
+    
+    public void businessIsClosed(String building, boolean closed) {
+    	for (PersonAgent p : people) {
+    		p.setBusinessClosed(building, closed);
+    	}
     }
 }

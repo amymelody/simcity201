@@ -31,7 +31,6 @@ public class JoshRestaurantInputPanel extends JPanel
     private int numCustomers = 0;
 
     private JPanel restLabel = new JPanel();
-    private ListPanel customerPanel = new ListPanel(this, "Customers");
     private ListPanel waiterPanel = new ListPanel(this, "Waiters");
     private JPanel group = new JPanel();
 
@@ -65,7 +64,6 @@ public class JoshRestaurantInputPanel extends JPanel
         setLayout(new GridLayout(1, 2, 20, 20));
         group.setLayout(new GridLayout(1, 3, 10, 10));
 
-        group.add(customerPanel);
         group.add(waiterPanel);
 
         initRestLabel();
@@ -182,16 +180,7 @@ public class JoshRestaurantInputPanel extends JPanel
      */
     public void showInfo(String type, String name) {
 
-        if (type.equals("Customers")) {
-
-            for (int i = 0; i < customers.size(); i++) {
-                JoshCustomerRole temp = customers.get(i).cust;
-                if (temp.getName() == name)
-                    gui.updateInfoPanel(temp);
-            }
-        }
-        if (type.equals("Waiters")) {
-
+       if (type.equals("Waiters")) {
             for (int i = 0; i < waiters.size(); i++) {
                 JoshWaiterRole temp = waiters.get(i);
                 if (temp.getName() == name)

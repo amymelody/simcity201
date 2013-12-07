@@ -50,24 +50,22 @@ public class JoshRestaurantGui extends BuildingGui implements ActionListener {
     	
         //controlPanel.setLayout(new BorderLayout());
 
-        double inputFractionOfWindow = 350.0 / 650.0;
+        double inputFractionOfWindow = 150.0 / 650.0;
         Dimension inputDim = new Dimension((int)(WINDOWX * inputFractionOfWindow), WINDOWY);
         inputPanel.setPreferredSize(inputDim);
         inputPanel.setMinimumSize(inputDim);
         inputPanel.setMaximumSize(inputDim);
         //controlPanel.add(inputPanel, BorderLayout.CENTER);
         inputPanel.setVisible(false);
-        bG.add(inputPanel);
+        bG.add(inputPanel, BorderLayout.WEST);
         
-       // controlPanel.add(new JLabel("CHOOSE A SCENARIO"));
-        
-        double animFractionOfWindow = 300.0 / 650.0;
+        double animFractionOfWindow = 500.0 / 650.0;
         Dimension animDim = new Dimension((int)(WINDOWX * animFractionOfWindow), WINDOWY);
         animationPanel.setPreferredSize(animDim);
         animationPanel.setMinimumSize(animDim);
         animationPanel.setMaximumSize(animDim);
         animationPanel.setVisible(false);
-        bG.add(animationPanel);
+        bG.add(animationPanel, BorderLayout.CENTER);
         
         // Now, setup the info panel
 //        double infoFractionOfWindow = 100.0 / 500.0;

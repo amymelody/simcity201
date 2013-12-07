@@ -18,13 +18,13 @@ public class PersonGui implements Gui {
 
 	private static final int width = 10;
 	private static final int height = 10;
-	private int xPos = 60, yPos = 0;//default Person position
+	private int xPos = 0, yPos = 210;//default Person position
 	private int xGoal = xPos, yGoal = yPos;//default Person destination
 	private TrafficNode currentNode;
 	private String destination;
 	private String goalStop;
 	private Direction direction = Direction.Right;
-	private Font font = new Font("font", Font.PLAIN, 9);
+	private Font font = new Font("font", Font.PLAIN, 8);
 	
 	private enum Command {noCommand, GoToDestination, BoardBus};
 	private enum Direction {Left, Right, Up, Down};
@@ -34,10 +34,13 @@ public class PersonGui implements Gui {
 		agent = p;
 		gui = g;
 		city = c;
-		currentNode = gui.getTrafficNodes().get(1);
+		currentNode = gui.getTrafficNodes().get(12);
 	}
 
 	public void updatePosition() {
+		if (gui.getMoveBox(xPos, yPos).getHasVehicle()) {
+			AlertLog.getInstance().logMessage(AlertTag.PERSON, agent.getName(), "I've been hit!");
+		}
 		
 		if (city != null && destination != null && currentNode != null && (xPos == currentNode.x || xPos == currentNode.x2) && (yPos == currentNode.y || yPos == currentNode.y2)) {
 			if (city.getBuildingOrientation(destination).equals("horizontal")) {
@@ -292,11 +295,11 @@ public class PersonGui implements Gui {
 				text = "bT";
 				break;
 			}
-			g.setColor(Color.BLUE);
+			g.setColor(Color.YELLOW);
 			g.fillRect(xPos, yPos, width, height);
-			g.setColor(Color.WHITE);
+			g.setColor(Color.BLACK);
 			g.setFont(font);
-			g.drawString(text, xPos, yPos+10);
+			g.drawString(text, xPos-2, yPos+10);
 		}
 	}
 	

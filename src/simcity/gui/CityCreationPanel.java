@@ -271,6 +271,7 @@ public class CityCreationPanel extends JPanel //implements ActionListener
 		boolean testingAnimation = true;
 		boolean usingBus = false;
 		boolean goingHome = false;
+		boolean busNonNorm = false;
 		for(String key : cityConfig.stringPropertyNames()) {
 			if (key.equals("testingAnimation")) {
 				if (cityConfig.getProperty(key).equals("true")) {
@@ -291,6 +292,13 @@ public class CityCreationPanel extends JPanel //implements ActionListener
 					goingHome = true;
 				} else if (cityConfig.getProperty(key).equals("false")) {
 					goingHome = false;
+				}
+			}
+			if (key.equals("busNonNorm")) {
+				if (cityConfig.getProperty(key).equals("true")) {
+					busNonNorm = true;
+				} else if (cityConfig.getProperty(key).equals("false")) {
+					busNonNorm = false;
 				}
 			}
 			if (key.contains("name")) {
@@ -379,7 +387,7 @@ public class CityCreationPanel extends JPanel //implements ActionListener
 			inputPanel.addPerson(pI.name, pI.job, pI.pay, pI.start, pI.end, pI.eco, pI.physical, pI.housing, cityDirectory, testingAnimation, usingBus, goingHome);
 		}
 		cityDirectory.assignLandlord();
-		inputPanel.startBus();
+		inputPanel.startBus(busNonNorm);
 	}
 	
 	private class PersonInfo {

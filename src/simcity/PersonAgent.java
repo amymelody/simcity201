@@ -410,7 +410,11 @@ public class PersonAgent extends Agent implements Person
 		return banks.get(0);
 	}
 	
-//	public void businessIsClosed
+	public void businessIsClosed(String building, boolean closed) {
+		if (!unitTesting) {
+			cG.businessIsClosed(building, closed);
+		}
+	}
 	
 	public void setBusinessClosed(String building, boolean closed) {
 		if (building.contains("market")) {

@@ -41,6 +41,8 @@ public class BuildingsGui extends JFrame
 		cityGui = cG;
 		
 		setBounds(BUFFERSIDE, BUFFERTOP, WINDOWX, WINDOWY);
+		BorderLayout frameLayout = new BorderLayout();
+		setLayout(frameLayout);
 
 		// creation of buildings
 		MarketGui market1 = new MarketGui("market1", this, cd);
