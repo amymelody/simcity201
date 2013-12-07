@@ -75,5 +75,7 @@ public interface Person {
 	
 	public abstract String getDestination();
 	
+	public abstract boolean businessOpen(String b);
+	
 	public abstract void stateChanged();
 }

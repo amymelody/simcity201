@@ -73,6 +73,15 @@ public class BusAgent extends Agent implements Bus {
 		return name;
 	}
 	
+	public BusStop getCurrentStop() {
+		for (MyBusStop b : busStops) {
+			if (b.current) {
+				return b.busStop;
+			}
+		}
+		return null;
+	}
+	
 	public void addBusStop(BusStop b, boolean c) {
 		busStops.add(new MyBusStop(b,c));
 	}

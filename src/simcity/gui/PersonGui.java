@@ -1,6 +1,7 @@
 package simcity.gui;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Point;
 
@@ -17,12 +18,13 @@ public class PersonGui implements Gui {
 
 	private static final int width = 10;
 	private static final int height = 10;
-	private int xPos = 0, yPos = 0;//default Person position
+	private int xPos = 60, yPos = 0;//default Person position
 	private int xGoal = xPos, yGoal = yPos;//default Person destination
 	private TrafficNode currentNode;
 	private String destination;
 	private String goalStop;
 	private Direction direction = Direction.Right;
+	private Font font = new Font("font", Font.PLAIN, 9);
 	
 	private enum Command {noCommand, GoToDestination, BoardBus};
 	private enum Direction {Left, Right, Up, Down};
@@ -32,7 +34,7 @@ public class PersonGui implements Gui {
 		agent = p;
 		gui = g;
 		city = c;
-		currentNode = gui.getTrafficNodes().get(0);
+		currentNode = gui.getTrafficNodes().get(1);
 	}
 
 	public void updatePosition() {
@@ -250,9 +252,51 @@ public class PersonGui implements Gui {
 	}
 
 	public void draw(Graphics2D g) {
-		if (command != Command.noCommand) { 
+		if (command != Command.noCommand) {
+			String text = "";
+			switch(agent.getJob()) {
+			case "landlordRole":
+				text = "la";
+				break;
+			case "unemployed":
+				text = "u";
+				break;
+			case "restHostRole":
+				text = "rH";
+				break;
+			case "restWaiter1Role":
+				text = "rW";
+				break;
+			case "restWaiter2Role":
+				text = "rW";
+				break;
+			case "restCashierRole":
+				text = "rCa";
+				break;
+			case "restCookRole":
+				text = "rCo";
+				break;
+			case "marketEmployeeRole":
+				text = "mE";
+				break;
+			case "marketDelivererRole":
+				text = "mD";
+				break;
+			case "marketCashierRole":
+				text = "mC";
+				break;
+			case "bankManagerRole":
+				text = "bM";
+				break;
+			case "bankTellerRole":
+				text = "bT";
+				break;
+			}
 			g.setColor(Color.BLUE);
 			g.fillRect(xPos, yPos, width, height);
+			g.setColor(Color.WHITE);
+			g.setFont(font);
+			g.drawString(text, xPos, yPos+10);
 		}
 	}
 	

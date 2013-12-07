@@ -52,10 +52,10 @@ public class JoshWaiterGui implements Gui {
 		tablePositions.put(2, new Point(xTable + 2*tableWidth + WAITERWIDTH, yTable - WAITERWIDTH));
 		tablePositions.put(3, new Point(xTable + 4*tableWidth + WAITERWIDTH, yTable - WAITERWIDTH));
 		
-		foodSymbols.put("steak", "St");
-		foodSymbols.put("chicken", "C");
-		foodSymbols.put("pizza", "P");
-		foodSymbols.put("salad", "Sa");
+		foodSymbols.put("Steak", "St");
+		foodSymbols.put("Chicken", "C");
+		foodSymbols.put("Pizza", "P");
+		foodSymbols.put("Salad", "Sa");
     }
 
     public void updatePosition() {

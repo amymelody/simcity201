@@ -18,5 +18,7 @@ public interface BankDepositor {
 	public abstract void msgGoToTellerDesk();
 
 	
+	public abstract String getName();
+
 	
 }

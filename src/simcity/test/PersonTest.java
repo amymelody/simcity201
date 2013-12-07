@@ -49,6 +49,10 @@ public class PersonTest extends TestCase
 		person.msgCreatedAccount();
 		person.unitTesting = true;
 		person.setUsingBus(true);
+		
+		person.setBusinessClosed("joshRestaurant", false);
+		person.setBusinessClosed("bank1", false);
+		person.setBusinessClosed("market1", false);
 	}	
 	
 	public void testRestaurantCustomer()
@@ -313,7 +317,7 @@ public class PersonTest extends TestCase
 		
 		assertEquals("Person's location state should be market. It isn't", LocationState.market, person.state.getLState());
 		
-		assertEquals("Person's foodNeeded should be empty. It isn't.", 0, person.foodNeeded.size());
+		//assertEquals("Person's foodNeeded should be empty. It isn't.", 0, person.foodNeeded.size());
 		
 		assertTrue("MarketCust role should have logged \"Received msgOrderItems\" but didn't. His last event logged reads instead: " 
 				+ marketCust.log.getLastLoggedEvent().toString(), marketCust.log.containsString("Received msgOrderItems"));
@@ -322,6 +326,8 @@ public class PersonTest extends TestCase
 		
 		assertTrue("Person should have logged \"Received msgReceivedItems\" but didn't. His last event logged reads instead: " 
 				+ person.log.getLastLoggedEvent().toString(), person.log.containsString("Received msgReceivedItems"));
+		
+		assertEquals("Person's foodNeeded should be empty. It isn't.", 0, person.foodNeeded.size());
 		
 		assertTrue("Person should have logged \"Received msgExpense\" but didn't. His last event logged reads instead: " 
 				+ person.log.getLastLoggedEvent().toString(), person.log.containsString("Received msgExpense"));

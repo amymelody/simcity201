@@ -18,6 +18,7 @@ import simcity.PersonAgent.WorkingState;
 import simcity.mock.LoggedEvent;
 import simcity.role.JobRole;
 import simcity.role.Role;
+import simcity.interfaces.Bus;
 
 public interface Person {
 
@@ -38,8 +39,6 @@ public interface Person {
 	public abstract void msgExpense(int cost);
 
 	public abstract void msgReceivedItems(List<ItemOrder> items);
-
-	public abstract void msgBoughtCar(Car c);
 
 	public abstract void msgIncome(int cash);
 

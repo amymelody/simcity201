@@ -226,6 +226,8 @@ public class MarketCustomerRole extends Role implements MarketCustomer {
 		DoGetOut(); // animation
 		waitingChairX = 0;
 		waitingChairY = 0;
+		person.msgReceivedItems(items);
+		items = null;
 	}
 
 	private void updateInfo() {

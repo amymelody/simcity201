@@ -38,11 +38,9 @@ public class MarketGui extends BuildingGui
 		MarketCashierRole cashier;
 		if (n.equals("market1")) {
 			cashier = cD.getMarketCashiers().get(0);
-		} else if (n.equals("market2")) {
-			cashier = cD.getMarketCashiers().get(1);
 		} else {
-			cashier = cD.getMarketCashiers().get(2);
-		}
+			cashier = cD.getMarketCashiers().get(1);
+		} 
 		
 		animationPanel = new MarketAnimationPanel();
 		inputPanel = new MarketInputPanel(this, n, cashier);

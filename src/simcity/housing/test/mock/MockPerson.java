@@ -108,13 +108,6 @@ public class MockPerson extends Mock implements Person
 	}
 
 	@Override
-	public void msgBoughtCar(Car c)
-	{
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
 	public void msgCreatedAccount()
 	{
 		// TODO Auto-generated method stub
@@ -189,6 +182,13 @@ public class MockPerson extends Mock implements Person
 	{
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	@Override
+	public boolean businessOpen(String b)
+	{
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 	@Override
