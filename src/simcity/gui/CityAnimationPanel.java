@@ -33,7 +33,7 @@ import java.util.List;
 
 public class CityAnimationPanel extends JPanel implements ActionListener, MouseListener, MouseMotionListener
 {
-	static final int TIMERINCR = 400;
+	static final int TIMERINCR = 200;
 	private final int WINDOWX = 500;
 	private final int WINDOWY = 500;
 	private Image bufferImage;
