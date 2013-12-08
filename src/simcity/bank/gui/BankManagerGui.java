@@ -70,6 +70,7 @@ public class BankManagerGui implements Gui {
 	public void GoToHome(){
 		xDestination = 45;
 		yDestination = 50;
+		releaseIt = true;
 	}
 	
 	public void drawGun(String gun){

@@ -109,9 +109,10 @@ public class BankDepositorRole extends Role implements BankDepositor{
 	
 	
 	public void msgMakeWithdrawal(int cash){
-		AlertLog.getInstance().logMessage(AlertTag.BANK, name, "I want to make a withdrawal");
+		AlertLog.getInstance().logMessage(AlertTag.BANK, name, "I want to make a withdrawal. I have " + person.getMoney() + "right now.");
 		cS = CustomerState.makingTransaction;
-		transactionAmount = 0-cash;
+		transactionAmount = -cash;
+		AlertLog.getInstance().logMessage(AlertTag.BANK, name, "I want to make a withdrawal of " + transactionAmount);
 		stateChanged();
 	}
 	public void msgGoToTellerDesk(){
@@ -143,7 +144,7 @@ public class BankDepositorRole extends Role implements BankDepositor{
 		
 		if(market == false){
 			if(transactionAmount < 0){
-				person.msgIncome(transactionAmount);
+				person.msgIncome(-transactionAmount);
 			}
 			else if(transactionAmount > 0){
 		 	person.msgExpense(transactionAmount);
