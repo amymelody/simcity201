@@ -20,5 +20,6 @@ public abstract void msgTransaction(BankDepositor c);
 
 public abstract void msgProcessTransaction(BankTeller t, BankDepositor c, int cash);
 
+public abstract void msgProcessLoanRequest(BankTeller t, BankDepositor c);
 
 }

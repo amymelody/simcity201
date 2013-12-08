@@ -73,9 +73,9 @@ public class BankManagerRole extends JobRole implements BankManager  {
 	// BankState Status Data
 	int tellerSelection = 0;
 	
-	enum BankState {open, closing, closed};
+	enum BankState {open, closing, closed, checkingLoan};
 	BankState bS;
-	int bankMoney = 100;
+	int bankMoney = 1000;
 	private BankTeller teller;
 	private BankDepositor depositor;
 	//Teller data
@@ -198,6 +198,13 @@ public class BankManagerRole extends JobRole implements BankManager  {
 		}
 		
 	}
+	
+	public void msgProcessLoanRequest(BankTeller t, BankDepositor c){
+		teller = t;
+		findCustomer(c).cS = CustomerState.checkingLoan;
+		stateChanged();
+		
+	}
 	public boolean pickAndExecuteAnAction() {
 		synchronized(customers){
 			for(myCustomer c : customers){
@@ -210,6 +217,11 @@ public class BankManagerRole extends JobRole implements BankManager  {
 			for(myCustomer k : customers){
 				if(k.cS == CustomerState.transactionDenied){
 					transactionDenied(k.customer);
+				}
+			}
+			for(myCustomer b : customers){
+				if(b.cS == CustomerState.checkingLoan){
+					checkLoan(b.customer);
 				}
 			}
 			for(myCustomer x : customers){
@@ -283,7 +295,15 @@ public class BankManagerRole extends JobRole implements BankManager  {
 		teller.msgTransactionComplete(c, findCustomer(c).cashInBank);
 	}
 	
-	
+	private void checkLoan(BankDepositor c){
+		if(bankMoney > 300 && findCustomer(c).cashInBank == 0){
+			bankMoney = bankMoney - 100;
+			findCustomer(c).cashInBank += 100;
+			teller.msgLoanApproved(c, findCustomer(c).cashInBank);
+		}
+		else
+			teller.msgLoanDenied(c);
+	}
 	
 	
 	// Employee class (Cashier's view of employees)
@@ -310,7 +330,7 @@ public class BankManagerRole extends JobRole implements BankManager  {
 	}
 	public enum CustomerState{doingNothing, marketArrived, arrived, 
 		marketHelped, beingHelped, marketLeaving, leaving, 
-		marketTransactionComplete, transactionProcessed, transactionDenied, transactionComplete};
+		marketTransactionComplete, transactionProcessed, transactionDenied, checkingLoan, transactionComplete};
 	
 
 	private myCustomer findCustomer(BankDepositor c){

@@ -15,6 +15,8 @@ import simcity.bank.test.mock.MockBankManager;
 import simcity.interfaces.MarketCashier;
 import simcity.interfaces.MarketDeliverer;
 import simcity.role.Role;
+import simcity.trace.AlertLog;
+import simcity.trace.AlertTag;
 import simcity.ItemOrder;
 import simcity.PersonAgent;
 
@@ -61,7 +63,8 @@ public class BankDepositorRole extends Role implements BankDepositor{
 	BankManager manager;
 	
 	// Customer Status Data
-	public enum CustomerState {entered, makingRequest, makingTransaction, beingHelped, leaving, atManager, atTeller, out, waiting};
+	public enum CustomerState {entered, makingRequest, makingTransaction, beingHelped, 
+		leaving, atManager, atTeller, out, waiting, makingLoan};
 	CustomerState cS;
 	public CustomerState getCustomerState(){
 		return cS;
@@ -83,15 +86,15 @@ public class BankDepositorRole extends Role implements BankDepositor{
 	/* Messages */
 	public void msgMakeDeposit(int cash){
 		//Do("Person taking on role of bank depositor");
-		System.out.println("Bank depositor role taken on");
+		AlertLog.getInstance().logMessage(AlertTag.BANK, name, "Bank depositor wants to make a deposit");
 		cS = CustomerState.makingTransaction;
 		transactionAmount = cash;
 		stateChanged();
 	}
 	
-	public void msgMarketDeposit(int cash){
+	public void msgBusinessDeposit(int cash){
 		market = true;
-		Do("Market is depositing surplus into its bank account");
+		AlertLog.getInstance().logMessage(AlertTag.BANK, name, "I'm a business, I want to deposit surplus");
 		//mS = MarketState.entered;
 		cS = CustomerState.makingTransaction;
 		stateChanged();
@@ -99,7 +102,7 @@ public class BankDepositorRole extends Role implements BankDepositor{
 	
 	
 	public void msgMakeWithdrawal(int cash){
-		Do("Person taking on role of bank withdrawer");
+		AlertLog.getInstance().logMessage(AlertTag.BANK, name, "I want to make a withdrawal");
 		cS = CustomerState.makingTransaction;
 		transactionAmount = 0-cash;
 		stateChanged();
@@ -108,30 +111,39 @@ public class BankDepositorRole extends Role implements BankDepositor{
 		gui.GoToTeller();
 	}
 	public void msgMakeRequest(BankTeller t){
-		Do("Bank customer received message from teller to make a request");
+		AlertLog.getInstance().logMessage(AlertTag.BANK, name, "I'm making a request to teller");
 		this.teller = t;
 		cS = CustomerState.makingRequest;
 		stateChanged();
 	}
 	
 	public void msgCannotMakeTransaction(){
-		Do("Bank customer does not have enough money to make request. Please come back later.");
+		AlertLog.getInstance().logMessage(AlertTag.BANK, name, "Ok, I guess I'll make a loan");
+		
+		cS = CustomerState.makingLoan;
+		stateChanged();
+	}
+	
+	public void msgLoanDenied(){
 		cS = CustomerState.leaving;
 		stateChanged();
 	}
 	
 	public void msgTransactionComplete(){
-		Do("Bank customer received confirmation that his transaction is complete");
+		AlertLog.getInstance().logMessage(AlertTag.BANK, name, "I've received confirmation that my transaction was successful");
+
 		cS = CustomerState.leaving;
-		while(market = false){
-		if(transactionAmount < 0){
-			person.msgIncome(transactionAmount);
-		 if(transactionAmount > 0){
-		 	person.msgExpense(transactionAmount);
-			
+		
+		if(market == false){
+			if(transactionAmount < 0){
+				person.msgIncome(transactionAmount);
 			}
-		}
-		}
+			else if(transactionAmount > 0){
+		 	person.msgExpense(transactionAmount);
+			}
+			}
+		
+		
 		stateChanged();
 	}
 	
@@ -156,6 +168,11 @@ public class BankDepositorRole extends Role implements BankDepositor{
 			MakeTellerRequest();
 			return true;
 		}
+		if(cS == CustomerState.makingLoan){
+			cS = CustomerState.waiting;
+			MakeLoan();
+			return true;
+		}
 		
 		if(cS == CustomerState.leaving){
 			cS = CustomerState.out;
@@ -171,7 +188,7 @@ public class BankDepositorRole extends Role implements BankDepositor{
 	//Actions
 
 	public void MakeTransaction(){
-		Do("Bank customer is going to manager");
+		AlertLog.getInstance().logMessage(AlertTag.BANK, name, "I'm going to the managers desk");
 		DoGoToManager();
 		
 		try {
@@ -187,9 +204,11 @@ public class BankDepositorRole extends Role implements BankDepositor{
 		teller.msgMakeRequest(this, transactionAmount);
 		cS = CustomerState.beingHelped;
 	}
-	
+	public void MakeLoan(){
+		teller.msgMakeLoanRequest(this);
+	}
 	public void Leaving(){
-		Do("Goodbye.");
+		AlertLog.getInstance().logMessage(AlertTag.BANK, name, "I'm leaving the bank");
 		DoLeaveBank();
 		try {
 			customerAnimation.acquire();
