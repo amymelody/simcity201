@@ -480,6 +480,30 @@ public class PersonAgent extends Agent implements Person
 		return false;
 	}
 	
+	public void addJobRole() {
+		if (job.role.equals("restWaiter1Role") || job.role.equals("restWaiter2Role")) {
+			if (job.jobRole instanceof RestWaiterRole) {
+				RestWaiterRole rW = (RestWaiterRole)(job.jobRole);
+				cG.addRestWaiter(rW);
+			}
+		}
+		if (job.role.equals("marketEmployeeRole")) {
+			MarketEmployeeRole e = (MarketEmployeeRole)(job.jobRole);
+			cG.addMarketEmployee(e);
+		}
+		if (job.role.equals("marketDelivererRole")) {
+			MarketDelivererRole d = (MarketDelivererRole)(job.jobRole);
+			cG.addMarketDeliverer(d);
+		}
+		if (job.role.equals("bankTellerRole")) {
+			BankTellerRole t = (BankTellerRole)(job.jobRole);
+			cG.addBankTeller(t);
+		}
+		if (job.role.equals("landlordRole")) {
+			LandlordRole l = (LandlordRole)(job.jobRole);
+		}
+	}
+	
 
 	//Messages
 
@@ -530,6 +554,7 @@ public class PersonAgent extends Agent implements Person
 	public void msgYoureHired(String role, int payrate, Map<Day,Time> startShifts, Map<Day,Time> endShifts) {
 		JobRole j = city.JobFactory(role);
 		addRole(j, role);
+<<<<<<< HEAD
 		job = new Job(j.getJobLocation(), role, payrate, startShifts, endShifts);
 		if (role.equals("restWaiter1Role") || role.equals("restWaiter2Role")) {
 			if (j instanceof RestWaiterRole) {
@@ -553,6 +578,9 @@ public class PersonAgent extends Agent implements Person
 			LandlordRole l = (LandlordRole)j;
 			cG.addLandlord(l, houses.get(0).location);
 		}
+=======
+		job = new Job(j, j.getJobLocation(), role, payrate, startShifts, endShifts);
+>>>>>>> master
 		stateChanged();
 	}
 	
@@ -627,6 +655,11 @@ public class PersonAgent extends Agent implements Person
 	public void msgBusIsHere(Bus b) {
         bus = b;
         stateChanged();
+	}
+	
+	public void msgGoodGuyAgain() {
+		log.add(new LoggedEvent("Received msgGoodGuyAgain"));
+		robber = false;
 	}
 	
 	public void msgAtDestination(String d) {
