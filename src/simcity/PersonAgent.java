@@ -66,6 +66,7 @@ public class PersonAgent extends Agent implements Person
 	private static final int nearDistance = 180;
 	private Job job;
 	private Time time = new Time(Day.Sun, 0, 0);
+	private boolean robber = false;
 
 	public enum NourishmentState {unknown, normal, gotHungry, hungry, full};
 	public enum LocationState {unknown, outside, leavingHouse, home, ownerHouse, restaurant, market, bank, atDestination};
@@ -506,6 +507,7 @@ public class PersonAgent extends Agent implements Person
 				AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "I now have $" + money);
 			}
 			if (name.equals("robber")) {
+				robber = true;
 				money = minBalance;
 				AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "I now have $" + money);
 			}
@@ -624,6 +626,10 @@ public class PersonAgent extends Agent implements Person
 	public void msgCreatedAccount() {
 		log.add(new LoggedEvent("Received msgCreatedAccount"));
 		haveBankAccount = true;
+	}
+	
+	public void msgGoodGuyAgain() {
+		robber = false;
 	}
 	
 	public void msgBusIsHere(Bus b) {
@@ -997,7 +1003,7 @@ public class PersonAgent extends Agent implements Person
 							mr.r.setPerson(this);
 							mr.active = true;
 							state.ls = LocationState.bank;
-							if (name.equals("robber")) {
+							if (robber) {
 								d.msgImARobber();
 							} else {
 								if (money >= maxBalance) {

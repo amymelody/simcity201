@@ -57,6 +57,13 @@ public class MockPerson extends Mock implements Person {
 		// TODO Auto-generated method stub
 		log.add(new LoggedEvent("Hired"));
 	}
+	
+	@Override
+	public void msgGoodGuyAgain()
+	{
+		// TODO Auto-generated method stub
+		
+	}
 
 	@Override
 	public void msgYoureHired(String jobLocation, String role, int payrate,

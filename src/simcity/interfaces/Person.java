@@ -47,6 +47,8 @@ public interface Person {
 	
 	public abstract void msgCreatedAccount();
 	
+	public abstract void msgGoodGuyAgain();
+	
 	public abstract void msgBusIsHere(Bus b);
 	
 	public abstract void msgAtDestination(String d);

@@ -75,7 +75,6 @@ public class ListPanel extends JPanel implements ActionListener {
             restPanel.showInfo(type, name);
             validate();
             AlertLog.getInstance().logMessage(AlertTag.JOSH_RESTAURANT, "listpanel", "Waiter added");
-            view.setVisible(true);
         }
     }
 }
