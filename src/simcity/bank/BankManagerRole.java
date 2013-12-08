@@ -122,9 +122,10 @@ public class BankManagerRole extends JobRole implements BankManager  {
 			}
 		}
 	
-	public void msgHired(BankTeller t) {
-		Do("Manager has hired teller");
-		addTeller(t);
+	public void msgHired(BankTeller t, int salary) {
+		//Do("Manager has hired teller");
+		//addTeller(t);
+		//Do("Size of tellers is: " + tellers.size());
 	}
 	
 	
@@ -133,11 +134,9 @@ public class BankManagerRole extends JobRole implements BankManager  {
 		bS = BankState.closing;
 	}
 
-	/*
-	public void msgHired(BankTellerRole t, int salary){
-		addTeller(t);
-	}
-	*/
+	
+	
+	
 	public void msgWereOpen(){
 		bS = BankState.open;
 	
@@ -149,9 +148,11 @@ public class BankManagerRole extends JobRole implements BankManager  {
 			Do("Customer does not have an account in bank, creating account");
 			customers.add(new myCustomer(c));
 		}	
+			
 			Do("Manager has accessed customer account");
-			findCustomer(c).cS = CustomerState.arrived;
 			waitingCustomers.add(c);
+
+			findCustomer(c).cS = CustomerState.arrived;
 			stateChanged();
 
 		}
@@ -202,7 +203,7 @@ public class BankManagerRole extends JobRole implements BankManager  {
 			for(myCustomer c : customers){
 				if(c.cS == CustomerState.arrived && !tellers.isEmpty()){
 					
-					helpCustomer(waitingCustomers.get(0), findTeller());
+					helpCustomer(c.customer, findTeller());
 					return true;
 				}
 			}
@@ -252,20 +253,24 @@ public class BankManagerRole extends JobRole implements BankManager  {
 	}
 	
 	private BankTeller findTeller () {
-		BankTeller t = tellers.get(tellerSelection%tellers.size()).t;
-		tellerSelection++;
-
-		if(findTeller(t).tS == TellerState.doingNothing){
-			return t;
+		
+		
+		for(myTeller t : tellers){
+			if(t.tS == TellerState.working){
+				Do("Teller  found");
+				return t.t;
+			}
 		}
+		
 		
 	return null;
 	}	
 	
 	private void helpCustomer(BankDepositor c, BankTeller t){
 		Do("Manager is finding a teller to help the customer");
-		waitingCustomers.remove(c);
+		findCustomer(c).cS = CustomerState.beingHelped;
 		t.msgHelpCustomer(c);
+		
 	}
 	
 	private void transactionDenied(BankDepositor c){
@@ -274,6 +279,7 @@ public class BankManagerRole extends JobRole implements BankManager  {
 	}
 	private void transactionComplete(BankDepositor c) {
 		Do("Manager has successfully processed transaction");
+		findCustomer(c).cS = CustomerState.transactionComplete;
 		teller.msgTransactionComplete(c, findCustomer(c).cashInBank);
 	}
 	
@@ -291,6 +297,8 @@ public class BankManagerRole extends JobRole implements BankManager  {
 		CustomerState cS;
 
 		myCustomer(BankDepositor c){
+			customer = c;
+			cS = CustomerState.doingNothing;
 			cashInBank = 0;			
 			
 		}
@@ -300,17 +308,20 @@ public class BankManagerRole extends JobRole implements BankManager  {
 		}
 		
 	}
-	public enum CustomerState{marketArrived, arrived, marketHelped, beingHelped, marketLeaving, leaving, marketTransactionComplete, transactionProcessed, transactionDenied};
+	public enum CustomerState{doingNothing, marketArrived, arrived, 
+		marketHelped, beingHelped, marketLeaving, leaving, 
+		marketTransactionComplete, transactionProcessed, transactionDenied, transactionComplete};
 	
 
 	private myCustomer findCustomer(BankDepositor c){
-	
+	synchronized(customers){
 		for(myCustomer mc : customers){
-			if(mc.customer == c){
+			if(mc.customer.equals(c)){
 				return mc;
 			}
 		}
-		return null;
+	}
+	return null;
 
 	}
 	private myTeller findTeller(BankTeller t){
@@ -327,7 +338,7 @@ public class BankManagerRole extends JobRole implements BankManager  {
 		String n;
 		myTeller(BankTeller teller, TellerState ts){
 			t = teller;
-			tS = ts;
+			tS = TellerState.doingNothing;
 		}
 	
 		public TellerState getTellerState(){
@@ -341,11 +352,12 @@ public class BankManagerRole extends JobRole implements BankManager  {
 		tellers.add(new myTeller(t, TellerState.doingNothing));
 	}
 
-	@Override
-	public void msgHired(BankTeller t, int salary) {
-		// TODO Auto-generated method stub
-		
-	}
+	
+
+	
+	
+
+	
 
 	
 }	

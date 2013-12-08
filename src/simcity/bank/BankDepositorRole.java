@@ -61,7 +61,7 @@ public class BankDepositorRole extends Role implements BankDepositor{
 	BankManager manager;
 	
 	// Customer Status Data
-	public enum CustomerState {entered, makingRequest, makingTransaction, beingHelped, leaving, atManager, atTeller, out};
+	public enum CustomerState {entered, makingRequest, makingTransaction, beingHelped, leaving, atManager, atTeller, out, waiting};
 	CustomerState cS;
 	public CustomerState getCustomerState(){
 		return cS;
@@ -147,14 +147,18 @@ public class BankDepositorRole extends Role implements BankDepositor{
 	public boolean pickAndExecuteAnAction() {
 		if(cS == CustomerState.makingTransaction) {
 			MakeTransaction();
+			cS = CustomerState.waiting;
 			return true;
 		}
 		if(cS == CustomerState.makingRequest){
+			cS = CustomerState.waiting;
+
 			MakeTellerRequest();
 			return true;
 		}
 		
 		if(cS == CustomerState.leaving){
+			cS = CustomerState.out;
 			Leaving();
 			return true;
 		}
@@ -192,7 +196,8 @@ public class BankDepositorRole extends Role implements BankDepositor{
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		cS = CustomerState.leaving;
+		person.msgLeftDestination(this);
+
 	}
 
 	/* Actions */

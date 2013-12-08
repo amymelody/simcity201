@@ -43,7 +43,8 @@ public class BankTellerRole extends JobRole implements BankTeller   {
 		}
 	}
 	
-	public enum CustomerState{waitingForTeller, makingRequest,broke, transactionComplete, waiting, leaving}
+	public enum CustomerState{waitingForTeller, makingRequest,broke, 
+		transactionComplete, waiting, leaving}
 	
 	private BankManager manager;
 	
@@ -125,23 +126,28 @@ public void msgTransactionDenied(BankDepositor c){
 ///SCHEDULER
 public boolean pickAndExecuteAnAction(){
 	for(myCustomer c : customers){
-		if(c.getCustomerState() == CustomerState.waitingForTeller){
+		if(c.cS == CustomerState.waitingForTeller){
+			c.cS = CustomerState.waiting;
 			helpCustomer(c.c);
+			
 		}
 	
 	}
 	for(myCustomer j : customers){
-		if(j.getCustomerState() == CustomerState.broke){
+		if(j.cS == CustomerState.broke){
+			j.cS = CustomerState.waiting;
 			transactionDenied(j.c);
 		}
 	}
 	for(myCustomer x : customers){
-		if(x.getCustomerState() == CustomerState.makingRequest){
+		if(x.cS == CustomerState.makingRequest){
+			x.cS = CustomerState.waiting;
 			makeTransaction(x.c);
 		}
 	}
 	for(myCustomer l : customers){
-		if(l.getCustomerState() == CustomerState.transactionComplete){
+		if(l.cS == CustomerState.transactionComplete){
+			l.cS = CustomerState.waiting;
 			transactionComplete(l.c, l.money);
 		}
 	}
