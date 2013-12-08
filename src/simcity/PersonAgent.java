@@ -485,6 +485,30 @@ public class PersonAgent extends Agent implements Person
 		return false;
 	}
 	
+	public void addJobRole() {
+		if (job.role.equals("restWaiter1Role") || job.role.equals("restWaiter2Role")) {
+			if (job.jobRole instanceof RestWaiterRole) {
+				RestWaiterRole rW = (RestWaiterRole)(job.jobRole);
+				cG.addRestWaiter(rW);
+			}
+		}
+		if (job.role.equals("marketEmployeeRole")) {
+			MarketEmployeeRole e = (MarketEmployeeRole)(job.jobRole);
+			cG.addMarketEmployee(e);
+		}
+		if (job.role.equals("marketDelivererRole")) {
+			MarketDelivererRole d = (MarketDelivererRole)(job.jobRole);
+			cG.addMarketDeliverer(d);
+		}
+		if (job.role.equals("bankTellerRole")) {
+			BankTellerRole t = (BankTellerRole)(job.jobRole);
+			cG.addBankTeller(t);
+		}
+		if (job.role.equals("landlordRole")) {
+			LandlordRole l = (LandlordRole)(job.jobRole);
+		}
+	}
+	
 
 	//Messages
 
@@ -542,30 +566,6 @@ public class PersonAgent extends Agent implements Person
 		addRole(j, role);
 		job = new Job(j, j.getJobLocation(), role, payrate, startShifts, endShifts);
 		stateChanged();
-	}
-	
-	public void addJobRole() {
-		if (job.role.equals("restWaiter1Role") || job.role.equals("restWaiter2Role")) {
-			if (job.jobRole instanceof RestWaiterRole) {
-				RestWaiterRole rW = (RestWaiterRole)(job.jobRole);
-				cG.addRestWaiter(rW);
-			}
-		}
-		if (job.role.equals("marketEmployeeRole")) {
-			MarketEmployeeRole e = (MarketEmployeeRole)(job.jobRole);
-			cG.addMarketEmployee(e);
-		}
-		if (job.role.equals("marketDelivererRole")) {
-			MarketDelivererRole d = (MarketDelivererRole)(job.jobRole);
-			cG.addMarketDeliverer(d);
-		}
-		if (job.role.equals("bankTellerRole")) {
-			BankTellerRole t = (BankTellerRole)(job.jobRole);
-			cG.addBankTeller(t);
-		}
-		if (job.role.equals("landlordRole")) {
-			LandlordRole l = (LandlordRole)(job.jobRole);
-		}
 	}
 	
 	public void msgYoureHired(String jobLocation, String role, int payrate, Map<Day,Time> startShifts, Map<Day,Time> endShifts) {
@@ -636,14 +636,14 @@ public class PersonAgent extends Agent implements Person
 		haveBankAccount = true;
 	}
 	
-	public void msgGoodGuyAgain() {
-		log.add(new LoggedEvent("Received msgGoodGuyAgain"));
-		robber = false;
-	}
-	
 	public void msgBusIsHere(Bus b) {
         bus = b;
         stateChanged();
+	}
+	
+	public void msgGoodGuyAgain() {
+		log.add(new LoggedEvent("Received msgGoodGuyAgain"));
+		robber = false;
 	}
 	
 	public void msgAtDestination(String d) {
