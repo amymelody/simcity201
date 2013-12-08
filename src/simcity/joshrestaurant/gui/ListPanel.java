@@ -2,6 +2,9 @@ package simcity.joshrestaurant.gui;
 
 import javax.swing.*;
 
+import simcity.trace.AlertLog;
+import simcity.trace.AlertTag;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.util.List;
@@ -71,6 +74,8 @@ public class ListPanel extends JPanel implements ActionListener {
             view.add(button);
             restPanel.showInfo(type, name);
             validate();
+            AlertLog.getInstance().logMessage(AlertTag.JOSH_RESTAURANT, "listpanel", "Waiter added");
+            view.setVisible(true);
         }
     }
 }

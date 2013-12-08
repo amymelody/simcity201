@@ -48,26 +48,7 @@ public class JoshRestaurantGui extends BuildingGui implements ActionListener {
         int WINDOWX = 650;
         int WINDOWY = 500;
     	
-        //controlPanel.setLayout(new BorderLayout());
-
         double controlFractionOfWindow = 150.0 / 650.0;
-        Dimension controlDim = new Dimension((int)(WINDOWX * controlFractionOfWindow), WINDOWY);
-        controlPanel.setPreferredSize(controlDim);
-        controlPanel.setMinimumSize(controlDim);
-        controlPanel.setMaximumSize(controlDim);
-        controlPanel.add(inputPanel, BorderLayout.CENTER);
-        controlPanel.setVisible(false);
-        bG.add(controlPanel, BorderLayout.WEST);
-        
-        double animFractionOfWindow = 500.0 / 650.0;
-        Dimension animDim = new Dimension((int)(WINDOWX * animFractionOfWindow), WINDOWY);
-        animationPanel.setPreferredSize(animDim);
-        animationPanel.setMinimumSize(animDim);
-        animationPanel.setMaximumSize(animDim);
-        animationPanel.setVisible(false);
-        bG.add(animationPanel, BorderLayout.CENTER);
-        
-        //Now, setup the info panel
         double infoFractionOfWindow = 100.0 / 500.0;
         Dimension infoDim = new Dimension((int)(WINDOWX * controlFractionOfWindow), (int)(WINDOWY * infoFractionOfWindow));
         infoPanel = new JPanel();
@@ -82,13 +63,30 @@ public class JoshRestaurantGui extends BuildingGui implements ActionListener {
         stateCB.setEnabled(false);
         stateCB.setVisible(false);
 
-        infoPanel.setLayout(new GridLayout(1, 3, 30, 0));
+        infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.PAGE_AXIS));
         
         infoLabel = new JTextField(); 
 
         infoPanel.add(infoLabel);
         infoPanel.add(stateCB);
+
+        Dimension controlDim = new Dimension((int)(WINDOWX * controlFractionOfWindow), WINDOWY);
+        controlPanel.setPreferredSize(controlDim);
+        controlPanel.setMinimumSize(controlDim);
+        controlPanel.setMaximumSize(controlDim);
+        controlPanel.setLayout(new BorderLayout());
         controlPanel.add(infoPanel, BorderLayout.NORTH);
+        controlPanel.add(inputPanel, BorderLayout.CENTER);
+        controlPanel.setVisible(false);
+        bG.add(controlPanel, BorderLayout.WEST);
+        
+        double animFractionOfWindow = 500.0 / 650.0;
+        Dimension animDim = new Dimension((int)(WINDOWX * animFractionOfWindow), WINDOWY);
+        animationPanel.setPreferredSize(animDim);
+        animationPanel.setMinimumSize(animDim);
+        animationPanel.setMaximumSize(animDim);
+        animationPanel.setVisible(false);
+        bG.add(animationPanel, BorderLayout.CENTER);
     }
     
     /**

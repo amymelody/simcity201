@@ -233,7 +233,7 @@ public class PersonGui implements Gui {
 				xPos += 10;
 			} 
 			
-			if (gui.getMoveBox(xPos, yPos).getHasVehicle()) {
+			if (gui.getMoveBox(xPos, yPos).getHasVehicle() && command != Command.BoardBus) {
 				AlertLog.getInstance().logMessage(AlertTag.PERSON, agent.getName(), "I've been hit!");
 				command = Command.Respawn;
 				gui.setBox(xPos, yPos, true);
