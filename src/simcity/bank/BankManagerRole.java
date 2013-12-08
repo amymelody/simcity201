@@ -157,13 +157,17 @@ public class BankManagerRole extends JobRole implements BankManager  {
 		if(findCustomer(c) == null){
 			AlertLog.getInstance().logMessage(AlertTag.BANK, name, "Customer does not have an account in bank, creating account");
 			customers.add(new myCustomer(c));
+			waitingCustomers.add(c);
+			findCustomer(c).cS = CustomerState.arrived;
+			stateChanged();
 		}	
+		else{
 			AlertLog.getInstance().logMessage(AlertTag.BANK, name, "Manager has accessed customer account");
 			waitingCustomers.add(c);
 
 			findCustomer(c).cS = CustomerState.arrived;
 			stateChanged();
-
+		}
 		}
 			
 		
@@ -189,23 +193,16 @@ public class BankManagerRole extends JobRole implements BankManager  {
 		teller = t;
 		//Making withdrawal
 		if(transactionRequest < 0){
-			if(findCustomer(c).cashInBank < transactionRequest){
+			if(findCustomer(c).cashInBank < -transactionRequest){
 				findCustomer(c).cS = CustomerState.transactionDenied;
 			}
+		}
 			else{
-				findCustomer(c).cashInBank = findCustomer(c).cashInBank - transactionRequest;
-				bankMoney = bankMoney - transactionRequest;
+				findCustomer(c).cashInBank += transactionRequest;
+				bankMoney += transactionRequest;
 				findCustomer(c).cS = CustomerState.transactionProcessed;
 				stateChanged();
 			}
-		}
-		//Making deposit
-		if(transactionRequest > 0){
-			findCustomer(c).cashInBank += transactionRequest;
-			bankMoney += transactionRequest;
-			findCustomer(c).cS = CustomerState.transactionProcessed;
-			stateChanged();
-		}
 		
 	}
 	
