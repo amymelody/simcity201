@@ -18,6 +18,7 @@ import simcity.interfaces.Bus;
 import simcity.interfaces.BusStop;
 import simcity.mock.LoggedEvent;
 import simcity.role.Role;
+import simcity.housing.LandlordRole;
 import simcity.housing.ResidentRole;
 import simcity.market.MarketCustomerRole;
 import simcity.bank.BankDepositorRole;
@@ -538,26 +539,32 @@ public class PersonAgent extends Agent implements Person
 	public void msgYoureHired(String role, int payrate, Map<Day,Time> startShifts, Map<Day,Time> endShifts) {
 		JobRole j = city.JobFactory(role);
 		addRole(j, role);
-		job = new Job(j.getJobLocation(), role, payrate, startShifts, endShifts);
-		if (role.equals("restWaiter1Role") || role.equals("restWaiter2Role")) {
-			if (j instanceof RestWaiterRole) {
-				RestWaiterRole rW = (RestWaiterRole)j;
+		job = new Job(j, j.getJobLocation(), role, payrate, startShifts, endShifts);
+		stateChanged();
+	}
+	
+	public void addJobRole() {
+		if (job.role.equals("restWaiter1Role") || job.role.equals("restWaiter2Role")) {
+			if (job.jobRole instanceof RestWaiterRole) {
+				RestWaiterRole rW = (RestWaiterRole)(job.jobRole);
 				cG.addRestWaiter(rW);
 			}
 		}
-		if (role.equals("marketEmployeeRole")) {
-			MarketEmployeeRole e = (MarketEmployeeRole)j;
+		if (job.role.equals("marketEmployeeRole")) {
+			MarketEmployeeRole e = (MarketEmployeeRole)(job.jobRole);
 			cG.addMarketEmployee(e);
 		}
-		if (role.equals("marketDelivererRole")) {
-			MarketDelivererRole d = (MarketDelivererRole)j;
+		if (job.role.equals("marketDelivererRole")) {
+			MarketDelivererRole d = (MarketDelivererRole)(job.jobRole);
 			cG.addMarketDeliverer(d);
 		}
-		if (role.equals("bankTellerRole")) {
-			BankTellerRole t = (BankTellerRole)j;
+		if (job.role.equals("bankTellerRole")) {
+			BankTellerRole t = (BankTellerRole)(job.jobRole);
 			cG.addBankTeller(t);
 		}
-		stateChanged();
+		if (job.role.equals("landlordRole")) {
+			LandlordRole l = (LandlordRole)(job.jobRole);
+		}
 	}
 	
 	public void msgYoureHired(String jobLocation, String role, int payrate, Map<Day,Time> startShifts, Map<Day,Time> endShifts) {
@@ -1134,6 +1141,32 @@ public class PersonAgent extends Agent implements Person
 	}
 
 	public class Job {
+		Job(JobRole j, String l, String r, int p, Map<Day,Time> startShifts, Map<Day,Time> endShifts) {
+			jobRole = j;
+			location = l;
+			role = r;
+			payrate = p;
+			this.startShifts = startShifts;
+			this.endShifts = endShifts;
+			switch (location) {
+				case "joshRestaurant": case "cherysRestaurant": case "alfredRestaurant": case "anjaliRestaurant": case "jesusRestaurant":
+					jobLocation = LocationState.restaurant;
+					break;
+				case "market1": case "market2":
+					jobLocation = LocationState.market;
+					break;
+				case "home":
+					jobLocation = LocationState.home;
+					break;
+				case "bank1": case "bank2":
+					endShifts.get(Day.Sun).hour = startShifts.get(Day.Sun).hour;	//Banks are closed on weekends
+					endShifts.get(Day.Sat).hour = startShifts.get(Day.Sat).hour;
+					jobLocation = LocationState.bank;
+					break;
+				default:
+					break;
+			}
+		}
 		Job(String l, String r, int p, Map<Day,Time> startShifts, Map<Day,Time> endShifts) {
 			location = l;
 			role = r;
@@ -1159,6 +1192,7 @@ public class PersonAgent extends Agent implements Person
 					break;
 			}
 		}
+		JobRole jobRole;
 		String role;
 		LocationState jobLocation;
 		String location;
