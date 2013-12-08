@@ -62,16 +62,18 @@ public class BankManagerGui implements Gui {
 	}
 	
 	public void GoToRobber(){
-		managerStatus.equals("Manager with GUN");
 		xDestination = 75;
 		yDestination = 75;
 		releaseIt = true;
 	}
 	
 	public void GoToHome(){
-		managerStatus.equals("Manager");
 		xDestination = 45;
 		yDestination = 50;
+	}
+	
+	public void drawGun(String gun){
+		managerStatus = gun;	
 	}
 	
 	public boolean isPresent() {

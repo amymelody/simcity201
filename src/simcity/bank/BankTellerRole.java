@@ -18,6 +18,7 @@ import simcity.bank.gui.BankTellerGui;
 import simcity.bank.interfaces.BankDepositor;
 import simcity.bank.interfaces.BankManager;
 import simcity.bank.interfaces.BankTeller;
+import simcity.interfaces.Person;
 import simcity.role.JobRole;
 import simcity.role.Role;
 import simcity.trace.AlertLog;
@@ -69,7 +70,7 @@ public class BankTellerRole extends JobRole implements BankTeller   {
 		return name;
 	}
 	
-	public void setPerson(PersonAgent p){
+	public void setPerson(Person p){
 		super.setPerson(p);
 		name = p.getName();
 	}
