@@ -4,6 +4,7 @@ import simcity.RestWaiterRole;
 import simcity.joshrestaurant.gui.JoshCookGui;
 import simcity.joshrestaurant.gui.JoshWaiterGui;
 import simcity.joshrestaurant.interfaces.JoshCustomer;
+import simcity.joshrestaurant.gui.JoshRestaurantGui;
 
 /**
  * Restaurant Waiter Role
@@ -11,6 +12,7 @@ import simcity.joshrestaurant.interfaces.JoshCustomer;
 public abstract class JoshWaiterRole extends RestWaiterRole {
 	public abstract void setGui(JoshWaiterGui gui);
 	public abstract void setGui(JoshCookGui gui);
+	public abstract void setRestGui(JoshRestaurantGui gui);
 	public abstract JoshWaiterGui getGui();
 	public abstract void setHost(JoshHostRole host);
 	public abstract void setCook(JoshCookRole cook);

@@ -7,8 +7,11 @@ import simcity.agent.Agent;
 import simcity.interfaces.Person;
 import simcity.interfaces.Bus;
 import simcity.interfaces.BusStop;
+import simcity.joshrestaurant.JoshCustomerRole.AgentEvent;
 import simcity.gui.BusGui;
 import simcity.mock.LoggedEvent;
+import simcity.trace.AlertLog;
+import simcity.trace.AlertTag;
 
 public class BusAgent extends Agent implements Bus {
 
@@ -16,12 +19,16 @@ public class BusAgent extends Agent implements Bus {
 	public enum PassengerState {Waiting, Boarding, OnBus}
 	
 	private static final int nearDistance = 180;
+	private static final int waitTime = 1000;
+	
 	private String name;
 	public String location; //hack used for unit testing
+	Timer timer = new Timer();
 	private BusState state = BusState.Leaving;
 	public List<Passenger> passengers = Collections.synchronizedList(new ArrayList<Passenger>());
 	public List<MyBusStop> busStops = Collections.synchronizedList(new ArrayList<MyBusStop>());
 	public boolean unitTesting;
+	private boolean nonNorm = false;
 	private BusGui busGui;
 	private Semaphore atStop = new Semaphore(0,true);
 	
@@ -93,6 +100,14 @@ public class BusAgent extends Agent implements Bus {
 	public void setCityDirectory(CityDirectory c) {
 		city = c;
 	}
+	
+	public void setNonNorm(boolean bNN) {
+		nonNorm = bNN;
+	}
+	
+	public boolean getNonNorm() {
+		return nonNorm;
+	}
 
 
 	//Messages
@@ -104,7 +119,7 @@ public class BusAgent extends Agent implements Bus {
 
 	public void msgHereArePassengers(List<Person> passengers) {
 		log.add(new LoggedEvent("Received msgHereArePassengers"));
-		if (passengers.isEmpty()) {
+		if (passengers.isEmpty() && unitTesting) {
 			state = BusState.Leaving;
 		} else {
 			for (Person p : passengers) {
@@ -216,6 +231,26 @@ public class BusAgent extends Agent implements Bus {
 					passengers.remove(passengers.get(i));
 				}
 			}
+		}
+		
+		if (!unitTesting) {
+			timer.schedule(new TimerTask() {
+				public void run() {
+					boolean everyoneOnBoard = true;
+					synchronized(passengers) {
+						for (Passenger passenger : passengers) {
+							if (passenger.state != PassengerState.OnBus) {
+								everyoneOnBoard = false;
+							}
+						}
+					}
+					if (everyoneOnBoard) {
+						state = BusState.Leaving;
+						stateChanged();
+					}
+				}
+			},
+			waitTime);//how long to wait before running task
 		}
 	}
 	

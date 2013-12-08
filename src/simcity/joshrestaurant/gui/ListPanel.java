@@ -1,6 +1,10 @@
 package simcity.joshrestaurant.gui;
 
 import javax.swing.*;
+
+import simcity.trace.AlertLog;
+import simcity.trace.AlertTag;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.util.List;
@@ -51,6 +55,26 @@ public class ListPanel extends JPanel implements ActionListener {
         for (JButton temp:list){
             if (e.getSource() == temp)
                 restPanel.showInfo(type, temp.getText());
+        }
+    }
+    
+    public void addPerson(String name) {
+        if (name != null) {
+            JButton button = new JButton(name);
+            button.setBackground(Color.white);
+
+            Dimension paneSize = pane.getSize();
+            Dimension buttonSize = new Dimension(paneSize.width - 20,
+                    (int) (paneSize.height / 7));
+            button.setPreferredSize(buttonSize);
+            button.setMinimumSize(buttonSize);
+            button.setMaximumSize(buttonSize);
+            button.addActionListener(this);
+            list.add(button);
+            view.add(button);
+            restPanel.showInfo(type, name);
+            validate();
+            AlertLog.getInstance().logMessage(AlertTag.JOSH_RESTAURANT, "listpanel", "Waiter added");
         }
     }
 }

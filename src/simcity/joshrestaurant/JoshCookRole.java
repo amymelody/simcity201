@@ -251,7 +251,7 @@ public class JoshCookRole extends RestCookRole {
 				}
 			}
 			
-			if (person.businessOpen(markets.get(index).marketName)) {
+			if (unitTesting || person.businessOpen(markets.get(index).marketName)) {
 				AlertLog.getInstance().logMessage(AlertTag.JOSH_RESTAURANT, name, "I am ordering from " + markets.get(index).market.getName());
 				for (ItemOrder io : itemOrders) {
 					AlertLog.getInstance().logMessage(AlertTag.JOSH_RESTAURANT, name, "I need " + io.getAmount() + " " + io.getFoodItem() + "s");

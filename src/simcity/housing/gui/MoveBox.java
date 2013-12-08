@@ -7,6 +7,7 @@ public class MoveBox
 	private int x;
 	private int y;
 	private boolean open;
+	private boolean hasVehicle;
 	
 	public MoveBox(int ix, int iy, int x, int y)
 	{
@@ -15,6 +16,7 @@ public class MoveBox
 		this.x = x;
 		this.y = y;
 		open = true;
+		hasVehicle = false;
 	}
 
 	public int getX()
@@ -40,5 +42,13 @@ public class MoveBox
 	public void setOpen(boolean tf)
 	{
 		open = tf;
+	}
+	public boolean getHasVehicle() 
+	{
+		return hasVehicle;
+	}
+	public void setHasVehicle(boolean tf)
+	{
+		hasVehicle = tf;
 	}
 }

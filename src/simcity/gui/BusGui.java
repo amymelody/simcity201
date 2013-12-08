@@ -45,97 +45,136 @@ public class BusGui implements Gui {
 
 	public void updatePosition() {
 		
-//		if (city != null && destination != null && xPos == currentNode.x && yPos == currentNode.y) {
-//			if (city.getBuildingOrientation(destination).equals("horizontal")) {
-//				if (yGoal < yPos) {
-//					currentNode = currentNode.getNorthNeighbor();
-//				} else if (yGoal > yPos) {
-//					currentNode = currentNode.getSouthNeighbor();
-//				} else if (xGoal < xPos) {
-//					currentNode = currentNode.getWestNeighbor();
-//				} else {
-//					currentNode = currentNode.getEastNeighbor();
-//				}
-//			}
-//			if (city.getBuildingOrientation(destination).equals("vertical")) {
-//				if (xGoal < xPos) {
-//					currentNode = currentNode.getWestNeighbor();
-//				} else if (xGoal > xPos) {
-//					currentNode = currentNode.getEastNeighbor();
-//				} else if (yGoal < yPos) {
-//					currentNode = currentNode.getNorthNeighbor();
-//				} else {
-//					currentNode = currentNode.getSouthNeighbor();
-//				}
-//			}
-//		}
-//		
 		if (destination != null) {
 			if (destination.equals("busStop1")) {
 				if (xPos > xGoal) {
-					if (gui.getMoveBox(xPos-20, yPos).getOpen() && gui.getMoveBox(xPos-10, yPos).getOpen()
+					if (agent.getNonNorm() || (gui.getMoveBox(xPos-20, yPos).getOpen() && gui.getMoveBox(xPos-10, yPos).getOpen()
 							&& gui.getMoveBox(xPos-20, yPos+10).getOpen() && gui.getMoveBox(xPos-10, yPos+10).getOpen()
 							&& gui.getMoveBox(xPos-20, yPos+20).getOpen() && gui.getMoveBox(xPos-10, yPos+20).getOpen()
-							&& gui.getMoveBox(xPos-20, yPos+30).getOpen() && gui.getMoveBox(xPos-10, yPos+30).getOpen()) {
+							&& gui.getMoveBox(xPos-20, yPos+30).getOpen() && gui.getMoveBox(xPos-10, yPos+30).getOpen())) {
+						gui.getMoveBox(xPos, yPos).setHasVehicle(false);
+						gui.getMoveBox(xPos, yPos+10).setHasVehicle(false);
+						gui.getMoveBox(xPos+10, yPos).setHasVehicle(false);
+						gui.getMoveBox(xPos+10, yPos+10).setHasVehicle(false);
 						xPos-=20;
+						gui.getMoveBox(xPos, yPos).setHasVehicle(true);
+						gui.getMoveBox(xPos, yPos+10).setHasVehicle(true);
+						gui.getMoveBox(xPos+10, yPos).setHasVehicle(true);
+						gui.getMoveBox(xPos+10, yPos+10).setHasVehicle(true);
 					}
 				} else if (yPos > yGoal) {
-					if (gui.getMoveBox(xPos, yPos-20).getOpen() && gui.getMoveBox(xPos, yPos-10).getOpen()
+					if (agent.getNonNorm() || (gui.getMoveBox(xPos, yPos-20).getOpen() && gui.getMoveBox(xPos, yPos-10).getOpen()
 							&& gui.getMoveBox(xPos+10, yPos-20).getOpen() && gui.getMoveBox(xPos+10, yPos-10).getOpen()
 							&& gui.getMoveBox(xPos-10, yPos-20).getOpen() && gui.getMoveBox(xPos-10, yPos-10).getOpen()
-							&& gui.getMoveBox(xPos-20, yPos-20).getOpen() && gui.getMoveBox(xPos-20, yPos-10).getOpen()) {
+							&& gui.getMoveBox(xPos-20, yPos-20).getOpen() && gui.getMoveBox(xPos-20, yPos-10).getOpen())) {
+						gui.getMoveBox(xPos, yPos).setHasVehicle(false);
+						gui.getMoveBox(xPos, yPos+10).setHasVehicle(false);
+						gui.getMoveBox(xPos+10, yPos).setHasVehicle(false);
+						gui.getMoveBox(xPos+10, yPos+10).setHasVehicle(false);
 						yPos-=20;
+						gui.getMoveBox(xPos, yPos).setHasVehicle(true);
+						gui.getMoveBox(xPos, yPos+10).setHasVehicle(true);
+						gui.getMoveBox(xPos+10, yPos).setHasVehicle(true);
+						gui.getMoveBox(xPos+10, yPos+10).setHasVehicle(true);
 					}
 				} 
 			}
 			if (destination.equals("busStop2")) {
 				if (yPos > yGoal) {
-					if (gui.getMoveBox(xPos, yPos-20).getOpen() && gui.getMoveBox(xPos, yPos-10).getOpen()
+					if (agent.getNonNorm() || (gui.getMoveBox(xPos, yPos-20).getOpen() && gui.getMoveBox(xPos, yPos-10).getOpen()
 							&& gui.getMoveBox(xPos+10, yPos-20).getOpen() && gui.getMoveBox(xPos+10, yPos-10).getOpen()
 							&& gui.getMoveBox(xPos-10, yPos-20).getOpen() && gui.getMoveBox(xPos-10, yPos-10).getOpen()
-							&& gui.getMoveBox(xPos-20, yPos-20).getOpen() && gui.getMoveBox(xPos-20, yPos-10).getOpen()) {
+							&& gui.getMoveBox(xPos-20, yPos-20).getOpen() && gui.getMoveBox(xPos-20, yPos-10).getOpen())) {
+						gui.getMoveBox(xPos, yPos).setHasVehicle(false);
+						gui.getMoveBox(xPos, yPos+10).setHasVehicle(false);
+						gui.getMoveBox(xPos+10, yPos).setHasVehicle(false);
+						gui.getMoveBox(xPos+10, yPos+10).setHasVehicle(false);
 						yPos-=20;
+						gui.getMoveBox(xPos, yPos).setHasVehicle(true);
+						gui.getMoveBox(xPos, yPos+10).setHasVehicle(true);
+						gui.getMoveBox(xPos+10, yPos).setHasVehicle(true);
+						gui.getMoveBox(xPos+10, yPos+10).setHasVehicle(true);
 					}
 				} else if (xPos < xGoal) {
-					if (gui.getMoveBox(xPos+20, yPos).getOpen() && gui.getMoveBox(xPos+30, yPos).getOpen()
+					if (agent.getNonNorm() || (gui.getMoveBox(xPos+20, yPos).getOpen() && gui.getMoveBox(xPos+30, yPos).getOpen()
 							&& gui.getMoveBox(xPos+20, yPos+10).getOpen() && gui.getMoveBox(xPos+30, yPos+10).getOpen()
 							&& gui.getMoveBox(xPos+20, yPos-10).getOpen() && gui.getMoveBox(xPos+30, yPos-10).getOpen()
-							&& gui.getMoveBox(xPos+20, yPos-20).getOpen() && gui.getMoveBox(xPos+30, yPos-20).getOpen()) {
+							&& gui.getMoveBox(xPos+20, yPos-20).getOpen() && gui.getMoveBox(xPos+30, yPos-20).getOpen())) {
+						gui.getMoveBox(xPos, yPos).setHasVehicle(false);
+						gui.getMoveBox(xPos, yPos+10).setHasVehicle(false);
+						gui.getMoveBox(xPos+10, yPos).setHasVehicle(false);
+						gui.getMoveBox(xPos+10, yPos+10).setHasVehicle(false);
 						xPos+=20;
+						gui.getMoveBox(xPos, yPos).setHasVehicle(true);
+						gui.getMoveBox(xPos, yPos+10).setHasVehicle(true);
+						gui.getMoveBox(xPos+10, yPos).setHasVehicle(true);
+						gui.getMoveBox(xPos+10, yPos+10).setHasVehicle(true);
 					}
 				} 
 			}
 			if (destination.equals("busStop3")) {
 				if (xPos < xGoal) {
-					if (gui.getMoveBox(xPos+20, yPos).getOpen() && gui.getMoveBox(xPos+30, yPos).getOpen()
+					if (agent.getNonNorm() || (gui.getMoveBox(xPos+20, yPos).getOpen() && gui.getMoveBox(xPos+30, yPos).getOpen()
 							&& gui.getMoveBox(xPos+20, yPos+10).getOpen() && gui.getMoveBox(xPos+30, yPos+10).getOpen()
 							&& gui.getMoveBox(xPos+20, yPos-10).getOpen() && gui.getMoveBox(xPos+30, yPos-10).getOpen()
-							&& gui.getMoveBox(xPos+20, yPos-20).getOpen() && gui.getMoveBox(xPos+30, yPos-20).getOpen()) {
+							&& gui.getMoveBox(xPos+20, yPos-20).getOpen() && gui.getMoveBox(xPos+30, yPos-20).getOpen())) {
+						gui.getMoveBox(xPos, yPos).setHasVehicle(false);
+						gui.getMoveBox(xPos, yPos+10).setHasVehicle(false);
+						gui.getMoveBox(xPos+10, yPos).setHasVehicle(false);
+						gui.getMoveBox(xPos+10, yPos+10).setHasVehicle(false);
 						xPos+=20;
+						gui.getMoveBox(xPos, yPos).setHasVehicle(true);
+						gui.getMoveBox(xPos, yPos+10).setHasVehicle(true);
+						gui.getMoveBox(xPos+10, yPos).setHasVehicle(true);
+						gui.getMoveBox(xPos+10, yPos+10).setHasVehicle(true);
 					}
 				} else if (yPos < yGoal) {
-					if (gui.getMoveBox(xPos, yPos+20).getOpen() && gui.getMoveBox(xPos, yPos+30).getOpen()
+					if (agent.getNonNorm() || (gui.getMoveBox(xPos, yPos+20).getOpen() && gui.getMoveBox(xPos, yPos+30).getOpen()
 							&& gui.getMoveBox(xPos+10, yPos+20).getOpen() && gui.getMoveBox(xPos+10, yPos+30).getOpen()
 							&& gui.getMoveBox(xPos+20, yPos+20).getOpen() && gui.getMoveBox(xPos+20, yPos+30).getOpen()
-							&& gui.getMoveBox(xPos+30, yPos+20).getOpen() && gui.getMoveBox(xPos+30, yPos+30).getOpen()) {
+							&& gui.getMoveBox(xPos+30, yPos+20).getOpen() && gui.getMoveBox(xPos+30, yPos+30).getOpen())) {
+						gui.getMoveBox(xPos, yPos).setHasVehicle(false);
+						gui.getMoveBox(xPos, yPos+10).setHasVehicle(false);
+						gui.getMoveBox(xPos+10, yPos).setHasVehicle(false);
+						gui.getMoveBox(xPos+10, yPos+10).setHasVehicle(false);
 						yPos+=20;
+						gui.getMoveBox(xPos, yPos).setHasVehicle(true);
+						gui.getMoveBox(xPos, yPos+10).setHasVehicle(true);
+						gui.getMoveBox(xPos+10, yPos).setHasVehicle(true);
+						gui.getMoveBox(xPos+10, yPos+10).setHasVehicle(true);
 					}
 				}
 			}
 			if (destination.equals("busStop4")) {
 				if (yPos < yGoal) {
-					if (gui.getMoveBox(xPos, yPos+20).getOpen() && gui.getMoveBox(xPos, yPos+30).getOpen()
+					if (agent.getNonNorm() || (gui.getMoveBox(xPos, yPos+20).getOpen() && gui.getMoveBox(xPos, yPos+30).getOpen()
 							&& gui.getMoveBox(xPos+10, yPos+20).getOpen() && gui.getMoveBox(xPos+10, yPos+30).getOpen()
 							&& gui.getMoveBox(xPos+20, yPos+20).getOpen() && gui.getMoveBox(xPos+20, yPos+30).getOpen()
-							&& gui.getMoveBox(xPos+30, yPos+20).getOpen() && gui.getMoveBox(xPos+30, yPos+30).getOpen()) {
+							&& gui.getMoveBox(xPos+30, yPos+20).getOpen() && gui.getMoveBox(xPos+30, yPos+30).getOpen())) {
+						gui.getMoveBox(xPos, yPos).setHasVehicle(false);
+						gui.getMoveBox(xPos, yPos+10).setHasVehicle(false);
+						gui.getMoveBox(xPos+10, yPos).setHasVehicle(false);
+						gui.getMoveBox(xPos+10, yPos+10).setHasVehicle(false);
 						yPos+=20;
+						gui.getMoveBox(xPos, yPos).setHasVehicle(true);
+						gui.getMoveBox(xPos, yPos+10).setHasVehicle(true);
+						gui.getMoveBox(xPos+10, yPos).setHasVehicle(true);
+						gui.getMoveBox(xPos+10, yPos+10).setHasVehicle(true);
 					}
 				} else if (xPos > xGoal) {
-					if (gui.getMoveBox(xPos-20, yPos).getOpen() && gui.getMoveBox(xPos-10, yPos).getOpen()
+					if (agent.getNonNorm() || (gui.getMoveBox(xPos-20, yPos).getOpen() && gui.getMoveBox(xPos-10, yPos).getOpen()
 							&& gui.getMoveBox(xPos-20, yPos+10).getOpen() && gui.getMoveBox(xPos-10, yPos+10).getOpen()
 							&& gui.getMoveBox(xPos-20, yPos+20).getOpen() && gui.getMoveBox(xPos-10, yPos+20).getOpen()
-							&& gui.getMoveBox(xPos-20, yPos+30).getOpen() && gui.getMoveBox(xPos-10, yPos+30).getOpen()) {
+							&& gui.getMoveBox(xPos-20, yPos+30).getOpen() && gui.getMoveBox(xPos-10, yPos+30).getOpen())) {
+						gui.getMoveBox(xPos, yPos).setHasVehicle(false);
+						gui.getMoveBox(xPos, yPos+10).setHasVehicle(false);
+						gui.getMoveBox(xPos+10, yPos).setHasVehicle(false);
+						gui.getMoveBox(xPos+10, yPos+10).setHasVehicle(false);
 						xPos-=20;
+						gui.getMoveBox(xPos, yPos).setHasVehicle(true);
+						gui.getMoveBox(xPos, yPos+10).setHasVehicle(true);
+						gui.getMoveBox(xPos+10, yPos).setHasVehicle(true);
+						gui.getMoveBox(xPos+10, yPos+10).setHasVehicle(true);
 					}
 				}
 			}

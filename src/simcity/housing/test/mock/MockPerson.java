@@ -69,6 +69,13 @@ public class MockPerson extends Mock implements Person
 		// TODO Auto-generated method stub
 		
 	}
+	
+	@Override
+	public void msgGoodGuyAgain()
+	{
+		// TODO Auto-generated method stub
+		
+	}
 
 	@Override
 	public void msgUpdateWatch(Day d, int h, int m)
@@ -189,6 +196,11 @@ public class MockPerson extends Mock implements Person
 	{
 		// TODO Auto-generated method stub
 		return false;
+	}
+	
+	@Override
+	public void businessIsClosed(String b, boolean c)
+	{
 	}
 
 	@Override

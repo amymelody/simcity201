@@ -47,6 +47,8 @@ public interface Person {
 	
 	public abstract void msgCreatedAccount();
 	
+	public abstract void msgGoodGuyAgain();
+	
 	public abstract void msgBusIsHere(Bus b);
 	
 	public abstract void msgAtDestination(String d);
@@ -76,6 +78,8 @@ public interface Person {
 	public abstract String getDestination();
 	
 	public abstract boolean businessOpen(String b);
+	
+	public abstract void businessIsClosed(String b, boolean c);
 	
 	public abstract void stateChanged();
 }

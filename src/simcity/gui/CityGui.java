@@ -73,39 +73,6 @@ public class CityGui extends JFrame
 			}
 		}
 		
-//		//intersections
-//		for (int i=0; i<3; i++) {
-//			for (int j=0; j<3; j++) {
-//				for (int x=2; x<6; x++) {
-//					for (int y=2; y<6; y++) {
-//						boxes[i*21 + x][j*21 + y].setOpen(false);
-//					}
-//				}
-//			}
-//		}
-//		
-//		//horizontal roads
-//		for (int i=0; i<2; i++) {
-//			for (int j=0; j<3; j++) {
-//				for (int x=8; x<21; x++) {
-//					for (int y=2; y<6; y++) {
-//						boxes[i*21 + x][j*21 + y].setOpen(false);
-//					}
-//				}
-//			}
-//		}
-//		
-//		//vertical roads
-//		for (int i=0; i<3; i++) {
-//			for (int j=0; j<2; j++) {
-//				for (int x=2; x<6; x++) {
-//					for (int y=8; y<21; y++) {
-//						boxes[i*21 + x][j*21 + y].setOpen(false);
-//					}
-//				}
-//			}
-//		}
-		
 		//buildings
 		for (int i=0; i<2; i++) {
 			for (int j=0; j<2; j++) {
@@ -251,5 +218,9 @@ public class CityGui extends JFrame
 	
 	public void addBankTeller(BankTellerRole t) {
 		animationPanel.addBankTeller(t);
+	}
+	
+	public void businessIsClosed(String building, boolean closed) {
+		inputPanel.businessIsClosed(building, closed);
 	}
 }

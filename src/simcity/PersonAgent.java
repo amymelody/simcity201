@@ -18,6 +18,7 @@ import simcity.interfaces.Bus;
 import simcity.interfaces.BusStop;
 import simcity.mock.LoggedEvent;
 import simcity.role.Role;
+import simcity.housing.LandlordRole;
 import simcity.housing.ResidentRole;
 import simcity.market.MarketCustomerRole;
 import simcity.bank.BankDepositorRole;
@@ -66,6 +67,7 @@ public class PersonAgent extends Agent implements Person
 	private static final int nearDistance = 180;
 	private Job job;
 	private Time time = new Time(Day.Sun, 0, 0);
+	private boolean robber = false;
 
 	public enum NourishmentState {unknown, normal, gotHungry, hungry, full};
 	public enum LocationState {unknown, outside, leavingHouse, home, ownerHouse, restaurant, market, bank, atDestination};
@@ -297,6 +299,7 @@ public class PersonAgent extends Agent implements Person
 //		if (job != null && destination.equals(job.location) && (time.plus(30)).greaterThanOrEqualTo(job.startShifts.get(time.getDay())) && !time.greaterThanOrEqualTo(job.endShifts.get(time.getDay()))) {
 //			return true;
 //		}
+		//
 		if (nearDestination(destination)) {
 			return false;
 		}
@@ -410,7 +413,11 @@ public class PersonAgent extends Agent implements Person
 		return banks.get(0);
 	}
 	
-//	public void businessIsClosed
+	public void businessIsClosed(String building, boolean closed) {
+		if (!unitTesting) {
+			cG.businessIsClosed(building, closed);
+		}
+	}
 	
 	public void setBusinessClosed(String building, boolean closed) {
 		if (building.contains("market")) {
@@ -478,6 +485,30 @@ public class PersonAgent extends Agent implements Person
 		return false;
 	}
 	
+	public void addJobRole() {
+		if (job.role.equals("restWaiter1Role") || job.role.equals("restWaiter2Role")) {
+			if (job.jobRole instanceof RestWaiterRole) {
+				RestWaiterRole rW = (RestWaiterRole)(job.jobRole);
+				cG.addRestWaiter(rW);
+			}
+		}
+		if (job.role.equals("marketEmployeeRole")) {
+			MarketEmployeeRole e = (MarketEmployeeRole)(job.jobRole);
+			cG.addMarketEmployee(e);
+		}
+		if (job.role.equals("marketDelivererRole")) {
+			MarketDelivererRole d = (MarketDelivererRole)(job.jobRole);
+			cG.addMarketDeliverer(d);
+		}
+		if (job.role.equals("bankTellerRole")) {
+			BankTellerRole t = (BankTellerRole)(job.jobRole);
+			cG.addBankTeller(t);
+		}
+		if (job.role.equals("landlordRole")) {
+			LandlordRole l = (LandlordRole)(job.jobRole);
+		}
+	}
+	
 
 	//Messages
 
@@ -499,7 +530,12 @@ public class PersonAgent extends Agent implements Person
 		if (time.getHour() == 7 && time.getMinute() == 0) {
 			if (name.equals("bankDepositor")) {
 				money += 600;
-				AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "$" + money);
+				AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "I now have $" + money);
+			}
+			if (name.equals("robber")) {
+				robber = true;
+				money = minBalance;
+				AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "I now have $" + money);
 			}
 			if (name.equals("marketCustomer")) {
 				foodNeeded.add(new ItemOrder("Steak",2));
@@ -528,25 +564,7 @@ public class PersonAgent extends Agent implements Person
 	public void msgYoureHired(String role, int payrate, Map<Day,Time> startShifts, Map<Day,Time> endShifts) {
 		JobRole j = city.JobFactory(role);
 		addRole(j, role);
-		job = new Job(j.getJobLocation(), role, payrate, startShifts, endShifts);
-		if (role.equals("restWaiter1Role") || role.equals("restWaiter2Role")) {
-			if (j instanceof RestWaiterRole) {
-				RestWaiterRole rW = (RestWaiterRole)j;
-				cG.addRestWaiter(rW);
-			}
-		}
-		if (role.equals("marketEmployeeRole")) {
-			MarketEmployeeRole e = (MarketEmployeeRole)j;
-			cG.addMarketEmployee(e);
-		}
-		if (role.equals("marketDelivererRole")) {
-			MarketDelivererRole d = (MarketDelivererRole)j;
-			cG.addMarketDeliverer(d);
-		}
-		if (role.equals("bankTellerRole")) {
-			BankTellerRole t = (BankTellerRole)j;
-			cG.addBankTeller(t);
-		}
+		job = new Job(j, j.getJobLocation(), role, payrate, startShifts, endShifts);
 		stateChanged();
 	}
 	
@@ -623,6 +641,11 @@ public class PersonAgent extends Agent implements Person
         stateChanged();
 	}
 	
+	public void msgGoodGuyAgain() {
+		log.add(new LoggedEvent("Received msgGoodGuyAgain"));
+		robber = false;
+	}
+	
 	public void msgAtDestination(String d) {
 		state.ts = TransportationState.walkingFromVehicle;
 		destination = d;
@@ -647,7 +670,7 @@ public class PersonAgent extends Agent implements Person
 				return true;
 			} 
 			if (state.ws == WorkingState.notWorking) {
-				if (money <= minBalance && haveBankAccount && state.ls != LocationState.bank) {
+				if (money <= minBalance && state.ls != LocationState.bank) {
 					Bank b;
 					if (destination != null && destination.contains("bank")) {
 						b = getBank(destination);
@@ -989,11 +1012,15 @@ public class PersonAgent extends Agent implements Person
 							mr.r.setPerson(this);
 							mr.active = true;
 							state.ls = LocationState.bank;
-							if (money >= maxBalance) {
-								d.msgMakeDeposit(money-minBalance-(maxBalance-minBalance)/2);
-							}
-							if (money <= minBalance) {
-								d.msgMakeWithdrawal(minBalance+(maxBalance-minBalance)/3-money);
+							if (robber) {
+								d.msgImARobber();
+							} else {
+								if (money >= maxBalance) {
+									d.msgMakeDeposit(money-minBalance-(maxBalance-minBalance)/2);
+								}
+								if (money <= minBalance) {
+									d.msgMakeWithdrawal(minBalance+(maxBalance-minBalance)/3-money);
+								}
 							}
 						}
 						return;
@@ -1115,6 +1142,32 @@ public class PersonAgent extends Agent implements Person
 	}
 
 	public class Job {
+		Job(JobRole j, String l, String r, int p, Map<Day,Time> startShifts, Map<Day,Time> endShifts) {
+			jobRole = j;
+			location = l;
+			role = r;
+			payrate = p;
+			this.startShifts = startShifts;
+			this.endShifts = endShifts;
+			switch (location) {
+				case "joshRestaurant": case "cherysRestaurant": case "alfredRestaurant": case "anjaliRestaurant": case "jesusRestaurant":
+					jobLocation = LocationState.restaurant;
+					break;
+				case "market1": case "market2":
+					jobLocation = LocationState.market;
+					break;
+				case "home":
+					jobLocation = LocationState.home;
+					break;
+				case "bank1": case "bank2":
+					endShifts.get(Day.Sun).hour = startShifts.get(Day.Sun).hour;	//Banks are closed on weekends
+					endShifts.get(Day.Sat).hour = startShifts.get(Day.Sat).hour;
+					jobLocation = LocationState.bank;
+					break;
+				default:
+					break;
+			}
+		}
 		Job(String l, String r, int p, Map<Day,Time> startShifts, Map<Day,Time> endShifts) {
 			location = l;
 			role = r;
@@ -1140,6 +1193,7 @@ public class PersonAgent extends Agent implements Person
 					break;
 			}
 		}
+		JobRole jobRole;
 		String role;
 		LocationState jobLocation;
 		String location;

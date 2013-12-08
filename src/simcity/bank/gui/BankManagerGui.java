@@ -16,6 +16,7 @@ public class BankManagerGui implements Gui {
 	private int xDestination = 40, yDestination = 40;
 	private int xHome = -20, yHome = -20;
 	boolean releaseIt = false;
+	private String managerStatus = "Manager";
 	BankGui gui;
 	public BankManagerGui(BankManagerRole r){
 		this.role = r;
@@ -37,13 +38,43 @@ public class BankManagerGui implements Gui {
 			yPos++;
 		else if (yPos > yDestination)
 			yPos--;
+		if(xPos == xDestination && yPos == yDestination){
+			{
+				if(releaseIt){
+					AtDestination();
+				}
+			
+				}
+				
+			}
 		
 	}
 	
 	public void draw(Graphics2D g){
 		g.setColor(Color.BLUE);
 		g.fillRect(xPos, yPos, 30, 30);
-		g.drawString("Manager", xPos, yPos);
+		g.drawString(managerStatus, xPos, yPos);
+	}
+	
+	public void AtDestination(){
+		role.msgAtDestination();
+		releaseIt = false;
+	}
+	
+	public void GoToRobber(){
+		xDestination = 75;
+		yDestination = 75;
+		releaseIt = true;
+	}
+	
+	public void GoToHome(){
+		xDestination = 45;
+		yDestination = 50;
+		releaseIt = true;
+	}
+	
+	public void drawGun(String gun){
+		managerStatus = gun;	
 	}
 	
 	public boolean isPresent() {

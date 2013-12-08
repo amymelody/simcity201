@@ -41,6 +41,8 @@ public class BuildingsGui extends JFrame
 		cityGui = cG;
 		
 		setBounds(BUFFERSIDE, BUFFERTOP, WINDOWX, WINDOWY);
+		BorderLayout frameLayout = new BorderLayout();
+		setLayout(frameLayout);
 
 		/* Creation of Buildings */
 		

@@ -18,19 +18,24 @@ import simcity.bank.gui.BankTellerGui;
 import simcity.bank.interfaces.BankDepositor;
 import simcity.bank.interfaces.BankManager;
 import simcity.bank.interfaces.BankTeller;
+import simcity.interfaces.Person;
 import simcity.role.JobRole;
 import simcity.role.Role;
+import simcity.trace.AlertLog;
+import simcity.trace.AlertTag;
 
 //
 public class BankTellerRole extends JobRole implements BankTeller   {
 
 	private String name;
 	boolean working;
+	
 	private class myCustomer{
 		BankDepositor c;
 		CustomerState cS;
 		String name;
 		int money;
+		int loanAmount;
 		int request;
 		
 		myCustomer(BankDepositor c, CustomerState state){
@@ -43,8 +48,8 @@ public class BankTellerRole extends JobRole implements BankTeller   {
 		}
 	}
 	
-	public enum CustomerState{waitingForTeller, makingRequest,broke, 
-		transactionComplete, waiting, leaving}
+	public enum CustomerState{waitingForTeller, makingRequest,broke, makingLoanRequest, 
+		transactionComplete, loanApproved, loanDenied, waiting, leaving}
 	
 	private BankManager manager;
 	
@@ -65,7 +70,7 @@ public class BankTellerRole extends JobRole implements BankTeller   {
 		return name;
 	}
 	
-	public void setPerson(PersonAgent p){
+	public void setPerson(Person p){
 		super.setPerson(p);
 		name = p.getName();
 	}
@@ -100,29 +105,47 @@ public class BankTellerRole extends JobRole implements BankTeller   {
 		person.msgEndShift();
 	}
 public void msgHelpCustomer(BankDepositor c){
-	Do("Teller is assigned to customer");
+	AlertLog.getInstance().logMessage(AlertTag.BANK, name, "I've been assigned a customer");
 	customers.add(new myCustomer(c, CustomerState.waitingForTeller));
 	stateChanged();
 }
 
 public void msgMakeRequest(BankDepositor c, int transaction){
+	AlertLog.getInstance().logMessage(AlertTag.BANK, name, "I've received my customers request.");
+
 		findCustomer(c).request = transaction;
 		findCustomer(c).cS = CustomerState.makingRequest;
 		stateChanged();
 }
+public void msgMakeLoanRequest(BankDepositor c){
+	AlertLog.getInstance().logMessage(AlertTag.BANK, name, "I've received my customers request to make a loan.");
+	findCustomer(c).cS = CustomerState.makingLoanRequest;
+	stateChanged();
+}
 
 public void msgTransactionComplete(BankDepositor c, int newCash){
-	Do("Teller received confirmation from manager that transaction was successful");
+	AlertLog.getInstance().logMessage(AlertTag.BANK, name, "I've received confirmation from manager that transaction was successful.");
 	findCustomer(c).money = newCash;
 	findCustomer(c).cS = CustomerState.transactionComplete;
 	stateChanged();
 }
 public void msgTransactionDenied(BankDepositor c){
-	Do("Sorry, your transaction was denied because you do not have enough funds to make this deposit");
+	AlertLog.getInstance().logMessage(AlertTag.BANK, name, "Your transaction was denied. You should make a loan.");
 	findCustomer(c).cS = CustomerState.broke;
 	stateChanged();
 }
 
+public void msgLoanApproved(BankDepositor c, int newBalance){
+	findCustomer(c).money = newBalance;
+	findCustomer(c).loanAmount = newBalance;
+	findCustomer(c).cS = CustomerState.loanApproved;
+	stateChanged();
+}
+
+public void msgLoanDenied(BankDepositor c){
+	findCustomer(c).cS = CustomerState.loanDenied;
+	stateChanged();
+}
 ///SCHEDULER
 public boolean pickAndExecuteAnAction(){
 	for(myCustomer c : customers){
@@ -145,11 +168,30 @@ public boolean pickAndExecuteAnAction(){
 			makeTransaction(x.c);
 		}
 	}
+	for(myCustomer b : customers){
+		if(b.cS == CustomerState.makingLoanRequest){
+			b.cS = CustomerState.waiting;
+			makeLoan(b.c);
+		}
+	}
+	for(myCustomer a : customers){
+		if(a.cS == CustomerState.loanApproved){
+			a.cS = CustomerState.waiting;
+			loanApproved(a.c);
+		}
+	}
+	for(myCustomer d : customers){
+		if(d.cS == CustomerState.loanDenied){
+			d.cS = CustomerState.waiting;
+			loanDenied(d.c);
+		}
+	}
 	for(myCustomer l : customers){
 		if(l.cS == CustomerState.transactionComplete){
 			l.cS = CustomerState.waiting;
 			transactionComplete(l.c, l.money);
 		}
+		
 	}
 
 	
@@ -180,14 +222,28 @@ private void makeTransaction(BankDepositor c){
 }
 
 private void transactionComplete(BankDepositor c, int newCash){
-	Do("Your new bank balance is: $" + newCash);
+	AlertLog.getInstance().logMessage(AlertTag.BANK, name, "Your transaction was successful. Your new bank balance is: $" + newCash);
 	c.msgTransactionComplete();
 }
 
 private void transactionDenied(BankDepositor c){
-	
 	c.msgCannotMakeTransaction();
 	
+}
+
+private void makeLoan(BankDepositor c){
+	manager.msgProcessLoanRequest(this, c);
+}
+
+private void loanApproved(BankDepositor c){
+	AlertLog.getInstance().logMessage(AlertTag.BANK, name, "Your loan has been approved. Your new bank balance is $" 
+			+ findCustomer(c).money + ". You have two years to repay this loan on 3% interest");
+	c.msgTransactionComplete();
+}
+
+private void loanDenied(BankDepositor c){
+	AlertLog.getInstance().logMessage(AlertTag.BANK, name, "Your loan has been denied, the bank does not have enough funds. Come back later. Sorry.");
+	c.msgLoanDenied();
 }
 private myCustomer findCustomer(BankDepositor c){
 	

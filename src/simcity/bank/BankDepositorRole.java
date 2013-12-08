@@ -15,6 +15,8 @@ import simcity.bank.test.mock.MockBankManager;
 import simcity.interfaces.MarketCashier;
 import simcity.interfaces.MarketDeliverer;
 import simcity.role.Role;
+import simcity.trace.AlertLog;
+import simcity.trace.AlertTag;
 import simcity.ItemOrder;
 import simcity.PersonAgent;
 
@@ -49,6 +51,12 @@ public class BankDepositorRole extends Role implements BankDepositor{
 	public void setGui(BankDepositorGui g) {
 		gui = g;
 	}
+	
+	public boolean robber = false;
+			
+	public boolean getRobberStatus(){
+		return robber;
+	}
 	/* Animation */
 	private Semaphore customerAnimation = new Semaphore(0, true);
 	BankDepositorGui gui;
@@ -61,8 +69,10 @@ public class BankDepositorRole extends Role implements BankDepositor{
 	BankManager manager;
 	
 	// Customer Status Data
-	public enum CustomerState {entered, makingRequest, makingTransaction, beingHelped, leaving, atManager, atTeller, out, waiting};
-	CustomerState cS;
+	public enum CustomerState {entered, makingRequest, makingTransaction, beingHelped, 
+		leaving, atManager, atTeller, out, waiting, makingLoan,
+		robberEntered, robAttempt, robberKilled, robberLeft};
+	CustomerState cS = CustomerState.entered;
 	public CustomerState getCustomerState(){
 		return cS;
 	}
@@ -83,15 +93,15 @@ public class BankDepositorRole extends Role implements BankDepositor{
 	/* Messages */
 	public void msgMakeDeposit(int cash){
 		//Do("Person taking on role of bank depositor");
-		System.out.println("Bank depositor role taken on");
+		AlertLog.getInstance().logMessage(AlertTag.BANK, name, "Bank depositor wants to make a deposit");
 		cS = CustomerState.makingTransaction;
 		transactionAmount = cash;
 		stateChanged();
 	}
 	
-	public void msgMarketDeposit(int cash){
+	public void msgBusinessDeposit(int cash){
 		market = true;
-		Do("Market is depositing surplus into its bank account");
+		AlertLog.getInstance().logMessage(AlertTag.BANK, name, "I'm a business, I want to deposit surplus");
 		//mS = MarketState.entered;
 		cS = CustomerState.makingTransaction;
 		stateChanged();
@@ -99,43 +109,70 @@ public class BankDepositorRole extends Role implements BankDepositor{
 	
 	
 	public void msgMakeWithdrawal(int cash){
-		Do("Person taking on role of bank withdrawer");
+		AlertLog.getInstance().logMessage(AlertTag.BANK, name, "I want to make a withdrawal. I have " + person.getMoney() + "right now.");
 		cS = CustomerState.makingTransaction;
-		transactionAmount = 0-cash;
+		transactionAmount = -cash;
+		AlertLog.getInstance().logMessage(AlertTag.BANK, name, "I want to make a withdrawal of " + transactionAmount);
 		stateChanged();
 	}
 	public void msgGoToTellerDesk(){
 		gui.GoToTeller();
 	}
 	public void msgMakeRequest(BankTeller t){
-		Do("Bank customer received message from teller to make a request");
+		AlertLog.getInstance().logMessage(AlertTag.BANK, name, "I'm making a request to teller");
 		this.teller = t;
 		cS = CustomerState.makingRequest;
 		stateChanged();
 	}
 	
 	public void msgCannotMakeTransaction(){
-		Do("Bank customer does not have enough money to make request. Please come back later.");
+		AlertLog.getInstance().logMessage(AlertTag.BANK, name, "Ok, I guess I'll make a loan");
+		
+		cS = CustomerState.makingLoan;
+		stateChanged();
+	}
+	
+	public void msgLoanDenied(){
 		cS = CustomerState.leaving;
 		stateChanged();
 	}
 	
 	public void msgTransactionComplete(){
-		Do("Bank customer received confirmation that his transaction is complete");
+		AlertLog.getInstance().logMessage(AlertTag.BANK, name, "I've received confirmation that my transaction was successful");
+
 		cS = CustomerState.leaving;
-		while(market = false){
-		if(transactionAmount < 0){
-			person.msgIncome(transactionAmount);
-		 if(transactionAmount > 0){
-		 	person.msgExpense(transactionAmount);
-			
+		
+		if(market == false){
+			if(transactionAmount < 0){
+				person.msgIncome(-transactionAmount);
 			}
-		}
-		}
+			else if(transactionAmount > 0){
+		 	person.msgExpense(transactionAmount);
+			}
+			}
+		
+		
 		stateChanged();
 	}
 	
 	
+	////Bank Robber scenario
+	
+	public void msgImARobber(){
+		robber = true;
+		cS = CustomerState.robberEntered;
+		stateChanged();
+	}
+	
+	public void msgYoureDead(){
+		cS = CustomerState.robberKilled;
+		stateChanged();
+	}
+	
+	public void msgLeaveMyBank(){
+		cS = CustomerState.leaving;
+		stateChanged();
+	}
 	/*Animation messages*/
 	public void msgAtDestination(){
 		customerAnimation.release();
@@ -156,13 +193,28 @@ public class BankDepositorRole extends Role implements BankDepositor{
 			MakeTellerRequest();
 			return true;
 		}
+		if(cS == CustomerState.makingLoan){
+			cS = CustomerState.waiting;
+			MakeLoan();
+			return true;
+		}
 		
 		if(cS == CustomerState.leaving){
 			cS = CustomerState.out;
 			Leaving();
 			return true;
 		}
-		
+		//For robber scenario
+		if(cS == CustomerState.robberEntered){
+			cS = CustomerState.waiting;
+			RobBank();
+			return true;
+		}
+		if(cS == CustomerState.robberKilled){
+			cS = CustomerState.waiting;
+			ReturnMoney();
+			return true;
+		}
 		
 		return false;
 	}
@@ -171,7 +223,7 @@ public class BankDepositorRole extends Role implements BankDepositor{
 	//Actions
 
 	public void MakeTransaction(){
-		Do("Bank customer is going to manager");
+		AlertLog.getInstance().logMessage(AlertTag.BANK, name, "I'm going to the managers desk");
 		DoGoToManager();
 		
 		try {
@@ -187,16 +239,41 @@ public class BankDepositorRole extends Role implements BankDepositor{
 		teller.msgMakeRequest(this, transactionAmount);
 		cS = CustomerState.beingHelped;
 	}
-	
+	public void MakeLoan(){
+		teller.msgMakeLoanRequest(this);
+	}
 	public void Leaving(){
-		Do("Goodbye.");
+		AlertLog.getInstance().logMessage(AlertTag.BANK, name, "I'm leaving the bank");
 		DoLeaveBank();
 		try {
 			customerAnimation.acquire();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+		if(this.robber){
+			this.robber = false;
+			person.msgGoodGuyAgain();
+		}
 		person.msgLeftDestination(this);
+		
+	}
+	
+	/////Rob bank actions
+	public void RobBank(){
+		gui.RobBank();
+		try {
+			customerAnimation.acquire();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		AlertLog.getInstance().logMessage(AlertTag.BANK, name, "I'm robbing the bank biotch");
+
+		manager.msgImRobbingYourBank(this, 300);
+	}
+	
+	public void ReturnMoney(){
+		manager.msgHeresYourMoneyBack(this, 300);
+		AlertLog.getInstance().logMessage(AlertTag.BANK, name, "Fine take your money back");
 
 	}
 
@@ -216,6 +293,10 @@ public class BankDepositorRole extends Role implements BankDepositor{
 		public BankDepositorGui getGui() {
 		
 			return gui;
+		}
+		
+		public void DoGoRobBank(){
+			gui.RobBank();
 		}
 		
 		public void setBankGui(BankGui g){

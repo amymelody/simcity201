@@ -4,6 +4,7 @@ import simcity.joshrestaurant.gui.JoshWaiterGui;
 import simcity.joshrestaurant.gui.JoshCookGui;
 import simcity.joshrestaurant.interfaces.JoshWaiter;
 import simcity.joshrestaurant.interfaces.JoshCustomer;
+import simcity.joshrestaurant.gui.JoshRestaurantGui;
 import simcity.interfaces.Person;
 import simcity.trace.AlertLog;
 import simcity.trace.AlertTag;
@@ -44,6 +45,7 @@ public class JoshSharedDataWaiterRole extends JoshWaiterRole implements JoshWait
 	
 	public JoshWaiterGui waiterGui = null;
 	public JoshCookGui cookGui = null;
+	public JoshRestaurantGui gui = null;
 
 	public JoshSharedDataWaiterRole() {
 		super();
@@ -80,6 +82,10 @@ public class JoshSharedDataWaiterRole extends JoshWaiterRole implements JoshWait
 	
 	public void setStand(RevolvingStandMonitor s) {
 		stand = s;
+	}
+	
+	public void setRestGui(JoshRestaurantGui gui) {
+		this.gui = gui;
 	}
 
 	public String getName() {
@@ -122,6 +128,7 @@ public class JoshSharedDataWaiterRole extends JoshWaiterRole implements JoshWait
 	public void msgStartShift() {
 		working = true;
 		state = WaiterState.GoingToWork;
+		gui.addPerson(name);
 		stateChanged();
 	}
 	
