@@ -72,7 +72,7 @@ public class BankDepositorRole extends Role implements BankDepositor{
 	public enum CustomerState {entered, makingRequest, makingTransaction, beingHelped, 
 		leaving, atManager, atTeller, out, waiting, makingLoan,
 		robberEntered, robAttempt, robberKilled, robberLeft};
-	CustomerState cS;
+	CustomerState cS = CustomerState.entered;
 	public CustomerState getCustomerState(){
 		return cS;
 	}
@@ -249,24 +249,30 @@ public class BankDepositorRole extends Role implements BankDepositor{
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+		if(this.robber){
+			person.msgGoodGuyAgain();
+		}
 		person.msgLeftDestination(this);
-
+		
 	}
 	
 	/////Rob bank actions
 	public void RobBank(){
-		
+		gui.RobBank();
 		try {
 			customerAnimation.acquire();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		
+		AlertLog.getInstance().logMessage(AlertTag.BANK, name, "I'm robbing the bank biotch");
+
 		manager.msgImRobbingYourBank(this, 300);
 	}
 	
 	public void ReturnMoney(){
 		manager.msgHeresYourMoneyBack(this, 300);
+		AlertLog.getInstance().logMessage(AlertTag.BANK, name, "Fine take your money back");
+
 	}
 
 	/* Actions */

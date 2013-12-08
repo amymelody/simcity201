@@ -11,7 +11,10 @@ import simcity.bank.gui.BankManagerGui;
 import simcity.bank.interfaces.BankDepositor;
 import simcity.bank.interfaces.BankManager;
 import simcity.bank.interfaces.BankTeller;
+import simcity.interfaces.Person;
 import simcity.role.JobRole;
+import simcity.trace.AlertLog;
+import simcity.trace.AlertTag;
 
 //Bank Manager Role
 public class BankManagerRole extends JobRole implements BankManager  {
@@ -34,7 +37,7 @@ public class BankManagerRole extends JobRole implements BankManager  {
 		return name;
 	}
 	
-	public void setPerson(PersonAgent p){
+	public void setPerson(Person p){
 		super.setPerson(p);
 		name = p.getName();
 	}
@@ -148,13 +151,14 @@ public class BankManagerRole extends JobRole implements BankManager  {
 	}
 	// Normative Scenario #1
 	public void msgTransaction(BankDepositor c){
-		Do("Manager is adding customer to a list of waiting customers");
+		AlertLog.getInstance().logMessage(AlertTag.BANK, name, "Manager is adding customer to a list of waiting customers");
+
+	
 		if(findCustomer(c) == null){
-			Do("Customer does not have an account in bank, creating account");
+			AlertLog.getInstance().logMessage(AlertTag.BANK, name, "Customer does not have an account in bank, creating account");
 			customers.add(new myCustomer(c));
 		}	
-			
-			Do("Manager has accessed customer account");
+			AlertLog.getInstance().logMessage(AlertTag.BANK, name, "Manager has accessed customer account");
 			waitingCustomers.add(c);
 
 			findCustomer(c).cS = CustomerState.arrived;
@@ -167,20 +171,21 @@ public class BankManagerRole extends JobRole implements BankManager  {
 
 	
 	public void msgMarketTransaction(BankDepositor c){
-		Do("Manager is adding market to a list of waiting customers");
+		AlertLog.getInstance().logMessage(AlertTag.BANK, name, "Manager is adding business to a list of waiting customers");
+
 		//BankManagerRole changes 
 		if(findCustomer(c) == null){
-			Do("No customer found, creating customer");
 			customers.add(new myCustomer(c));
 		}
-		Do("Finding customer and changing state");
+		AlertLog.getInstance().logMessage(AlertTag.BANK, name, "Finding customer and changing state");
+
 			findCustomer(c).cS = CustomerState.marketArrived;
 			waitingCustomers.add(c);
 		stateChanged();
 	}
 	
 	public void msgProcessTransaction(BankTeller t, BankDepositor c, int transactionRequest){
-		Do("Bank manager is processing transaction");
+		AlertLog.getInstance().logMessage(AlertTag.BANK, name, "Bank manager is processing transaction");
 		teller = t;
 		//Making withdrawal
 		if(transactionRequest < 0){
@@ -230,9 +235,6 @@ public class BankManagerRole extends JobRole implements BankManager  {
 		stateChanged();
 	}
 	
-	public void msgAllsGood(int cash){
-		//From security guard
-	}
 	
 	
 	/////SCHEDULER//////
@@ -240,29 +242,33 @@ public class BankManagerRole extends JobRole implements BankManager  {
 		synchronized(customers){
 			for(myCustomer c : customers){
 				if(c.cS == CustomerState.arrived && !tellers.isEmpty()){
-					
+					c.cS = CustomerState.nothing;
 					helpCustomer(c.customer, findTeller());
 					return true;
 				}
 			}
 			for(myCustomer k : customers){
 				if(k.cS == CustomerState.transactionDenied){
+					k.cS = CustomerState.nothing;
 					transactionDenied(k.customer);
 				}
 			}
 			for(myCustomer b : customers){
 				if(b.cS == CustomerState.checkingLoan){
+					b.cS = CustomerState.nothing;
 					checkLoan(b.customer);
 				}
 			}
 			for(myCustomer x : customers){
 				if(x.cS == CustomerState.transactionProcessed){
+					x.cS = CustomerState.nothing;
 					transactionComplete(x.customer);
 				}
 			}
 		
 			for(myCustomer j : customers){
 				if(j.cS == CustomerState.marketArrived && !tellers.isEmpty()){
+					j.cS = CustomerState.nothing;
 					helpCustomer(waitingCustomers.get(0), findTeller());
 					return true;
 				}
@@ -270,12 +276,14 @@ public class BankManagerRole extends JobRole implements BankManager  {
 			
 			for(myCustomer d : customers){
 				if(d.cS == CustomerState.robberArrived){
+					d.cS = CustomerState.nothing;
 					KillRobber(d.customer);
 					return true;
 				}
 			}
 			for(myCustomer e : customers){
 				if(e.cS == CustomerState.robberCaught){
+					e.cS = CustomerState.nothing;
 					ReturnToNormal(e.customer);
 					return true;
 				}
@@ -313,7 +321,7 @@ public class BankManagerRole extends JobRole implements BankManager  {
 		
 		for(myTeller t : tellers){
 			if(t.tS == TellerState.working){
-				Do("Teller  found");
+				AlertLog.getInstance().logMessage(AlertTag.BANK, name, "Teller found");
 				return t.t;
 			}
 		}
@@ -323,18 +331,21 @@ public class BankManagerRole extends JobRole implements BankManager  {
 	}	
 	
 	private void helpCustomer(BankDepositor c, BankTeller t){
-		Do("Manager is finding a teller to help the customer");
+		AlertLog.getInstance().logMessage(AlertTag.BANK, name, "Manager is finding a teller to help the customer");
 		findCustomer(c).cS = CustomerState.beingHelped;
 		t.msgHelpCustomer(c);
 		
 	}
 	
 	private void transactionDenied(BankDepositor c){
-		Do("Manager has denid transaction, not enough funds");
+		AlertLog.getInstance().logMessage(AlertTag.BANK, name, "Manager has denid transaction, not enough funds");
+
 		teller.msgTransactionDenied(c);
 	}
 	private void transactionComplete(BankDepositor c) {
-		Do("Manager has successfully processed transaction");
+		AlertLog.getInstance().logMessage(AlertTag.BANK, name, "Manager has successfully processed transaction");
+
+
 		findCustomer(c).cS = CustomerState.transactionComplete;
 		teller.msgTransactionComplete(c, findCustomer(c).cashInBank);
 	}
@@ -351,7 +362,10 @@ public class BankManagerRole extends JobRole implements BankManager  {
 	///Robber scenario
 	
 	private void KillRobber(BankDepositor c){
+		AlertLog.getInstance().logMessage(AlertTag.BANK, name, "I'm gonna kill that robber");
+
 		gui.GoToRobber();
+		gui.drawGun("Manager with GUN");
 		try {
 			managerAnimation.acquire();
 		} catch (InterruptedException e) {
@@ -361,8 +375,11 @@ public class BankManagerRole extends JobRole implements BankManager  {
 	}
 	
 	private void ReturnToNormal(BankDepositor c){
+		AlertLog.getInstance().logMessage(AlertTag.BANK, name, "Alright, everything is back to normal, robber is gone");
+
 		c.msgLeaveMyBank();
 		gui.GoToHome();
+		gui.drawGun("Manager");
 		try {
 			managerAnimation.acquire();
 		} catch (InterruptedException e) {
@@ -398,7 +415,7 @@ public class BankManagerRole extends JobRole implements BankManager  {
 	public enum CustomerState{doingNothing, marketArrived, arrived, 
 		marketHelped, beingHelped, marketLeaving, leaving, 
 		marketTransactionComplete, transactionProcessed, transactionDenied, checkingLoan, transactionComplete,
-		robberArrived, robberCaught, robberMoneyReturned, robberLeft};
+		robberArrived, robberCaught, robberMoneyReturned, robberLeft, nothing};
 	
 
 	private myCustomer findCustomer(BankDepositor c){
