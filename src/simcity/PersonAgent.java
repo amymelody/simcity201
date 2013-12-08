@@ -298,6 +298,7 @@ public class PersonAgent extends Agent implements Person
 //		if (job != null && destination.equals(job.location) && (time.plus(30)).greaterThanOrEqualTo(job.startShifts.get(time.getDay())) && !time.greaterThanOrEqualTo(job.endShifts.get(time.getDay()))) {
 //			return true;
 //		}
+		//
 		if (nearDestination(destination)) {
 			return false;
 		}
