@@ -19,6 +19,11 @@ public abstract void msgTransactionComplete(BankDepositor c, int cashInBank);
 public abstract void msgMakeRequest(BankDepositor c,
 		int transactionAmount);
 
+public abstract void msgMakeLoanRequest(BankDepositor c);
+
+public abstract void msgLoanApproved(BankDepositor c, int newBalance);
+
+public abstract void msgLoanDenied(BankDepositor c);
 public abstract void msgTransactionDenied(BankDepositor c);
 	
 }

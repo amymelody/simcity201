@@ -9,6 +9,8 @@ public interface BankDepositor {
 	
 	public abstract void msgMakeWithdrawal(int cash);
 	
+	public abstract void msgBusinessDeposit(int cash);
+	
 	public abstract void msgMakeRequest(BankTeller t);
 	
 	public abstract void msgCannotMakeTransaction();
@@ -17,6 +19,11 @@ public interface BankDepositor {
 
 	public abstract void msgGoToTellerDesk();
 
+	public abstract void msgLoanDenied();
+	
+	public abstract void msgYoureDead();
+	
+	public abstract void msgLeaveMyBank();
 	
 	public abstract String getName();
 
