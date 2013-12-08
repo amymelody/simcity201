@@ -503,7 +503,11 @@ public class PersonAgent extends Agent implements Person
 		if (time.getHour() == 7 && time.getMinute() == 0) {
 			if (name.equals("bankDepositor")) {
 				money += 600;
-				AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "$" + money);
+				AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "I now have $" + money);
+			}
+			if (name.equals("robber")) {
+				money = minBalance;
+				AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "I now have $" + money);
 			}
 			if (name.equals("marketCustomer")) {
 				foodNeeded.add(new ItemOrder("Steak",2));
@@ -651,7 +655,7 @@ public class PersonAgent extends Agent implements Person
 				return true;
 			} 
 			if (state.ws == WorkingState.notWorking) {
-				if (money <= minBalance && haveBankAccount && state.ls != LocationState.bank) {
+				if (money <= minBalance && state.ls != LocationState.bank) {
 					Bank b;
 					if (destination != null && destination.contains("bank")) {
 						b = getBank(destination);
@@ -993,11 +997,15 @@ public class PersonAgent extends Agent implements Person
 							mr.r.setPerson(this);
 							mr.active = true;
 							state.ls = LocationState.bank;
-							if (money >= maxBalance) {
-								d.msgMakeDeposit(money-minBalance-(maxBalance-minBalance)/2);
-							}
-							if (money <= minBalance) {
-								d.msgMakeWithdrawal(minBalance+(maxBalance-minBalance)/3-money);
+							if (name.equals("robber")) {
+								d.msgImARobber();
+							} else {
+								if (money >= maxBalance) {
+									d.msgMakeDeposit(money-minBalance-(maxBalance-minBalance)/2);
+								}
+								if (money <= minBalance) {
+									d.msgMakeWithdrawal(minBalance+(maxBalance-minBalance)/3-money);
+								}
 							}
 						}
 						return;

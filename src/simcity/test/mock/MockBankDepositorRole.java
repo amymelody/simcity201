@@ -25,6 +25,16 @@ public class MockBankDepositorRole extends Role implements BankDepositor {
 	
 	public void msgMakeRequest(BankTeller t) {};
 	
+	public void msgImARobber() {};
+	
+	public void msgLoanDenied() {};
+	
+	public void msgLeaveMyBank() {};
+	
+	public void msgYoureDead() {};
+	
+	public void msgBusinessDeposit(int amt) {};
+	
 	public void msgMakeDeposit(int amount) {
 		log.add(new LoggedEvent("Received msgMakeDeposit. Amount = $" + amount));
 		deposit = amount;
