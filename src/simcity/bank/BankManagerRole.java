@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.concurrent.Semaphore;
 
 import simcity.PersonAgent;
+import simcity.bank.gui.BankDepositorGui;
 import simcity.bank.gui.BankManagerGui;
 import simcity.bank.interfaces.BankDepositor;
 import simcity.bank.interfaces.BankManager;
@@ -73,17 +74,19 @@ public class BankManagerRole extends JobRole implements BankManager  {
 	// BankState Status Data
 	int tellerSelection = 0;
 	
-	enum BankState {open, closing, closed};
+	enum BankState {open, closing, closed, checkingLoan};
 	BankState bS;
-	int bankMoney = 100;
+	int bankMoney = 1000;
 	private BankTeller teller;
 	private BankDepositor depositor;
 	//Teller data
 	int salary;
 	boolean working;
 	private myCustomer cust;
+	
 	private Semaphore managerAnimation = new Semaphore(0,true);
 	BankManagerGui gui = new BankManagerGui(this);
+	
 	public void setGui(BankManagerGui g){
 		gui = g;
 	}
@@ -97,7 +100,9 @@ public class BankManagerRole extends JobRole implements BankManager  {
 	
 	// Worker interactions (hiring, enter/exit shift, etc.)
 	
-	
+	public void msgAtDestination(){
+		managerAnimation.release();
+	}
 	
 
 	public void msgStartShift() {
@@ -198,6 +203,39 @@ public class BankManagerRole extends JobRole implements BankManager  {
 		}
 		
 	}
+	
+	public void msgProcessLoanRequest(BankTeller t, BankDepositor c){
+		teller = t;
+		findCustomer(c).cS = CustomerState.checkingLoan;
+		stateChanged();
+		
+	}
+	
+	
+	///Non norm with robber
+	
+	public void msgImRobbingYourBank(BankDepositor c, int cash){
+		if(findCustomer(c) == null){
+			customers.add(new myCustomer(c));
+		}
+			findCustomer(c).cS = CustomerState.robberArrived;
+			findCustomer(c).robber = true;
+			bankMoney = bankMoney - cash;
+		stateChanged();
+	}
+	
+	public void msgHeresYourMoneyBack(BankDepositor c, int cash){
+		findCustomer(c).cS = CustomerState.robberCaught;
+		bankMoney += cash;
+		stateChanged();
+	}
+	
+	public void msgAllsGood(int cash){
+		//From security guard
+	}
+	
+	
+	/////SCHEDULER//////
 	public boolean pickAndExecuteAnAction() {
 		synchronized(customers){
 			for(myCustomer c : customers){
@@ -212,23 +250,41 @@ public class BankManagerRole extends JobRole implements BankManager  {
 					transactionDenied(k.customer);
 				}
 			}
+			for(myCustomer b : customers){
+				if(b.cS == CustomerState.checkingLoan){
+					checkLoan(b.customer);
+				}
+			}
 			for(myCustomer x : customers){
 				if(x.cS == CustomerState.transactionProcessed){
 					transactionComplete(x.customer);
 				}
 			}
-		}
 		
-		for(myCustomer j : customers){
-			if(j.cS == CustomerState.marketArrived && !tellers.isEmpty()){
-				helpCustomer(waitingCustomers.get(0), findTeller());
-				return true;
+			for(myCustomer j : customers){
+				if(j.cS == CustomerState.marketArrived && !tellers.isEmpty()){
+					helpCustomer(waitingCustomers.get(0), findTeller());
+					return true;
+				}
+			}
+			
+			for(myCustomer d : customers){
+				if(d.cS == CustomerState.robberArrived){
+					KillRobber(d.customer);
+					return true;
+				}
+			}
+			for(myCustomer e : customers){
+				if(e.cS == CustomerState.robberCaught){
+					ReturnToNormal(e.customer);
+					return true;
+				}
 			}
 		}
-		if(bS == BankState.closing) {
-			closeUp();
-			return true;
-		}
+			if(bS == BankState.closing) {
+				closeUp();
+				return true;
+			}
 		
 		
 		return false;
@@ -283,8 +339,37 @@ public class BankManagerRole extends JobRole implements BankManager  {
 		teller.msgTransactionComplete(c, findCustomer(c).cashInBank);
 	}
 	
+	private void checkLoan(BankDepositor c){
+		if(bankMoney > 300 && findCustomer(c).cashInBank == 0){
+			bankMoney = bankMoney - 100;
+			findCustomer(c).cashInBank += 100;
+			teller.msgLoanApproved(c, findCustomer(c).cashInBank);
+		}
+		else
+			teller.msgLoanDenied(c);
+	}
+	///Robber scenario
 	
+	private void KillRobber(BankDepositor c){
+		gui.GoToRobber();
+		try {
+			managerAnimation.acquire();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		c.msgYoureDead();
+	}
 	
+	private void ReturnToNormal(BankDepositor c){
+		c.msgLeaveMyBank();
+		gui.GoToHome();
+		try {
+			managerAnimation.acquire();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		
+	}
 	
 	// Employee class (Cashier's view of employees)
 	
@@ -295,11 +380,13 @@ public class BankManagerRole extends JobRole implements BankManager  {
 		int cashInBank;
 		String name;
 		CustomerState cS;
+		boolean robber;
 
 		myCustomer(BankDepositor c){
 			customer = c;
 			cS = CustomerState.doingNothing;
-			cashInBank = 0;			
+			cashInBank = 0;	
+			robber = false;
 			
 		}
 		
@@ -310,7 +397,8 @@ public class BankManagerRole extends JobRole implements BankManager  {
 	}
 	public enum CustomerState{doingNothing, marketArrived, arrived, 
 		marketHelped, beingHelped, marketLeaving, leaving, 
-		marketTransactionComplete, transactionProcessed, transactionDenied, transactionComplete};
+		marketTransactionComplete, transactionProcessed, transactionDenied, checkingLoan, transactionComplete,
+		robberArrived, robberCaught, robberMoneyReturned, robberLeft};
 	
 
 	private myCustomer findCustomer(BankDepositor c){

@@ -26,9 +26,7 @@ public class MockBankManager extends Mock implements BankManager {
 	@Override
 	
 	
-	public void msgHired(BankTeller t){
-		log.add(new LoggedEvent("Hired a bank teller"));
-	}
+	
 	
 	public void msgStartShift(){
 		log.add(new LoggedEvent("Starting shift of tellers and manager"));
