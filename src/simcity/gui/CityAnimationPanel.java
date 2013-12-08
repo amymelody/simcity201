@@ -207,9 +207,11 @@ public class CityAnimationPanel extends JPanel implements ActionListener, MouseL
 		synchronized(buildings) {
 			for(BuildingGui bG: buildings) {
 				if(bG.getName().equals(buildingName)) {
+					System.out.println("LALALALALALALALALALAL");
 					HousingGui g = (HousingGui)bG;
 					l.setGui(g);
 					g.addLandlordGui(l.getGui());
+
 				}
 			}
 		}

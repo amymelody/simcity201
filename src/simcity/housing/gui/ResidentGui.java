@@ -11,8 +11,6 @@ import simcity.interfaces.HousingGuiInterface;
 import simcity.interfaces.Resident;
 import simcity.mock.EventLog;
 import simcity.mock.LoggedEvent;
-import simcity.trace.AlertLog;
-import simcity.trace.AlertTag;
 
 public class ResidentGui implements Gui
 {

@@ -362,7 +362,6 @@ public class ResidentRole extends Role implements Resident
 	{
 		if(!unitTesting)
 		{
-			AlertLog.getInstance().logMessage(AlertTag.BANK, name, "Doing " + s);
 			gui.doGoToLocation(p, s);
 			try
 			{

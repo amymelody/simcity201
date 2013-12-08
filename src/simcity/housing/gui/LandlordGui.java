@@ -9,7 +9,6 @@ import java.util.List;
 import simcity.gui.Gui;
 import simcity.housing.LandlordRole;
 import simcity.interfaces.HousingGuiInterface;
-import simcity.interfaces.Resident;
 import simcity.mock.EventLog;
 import simcity.mock.LoggedEvent;
 
@@ -29,6 +28,8 @@ public class LandlordGui implements Gui
 	public List<MoveBox> pastBoxes = new ArrayList<MoveBox>();
 	public MoveBox currentBox;
 	private boolean exiting;
+	private boolean arrived;
+	private boolean error;
 
 	public enum Command
 	{
@@ -53,6 +54,7 @@ public class LandlordGui implements Gui
 		dimensions = 20;
 		exiting = false;
 		command = Command.noCommand;
+		error = false;
 	}
 	public void setGui(HousingGuiInterface gui)
 	{
@@ -61,6 +63,7 @@ public class LandlordGui implements Gui
 
 	public void updatePosition()
 	{
+		System.out.println("LALALALALALALALALALAL");
 		log.add(new LoggedEvent("Received updatePosition"));
 
 		if(exiting)
@@ -82,15 +85,19 @@ public class LandlordGui implements Gui
 				exiting = false;
 				command = Command.noCommand;
 				currentBox = null;
+				error = false;
 
 				landlord.msgAtLocation();
 			}
 		}
 		else
 		{
-			if(xPos == xDestination && yPos == yDestination && (xDestination != xGoal || yDestination != yGoal))
+			if(!error)
 			{
-				findMoveBox();
+				if(xPos == xDestination && yPos == yDestination && (xDestination != xGoal || yDestination != yGoal))
+				{
+					findMoveBox();
+				}
 			}
 
 			if (xPos < xDestination)
@@ -120,7 +127,11 @@ public class LandlordGui implements Gui
 				}
 				else
 				{
-					landlord.msgAtLocation();
+					if(!arrived)
+					{
+						landlord.msgAtLocation();
+						arrived = true;
+					}
 				}
 			}
 		}
@@ -145,10 +156,17 @@ public class LandlordGui implements Gui
 
 	public void doGoToLocation(Point p, String purpose)
 	{
-		log.add(new LoggedEvent("Received doGoToLocation"));
+		log.add(new LoggedEvent("Received doGoToLocation. String purpose = " + purpose));
 
+		arrived = false;
 		xGoal = (int) p.getX();
 		yGoal = (int) p.getY();
+		//Specifically just for move hack
+		if(error)
+		{
+			xDestination = xGoal;
+			yDestination = yGoal;
+		}
 
 		if(purpose.equals("Exit"))
 		{
@@ -163,7 +181,7 @@ public class LandlordGui implements Gui
 	public void findMoveBox()
 	{
 		log.add(new LoggedEvent("Received findMoveBox"));
-
+		
 		List<MoveBox> boxesToCheck = new ArrayList<MoveBox>();
 
 		if (xPos < xGoal)
@@ -290,7 +308,7 @@ public class LandlordGui implements Gui
 					boxesToCheck.add(gui.getBox(boxY, boxX + 1));
 				}
 			}
-
+			
 			untouchedBoxes.clear();
 			for(MoveBox b : boxesToCheck)
 			{
@@ -321,7 +339,17 @@ public class LandlordGui implements Gui
 		}
 		boxesToCheck.remove(currentBox);
 		gui.setBox(boxesToCheck);
-		xDestination = currentBox.getX();
-		yDestination = currentBox.getY();
+		if(currentBox == null)
+		{
+			error = true;
+			xDestination = xGoal;
+			yDestination = yGoal;
+			
+		}
+		else
+		{
+			xDestination = currentBox.getX();
+			yDestination = currentBox.getY();
+		}
 	}
 }
