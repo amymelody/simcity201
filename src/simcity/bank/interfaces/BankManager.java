@@ -5,7 +5,6 @@ package simcity.bank.interfaces;
 public interface BankManager {
 	
 /////MESSAGES////////
-public abstract void msgHired(BankTeller t);
 
 public abstract void msgStartShift();
 
