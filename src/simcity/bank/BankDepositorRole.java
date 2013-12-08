@@ -250,6 +250,7 @@ public class BankDepositorRole extends Role implements BankDepositor{
 			e.printStackTrace();
 		}
 		if(this.robber){
+			this.robber = false;
 			person.msgGoodGuyAgain();
 		}
 		person.msgLeftDestination(this);

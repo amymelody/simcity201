@@ -1034,7 +1034,6 @@ public class PersonAgent extends Agent implements Person
 					if (mr.name.equals(job.role)) {
 						if (mr.r instanceof JobInterface) {
 							JobInterface j = (JobInterface)(mr.r);
-							AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "SET PERSON");
 							mr.r.setPerson(this);
 							mr.active = true;
 							j.msgStartShift();
