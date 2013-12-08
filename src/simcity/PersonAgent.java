@@ -506,6 +506,7 @@ public class PersonAgent extends Agent implements Person
 		}
 		if (job.role.equals("landlordRole")) {
 			LandlordRole l = (LandlordRole)(job.jobRole);
+			cG.addLandlord(l, houses.get(0).location);
 		}
 	}
 	

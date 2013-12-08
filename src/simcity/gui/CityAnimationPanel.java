@@ -204,6 +204,7 @@ public class CityAnimationPanel extends JPanel implements ActionListener, MouseL
 		}
 	}
 	public void addLandlord(LandlordRole l, String buildingName) {
+		System.out.println(buildingName + "----------------");
 		synchronized(buildings) {
 			for(BuildingGui bG: buildings) {
 				if(bG.getName().equals(buildingName)) {
