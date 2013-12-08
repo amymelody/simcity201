@@ -51,6 +51,12 @@ public class BankDepositorRole extends Role implements BankDepositor{
 	public void setGui(BankDepositorGui g) {
 		gui = g;
 	}
+	
+	public boolean robber = false;
+			
+	public boolean getRobberStatus(){
+		return robber;
+	}
 	/* Animation */
 	private Semaphore customerAnimation = new Semaphore(0, true);
 	BankDepositorGui gui;
@@ -64,7 +70,8 @@ public class BankDepositorRole extends Role implements BankDepositor{
 	
 	// Customer Status Data
 	public enum CustomerState {entered, makingRequest, makingTransaction, beingHelped, 
-		leaving, atManager, atTeller, out, waiting, makingLoan};
+		leaving, atManager, atTeller, out, waiting, makingLoan,
+		robberEntered, robAttempt, robberKilled, robberLeft};
 	CustomerState cS;
 	public CustomerState getCustomerState(){
 		return cS;
@@ -148,6 +155,23 @@ public class BankDepositorRole extends Role implements BankDepositor{
 	}
 	
 	
+	////Bank Robber scenario
+	
+	public void msgImARobber(){
+		robber = true;
+		cS = CustomerState.robberEntered;
+		stateChanged();
+	}
+	
+	public void msgYoureDead(){
+		cS = CustomerState.robberKilled;
+		stateChanged();
+	}
+	
+	public void msgLeaveMyBank(){
+		cS = CustomerState.leaving;
+		stateChanged();
+	}
 	/*Animation messages*/
 	public void msgAtDestination(){
 		customerAnimation.release();
@@ -179,7 +203,17 @@ public class BankDepositorRole extends Role implements BankDepositor{
 			Leaving();
 			return true;
 		}
-		
+		//For robber scenario
+		if(cS == CustomerState.robberEntered){
+			cS = CustomerState.waiting;
+			RobBank();
+			return true;
+		}
+		if(cS == CustomerState.robberKilled){
+			cS = CustomerState.waiting;
+			ReturnMoney();
+			return true;
+		}
 		
 		return false;
 	}
@@ -218,6 +252,22 @@ public class BankDepositorRole extends Role implements BankDepositor{
 		person.msgLeftDestination(this);
 
 	}
+	
+	/////Rob bank actions
+	public void RobBank(){
+		
+		try {
+			customerAnimation.acquire();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		
+		manager.msgImRobbingYourBank(this, 300);
+	}
+	
+	public void ReturnMoney(){
+		manager.msgHeresYourMoneyBack(this, 300);
+	}
 
 	/* Actions */
 	
@@ -235,6 +285,10 @@ public class BankDepositorRole extends Role implements BankDepositor{
 		public BankDepositorGui getGui() {
 		
 			return gui;
+		}
+		
+		public void DoGoRobBank(){
+			gui.RobBank();
 		}
 		
 		public void setBankGui(BankGui g){

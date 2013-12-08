@@ -21,6 +21,10 @@ public interface BankDepositor {
 
 	public abstract void msgLoanDenied();
 	
+	public abstract void msgYoureDead();
+	
+	public abstract void msgLeaveMyBank();
+	
 	public abstract String getName();
 
 	

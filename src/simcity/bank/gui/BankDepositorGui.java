@@ -51,9 +51,16 @@ public class BankDepositorGui implements Gui {
 		}
 
 	public void draw(Graphics2D g) {
+	if(role.getRobberStatus() == false){
 		g.setColor(Color.GREEN);
 		g.fillRect(xPos, yPos, 30, 30);
 		g.drawString("Depositor", xPos, yPos);
+	}
+	if(role.getRobberStatus()){
+		g.setColor(Color.BLACK);
+		g.fillRect(xPos, yPos, 30, 30);
+		g.drawString("Robber", xPos, yPos);
+	}
 	}
 
 	public boolean isPresent() {
@@ -76,6 +83,12 @@ public class BankDepositorGui implements Gui {
 	public void GoToTeller(){
 		xDestination = 100;
 		yDestination = 200;
+		releaseIt = true;
+	}
+	
+	public void RobBank(){
+		xDestination = 75;
+		yDestination = 70;
 		releaseIt = true;
 	}
 	

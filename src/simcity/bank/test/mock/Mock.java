@@ -1,11 +1,6 @@
 package simcity.bank.test.mock;
 
-/**
- * This is the base class for all mocks.
- *
- * @author Sean Turner
- *
- */
+
 public class Mock {
         private String name;
 
