@@ -50,14 +50,14 @@ public class JoshRestaurantGui extends BuildingGui implements ActionListener {
     	
         //controlPanel.setLayout(new BorderLayout());
 
-        double inputFractionOfWindow = 150.0 / 650.0;
-        Dimension inputDim = new Dimension((int)(WINDOWX * inputFractionOfWindow), WINDOWY);
-        inputPanel.setPreferredSize(inputDim);
-        inputPanel.setMinimumSize(inputDim);
-        inputPanel.setMaximumSize(inputDim);
-        //controlPanel.add(inputPanel, BorderLayout.CENTER);
-        inputPanel.setVisible(false);
-        bG.add(inputPanel, BorderLayout.WEST);
+        double controlFractionOfWindow = 150.0 / 650.0;
+        Dimension controlDim = new Dimension((int)(WINDOWX * controlFractionOfWindow), WINDOWY);
+        controlPanel.setPreferredSize(controlDim);
+        controlPanel.setMinimumSize(controlDim);
+        controlPanel.setMaximumSize(controlDim);
+        controlPanel.add(inputPanel, BorderLayout.CENTER);
+        controlPanel.setVisible(false);
+        bG.add(controlPanel, BorderLayout.WEST);
         
         double animFractionOfWindow = 500.0 / 650.0;
         Dimension animDim = new Dimension((int)(WINDOWX * animFractionOfWindow), WINDOWY);
@@ -67,28 +67,28 @@ public class JoshRestaurantGui extends BuildingGui implements ActionListener {
         animationPanel.setVisible(false);
         bG.add(animationPanel, BorderLayout.CENTER);
         
-        // Now, setup the info panel
-//        double infoFractionOfWindow = 100.0 / 500.0;
-//        Dimension infoDim = new Dimension((int)(WINDOWX * controlFractionOfWindow), (int)(WINDOWY * infoFractionOfWindow));
-//        infoPanel = new JPanel();
-//        infoPanel.setPreferredSize(infoDim);
-//        infoPanel.setMinimumSize(infoDim);
-//        infoPanel.setMaximumSize(infoDim);
-//        infoPanel.setBorder(BorderFactory.createTitledBorder("Information"));
+        //Now, setup the info panel
+        double infoFractionOfWindow = 100.0 / 500.0;
+        Dimension infoDim = new Dimension((int)(WINDOWX * controlFractionOfWindow), (int)(WINDOWY * infoFractionOfWindow));
+        infoPanel = new JPanel();
+        infoPanel.setPreferredSize(infoDim);
+        infoPanel.setMinimumSize(infoDim);
+        infoPanel.setMaximumSize(infoDim);
+        infoPanel.setBorder(BorderFactory.createTitledBorder("Information"));
 
-//        stateCB = new JCheckBox();
-//        stateCB.setText("Hungry?");
-//        stateCB.addActionListener(this);
-//        stateCB.setEnabled(false);
-//        stateCB.setVisible(false);
-//
-//        infoPanel.setLayout(new GridLayout(1, 3, 30, 0));
-//        
-//        infoLabel = new JTextField(); 
-//
-//        infoPanel.add(infoLabel);
-//        infoPanel.add(stateCB);
-       // controlPanel.add(infoPanel, BorderLayout.NORTH);
+        stateCB = new JCheckBox();
+        stateCB.setText("Break?");
+        stateCB.addActionListener(this);
+        stateCB.setEnabled(false);
+        stateCB.setVisible(false);
+
+        infoPanel.setLayout(new GridLayout(1, 3, 30, 0));
+        
+        infoLabel = new JTextField(); 
+
+        infoPanel.add(infoLabel);
+        infoPanel.add(stateCB);
+        controlPanel.add(infoPanel, BorderLayout.NORTH);
     }
     
     /**
@@ -170,6 +170,10 @@ public class JoshRestaurantGui extends BuildingGui implements ActionListener {
     	inputPanel.addWaiter(w);
     }
     
+    public void addPerson(String name) {
+    	inputPanel.addPerson(name);
+    }
+    
     public void removeWaitingCustomer(JoshCustomerRole c) {
     	inputPanel.removeWaitingCustomer(c);
     }
@@ -190,6 +194,6 @@ public class JoshRestaurantGui extends BuildingGui implements ActionListener {
     
     public void changeView(boolean visible) {
     	animationPanel.setVisible(visible);
-		inputPanel.setVisible(visible);
+		controlPanel.setVisible(visible);
 	}
 }

@@ -116,9 +116,18 @@ public class JoshRestaurantInputPanel extends JPanel
  		w.setCook(cook);
  		w.setGui(g);
  		w.setGui(cookGui);
+ 		w.setRestGui(gui);
  		waiters.add(w);
  		host.addWaiter(w);
     }
+    
+    public void addPerson(String name) {
+    	waiterPanel.addPerson(name);
+    }
+    
+//    public void removePerson(String name) {
+//    	waiterPanel.removePerson(name);
+//    }
     
     public void addWaitingCustomer(JoshCustomerRole c) {
     	for (MyCustomer mc : customers) {
