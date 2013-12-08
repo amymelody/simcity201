@@ -629,6 +629,7 @@ public class PersonAgent extends Agent implements Person
 	}
 	
 	public void msgGoodGuyAgain() {
+		log.add(new LoggedEvent("Received msgGoodGuyAgain"));
 		robber = false;
 	}
 	
