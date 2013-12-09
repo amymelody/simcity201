@@ -108,7 +108,6 @@ public class LandlordRole extends JobRole implements Landlord
 		moneyEarned += money;
 		for(Renter renter : renters)
 		{
-		
 			if(renter.resident == r)
 			{
 				renter.state = RenterState.paid;
@@ -176,6 +175,7 @@ public class LandlordRole extends JobRole implements Landlord
 //Actions
 	private void sendRentDue(Command c)
 	{
+		AlertLog.getInstance().logMessage(AlertTag.BANK, name, "renters size: " + renters.size());
 		commands.remove(c);
 		for(Renter r : renters)
 		{
@@ -232,9 +232,8 @@ public class LandlordRole extends JobRole implements Landlord
 
 	public void addRenter(Resident r)
 	{
-		AlertLog.getInstance().logMessage(AlertTag.BANK, name, "Sofa surfing----------");
 		renters.add(new Renter(r));
 		r.setLandlord((Landlord)this);
+		AlertLog.getInstance().logMessage(AlertTag.BANK, name, "renters size: " + renters.size());
 	}
-
 }

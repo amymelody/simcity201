@@ -426,7 +426,6 @@ public class CityDirectory
 		default:
 			LandlordRole la = new LandlordRole();
 			la.setJobLocation("home");
-			landlords.add(la);
 			return la;
 		}
 	}
