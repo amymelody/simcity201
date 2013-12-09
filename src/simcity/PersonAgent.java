@@ -122,6 +122,15 @@ public class PersonAgent extends Agent implements Person
 		gui = g;
 	}
 	
+	public void addResidentRole() {
+		Housing h = houses.get(0);	
+		if (!findRole(h.residentRole)) {
+			ResidentRole r = city.ResidentFactory(h.residentRole);
+			addRole(r, h.residentRole);
+			cG.addResident(r, h.location, houses.get(1).location);
+		}
+	}
+	
 	public void setHome(String home) {
 		houses.get(0).location = home;
 		if (job != null && job.location.equals("home")) {
