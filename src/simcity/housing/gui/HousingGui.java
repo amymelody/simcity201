@@ -117,6 +117,11 @@ public class HousingGui extends BuildingGui implements HousingGuiInterface
 		try
 		{
 			boxBlock[y][x].acquire(); //this doesn't also "try" to return, right?
+			if(x == 24 && y == 13)
+			{
+				System.out.println("X = " + x + ", Y = " + y);
+				System.out.println(boxes[y][x].getOpen());
+			}
 			return boxes[y][x];
 		}
 		catch (InterruptedException e)
@@ -135,6 +140,10 @@ public class HousingGui extends BuildingGui implements HousingGuiInterface
 				{
 					if(boxes[i][j] == b)
 					{
+//						if(j == 24 && i == 13)
+//						{
+//							System.out.println("X = " + j + ", Y = " + i);
+//						}
 						boxes[i][j].setOpen(b.getOpen());
 						boxBlock[i][j].release();
 					}
