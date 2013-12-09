@@ -28,6 +28,23 @@ public class JoshRestaurantGui extends BuildingGui implements ActionListener {
     private JPanel restLabel = new JPanel();
     private JPanel inventoryPanel = new JPanel();
     
+    private ButtonGroup foodGroup = new ButtonGroup();
+	private JRadioButtonMenuItem stButton = new JRadioButtonMenuItem("Steak");
+	private JRadioButtonMenuItem chButton = new JRadioButtonMenuItem("Chicken");
+	private JRadioButtonMenuItem piButton = new JRadioButtonMenuItem("Pizza");
+	private JRadioButtonMenuItem saButton = new JRadioButtonMenuItem("Salad");
+	
+	private JLabel currentCash;
+	private JLabel currentSteak;
+	private JLabel currentChicken;
+	private JLabel currentPizza;
+	private JLabel currentSalad;
+    
+	private JButton cashButton = new JButton("Add");
+	private JButton inventoryButton = new JButton("Add");
+	private JTextField cashInput;
+	private JTextField inventoryInput;
+    
     private Timer timer;
 
     private Object currentPerson;
@@ -72,6 +89,54 @@ public class JoshRestaurantGui extends BuildingGui implements ActionListener {
         waiters.setLayout(new BorderLayout());
         waiters.add(infoPanel, BorderLayout.NORTH);
         waiters.add(inputPanel, BorderLayout.CENTER);
+        
+        
+        //Inventory Panel
+        
+        inventoryPanel.setLayout(new FlowLayout());
+        JLabel addCash = new JLabel("<html><u>Add Cash</u></html>");
+        JLabel addInventory = new JLabel("<html><u>   Add Food   </u></html>");
+        JPanel cash = new JPanel();
+        JPanel inventory = new JPanel();
+        cash.setLayout(new GridLayout(1,2));
+        inventory.setLayout(new GridLayout(1,2));
+        
+        foodGroup.add(stButton);
+        foodGroup.add(chButton);
+        foodGroup.add(piButton);
+        foodGroup.add(saButton);
+        cashInput = new JTextField("");
+        inventoryInput = new JTextField("");
+        
+        cashButton.addActionListener(this);
+        inventoryButton.addActionListener(this);
+        cash.add(cashInput);
+        cash.add(cashButton);
+        inventory.add(inventoryInput);
+        inventory.add(inventoryButton);
+        
+        inventoryPanel.add(addCash);
+        inventoryPanel.add(cash);
+        inventoryPanel.add(addInventory);
+        inventoryPanel.add(stButton);
+        inventoryPanel.add(chButton);
+        inventoryPanel.add(piButton);
+        inventoryPanel.add(saButton);
+        inventoryPanel.add(inventory);
+        
+        JLabel space = new JLabel("                      ");
+        currentCash = new JLabel("      Cash: $" + inputPanel.getCashier().getCash() + "      ");
+        currentSteak =  new JLabel("         Steak: " + inputPanel.getCook().getFoodAmt("Steak") + "         ");
+        currentChicken =  new JLabel("         Chicken: " + inputPanel.getCook().getFoodAmt("Chicken") + "         ");
+        currentPizza =  new JLabel("         Pizza: " + inputPanel.getCook().getFoodAmt("Pizza") + "         ");
+        currentSalad =  new JLabel("         Salad: " + inputPanel.getCook().getFoodAmt("Salad") + "         ");
+        inventoryPanel.add(space);
+        inventoryPanel.add(currentCash);
+        inventoryPanel.add(currentSteak);
+        inventoryPanel.add(currentChicken);
+        inventoryPanel.add(currentPizza);
+        inventoryPanel.add(currentSalad);
+        
         
         controlPanel.addTab("Menu", restLabel);
         controlPanel.addTab("Waiters", waiters);
@@ -125,7 +190,70 @@ public class JoshRestaurantGui extends BuildingGui implements ActionListener {
      * For v3, it will propose a break for the waiter.
      */
     public void actionPerformed(ActionEvent e) {
- //   	AlertLog.getInstance().logMessage(AlertTag.JOSH_RESTAURANT, "restaurantgui", "kdfjkldf");
+    	
+    	currentCash.setText("      Cash: $" + inputPanel.getCashier().getCash() + "      ");
+    	currentSteak.setText("         Steak: " + inputPanel.getCook().getFoodAmt("Steak") + "         ");
+    	currentChicken.setText("         Chicken: " + inputPanel.getCook().getFoodAmt("Chicken") + "         ");
+    	currentPizza.setText("         Pizza: " + inputPanel.getCook().getFoodAmt("Pizza") + "         ");
+    	currentSalad.setText("         Salad: " + inputPanel.getCook().getFoodAmt("Salad") + "         ");
+    	
+    	if(e.getSource() == cashButton)
+		{
+			int num = 0;
+			try {
+				num = Integer.parseInt(cashInput.getText());
+			} catch (NumberFormatException ex) {
+			}
+
+			inputPanel.getCashier().setCash(inputPanel.getCashier().getCash()+num);
+			cashInput.setText("");
+		}
+    	
+    	if(e.getSource() == inventoryButton)
+		{
+			if(stButton.isSelected())
+			{
+				int num = 0;
+				try {
+					num = Integer.parseInt(inventoryInput.getText());
+				} catch (NumberFormatException ex) {
+				}
+
+				inputPanel.getCook().addFoodAmt("Steak", num);
+				inventoryInput.setText("");
+			}
+			else if(chButton.isSelected())
+			{
+				int num = 0;
+				try {
+					num = Integer.parseInt(inventoryInput.getText());
+				} catch (NumberFormatException ex) {
+				}
+				inputPanel.getCook().addFoodAmt("Chicken", num);
+				inventoryInput.setText("");
+			}
+			else if(piButton.isSelected())
+			{
+				int num = 0;
+				try {
+					num = Integer.parseInt(inventoryInput.getText());
+				} catch (NumberFormatException ex) {
+				}
+				inputPanel.getCook().addFoodAmt("Pizza", num);
+				inventoryInput.setText("");
+			}
+			else if(saButton.isSelected())
+			{
+				int num = 0;
+				try {
+					num = Integer.parseInt(inventoryInput.getText());
+				} catch (NumberFormatException ex) {
+				}
+				inputPanel.getCook().addFoodAmt("Salad", num);
+				inventoryInput.setText("");
+			}
+		}
+    	
         if (e.getSource() == stateCB) {
         	if (stateCB.getText().equals("Break?")) {
 	            if (currentPerson instanceof JoshWaiterRole) {
