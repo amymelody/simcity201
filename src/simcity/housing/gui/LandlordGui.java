@@ -83,6 +83,11 @@ public class LandlordGui implements Gui
 				boxX = 25;
 				exiting = false;
 				command = Command.noCommand;
+				currentBox.setOpen(true);
+				List<MoveBox> boxTemp = new ArrayList<MoveBox>();
+				boxTemp.add(currentBox);
+				gui.setBox(boxTemp);
+				boxTemp.clear();
 				currentBox = null;
 				error = false;
 
@@ -126,10 +131,13 @@ public class LandlordGui implements Gui
 				}
 				else
 				{
-					if(!arrived && xPos != 500 && yPos != 220)
+					if(!arrived)
 					{
-						landlord.msgAtLocation();
-						arrived = true;
+						if(!(xPos == 500 && yPos == 220))
+						{
+							landlord.msgAtLocation();
+							arrived = true;
+						}
 					}
 				}
 			}
