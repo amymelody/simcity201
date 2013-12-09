@@ -23,6 +23,7 @@ public class MarketAnimationPanel extends JPanel implements ActionListener {
 	Image bg;
 	
 	public MarketAnimationPanel() {
+		setBounds(150, 0, 500, 500);
 		setSize(WINDOWX, WINDOWY);
 		setVisible(true);
 		
