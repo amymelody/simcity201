@@ -108,18 +108,6 @@ public class JoshRestaurantGui extends BuildingGui implements ActionListener {
      */
     public void updateInfoPanel(Object person) {
         currentPerson = person;
-
-//        if (person instanceof JoshCustomerRole) {
-//            JoshCustomerRole customer = (JoshCustomerRole) person;
-//            stateCB.setVisible(true);
-//            stateCB.setText("Hungry?");
-//          //Should checkmark be there? 
-//            stateCB.setSelected(customer.getGui().isHungry());
-//          //Is customer hungry? Hack. Should ask customerGui
-//            stateCB.setEnabled(!customer.getGui().isHungry());
-//          // Hack. Should ask customerGui
-//            infoLabel.setText(customer.getName());
-//        } else 
         if (person instanceof JoshWaiterRole) {
         	JoshWaiterRole waiter = (JoshWaiterRole) person;
         	stateCB.setVisible(true);

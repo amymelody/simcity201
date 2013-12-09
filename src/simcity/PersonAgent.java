@@ -595,13 +595,14 @@ public class PersonAgent extends Agent implements Person
 	}
 
 	public void msgLeftDestination(Role r) {
+		AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "kdfjdkfkldfjd");
 		log.add(new LoggedEvent("Received msgLeftDestination"));
 		synchronized(roles) {
 			for (MyRole mr : roles) {
 				if (mr.r == r) {
-						mr.active = false;
-						state.ls = LocationState.outside;
-						destination = null;
+					mr.active = false;
+					state.ls = LocationState.outside;
+					destination = null;
 				}
 			}
 		}
@@ -806,6 +807,7 @@ public class PersonAgent extends Agent implements Person
 			}
 		}
 		
+		AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "Fuuuuckkkkk");
 		if (!unitTesting && goingHome && state.ts == TransportationState.walking && state.ls != LocationState.home && state.ls != LocationState.leavingHouse) {
 			goHome(); //if nothing left to do, go home and do whatever
 			return true;
