@@ -200,4 +200,8 @@ public class BuildingsGui extends JFrame
 
 	}
 
+	public void addDelivererGui(DelivererGui dG) {
+		cityGui.animationPanel.addGui(dG);
+	}
+
 }

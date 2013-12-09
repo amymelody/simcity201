@@ -6,6 +6,7 @@ import simcity.CityDirectory;
 import simcity.gui.BuildingGui;
 import simcity.gui.BuildingsGui;
 import simcity.gui.CityGui;
+import simcity.gui.DelivererGui;
 import simcity.market.MarketCashierRole;
 import simcity.market.MarketEmployeeRole;
 import simcity.market.MarketDelivererRole;
@@ -81,6 +82,10 @@ public class MarketGui extends BuildingGui
 	
 	public void addMarketCustomer(MarketCustomerRole c) {
 		inputPanel.addCustomer(c);
+	}
+
+	public void addDelivererGui(DelivererGui dG) {
+		buildingsGui.addDelivererGui(dG);
 	}
 	
 }

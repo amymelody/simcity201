@@ -93,9 +93,9 @@ public class MarketDelivererRole extends JobRole implements MarketDeliverer {
 
 	// Normative Scenarios
 	public void msgDeliverItems(Order o) {
+		Order temp = new Order(o.cook, o.cashier, o.items, o.location);
+		orders.add(temp);
 		dS = DelivererState.nothing;
-		o.oS = OrderState.newDelivery;
-		orders.add(o);
 		stateChanged();
 	}
 	public void msgPayment(RestCashier c, int money) {
@@ -141,7 +141,7 @@ public class MarketDelivererRole extends JobRole implements MarketDeliverer {
 						goToCustomer(o);
 						return true;
 					}
-					if(currentOrder.equals(o) && dS == DelivererState.arrived && o.oS == OrderState.newDelivery) {
+					if(o.equals(currentOrder) && dS == DelivererState.arrived && o.oS == OrderState.newDelivery) {
 						deliverOrder(o);
 						return true;
 					}
@@ -149,7 +149,7 @@ public class MarketDelivererRole extends JobRole implements MarketDeliverer {
 						takePayment(o);
 						return true;
 					}
-					if(currentOrder.equals(o) && dS == DelivererState.arrivedBack) {
+					if(o.equals(currentOrder) && dS == DelivererState.arrivedBack) {
 						finishDelivery(o);
 						return true;
 					}

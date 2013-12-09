@@ -24,14 +24,12 @@ public class DelivererGui implements Gui {
 	private int xHome, yHome; // Deliverer home poMap<K, V>ion
 	private static Map<String, Point> locations = new HashMap<String, Point>();
 	static {
-		locations.put("market1", new Point(250, 350));
-		locations.put("market2", new Point(230, 350));
-		locations.put("market3", new Point(60, 380));
-		locations.put("joshRestaurant", new Point(440, 330));
-		locations.put("cherysRestaurant", new Point(250, 380));
-		locations.put("anjaliRestaurant", new Point(440, 350));
-		locations.put("alfredRestaurant", new Point(230, 380));
-		locations.put("jesusRestaurant", new Point(440, 380));
+		locations.put("market1", new Point(370, 280));
+		locations.put("market2", new Point(370, 420));
+		locations.put("joshRestaurant", new Point(280, 280));
+		locations.put("cherysRestaurant", new Point(420, 280));
+		locations.put("anjaliRestaurant", new Point(420, 420));
+		locations.put("jesusRestaurant", new Point(280, 420));
 	}
 	
 	public enum GuiState {nothing, delivering, cashier}
@@ -51,14 +49,14 @@ public class DelivererGui implements Gui {
 
 	public void updatePosition() {
 		if (xPos < xDestination)
-			xPos+=20;
+			xPos+=10;
 		else if (xPos > xDestination)
-			xPos-=20;
+			xPos-=10;
 
 		if (yPos < yDestination)
-			yPos+=20;
+			yPos+=10;
 		else if (yPos > yDestination)
-			yPos-=20;
+			yPos-=10;
 		if(xPos == xDestination && yPos == yDestination) {
 			if(gS == GuiState.delivering) {
 				gui.Outside();
@@ -77,7 +75,7 @@ public class DelivererGui implements Gui {
 
 	public void draw(Graphics2D g) {
 		g.setColor(Color.GREEN);
-		g.fillRect(20, 20, xPos, yPos);
+		g.fillRect(xPos, yPos, 10, 10);
 	}
 
 	public boolean isPresent() {

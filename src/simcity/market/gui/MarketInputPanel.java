@@ -13,6 +13,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import simcity.bank.gui.BankManagerGui;
+import simcity.gui.DelivererGui;
 import simcity.market.MarketDelivererRole;
 import simcity.market.MarketEmployeeRole;
 import simcity.market.MarketCustomerRole;
@@ -94,7 +95,9 @@ public class MarketInputPanel extends JPanel
 	
 	public void addDeliverer(MarketDelivererRole d) {
 		MarketDelivererGui g = new MarketDelivererGui(d);
+		DelivererGui dG = new DelivererGui(g, name);
 		marketGui.animationPanel.addGui(g);
+		marketGui.addDelivererGui(dG);
 		d.setGui(g);
 		d.setCashier(cashier);
 		deliverers.add(d);
