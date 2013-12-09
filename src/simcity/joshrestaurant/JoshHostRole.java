@@ -20,6 +20,7 @@ public class JoshHostRole extends RestHostRole {
 
 	private String name = null;
 	private boolean working;
+	private JoshCashierRole cashier = null;
 	
 	public enum WaiterState
 	{OnTheJob, WantToGoOnBreak, AboutToGoOnBreak, OnBreak};
@@ -38,6 +39,10 @@ public class JoshHostRole extends RestHostRole {
 	public void setPerson(Person p) {
 		super.setPerson(p);
 		name = person.getName();
+	}
+	
+	public void setCashier(JoshCashierRole c) {
+		cashier = c;
 	}
 
 	public String getMaitreDName() {
@@ -239,6 +244,7 @@ public class JoshHostRole extends RestHostRole {
 	// Actions
 	
 	private void leaveRestaurant() {
+		cashier.msgPayMe(person.getSalary());
 		person.msgLeftDestination(this);
 	}
 

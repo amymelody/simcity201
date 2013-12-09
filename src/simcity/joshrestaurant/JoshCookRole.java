@@ -202,6 +202,7 @@ public class JoshCookRole extends RestCookRole {
 	// Actions
 	
 	private void leaveRestaurant() {
+		cashier.msgPayMe(person.getSalary());
 		person.msgLeftDestination(this);
 	}
 	

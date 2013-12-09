@@ -791,6 +791,89 @@ public class CityDirectory
 				return num;
 			}
 		}
+		if(role.equals("bankTellerRole")) {
+			if (building.equals("bank1")) {
+				return bank1Tellers.size();
+			}
+			if (building.equals("bank2")) {
+				return bank2Tellers.size();
+			}
+		}
+		if(role.equals("bankManagerRole")) {
+			if (building.equals("bank1")) {
+				int num = 0;
+				for (PersonInfo p : personMap.values()) {
+					if (p.job.equals(role) && p.jobBuilding.equals(building)) {
+						num++;
+					}
+				}
+				return num;
+			}
+			if (building.equals("bank2")) {
+				int num = 0;
+				for (PersonInfo p : personMap.values()) {
+					if (p.job.equals(role) && p.jobBuilding.equals(building)) {
+						num++;
+					}
+				}
+				return num;
+			}
+		}
+		if(role.equals("bankTellerRole")) {
+			if (building.equals("bank1")) {
+				return bank1Tellers.size();
+			}
+			if (building.equals("bank2")) {
+				return bank2Tellers.size();
+			}
+		}
+		if(role.equals("restWaiterRole")) {
+			if (building.equals("joshRestaurant")) {
+				return joshWaiters.size();
+			}
+//			if (building.equals("cherysRestaurant")) {
+//				return cherysWaiters.size();
+//			}
+//			if (building.equals("anjaliRestaurant")) {
+//				return anjaliWaiters.size();
+//			}
+//			if (building.equals("jesusRestaurant")) {
+//				return jesusWaiters.size();
+//			}
+		}
+		if(role.equals("restHostRole")) {
+			if (building.equals("joshRestaurant") || building.equals("cherysRestaurant") || building.equals("anjaliRestaurant") || building.equals("jesusRestaurant")) {
+				int num = 0;
+				for (PersonInfo p : personMap.values()) {
+					if (p.job.equals(role) && p.jobBuilding.equals(building)) {
+						num++;
+					}
+				}
+				return num;
+			}
+		}
+		if(role.equals("restCashierRole")) {
+			if (building.equals("joshRestaurant") || building.equals("cherysRestaurant") || building.equals("anjaliRestaurant") || building.equals("jesusRestaurant")) {
+				int num = 0;
+				for (PersonInfo p : personMap.values()) {
+					if (p.job.equals(role) && p.jobBuilding.equals(building)) {
+						num++;
+					}
+				}
+				return num;
+			}
+		}
+		if(role.equals("restCookRole")) {
+			if (building.equals("joshRestaurant") || building.equals("cherysRestaurant") || building.equals("anjaliRestaurant") || building.equals("jesusRestaurant")) {
+				int num = 0;
+				for (PersonInfo p : personMap.values()) {
+					if (p.job.equals(role) && p.jobBuilding.equals(building)) {
+						num++;
+					}
+				}
+				return num;
+			}
+		}
 		return 0;
 	}
 	

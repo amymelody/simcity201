@@ -82,6 +82,4 @@ public interface Person {
 	public abstract void businessIsClosed(String b, boolean c);
 	
 	public abstract void stateChanged();
-
-	public abstract void msgGoodGuyAgain();
 }

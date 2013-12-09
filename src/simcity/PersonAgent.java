@@ -987,7 +987,7 @@ public class PersonAgent extends Agent implements Person
 			if (!findRole(r.customerRole)) {
 				RestCustomerRole c = city.RestCustomerFactory(r.customerRole);
 				addRole(c, r.customerRole);
-				cG.addRestCustomer(c);
+				cG.addRestCustomer(c, r.location);
 			}
 			synchronized(roles) {
 				for (MyRole mr : roles) {
@@ -1046,7 +1046,7 @@ public class PersonAgent extends Agent implements Person
 			if (!findRole(b.depositorRole)) {
 				BankDepositorRole d = city.BankDepositorFactory(b.depositorRole);
 				addRole(d, b.depositorRole);
-				cG.addBankDepositor(d);
+				cG.addBankDepositor(d, b.location);
 			}
 			synchronized(roles) {
 				for (MyRole mr : roles) {

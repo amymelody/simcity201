@@ -105,14 +105,16 @@ public class CityAnimationPanel extends JPanel implements ActionListener, MouseL
 		buildings.add(bG);
 	}
 	
-	public void addRestCustomer(RestCustomerRole c) {
+	public void addRestCustomer(RestCustomerRole c, String location) {
 		synchronized(buildings) {
 			for(BuildingGui bG: buildings) {
-				if(bG.getName().equals("joshRestaurant")) {
-					JoshRestaurantGui g = (JoshRestaurantGui)bG;
-					if (c instanceof JoshCustomerRole) {
-						JoshCustomerRole jC = (JoshCustomerRole)(c);
-						g.addCustomer(jC);
+				if(bG.getName().equals(location)) {
+					if (location.equals("joshRestaurant")) {
+						JoshRestaurantGui g = (JoshRestaurantGui)bG;
+						if (c instanceof JoshCustomerRole) {
+							JoshCustomerRole jC = (JoshCustomerRole)(c);
+							g.addCustomer(jC);
+						}
 					}
 				}
 			}
@@ -122,24 +124,26 @@ public class CityAnimationPanel extends JPanel implements ActionListener, MouseL
 	public void addRestWaiter(RestWaiterRole w) {
 		synchronized(buildings) {
 			for(BuildingGui bG: buildings) {
-				if(bG.getName().equals("joshRestaurant")) {
-					JoshRestaurantGui g = (JoshRestaurantGui)bG;
-					if (w instanceof JoshNormalWaiterRole) {
-						JoshNormalWaiterRole jW = (JoshNormalWaiterRole)(w);
-						g.addWaiter(jW);
-					}
-					if (w instanceof JoshSharedDataWaiterRole) {
-						JoshSharedDataWaiterRole jW = (JoshSharedDataWaiterRole)(w);
-						g.addWaiter(jW);
+				if(bG.getName().equals(w.getJobLocation())) {
+					if (w.getJobLocation().equals("joshRestaurant")) {
+						JoshRestaurantGui g = (JoshRestaurantGui)bG;
+						if (w instanceof JoshNormalWaiterRole) {
+							JoshNormalWaiterRole jW = (JoshNormalWaiterRole)(w);
+							g.addWaiter(jW);
+						}
+						if (w instanceof JoshSharedDataWaiterRole) {
+							JoshSharedDataWaiterRole jW = (JoshSharedDataWaiterRole)(w);
+							g.addWaiter(jW);
+						}
 					}
 				}
 			}
 		}
 	}
-	public void addBankDepositor(BankDepositorRole d) {
+	public void addBankDepositor(BankDepositorRole d, String location) {
 		synchronized(buildings){
 			for(BuildingGui bG : buildings){
-				if(bG.getName().equals("bank1")){
+				if(bG.getName().equals(location)){
 					BankGui g = (BankGui)bG;
 					g.addBankDepositor(d);
 				}
@@ -150,7 +154,7 @@ public class CityAnimationPanel extends JPanel implements ActionListener, MouseL
 	public void addBankTeller(BankTellerRole t){
 		synchronized(buildings){
 			for(BuildingGui bG : buildings){
-				if(bG.getName().equals("bank1")){
+				if(bG.getName().equals(t.getJobLocation())){
 					BankGui g = (BankGui)bG;
 					g.addBankTeller(t);
 				}
