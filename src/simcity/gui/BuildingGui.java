@@ -14,6 +14,7 @@ public abstract class BuildingGui
 {
 	String name;
 	protected CityDirectory cityDirectory;
+	protected BuildingsGui buildingsGui;
 
 	/**
 	 * Constructor
@@ -21,6 +22,7 @@ public abstract class BuildingGui
 	public BuildingGui(String n, BuildingsGui bG, CityDirectory cD)
 	{
 		cityDirectory = cD;
+		buildingsGui = bG;
 		name = n;
 	}
 	public String getName() {

@@ -140,6 +140,17 @@ public class PersonAgent extends Agent implements Person
 	
 	public void setOwnerHome(String home) {
 		houses.get(1).location = home;
+		for(MyRole mr : roles)
+		{
+			if(mr.name.equals("residentRole"))
+			{
+				if(mr.r instanceof ResidentRole)
+				{
+					ResidentRole r = (ResidentRole)(mr.r);
+					cG.addResident(r, houses.get(0).location, houses.get(0).location);
+				}
+			}
+		}
 	}
 	
 	public void setTestingAnimation(boolean tA) {
@@ -598,7 +609,6 @@ public class PersonAgent extends Agent implements Person
 	}
 
 	public void msgLeftDestination(Role r) {
-		AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "kdfjdkfkldfjd");
 		log.add(new LoggedEvent("Received msgLeftDestination"));
 		synchronized(roles) {
 			for (MyRole mr : roles) {
@@ -810,7 +820,6 @@ public class PersonAgent extends Agent implements Person
 			}
 		}
 		
-		AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "Fuuuuckkkkk");
 		if (!unitTesting && goingHome && state.ts == TransportationState.walking && state.ls != LocationState.home && state.ls != LocationState.leavingHouse) {
 			goHome(); //if nothing left to do, go home and do whatever
 			return true;

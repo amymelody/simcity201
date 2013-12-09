@@ -67,6 +67,7 @@ public class ResidentRole extends Role implements Resident
 		locations.put("Stove", new Point(60, 140));
 		locations.put("Table", new Point(80, 340));
 		locations.put("Sofa", new Point(360, 240));
+		locations.put("Entrance", new Point(480, 220));
 		locations.put("Doorway", new Point(480, 240));
 		locations.put("Exit", new Point(480, 260));
 		gui = new ResidentGui(this);
@@ -231,7 +232,6 @@ public class ResidentRole extends Role implements Resident
 	{
 		commands.remove(c);
 		landlord.msgDingDong(this);
-		stateChanged();
 	}
 	private void sendPayRent(Command c)
 	{
@@ -239,8 +239,8 @@ public class ResidentRole extends Role implements Resident
 		landlord.msgPayRent(this, rent);
 		person.msgExpense(rent);
 		rent = -1;
-		//goToLocation(locations.get("Exit"), "Exit");
 		person.setRentDue(false);
+		state = ResidentState.away;
 		person.msgLeftDestination(this);
 	}
 	private void putGroceriesInFridge(Command c)
