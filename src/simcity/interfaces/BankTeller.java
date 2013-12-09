@@ -1,4 +1,5 @@
-package simcity.bank.interfaces;
+package simcity.interfaces;
+
 
 
 

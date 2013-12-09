@@ -2,10 +2,9 @@ package simcity.bank.test.mock;
 
 import java.util.Map;
 
-
-import simcity.bank.interfaces.BankDepositor;
-import simcity.bank.interfaces.BankTeller;
-
+import simcity.interfaces.BankDepositor;
+import simcity.interfaces.BankTeller;
+import simcity.interfaces.BankManager;
 
 //Works for normative and nonnormative scenarios
 
@@ -50,6 +49,30 @@ public class MockBankDepositor extends Mock implements BankDepositor {
 
 	@Override
 	public void msgGoToTellerDesk() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void msgBusinessDeposit(int cash) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void msgLoanDenied() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void msgYoureDead() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void msgLeaveMyBank() {
 		// TODO Auto-generated method stub
 		
 	}

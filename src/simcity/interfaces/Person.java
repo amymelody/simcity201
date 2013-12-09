@@ -78,4 +78,6 @@ public interface Person {
 	public abstract boolean businessOpen(String b);
 	
 	public abstract void stateChanged();
+
+	public abstract void msgGoodGuyAgain();
 }
