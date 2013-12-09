@@ -28,6 +28,8 @@ public class MarketGui extends BuildingGui
 	private final int WINDOWY = 500;
 	private final int BUFFERTOP = 50;
 	private final int BUFFERSIDE = 15;
+	
+	boolean closed = true;
 
 	/**
 	 * Constructor

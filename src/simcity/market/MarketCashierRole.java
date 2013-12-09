@@ -256,7 +256,7 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 	public void msgHereAreItems(Order order, MarketEmployee e) {
 		synchronized(orders) {
 			for(Order o: orders) {
-				if(o.equals(order)) {
+				if(o.customer.equals(order.customer)) {
 					o.oS = OrderState.ready;
 				}
 			}
