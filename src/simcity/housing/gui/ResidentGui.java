@@ -62,7 +62,6 @@ public class ResidentGui implements Gui
 		command = Command.noCommand;
 		error = false;
 	}
-	
 	public void setGui(HousingGuiInterface gui)
 	{
 		this.gui = gui;
@@ -271,7 +270,7 @@ public class ResidentGui implements Gui
 				boxesToCheck.add(gui.getBox(boxY, boxX - 1));
 			}
 		}
-		if (yPos == yGoal)
+		if (yPos == yGoal && boxX < 25)
 		{
 			if((boxY + 1) < 25)
 			{
