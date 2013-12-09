@@ -84,7 +84,6 @@ public class LandlordRole extends JobRole implements Landlord
 	}
 	public void msgEndShift()
 	{
-		AlertLog.getInstance().logMessage(AlertTag.BANK, name, "WOAH THERE");
 		//dummy method unnecessary for landlord 
 	}
 	public void msgDingDong(Resident r) //from Resident
@@ -118,7 +117,6 @@ public class LandlordRole extends JobRole implements Landlord
 
 	public void msgAtLocation()
 	{
-		AlertLog.getInstance().logMessage(AlertTag.BANK, name, "received msgAtLocation----------");
 		atLocation.release();
 	}
 
@@ -167,7 +165,6 @@ public class LandlordRole extends JobRole implements Landlord
     		sendEndShift();
     		return true;
     	}
-		AlertLog.getInstance().logMessage(AlertTag.BANK, name, "goToSofa----------");
     	goToLocation(locations.get("Sofa"), "");
     	return false;
     }

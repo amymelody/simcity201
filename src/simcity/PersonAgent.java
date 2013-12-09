@@ -140,6 +140,17 @@ public class PersonAgent extends Agent implements Person
 	
 	public void setOwnerHome(String home) {
 		houses.get(1).location = home;
+		for(MyRole mr : roles)
+		{
+			if(mr.name.equals("residentRole"))
+			{
+				if(mr.r instanceof ResidentRole)
+				{
+					ResidentRole r = (ResidentRole)(mr.r);
+					cG.addResident(r, houses.get(0).location, houses.get(0).location);
+				}
+			}
+		}
 	}
 	
 	public void setTestingAnimation(boolean tA) {
