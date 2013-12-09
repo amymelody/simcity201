@@ -90,6 +90,11 @@ public class ResidentGui implements Gui
 				exiting = false;
 				pastCommand = Command.noCommand;
 				command = Command.noCommand;
+				currentBox.setOpen(true);
+				List<MoveBox> boxTemp = new ArrayList<MoveBox>();
+				boxTemp.add(currentBox);
+				gui.setBox(boxTemp);
+				boxTemp.clear();
 				currentBox = null;
 				error = false;
 				
@@ -133,10 +138,13 @@ public class ResidentGui implements Gui
 				}
 				else
 				{
-					if(!arrived && xPos != 500 && yPos != 220)
+					if(!arrived)
 					{
-						resident.msgAtLocation();
-						arrived = true;
+						if(!(xPos == 500 && yPos == 220))
+						{
+							resident.msgAtLocation();
+							arrived = true;
+						}
 					}
 				}
 			}

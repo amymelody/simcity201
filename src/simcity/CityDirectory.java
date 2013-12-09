@@ -804,10 +804,16 @@ public class CityDirectory
 	
 	public void assignLandlord()
 	{
+		int i = 0;
 		for(PersonAgent p : renters)
 		{
-			p.setOwnerHome(landlords.get(0).getPersonAgent().getHome());
-			landlords.get(0).addRenter(p.getResident());
+			p.setOwnerHome(landlords.get(i).getPersonAgent().getHome());
+			landlords.get(i).addRenter(p.getResident());
+			i++;
+			if(i >= landlords.size())
+			{
+				i = 0;
+			}
 		}
 	}
 }

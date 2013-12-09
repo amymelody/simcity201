@@ -118,7 +118,7 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 	private static Map<Integer, Point> chairLocations = new HashMap<Integer, Point>();
 	static {
 		chairLocations.put(1, new Point(80, 320));
-		chairLocations.put(2, new Point(40, 320));
+		chairLocations.put(2, new Point(20, 320));
 		chairLocations.put(3, new Point(80, 340));
 		chairLocations.put(4, new Point(20, 340));
 		chairLocations.put(5, new Point(80, 360));
@@ -256,7 +256,7 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 	public void msgHereAreItems(Order order, MarketEmployee e) {
 		synchronized(orders) {
 			for(Order o: orders) {
-				if(o.equals(order)) {
+				if(o.customer.equals(order.customer)) {
 					o.oS = OrderState.ready;
 				}
 			}

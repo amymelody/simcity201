@@ -3,8 +3,14 @@ package simcity.gui;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
+import java.awt.Image;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import javax.swing.ImageIcon;
 
 import simcity.PersonAgent;
 import simcity.CityDirectory;
@@ -28,6 +34,11 @@ public class PersonGui implements Gui {
 	private Direction direction = Direction.Right;
 	private Font font = new Font("font", Font.PLAIN, 8);
 	private Timer timer = new Timer();
+	Image personImage;
+	List<ImageIcon> upAnimation = new ArrayList<ImageIcon>();
+	List<ImageIcon> rightAnimation = new ArrayList<ImageIcon>();
+	List<ImageIcon> downAnimation = new ArrayList<ImageIcon>();
+	List<ImageIcon> leftAnimation = new ArrayList<ImageIcon>();
 	
 	private enum Command {noCommand, Respawn, GoToDestination, BoardBus};
 	private enum Direction {Left, Right, Up, Down};
@@ -38,6 +49,26 @@ public class PersonGui implements Gui {
 		gui = g;
 		city = c;
 		currentNode = gui.getTrafficNodes().get(12);
+		
+		ImageIcon normal_maleU1 = new ImageIcon(this.getClass().getResource("images/person/normal_male_u1.png"));
+		ImageIcon normal_maleU2 = new ImageIcon(this.getClass().getResource("images/person/normal_male_u2.png"));
+		ImageIcon normal_maleR1 = new ImageIcon(this.getClass().getResource("images/person/normal_male_r1.png"));
+		ImageIcon normal_maleR2 = new ImageIcon(this.getClass().getResource("images/person/normal_male_r2.png"));
+		ImageIcon normal_maleD1 = new ImageIcon(this.getClass().getResource("images/person/normal_male_d1.png"));
+		ImageIcon normal_maleD2 = new ImageIcon(this.getClass().getResource("images/person/normal_male_d2.png"));
+		ImageIcon normal_maleL1 = new ImageIcon(this.getClass().getResource("images/person/normal_male_l1.png"));
+		ImageIcon normal_maleL2 = new ImageIcon(this.getClass().getResource("images/person/normal_male_l2.png"));
+		upAnimation.add(normal_maleU1);
+		upAnimation.add(normal_maleU2);
+		rightAnimation.add(normal_maleR1);
+		rightAnimation.add(normal_maleR2);
+		downAnimation.add(normal_maleD1);
+		downAnimation.add(normal_maleD2);
+		leftAnimation.add(normal_maleL1);
+		leftAnimation.add(normal_maleL2);
+		
+		personImage = downAnimation.get(0).getImage();
+		Collections.rotate(downAnimation, 1);
 	}
 
 	public void updatePosition() {
@@ -116,19 +147,27 @@ public class PersonGui implements Gui {
 				if (xPos < xGoal) {
 					gui.setBox(xPos, yPos, true);
 					xPos+=10;
+					personImage = rightAnimation.get(0).getImage();
+					Collections.rotate(rightAnimation, 1);
 					gui.setBox(xPos, yPos, false);
 				} else if (xPos > xGoal) {
 					gui.setBox(xPos, yPos, true);
 					xPos-=10;
+					personImage = leftAnimation.get(0).getImage();
+					Collections.rotate(leftAnimation, 1);
 					gui.setBox(xPos, yPos, false);
 				}
 				if (yPos < yGoal) {
 					gui.setBox(xPos, yPos, true);
 					yPos+=10;
+					personImage = downAnimation.get(0).getImage();
+					Collections.rotate(downAnimation, 1);
 					gui.setBox(xPos, yPos, false);
 				} else if (yPos > yGoal) {
 					gui.setBox(xPos, yPos, true);
 					yPos-=10;
+					personImage = upAnimation.get(0).getImage();
+					Collections.rotate(upAnimation, 1);
 					gui.setBox(xPos, yPos, false);
 				}
 			}
@@ -153,6 +192,8 @@ public class PersonGui implements Gui {
 					if (gui.getMoveBox(xPos, yPos+10).getOpen()) {
 						gui.setBox(xPos, yPos, true);
 						yPos+=10;
+						personImage = downAnimation.get(0).getImage();
+						Collections.rotate(downAnimation, 1);
 						gui.setBox(xPos, yPos, true);
 						ok = true;
 					} else {
@@ -162,6 +203,8 @@ public class PersonGui implements Gui {
 					if (gui.getMoveBox(xPos, yPos-10).getOpen()) {
 						gui.setBox(xPos, yPos, true);
 						yPos-=10;
+						personImage = upAnimation.get(0).getImage();
+						Collections.rotate(upAnimation, 1);
 						gui.setBox(xPos, yPos, true);
 						ok = true;
 					} else {
@@ -171,6 +214,8 @@ public class PersonGui implements Gui {
 					if (gui.getMoveBox(xPos-10, yPos).getOpen()) {
 						gui.setBox(xPos, yPos, true);
 						xPos-=10;
+						personImage = leftAnimation.get(0).getImage();
+						Collections.rotate(leftAnimation, 1);
 						gui.setBox(xPos, yPos, true);
 						ok = true;
 					} else {
@@ -180,6 +225,8 @@ public class PersonGui implements Gui {
 					if (gui.getMoveBox(xPos+10, yPos).getOpen()) {
 						gui.setBox(xPos, yPos, true);
 						xPos+=10;
+						personImage = rightAnimation.get(0).getImage();
+						Collections.rotate(rightAnimation, 1);
 						gui.setBox(xPos, yPos, true);
 						ok = true;
 					} else {
@@ -191,6 +238,8 @@ public class PersonGui implements Gui {
 						if (gui.getMoveBox(xPos+10, yPos).getOpen()) {
 							gui.setBox(xPos, yPos, true);
 							xPos+=10;
+							personImage = rightAnimation.get(0).getImage();
+							Collections.rotate(rightAnimation, 1);
 							gui.setBox(xPos, yPos, false);
 						}
 					}
@@ -198,6 +247,8 @@ public class PersonGui implements Gui {
 						if (gui.getMoveBox(xPos-10, yPos).getOpen()) {
 							gui.setBox(xPos, yPos, true);
 							xPos-=10;
+							personImage = leftAnimation.get(0).getImage();
+							Collections.rotate(leftAnimation, 1);
 							gui.setBox(xPos, yPos, false);
 						}
 					}
@@ -206,6 +257,8 @@ public class PersonGui implements Gui {
 						if (gui.getMoveBox(xPos, yPos+10).getOpen()) {
 							gui.setBox(xPos, yPos, true);
 							yPos+=10;
+							personImage = downAnimation.get(0).getImage();
+							Collections.rotate(downAnimation, 1);
 							gui.setBox(xPos, yPos, false);
 						}
 					}
@@ -213,6 +266,8 @@ public class PersonGui implements Gui {
 						if (gui.getMoveBox(xPos, yPos-10).getOpen()) {
 							gui.setBox(xPos, yPos, true);
 							yPos-=10;
+							personImage = upAnimation.get(0).getImage();
+							Collections.rotate(upAnimation, 1);
 							gui.setBox(xPos, yPos, false);
 						}
 					}
@@ -222,15 +277,23 @@ public class PersonGui implements Gui {
 			if (direction == Direction.Right && xPos == xGoal && yPos == yGoal+10) {
 				gui.setBox(xPos,  yPos,  true);
 				yPos -= 10;
+				personImage = upAnimation.get(0).getImage();
+				Collections.rotate(upAnimation, 1);
 			} else if (direction == Direction.Left && xPos == xGoal && yPos == yGoal-10) {
 				gui.setBox(xPos,  yPos,  true);
 				yPos += 10;
+				personImage = downAnimation.get(0).getImage();
+				Collections.rotate(downAnimation, 1);
 			} else if (direction == Direction.Up && yPos == yGoal && xPos == xGoal+10) {
 				gui.setBox(xPos,  yPos,  true);
 				xPos -= 10;
+				personImage = leftAnimation.get(0).getImage();
+				Collections.rotate(leftAnimation, 1);
 			} else if (direction == Direction.Down && yPos == yGoal && xPos == xGoal-10) {
 				gui.setBox(xPos,  yPos,  true);
 				xPos += 10;
+				personImage = rightAnimation.get(0).getImage();
+				Collections.rotate(rightAnimation, 1);
 			} 
 			
 			if (gui.getMoveBox(xPos, yPos).getHasVehicle() && command != Command.BoardBus) {
@@ -313,8 +376,9 @@ public class PersonGui implements Gui {
 				break;
 			}
 			g.setColor(Color.YELLOW);
-			g.fillRect(xPos, yPos, width, height);
-			g.setColor(Color.BLACK);
+			//g.fillRect(xPos, yPos, width, height);
+			g.drawImage(personImage, xPos, yPos, null);
+			g.setColor(Color.WHITE);
 			g.setFont(font);
 			g.drawString(text, xPos-2, yPos+10);
 		}

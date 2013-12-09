@@ -27,7 +27,11 @@ public class DelivererGui implements Gui {
 		locations.put("market1", new Point(370, 280));
 		locations.put("market2", new Point(370, 420));
 		locations.put("joshRestaurant", new Point(280, 280));
+<<<<<<< HEAD
 		locations.put("AnjaliRestaurant", new Point(420, 280));
+=======
+		locations.put("cherysRestaurant", new Point(420, 280));
+>>>>>>> 69d94d771c31445ba4d9105f6097bc65d6b7d4f6
 		locations.put("anjaliRestaurant", new Point(420, 420));
 		locations.put("jesusRestaurant", new Point(280, 420));
 	}
