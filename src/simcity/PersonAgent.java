@@ -537,10 +537,9 @@ public class PersonAgent extends Agent implements Person
 		}
 		if (job.role.equals("landlordRole")) {
 			LandlordRole l = (LandlordRole)(job.jobRole);
-<<<<<<< HEAD
+
 			cG.addLandlord(l, houses.get(0).location);
-=======
->>>>>>> anjali
+
 		}
 	}
 
@@ -829,11 +828,7 @@ public class PersonAgent extends Agent implements Person
 				}
 			}
 		}
-<<<<<<< HEAD
-		
-=======
 
->>>>>>> 69d94d771c31445ba4d9105f6097bc65d6b7d4f6
 		if (!unitTesting && goingHome && state.ts == TransportationState.walking && state.ls != LocationState.home && state.ls != LocationState.leavingHouse) {
 			goHome(); //if nothing left to do, go home and do whatever
 			return true;
@@ -1199,7 +1194,7 @@ public class PersonAgent extends Agent implements Person
 			this.startShifts = startShifts;
 			this.endShifts = endShifts;
 			switch (location) {
-<<<<<<< HEAD
+
 				case "joshRestaurant": case "AnjaliRestaurant": case "alfredRestaurant": case "anjaliRestaurant": case "jesusRestaurant":
 					jobLocation = LocationState.restaurant;
 					break;
@@ -1216,26 +1211,9 @@ public class PersonAgent extends Agent implements Person
 					break;
 				default:
 					break;
-=======
-			case "joshRestaurant": case "cherysRestaurant": case "alfredRestaurant": case "anjaliRestaurant": case "jesusRestaurant":
-				jobLocation = LocationState.restaurant;
-				break;
-			case "market1": case "market2":
-				jobLocation = LocationState.market;
-				break;
-			case "home":
-				jobLocation = LocationState.home;
-				break;
-			case "bank1": case "bank2":
-				endShifts.get(Day.Sun).hour = startShifts.get(Day.Sun).hour;	//Banks are closed on weekends
-				endShifts.get(Day.Sat).hour = startShifts.get(Day.Sat).hour;
-				jobLocation = LocationState.bank;
-				break;
-			default:
-				break;
->>>>>>> 69d94d771c31445ba4d9105f6097bc65d6b7d4f6
 			}
 		}
+		
 		Job(String l, String r, int p, Map<Day,Time> startShifts, Map<Day,Time> endShifts) {
 			location = l;
 			role = r;
@@ -1243,7 +1221,7 @@ public class PersonAgent extends Agent implements Person
 			this.startShifts = startShifts;
 			this.endShifts = endShifts;
 			switch (location) {
-<<<<<<< HEAD
+
 				case "joshRestaurant": case "AnjaliRestaurant": case "alfredRestaurant": case "anjaliRestaurant": case "jesusRestaurant":
 					jobLocation = LocationState.restaurant;
 					break;
@@ -1260,24 +1238,7 @@ public class PersonAgent extends Agent implements Person
 					break;
 				default:
 					break;
-=======
-			case "joshRestaurant": case "cherysRestaurant": case "alfredRestaurant": case "anjaliRestaurant": case "jesusRestaurant":
-				jobLocation = LocationState.restaurant;
-				break;
-			case "market1": case "market2":
-				jobLocation = LocationState.market;
-				break;
-			case "home":
-				jobLocation = LocationState.home;
-				break;
-			case "bank1": case "bank2":
-				endShifts.get(Day.Sun).hour = startShifts.get(Day.Sun).hour;	//Banks are closed on weekends
-				endShifts.get(Day.Sat).hour = startShifts.get(Day.Sat).hour;
-				jobLocation = LocationState.bank;
-				break;
-			default:
-				break;
->>>>>>> 69d94d771c31445ba4d9105f6097bc65d6b7d4f6
+
 			}
 		}
 		JobRole jobRole;
