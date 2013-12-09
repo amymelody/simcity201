@@ -1,11 +1,11 @@
 package simcity.anjalirestaurant;
-import agent.Agent;
-import simcity.anjalirestaurant.interfaces.Cashier;
-import simcity.anjalirestaurant.interfaces.Cook;
-import simcity.anjalirestaurant.interfaces.Market;
-
-import java.util.*;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.Semaphore;
+
+import simcity.anjalirestaurant.interfaces.AnjaliCashier;
+import simcity.anjalirestaurant.interfaces.AnjaliCook;
+import simcity.anjalirestaurant.interfaces.AnjaliMarket;
 
 /**
  * Restaurant Market Agent
@@ -14,14 +14,14 @@ import java.util.concurrent.Semaphore;
 //does all the rest. Rather than calling the other agent a waiter, we called him
 //the HostAgent. A Host is the manager of a restaurant who sees that all
 //is proceeded as he wishes.
-public class MarketAgent extends Agent implements Market {
+public class AnjaliMarketRole extends Agent implements AnjaliMarket {
 	static final int NTABLES = 3;//a global for the number of tables.
 	
 	private String name;
 	private Semaphore atTable = new Semaphore(0,true);
 	private String sendThisFood;
-	private Cook cook;
-	private Cashier cashier;
+	private AnjaliCook cook;
+	private AnjaliCashier cashier;
 	Timer timer = new Timer(); 
 	public boolean partOrderFulfilled = true;
 	private int steakInventory = 2;
@@ -36,7 +36,7 @@ public class MarketAgent extends Agent implements Market {
 	private MarketState state = MarketState.nothing;
 		
 
-	public MarketAgent(String name) {
+	public AnjaliMarketRole(String name) {
 		super();
 
 		this.name = name;
@@ -51,7 +51,7 @@ public class MarketAgent extends Agent implements Market {
 /////MESSAGES////////
 	
 		
-	public void msgOrderSupply(String food, Cook c, int reduceInventory, boolean canPay){
+	public void msgOrderSupply(String food, AnjaliCook c, int reduceInventory, boolean canPay){
 	
 	this.brokeCashier = canPay;
 		Do("Market has received request from cook for more food");
@@ -100,7 +100,7 @@ public class MarketAgent extends Agent implements Market {
 		
 			
 		}
-	public void msgCheckInventory(String food, Cook c){
+	public void msgCheckInventory(String food, AnjaliCook c){
 		//Do("Market " + this.getName() + " received message to check inventory");
 		this.cook = c;
 		//this.sendThisFood = food;

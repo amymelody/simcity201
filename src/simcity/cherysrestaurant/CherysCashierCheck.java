@@ -1,19 +1,19 @@
-package simcity.cherysrestaurant;
+package simcity.Anjalirestaurant;
 
-import simcity.cherysrestaurant.CherysCashierRole.CheckState;
-import simcity.cherysrestaurant.interfaces.*;
+import simcity.Anjalirestaurant.AnjaliCashierRole.CheckState;
+import simcity.Anjalirestaurant.interfaces.*;
 
-public class CherysCashierCheck
+public class AnjaliCashierCheck
 {
-	public CherysWaiter waiter;
-	public CherysCustomer customer;
+	public AnjaliWaiter waiter;
+	public AnjaliCustomer customer;
 	public int table;
 	public String order;
 	public double total;
 	public double amountPaid = 0.0;
 	public CheckState state = null;
 	
-	public CherysCashierCheck(CherysWaiter w, int table, String o, double t)
+	public AnjaliCashierCheck(AnjaliWaiter w, int table, String o, double t)
 	{
 		waiter = w;
 		this.table = table;

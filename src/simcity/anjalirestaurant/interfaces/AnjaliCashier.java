@@ -10,17 +10,15 @@ package simcity.anjalirestaurant.interfaces;
 //is proceeded as he wishes.
 
 //Works for normative and nonnormative scenarios
-public interface Cook {
+public interface AnjaliCashier {
 	
 /////MESSAGES////////
-	public abstract void msgHereIsOrder(String name, String choice, int tableNumber, Waiter waiter);
+	public abstract void msgMakeCheck(AnjaliCustomer c, String choice, int tableNumber, AnjaliWaiter w);
 		
 	
-	public abstract void msgHereIsMoreFood(String food);
+	public abstract void msgIHaveNoMoney(AnjaliCustomer c);
 		
-	public abstract void msgOrderFromMe(Market m);
+	public abstract void msgTakeMyMoney(AnjaliCustomer c, double p);
 	
-	public abstract void msgPartOrderFulfilled(String food);
-	
-	public abstract void msgNoMarketSupply(String food);
+	public abstract void msgPayMarket(AnjaliMarket m, boolean broke, double price);
 }

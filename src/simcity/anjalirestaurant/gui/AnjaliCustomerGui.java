@@ -3,16 +3,16 @@ package simcity.anjalirestaurant.gui;
 import java.awt.Color;
 import java.awt.Graphics2D;
 
-import restaurant.CustomerAgent;
+import simcity.Anjalirestaurant.AnjaliCustomerRole;
 
-public class AnjaliCustomerGui implements Gui{
+public class AnjaliCustomerGui implements AnjaliGui{
 
-	private CherysCustomerRole agent = null;
+	private AnjaliCustomerRole agent = null;
 	private boolean isPresent = false;
 	private boolean isHungry = false;
 
 	//private HostAgent host;
-	RestaurantGui gui;
+	AnjaliRestaurantGui gui;
 
 	private int xPos, yPos;
 	private int xDestination, yDestination;
@@ -22,7 +22,7 @@ public class AnjaliCustomerGui implements Gui{
 	public static final int xTable = 200;
 	public static final int yTable = 250;
 	private int xHomePos = 0;
-	public AnjaliCustomerGui(CherysCustomerRole c, RestaurantGui gui, int xPos){ //HostAgent m) {
+	public AnjaliCustomerGui(AnjaliCustomerRole c, AnjaliRestaurantGui gui, int xPos){ //HostAgent m) {
 		this.xHomePos = xPos;
 		agent = c;
 		xPos = -20;

@@ -18,46 +18,12 @@ import simcity.trace.AlertTag;
 
 //Bank Manager Role
 	
-<<<<<<< HEAD
-	String name;
-	
-	public BankManagerRole(){
-		super();
-	}
-	
-	public BankManagerRole(String name) {
-		this.name = name;
-	}
-	
-	public String getMaitreDName(){
-		return name;
-	}
-	
-	public String getName(){
-		return name;
-	}
-	
-	public void setPerson(Person p){
-		super.setPerson(p);
-		name = p.getName();
-	}
-	
-	public void setTellers(BankTeller t){
-		addTeller(t);
-	}
-	
-	public void setBankState(boolean open){
-		if(open){
-			bS = BankState.open;
-			working = true;
-=======
 	public class BankManagerRole extends JobRole implements BankManager  {
 		
 		String name;
 		
 		public BankManagerRole(){
 			super();
->>>>>>> anjali
 		}
 		
 		public BankManagerRole(String name) {
@@ -177,35 +143,6 @@ import simcity.trace.AlertTag;
 			bS = BankState.closing;
 		}
 
-<<<<<<< HEAD
-	
-	
-	
-	public void msgWereOpen(){
-		bS = BankState.open;
-	
-	}
-	// Normative Scenario #1
-	public void msgTransaction(BankDepositor c){
-		AlertLog.getInstance().logMessage(AlertTag.BANK, name, "Manager is adding customer to a list of waiting customers");
-
-	
-		if(findCustomer(c) == null){
-			AlertLog.getInstance().logMessage(AlertTag.BANK, name, "Customer does not have an account in bank, creating account");
-			customers.add(new myCustomer(c));
-			waitingCustomers.add(c);
-			findCustomer(c).cS = CustomerState.arrived;
-			stateChanged();
-		}	
-		else{
-			AlertLog.getInstance().logMessage(AlertTag.BANK, name, "Manager has accessed customer account");
-			waitingCustomers.add(c);
-
-			findCustomer(c).cS = CustomerState.arrived;
-			stateChanged();
-		}
-		}
-=======
 		
 		
 		
@@ -234,42 +171,9 @@ import simcity.trace.AlertTag;
 			}
 			}
 				
->>>>>>> anjali
 			
 		
 
-<<<<<<< HEAD
-	
-	public void msgMarketTransaction(BankDepositor c){
-		AlertLog.getInstance().logMessage(AlertTag.BANK, name, "Manager is adding business to a list of waiting customers");
-
-		//BankManagerRole changes 
-		if(findCustomer(c) == null){
-			customers.add(new myCustomer(c));
-		}
-		AlertLog.getInstance().logMessage(AlertTag.BANK, name, "Finding customer and changing state");
-
-			findCustomer(c).cS = CustomerState.marketArrived;
-			waitingCustomers.add(c);
-		stateChanged();
-	}
-	
-	public void msgProcessTransaction(BankTeller t, BankDepositor c, int transactionRequest){
-		AlertLog.getInstance().logMessage(AlertTag.BANK, name, "Bank manager is processing transaction");
-		teller = t;
-		//Making withdrawal
-		if(transactionRequest < 0){
-			if(findCustomer(c).cashInBank < -transactionRequest){
-				findCustomer(c).cS = CustomerState.transactionDenied;
-			}
-		}
-			else{
-				findCustomer(c).cashInBank += transactionRequest;
-				bankMoney += transactionRequest;
-				findCustomer(c).cS = CustomerState.transactionProcessed;
-				stateChanged();
-			}
-=======
 		
 		public void msgMarketTransaction(BankDepositor c){
 			AlertLog.getInstance().logMessage(AlertTag.BANK, name, "Manager is adding business to a list of waiting customers");
@@ -309,68 +213,8 @@ import simcity.trace.AlertTag;
 			stateChanged();
 			
 		}
->>>>>>> anjali
 		
 		
-<<<<<<< HEAD
-	}
-	
-	
-	///Non norm with robber
-	
-	public void msgImRobbingYourBank(BankDepositor c, int cash){
-		if(findCustomer(c) == null){
-			customers.add(new myCustomer(c));
-		}
-			findCustomer(c).cS = CustomerState.robberArrived;
-			findCustomer(c).robber = true;
-			bankMoney = bankMoney - cash;
-		stateChanged();
-	}
-	
-	public void msgHeresYourMoneyBack(BankDepositor c, int cash){
-		findCustomer(c).cS = CustomerState.robberCaught;
-		bankMoney += cash;
-		stateChanged();
-	}
-	
-	
-	
-	/////SCHEDULER//////
-	public boolean pickAndExecuteAnAction() {
-		synchronized(customers){
-			for(myCustomer c : customers){
-				if(c.cS == CustomerState.arrived && !tellers.isEmpty()){
-					c.cS = CustomerState.nothing;
-					helpCustomer(c.customer, findTeller());
-					return true;
-				}
-			}
-			for(myCustomer k : customers){
-				if(k.cS == CustomerState.transactionDenied){
-					k.cS = CustomerState.nothing;
-					transactionDenied(k.customer);
-				}
-			}
-			for(myCustomer b : customers){
-				if(b.cS == CustomerState.checkingLoan){
-					b.cS = CustomerState.nothing;
-					checkLoan(b.customer);
-				}
-			}
-			for(myCustomer x : customers){
-				if(x.cS == CustomerState.transactionProcessed){
-					x.cS = CustomerState.nothing;
-					transactionComplete(x.customer);
-				}
-			}
-		
-			for(myCustomer j : customers){
-				if(j.cS == CustomerState.marketArrived && !tellers.isEmpty()){
-					j.cS = CustomerState.nothing;
-					helpCustomer(waitingCustomers.get(0), findTeller());
-					return true;
-=======
 		///Non norm with robber
 		
 		public void msgImRobbingYourBank(BankDepositor c, int cash){
@@ -418,22 +262,8 @@ import simcity.trace.AlertTag;
 						x.cS = CustomerState.nothing;
 						transactionComplete(x.customer);
 					}
->>>>>>> anjali
 				}
 			
-<<<<<<< HEAD
-			for(myCustomer d : customers){
-				if(d.cS == CustomerState.robberArrived){
-					d.cS = CustomerState.nothing;
-					KillRobber(d.customer);
-					return true;
-				}
-			}
-			for(myCustomer e : customers){
-				if(e.cS == CustomerState.robberCaught){
-					e.cS = CustomerState.nothing;
-					ReturnToNormal(e.customer);
-=======
 				for(myCustomer j : customers){
 					if(j.cS == CustomerState.marketArrived && !tellers.isEmpty()){
 						j.cS = CustomerState.nothing;
@@ -459,7 +289,6 @@ import simcity.trace.AlertTag;
 			}
 				if(bS == BankState.closing) {
 					closeUp();
->>>>>>> anjali
 					return true;
 				}
 			
@@ -485,17 +314,6 @@ import simcity.trace.AlertTag;
 			
 		}
 		
-<<<<<<< HEAD
-	}
-	
-	private BankTeller findTeller () {
-		
-		
-		for(myTeller t : tellers){
-			if(t.tS == TellerState.working){
-				AlertLog.getInstance().logMessage(AlertTag.BANK, name, "Teller found");
-				return t.t;
-=======
 		private BankTeller findTeller () {
 			
 			
@@ -504,7 +322,6 @@ import simcity.trace.AlertTag;
 					AlertLog.getInstance().logMessage(AlertTag.BANK, name, "Teller found");
 					return t.t;
 				}
->>>>>>> anjali
 			}
 			
 			
@@ -531,65 +348,6 @@ import simcity.trace.AlertTag;
 			teller.msgTransactionComplete(c, findCustomer(c).cashInBank);
 		}
 		
-<<<<<<< HEAD
-	return null;
-	}	
-	
-	private void helpCustomer(BankDepositor c, BankTeller t){
-		AlertLog.getInstance().logMessage(AlertTag.BANK, name, "Manager is finding a teller to help the customer");
-		findCustomer(c).cS = CustomerState.beingHelped;
-		t.msgHelpCustomer(c);
-		
-	}
-	
-	private void transactionDenied(BankDepositor c){
-		AlertLog.getInstance().logMessage(AlertTag.BANK, name, "Manager has denid transaction, not enough funds");
-
-		teller.msgTransactionDenied(c);
-	}
-	private void transactionComplete(BankDepositor c) {
-		AlertLog.getInstance().logMessage(AlertTag.BANK, name, "Manager has successfully processed transaction");
-
-
-		findCustomer(c).cS = CustomerState.transactionComplete;
-		teller.msgTransactionComplete(c, findCustomer(c).cashInBank);
-	}
-	
-	private void checkLoan(BankDepositor c){
-		if(bankMoney > 300 && findCustomer(c).cashInBank == 0){
-			bankMoney = bankMoney - 100;
-			findCustomer(c).cashInBank += 100;
-			teller.msgLoanApproved(c, findCustomer(c).cashInBank);
-		}
-		else
-			teller.msgLoanDenied(c);
-	}
-	///Robber scenario
-	
-	private void KillRobber(BankDepositor c){
-		AlertLog.getInstance().logMessage(AlertTag.BANK, name, "I'm gonna kill that robber");
-
-		gui.GoToRobber();
-		gui.drawGun("Manager with GUN");
-		try {
-			managerAnimation.acquire();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		c.msgYoureDead();
-	}
-	
-	private void ReturnToNormal(BankDepositor c){
-		AlertLog.getInstance().logMessage(AlertTag.BANK, name, "Alright, everything is back to normal, robber is gone");
-
-		c.msgLeaveMyBank();
-		gui.GoToHome();
-		gui.drawGun("Manager");
-		try {
-			managerAnimation.acquire();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-=======
 		private void checkLoan(BankDepositor c){
 			if(bankMoney > 300 && findCustomer(c).cashInBank == 0){
 				bankMoney = bankMoney - 100;
@@ -612,7 +370,6 @@ import simcity.trace.AlertTag;
 				e.printStackTrace();
 			}
 			c.msgYoureDead();
->>>>>>> anjali
 		}
 		
 		private void ReturnToNormal(BankDepositor c){
@@ -631,14 +388,6 @@ import simcity.trace.AlertTag;
 		
 		// Employee class (Cashier's view of employees)
 		
-<<<<<<< HEAD
-	}
-	public enum CustomerState{doingNothing, marketArrived, arrived, 
-		marketHelped, beingHelped, marketLeaving, leaving, 
-		marketTransactionComplete, transactionProcessed, transactionDenied, checkingLoan, transactionComplete,
-		robberArrived, robberCaught, robberMoneyReturned, robberLeft, nothing};
-	
-=======
 		
 		//Customer class
 		public class myCustomer{
@@ -647,7 +396,6 @@ import simcity.trace.AlertTag;
 			String name;
 			CustomerState cS;
 			boolean robber;
->>>>>>> anjali
 
 			myCustomer(BankDepositor c){
 				customer = c;
@@ -706,28 +454,6 @@ import simcity.trace.AlertTag;
 		public void addTeller(BankTeller t){
 			tellers.add(new myTeller(t, TellerState.doingNothing));
 		}
-<<<<<<< HEAD
-	}
-	public enum TellerState{doingNothing, working};
-	
-	
-	public void addTeller(BankTeller t){
-		tellers.add(new myTeller(t, TellerState.doingNothing));
-	}
-
-	
-
-	
-
-	
-	
-
-	
-
-	
-}	
-=======
->>>>>>> anjali
 
 		
 

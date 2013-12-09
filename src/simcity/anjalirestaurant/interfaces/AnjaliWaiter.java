@@ -1,7 +1,7 @@
 package simcity.anjalirestaurant.interfaces;
 
-import restaurant.CookAgent.Order;
-import restaurant.HostAgent.Table;
+import simcity.anjalirestaurant.AnjaliCookRole.Order;
+import simcity.anjalirestaurant.AnjaliHostRole.Table;
 
 
 /**
@@ -14,20 +14,20 @@ import restaurant.HostAgent.Table;
 
 //Works for normative and nonnormative scenarios
 
-public interface Waiter {
+public interface AnjaliWaiter {
 	
 	//////////// MESSAGES MESSAGES MESSAGES MESSAGES ///////////
 	
-	public abstract void msgSitThisCustomer(Customer c, Table t);
-	public abstract void msgReadyForCheck(Customer c);
-	public abstract void msgReadyToOrder(Customer c);
+	public abstract void msgSitThisCustomer(AnjaliCustomer c, Table t);
+	public abstract void msgReadyForCheck(AnjaliCustomer c);
+	public abstract void msgReadyToOrder(AnjaliCustomer c);
 	public abstract void msgBreakAllowed();
-	public abstract void msgHereIsMyChoice(Customer c, String food);
+	public abstract void msgHereIsMyChoice(AnjaliCustomer c, String food);
 	public abstract void msgHereIsCheck(int tn, double amount);
 	public abstract String getName();
 	public abstract void msgNoMoreFood(Order o);
 	public abstract void msgRemoveItem(String food);
 	public abstract void msgOrderIsReady(int tableNumber);
-	public abstract void msgLeavingTable(Customer c);
+	public abstract void msgLeavingTable(AnjaliCustomer c);
 
 }

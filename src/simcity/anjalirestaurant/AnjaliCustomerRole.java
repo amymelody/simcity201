@@ -7,11 +7,13 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.Semaphore;
 
-import restaurant.gui.CustomerGui;
-import simcity.anjalirestaurant.interfaces.Cashier;
-import simcity.anjalirestaurant.interfaces.Customer;
-import simcity.anjalirestaurant.interfaces.Waiter;
-import agent.Agent;
+import simcity.RestCustomerRole;
+import simcity.anjalirestaurant.gui.AnjaliCustomerGui;
+import simcity.anjalirestaurant.interfaces.AnjaliCashier;
+import simcity.anjalirestaurant.interfaces.AnjaliCustomer;
+import simcity.anjalirestaurant.interfaces.AnjaliHost;
+import simcity.anjalirestaurant.interfaces.AnjaliWaiter;
+import simcity.interfaces.Person;
 
 
 /**
@@ -21,7 +23,7 @@ import agent.Agent;
 //Works for normative and nonnormative scenarios
 
 
-public class CustomerAgent extends Agent implements Customer{
+public class AnjaliCustomerRole extends RestCustomerRole implements AnjaliCustomer{
 	private String name;
 	String pizzaName = "Pizza";
 	String poorCustomer = "poorCustomer";
@@ -37,9 +39,9 @@ public class CustomerAgent extends Agent implements Customer{
 	int tableX;
 	int tableY;
 	// agent correspondents
-	private HostAgent host;
-	private Waiter waiter;
-	private Cashier cashier;
+	private AnjaliHost host;
+	private AnjaliWaiter waiter;
+	private AnjaliCashier cashier;
 	//    private boolean isHungry = false; //hack for gui
 	public enum CustomerState
 	{DoingNothing, WaitingInRestaurant, WaitingForTable, BeingSeated, Seated, ReadingMenu, ReadyToOrder, Ordered, Eating, DoneEating, readyToPay, paid, Leaving};
@@ -52,6 +54,7 @@ public class CustomerAgent extends Agent implements Customer{
 	Map<String, Double> m;
 	
 	double price = 0.00;
+	int cash;
 	/**
 	 * Constructor for Customer class
 	 *
@@ -59,28 +62,33 @@ public class CustomerAgent extends Agent implements Customer{
 	 * @param gui  reference to the customergui so the customer can send it messages
 	 */
 	
-	public CustomerAgent (String name){
+	public AnjaliCustomerRole (String name){
 		super();
 		this.name = name;
-		
+		cash = 30;
 	}
 	
 	public String getCustomerChoice(){
 		return foodSelection;
 	}
 
+	public void setPerson(Person p){
+		super.setPerson(p);
+		name = person.getName();
+		cash = person.getMoney();
+	}
 	/**
 	 * hack to establish connection to Host agent.
 	 */
-	public void setHost(HostAgent host) {
+	public void setHost(AnjaliHost host) {
 		this.host = host;
 	}
 	
-	public void setWaiter(Waiter waiter){
+	public void setWaiter(AnjaliWaiter waiter){
 		this.waiter = waiter;
 	}
 	
-	public void setCashier(CashierAgent cashier){
+	public void setCashier(AnjaliCashier cashier){
 		this.cashier = cashier;
 	}
 	public String getCustomerName() {
@@ -120,7 +128,7 @@ public class CustomerAgent extends Agent implements Customer{
 		}
 
 	
-	public void msgFollowMeToTable(int tableX, int tableY, Map<String, Double> m, Waiter w) {
+	public void msgFollowMeToTable(int tableX, int tableY, Map<String, Double> m, AnjaliWaiter w) {
 	
 		print("Received msgFollowMeToTable");
 		this.tableX = tableX;
@@ -188,7 +196,7 @@ public class CustomerAgent extends Agent implements Customer{
 	/**
 	 * Scheduler.  Determine what action is called for, and do it.
 	 */
-	protected boolean pickAndExecuteAnAction() {
+	public boolean pickAndExecuteAnAction() {
 		//	Customer is a finite state machine
 
 		
@@ -451,6 +459,9 @@ public class CustomerAgent extends Agent implements Customer{
 			else{
 				Do("Customer is paying cashier:" + price);
 		cashier.msgTakeMyMoney(this, price);
+		int payment = (int)Math.round(price);
+		cash -= payment;
+		person.msgExpense(payment);
 			}
 		}
 	
@@ -459,6 +470,8 @@ public class CustomerAgent extends Agent implements Customer{
 		Do("Leaving.");
 		waiter.msgLeavingTable(this);
 		customerGui.DoExitRestaurant();
+		
+		person.msgLeftDestination(this);
 	}
 
 	public void drawString(){
@@ -490,6 +503,12 @@ public class CustomerAgent extends Agent implements Customer{
 
 	public AnjaliCustomerGui getGui() {
 		return customerGui;
+	}
+
+	@Override
+	public void setCash(int c) {
+		// TODO Auto-generated method stub
+		
 	}
 }
 

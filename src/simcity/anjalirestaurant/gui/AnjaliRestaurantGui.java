@@ -14,13 +14,13 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import restaurant.CustomerAgent;
-import restaurant.WaiterAgent;
+import simcity.Anjalirestaurant.AnjaliCustomerRole;
+import simcity.Anjalirestaurant.AnjaliWaiterRole;
 /**
  * Main GUI class.
  * Contains the main frame and subsequent panels
  */
-public class RestaurantGui extends JFrame implements ActionListener {
+public class AnjaliRestaurantGui extends JFrame implements ActionListener {
     /* The GUI has two frames, the control frame (in variable gui) 
      * and the animation frame, (in variable animationFrame within gui)
      */
@@ -32,7 +32,7 @@ public class RestaurantGui extends JFrame implements ActionListener {
      *    in RestaurantPanel()
      * 2) the infoPanel about the clicked Customer (created just below)
      */    
-    private RestaurantPanel restPanel = new RestaurantPanel(this);
+    private AnjaliRestaurantPanel restPanel = new AnjaliRestaurantPanel(this);
     
     /* infoPanel holds information about the clicked customer, if there is one*/
     private JPanel infoPanel;
@@ -47,7 +47,7 @@ public class RestaurantGui extends JFrame implements ActionListener {
      * Constructor for RestaurantGui class.
      * Sets up all the gui components.
      */
-    public RestaurantGui() {
+    public AnjaliRestaurantGui() {
         int WINDOWX = 1000;
         int WINDOWY = 1000;
        
@@ -117,8 +117,8 @@ public class RestaurantGui extends JFrame implements ActionListener {
         //stateWB.setVisible(true);
         currentPerson = person;
 
-        if (person instanceof CherysCustomerRole) {
-            CherysCustomerRole customer = (CherysCustomerRole) person;
+        if (person instanceof AnjaliCustomerRole) {
+            AnjaliCustomerRole customer = (AnjaliCustomerRole) person;
             stateCB.setText("Hungry?");
           //Should checkmark be there? 
             stateCB.setSelected(customer.getGui().isHungry());
@@ -129,8 +129,8 @@ public class RestaurantGui extends JFrame implements ActionListener {
                "<html><pre>     Name: " + customer.getName() + " </pre></html>");
         }
         
-       if(person instanceof CherysWaiterRole){
-    	   CherysWaiterRole waiter = (CherysWaiterRole) person;
+       if(person instanceof AnjaliWaiterRole){
+    	   AnjaliWaiterRole waiter = (AnjaliWaiterRole) person;
     	   stateCB.setText("Wants break?");
     	   //Setting checkmark false because waiter doesn't want break immediately
     	   stateCB.setSelected(false);
@@ -149,15 +149,15 @@ public class RestaurantGui extends JFrame implements ActionListener {
      */
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == stateCB) {
-            if (currentPerson instanceof CherysCustomerRole) {
-                CherysCustomerRole c = (CherysCustomerRole) currentPerson;
+            if (currentPerson instanceof AnjaliCustomerRole) {
+                AnjaliCustomerRole c = (AnjaliCustomerRole) currentPerson;
                 c.getGui().setHungry();
                 stateCB.setEnabled(false);
             }
         }
         if(e.getSource() == stateCB){
-        	if(currentPerson instanceof CherysWaiterRole){
-        		CherysWaiterRole w = (CherysWaiterRole) currentPerson;
+        	if(currentPerson instanceof AnjaliWaiterRole){
+        		AnjaliWaiterRole w = (AnjaliWaiterRole) currentPerson;
         		System.out.println("Waiter wants break button selected");
         		w.msgWantsBreak();
         		stateCB.setEnabled(false);
@@ -171,9 +171,9 @@ public class RestaurantGui extends JFrame implements ActionListener {
      *
      * @param c reference to the CustomerAgent
      */
-    public void setCustomerEnabled(CherysCustomerRole c) {
-        if (currentPerson instanceof CherysCustomerRole) {
-            CherysCustomerRole cust = (CherysCustomerRole) currentPerson;
+    public void setCustomerEnabled(AnjaliCustomerRole c) {
+        if (currentPerson instanceof AnjaliCustomerRole) {
+            AnjaliCustomerRole cust = (AnjaliCustomerRole) currentPerson;
             if (c.equals(cust)) {
                 stateCB.setEnabled(true);
                 stateCB.setSelected(false);
@@ -184,7 +184,7 @@ public class RestaurantGui extends JFrame implements ActionListener {
      * Main routine to get gui started
      */
     public static void main(String[] args) {
-        RestaurantGui gui = new RestaurantGui();
+        AnjaliRestaurantGui gui = new AnjaliRestaurantGui();
         gui.setTitle("csci201 Restaurant");
         gui.setVisible(true);
         gui.setLocationRelativeTo(null);

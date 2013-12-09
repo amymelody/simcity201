@@ -1075,10 +1075,10 @@ public class CityAnimationPanel extends JPanel implements ActionListener, MouseL
 				}
 			}
 			if(x > 390 && x < 419 && y > 290 && y < 340) {
-				// Cherys's Restaurant
+				// Anjali's Restaurant
 				synchronized(buildings) {
 					for(BuildingGui bG: buildings) {
-						if(bG.getName().equals("cherysRestaurant")) {
+						if(bG.getName().equals("AnjaliRestaurant")) {
 							if(currentBG != null)
 								currentBG.changeView(false);
 							bG.changeView(true);

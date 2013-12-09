@@ -1,12 +1,17 @@
 package simcity.anjalirestaurant.gui;
 
-import javax.swing.*;
-
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
+
+import javax.swing.JPanel;
+import javax.swing.Timer;
 
 public class AnjaliRestaurantAnimationPanel extends JPanel implements ActionListener {
 
@@ -18,7 +23,7 @@ public class AnjaliRestaurantAnimationPanel extends JPanel implements ActionList
     private Image bufferImage;
     private Dimension bufferSize;
 
-    private List<Gui> guis = new ArrayList<Gui>();
+    private List<AnjaliGui> guis = new ArrayList<AnjaliGui>();
 
     public AnjaliRestaurantAnimationPanel() {
     	setSize(WINDOWX, WINDOWY);
@@ -71,13 +76,13 @@ public class AnjaliRestaurantAnimationPanel extends JPanel implements ActionList
         fridge.fillRect(70, 250, 10, 20);
         fridge.drawString("Fridge", 70, 250);
 
-        for(Gui gui : guis) {
+        for(AnjaliGui gui : guis) {
             if (gui.isPresent()) {
                 gui.updatePosition();
             }
         }
 
-        for(Gui gui : guis) {
+        for(AnjaliGui gui : guis) {
             if (gui.isPresent()) {
                 gui.draw(g2);
                 gui.draw(g3);
@@ -93,12 +98,12 @@ public class AnjaliRestaurantAnimationPanel extends JPanel implements ActionList
         guis.add(gui);
     }
     
-    public void addGui(WaiterGui gui){
+    public void addGui(AnjaliWaiterGui gui){
     	guis.add(gui);
     	
     }
 
-    public void addGui(HostGui gui) {
+    public void addGui(AnjaliHostGui gui) {
         guis.add(gui);
     }
     public void addGui(AnjaliCookGui gui){

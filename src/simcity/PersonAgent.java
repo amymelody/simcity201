@@ -99,7 +99,7 @@ public class PersonAgent extends Agent implements Person
 		houses.add(new Housing("ownerHouse", "residentRole"));
 		
 		restaurants.add(new Restaurant("joshRestaurant", "italian", "joshCustomerRole"));
-		restaurants.add(new Restaurant("cherysRestaurant", "blah", "cherysCustomerRole"));
+		restaurants.add(new Restaurant("AnjaliRestaurant", "blah", "AnjaliCustomerRole"));
 		restaurants.add(new Restaurant("jesusRestaurant", "bleh", "jesusCustomerRole"));
 		restaurants.add(new Restaurant("anjaliRestaurant", "blih", "anjaliCustomerRole"));
 		
@@ -382,7 +382,7 @@ public class PersonAgent extends Agent implements Person
 			if (destination.equals("joshRestaurant")) {
 				return restaurants.get(0);
 			}
-			if (destination.equals("cherysRestaurant")) {
+			if (destination.equals("AnjaliRestaurant")) {
 				return restaurants.get(1);
 			}
 			if (destination.equals("jesusRestaurant")) {
@@ -1185,7 +1185,7 @@ public class PersonAgent extends Agent implements Person
 			this.startShifts = startShifts;
 			this.endShifts = endShifts;
 			switch (location) {
-				case "joshRestaurant": case "cherysRestaurant": case "alfredRestaurant": case "anjaliRestaurant": case "jesusRestaurant":
+				case "joshRestaurant": case "AnjaliRestaurant": case "alfredRestaurant": case "anjaliRestaurant": case "jesusRestaurant":
 					jobLocation = LocationState.restaurant;
 					break;
 				case "market1": case "market2":
@@ -1210,7 +1210,7 @@ public class PersonAgent extends Agent implements Person
 			this.startShifts = startShifts;
 			this.endShifts = endShifts;
 			switch (location) {
-				case "joshRestaurant": case "cherysRestaurant": case "alfredRestaurant": case "anjaliRestaurant": case "jesusRestaurant":
+				case "joshRestaurant": case "AnjaliRestaurant": case "alfredRestaurant": case "anjaliRestaurant": case "jesusRestaurant":
 					jobLocation = LocationState.restaurant;
 					break;
 				case "market1": case "market2":

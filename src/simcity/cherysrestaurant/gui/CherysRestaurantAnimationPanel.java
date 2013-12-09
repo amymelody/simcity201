@@ -1,4 +1,4 @@
-package simcity.cherysrestaurant.gui;
+package simcity.Anjalirestaurant.gui;
 
 import javax.swing.*;
 
@@ -12,7 +12,7 @@ import java.util.ArrayList;
  * Sub panel of RestaurantGui.
  * Shows all of the animation.
  */
-public class CherysRestaurantAnimationPanel extends JPanel implements ActionListener
+public class AnjaliRestaurantAnimationPanel extends JPanel implements ActionListener
 {
 	private final int WINDOWLOCATIONX = 0;
 	private final int WINDOWLOCATIONY = 0;
@@ -27,7 +27,7 @@ public class CherysRestaurantAnimationPanel extends JPanel implements ActionList
     private Dimension bufferSize;
     private int buff = 1;
 
-    private List<CherysGui> guis = new ArrayList<CherysGui>();
+    private List<AnjaliGui> guis = new ArrayList<AnjaliGui>();
     
     class Table
     {
@@ -47,7 +47,7 @@ public class CherysRestaurantAnimationPanel extends JPanel implements ActionList
     /**
      * Constructor for AnimationPanel
      */
-    public CherysRestaurantAnimationPanel()
+    public AnjaliRestaurantAnimationPanel()
     {
     	setSize(WINDOWX, WINDOWY);
         setVisible(true);
@@ -89,7 +89,7 @@ public class CherysRestaurantAnimationPanel extends JPanel implements ActionList
 	        g2.fillRect(tables.get(i).x, tables.get(i).y, tableDimensions, tableDimensions);//200 and 250 need to be table params
         }
 
-        for(CherysGui gui : guis)
+        for(AnjaliGui gui : guis)
         {
             if (gui.isPresent())
             {
@@ -97,7 +97,7 @@ public class CherysRestaurantAnimationPanel extends JPanel implements ActionList
             }
         }
 
-        for(CherysGui gui : guis)
+        for(AnjaliGui gui : guis)
         {
             if (gui.isPresent())
             {
@@ -106,11 +106,11 @@ public class CherysRestaurantAnimationPanel extends JPanel implements ActionList
         }
     }
 
-    public void addGui(CherysCustomerGui gui)
+    public void addGui(AnjaliCustomerGui gui)
     {
         guis.add(gui);
     }
-    public void addGui(CherysWaiterGui gui)
+    public void addGui(AnjaliWaiterGui gui)
     {
         guis.add(gui);
     }

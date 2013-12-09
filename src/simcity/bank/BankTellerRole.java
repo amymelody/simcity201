@@ -18,10 +18,9 @@ import simcity.bank.gui.BankTellerGui;
 import simcity.interfaces.BankDepositor;
 import simcity.interfaces.BankManager;
 import simcity.interfaces.BankTeller;
-<<<<<<< HEAD
+
 import simcity.interfaces.Person;
-=======
->>>>>>> anjali
+
 import simcity.role.JobRole;
 import simcity.role.Role;
 import simcity.trace.AlertLog;

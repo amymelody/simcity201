@@ -4,23 +4,23 @@ package simcity.anjalirestaurant.gui;
 import java.awt.Color;
 import java.awt.Graphics2D;
 
-import restaurant.CustomerAgent;
-import restaurant.WaiterAgent;
+import simcity.Anjalirestaurant.AnjaliCustomerRole;
+import simcity.Anjalirestaurant.AnjaliWaiterRole;
 
-public class WaiterGui implements Gui {
+public class AnjaliWaiterGui implements AnjaliGui {
 
-    private CherysWaiterRole agent = null;
+    private AnjaliWaiterRole agent = null;
   private boolean isPresent = false;
   private boolean releaseIt = false;
   private String choice = " ";
-  RestaurantGui gui;
+  AnjaliRestaurantGui gui;
     private int xPos = 20, yPos = 20;//default waiter position
     private int xDestination = 20, yDestination = 20;//default start position
     
     private int yHomePosition = 0; 
    
     
-    public WaiterGui(CherysWaiterRole w, RestaurantGui gui, int yPosition){ //HostAgent m) {
+    public AnjaliWaiterGui(AnjaliWaiterRole w, AnjaliRestaurantGui gui, int yPosition){ //HostAgent m) {
 		this.yHomePosition = yPosition;
     	agent = w;
 		xPos = -20;
@@ -83,7 +83,7 @@ public class WaiterGui implements Gui {
     	yDestination = 20;
     	releaseIt = true;
     }
-    public void DoBringToTable(CherysCustomerRole c, int xLocation, int yLocation) {
+    public void DoBringToTable(AnjaliCustomerRole c, int xLocation, int yLocation) {
         xDestination = xLocation;
         yDestination = yLocation;
         releaseIt = true;

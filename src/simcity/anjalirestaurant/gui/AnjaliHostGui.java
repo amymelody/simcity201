@@ -3,12 +3,12 @@ package simcity.anjalirestaurant.gui;
 
 import java.awt.Graphics2D;
 
-import restaurant.CustomerAgent;
-import restaurant.HostAgent;
+import simcity.Anjalirestaurant.AnjaliCustomerRole;
+import simcity.Anjalirestaurant.AnjaliHostRole;
 
-public class HostGui implements Gui {
+public class AnjaliHostGui implements AnjaliGui {
 
-    private CherysHostRole agent = null;
+    private AnjaliHostRole agent = null;
 
     private int xPos = -20, yPos = -20;//default waiter position
     private int xDestination = -20, yDestination = -20;//default start position
@@ -17,7 +17,7 @@ public class HostGui implements Gui {
     public static final int yTable = 250;
     public static final int x2Table = 100;
     public static final int y2Table = 150;
-    public HostGui(CherysHostRole agent) {
+    public AnjaliHostGui(AnjaliHostRole agent) {
         this.agent = agent;
     }
 
@@ -50,7 +50,7 @@ public class HostGui implements Gui {
         return true;
     }
 
-    public void DoBringToTable(CherysCustomerRole customer, int xLocation, int yLocation) {
+    public void DoBringToTable(AnjaliCustomerRole customer, int xLocation, int yLocation) {
         xDestination = xLocation + 20;
         yDestination = yLocation - 20;
     }

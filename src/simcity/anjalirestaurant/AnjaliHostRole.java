@@ -1,14 +1,20 @@
 package simcity.anjalirestaurant;
 
-import agent.Agent;
-//import restaurant.Waiter.CustomerState;
-import restaurant.gui.HostGui;
-import simcity.anjalirestaurant.interfaces.Customer;
-import simcity.anjalirestaurant.interfaces.Host;
-import simcity.anjalirestaurant.interfaces.Waiter;
-
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.Semaphore;
+
+import simcity.RestHostRole;
+import simcity.anjalirestaurant.gui.AnjaliHostGui;
+import simcity.anjalirestaurant.interfaces.AnjaliCustomer;
+import simcity.anjalirestaurant.interfaces.AnjaliHost;
+import simcity.anjalirestaurant.interfaces.AnjaliWaiter;
+//import restaurant.Waiter.CustomerState;
+import simcity.interfaces.Person;
 
 /**
  * Restaurant Host Agent
@@ -21,31 +27,31 @@ import java.util.concurrent.Semaphore;
 //Works for normative and nonnormative scenarios
 //All requirements for v2.1 have been met
 
-public class HostAgent extends Agent implements Host{
+public class AnjaliHostRole extends RestHostRole implements AnjaliHost{
 	static final int NTABLES = 3;//a global for the number of tables.
 	//Notice that we implement waitingCustomers using ArrayList, but type it
 	//with List semantics.
-	private HostAgent host;
+	private AnjaliHostRole host;
 //	private Waiter waiter;
-	private Customer customer;
+	private AnjaliCustomer customer;
 	boolean wantsBreak = false;
 	private int workingWaiters = 0;
 	int waiterSelection = 0;
-	protected List<Customer> waitingCustomers = Collections.synchronizedList(new ArrayList<Customer>());
+	protected List<AnjaliCustomer> waitingCustomers = Collections.synchronizedList(new ArrayList<AnjaliCustomer>());
 	
 	public Collection<Table> tables;
 	//note that tables is typed with Collection semantics.
 	//Later we will see how it is implemented
 	boolean hostIsBack;
-	private String name;
+	private String name = null;
 	private Semaphore atTable = new Semaphore(0,true);
 	
 	private class myWaiter{
-		Waiter w;
+		AnjaliWaiter w;
 		WaiterState s;
 		private Table t;
 		
-		myWaiter(Waiter w, WaiterState s){
+		myWaiter(AnjaliWaiter w, WaiterState s){
 			this.w = w;
 			this.s = s;
 		}
@@ -62,11 +68,14 @@ public class HostAgent extends Agent implements Host{
 	
 	int numCust = 0;
 	private List<myWaiter> myWaiters = Collections.synchronizedList(new ArrayList<myWaiter>());
-	public HostGui hostGui = null; 
+	public AnjaliHostGui hostGui = null; 
 	Timer waitTimer = new Timer();
-	public HostAgent(String name) {
+	
+	private boolean working;
+	
+	public AnjaliHostRole(String name) {
 		super();
-		//waiters.add(restaurant.gui.RestaurantPanel.getWaiter());
+		working = false;
 		this.name = name;
 		// make some tables
 		tables = Collections.synchronizedList(new ArrayList<Table>(NTABLES));
@@ -76,6 +85,10 @@ public class HostAgent extends Agent implements Host{
 		hostIsBack = true;
 	}
 
+	public void setPerson(Person p){
+		super.setPerson(p);
+		name = person.getName();
+	}
 	
 	public String getMaitreDName() {
 		return name;
@@ -94,7 +107,18 @@ public class HostAgent extends Agent implements Host{
 	
 	//////// MESSAGES //////////
 
-	public void msgIWantFood(Customer cust) {
+	public void msgStartShift(){
+		person.businessIsClosed(getJobLocation(), false);
+		working = true;
+		stateChanged();
+	}
+	
+	public void msgEndShift(){
+		person.businessIsClosed(getJobLocation(), true);
+		working = false;
+		stateChanged();
+	}
+	public void msgIWantFood(AnjaliCustomer cust) {
 				numCust++;
 			if(numCust <= 3){
 				waitingCustomers.add(cust);
@@ -111,7 +135,7 @@ public class HostAgent extends Agent implements Host{
 			
 		
 		
-	public void msgIWillWait(final Customer c){
+	public void msgIWillWait(final AnjaliCustomer c){
 		Do("Host received message that customer will wait in restaurant, setting wait time to 30 seconds.");
 		
 		waitTimer.schedule(new TimerTask(){
@@ -126,7 +150,7 @@ public class HostAgent extends Agent implements Host{
 	
 	
 	
-	public void msgWantBreak(Waiter w){
+	public void msgWantBreak(AnjaliWaiter w){
 			findWaiter(w).s = state.wantsBreak;
 			stateChanged();
 			//stateChanged();
@@ -134,13 +158,13 @@ public class HostAgent extends Agent implements Host{
 		
 	}
 	
-	public void msgWaiterBreakDone(Waiter w){
+	public void msgWaiterBreakDone(AnjaliWaiter w){
 		if(findWaiter(w).s == state.onBreak){
 			findWaiter(w).s = state.working;
 			stateChanged();
 		}
 	}
-	public void msgTableIsFree(Table t, Waiter w){
+	public void msgTableIsFree(Table t, AnjaliWaiter w){
 		t.setOccupant(null);
 		numCust--;
 		print("table " + t.getTableNumber() + " is free");
@@ -158,24 +182,12 @@ public class HostAgent extends Agent implements Host{
 	/**
 	 * Scheduler.  Determine what action is called for, and do it.
 	 */
-	protected boolean pickAndExecuteAnAction() {
-		/* Think of this next rule as:
-            Does there exist a table and customer,
-            so that table is unoccupied and customer is waiting.
-            If so seat him at the table.
-		//RULES FOR V2
-		 * if there exists a customer c in waitingCustomers and there exists a t in Tables such that !t.isOccupied() and findLeastBusyWaiter()
-		 * {sitCustomer(customer c, Table t, Waiter w}
-		
-		for (Table table : tables) {
-			if (!table.isOccupied()) {
-				if (!waitingCustomers.isEmpty() && hostIsBack) {
-					seatCustomer(waitingCustomers.get(0), table, findLeastBusyWaiter());//the action
-					return true;//return true to the abstract agent to reinvoke the scheduler.
-				}
-			}
+	public boolean pickAndExecuteAnAction() {
+		if(!working){
+			leaveRestaurant();
+			return true;
 		}
-*/
+
 		if(rs == RestaurantState.full){
 			Do("Restaurant is full.");
 			restFull();
@@ -210,11 +222,16 @@ public class HostAgent extends Agent implements Host{
 	}
 
 	/////////// ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS ////////////////////
+	private void leaveRestaurant(){
+		person.msgLeftDestination(this);
+	}
 	
-	private Waiter selectWaiter(){
+	
+	
+	private AnjaliWaiter selectWaiter(){
 		
 	while(!myWaiters.isEmpty()){
-		Waiter w = myWaiters.get(waiterSelection%myWaiters.size()).w;
+		AnjaliWaiter w = myWaiters.get(waiterSelection%myWaiters.size()).w;
 		myWaiters.get(waiterSelection%myWaiters.size()).waitersCustomers++;
 		Do("size of myWaiters waitingCustomers list: " + myWaiters.get(waiterSelection%myWaiters.size()).waitersCustomers);
 	waiterSelection++;
@@ -234,7 +251,7 @@ public class HostAgent extends Agent implements Host{
 		
 	}
 	
-	private void sitCustomer(Customer c, Table t, Waiter w)
+	private void sitCustomer(AnjaliCustomer c, Table t, AnjaliWaiter w)
 	{
 		waitingCustomers.remove(c);
 		t.setOccupant(c);
@@ -264,15 +281,15 @@ public class HostAgent extends Agent implements Host{
 	}
 	//utilities
 
-	public void setGui(HostGui gui) {
+	public void setGui(AnjaliHostGui gui) {
 		hostGui = gui;
 	}
 
-	public HostGui getGui() {
+	public AnjaliHostGui getGui() {
 		return hostGui;
 	}
 
-	public void addWaiter(Waiter w){
+	public void addWaiter(AnjaliWaiter w){
 		//waiters.add(w);
 		myWaiters.add(new myWaiter(w, WaiterState.working));
 		workingWaiters++;
@@ -284,7 +301,7 @@ public class HostAgent extends Agent implements Host{
 		return myWaiters.get(w);
 	}
 	
-	public myWaiter findWaiter(Waiter waiter){
+	public myWaiter findWaiter(AnjaliWaiter waiter){
 	synchronized(myWaiters){
 		for(myWaiter k : myWaiters){
 			if(k.w == waiter)
@@ -294,7 +311,7 @@ public class HostAgent extends Agent implements Host{
 		}
 	}
 	public class Table {
-		Customer occupiedBy;
+		AnjaliCustomer occupiedBy;
 		int tableNumber = 0;
 		int XPosTable;
 		int YPosTable;
@@ -306,7 +323,7 @@ public class HostAgent extends Agent implements Host{
 		}
 
 		
-		void setOccupant(Customer cust) {
+		void setOccupant(AnjaliCustomer cust) {
 			occupiedBy = cust;
 		}
 
@@ -314,7 +331,7 @@ public class HostAgent extends Agent implements Host{
 			occupiedBy = null;
 		}
 
-		Customer getOccupant() {
+		AnjaliCustomer getOccupant() {
 			return occupiedBy;
 		}
 		void setTableNumber()

@@ -1,8 +1,8 @@
 package simcity.anjalirestaurant.gui;
 
-import java.awt.*;
+import java.awt.Graphics2D;
 
-public interface Gui {
+public interface AnjaliGui {
 
     public void updatePosition();
     public void draw(Graphics2D g);

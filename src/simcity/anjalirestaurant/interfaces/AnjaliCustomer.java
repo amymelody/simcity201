@@ -3,9 +3,9 @@ package simcity.anjalirestaurant.interfaces;
 import java.util.Map;
 
 
-public interface Customer {
+public interface AnjaliCustomer {
 	
-	public abstract void msgFollowMeToTable(int tableX, int tableY, Map<String, Double> m, Waiter w);
+	public abstract void msgFollowMeToTable(int tableX, int tableY, Map<String, Double> m, AnjaliWaiter w);
 
 	public abstract void msgRestaurantIsFull();
 	

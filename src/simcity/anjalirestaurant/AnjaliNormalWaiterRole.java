@@ -8,14 +8,21 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.Semaphore;
 
-import restaurant.CookAgent.Order;
+import simcity.anjalirestaurant.AnjaliCookRole.Order;
+import simcity.anjalirestaurant.AnjaliHostRole.Table;
+import simcity.anjalirestaurant.gui.AnjaliCookGui;
+import simcity.anjalirestaurant.gui.AnjaliRestaurantGui;
+import simcity.anjalirestaurant.gui.AnjaliWaiterGui;
+import simcity.anjalirestaurant.interfaces.AnjaliCook;
+import simcity.anjalirestaurant.interfaces.AnjaliCustomer;
+import simcity.anjalirestaurant.interfaces.AnjaliHost;
+import simcity.anjalirestaurant.interfaces.AnjaliWaiter;
+import simcity.anjalirestaurant.interfaces.AnjaliCashier;
+import simcity.interfaces.Person;
+
+
 //import restaurant.Customer.CustomerEvent;
 //import restaurant.Customer.CustomerState;
-import restaurant.HostAgent.Table;
-import restaurant.gui.WaiterGui;
-import simcity.anjalirestaurant.interfaces.Customer;
-import simcity.anjalirestaurant.interfaces.Waiter;
-import agent.Agent;
 
 /**
  * Restaurant Host Agent
@@ -27,7 +34,7 @@ import agent.Agent;
 
 //Works for normative and nonnormative scenarios
 
-public class WaiterAgent extends Agent implements Waiter{
+public class AnjaliNormalWaiterRole extends  AnjaliWaiterRole implements AnjaliWaiter{
 	static final int NTABLES = 3;//a global for the number of tables.
 	
 	//Notice that we implement waitingCustomers using ArrayList, but type it
@@ -45,12 +52,12 @@ public class WaiterAgent extends Agent implements Waiter{
 	private int yPos;
 	boolean wantsBreak = false;
 	private class myCustomer{
-		 Customer c;
+		 AnjaliCustomer c;
 		private  Table t;
 		 CustomerState s;
 		 String name;
 		
-		myCustomer(Customer c, Table t, CustomerState s){
+		myCustomer(AnjaliCustomer c, Table t, CustomerState s){
 			this.c = c;
 			this.t = t;
 			this.s = s;
@@ -75,35 +82,47 @@ public class WaiterAgent extends Agent implements Waiter{
 	public enum CustomerEvent {none, seated, readyToOrder, ordering, ordered, orderAgain, orderedAgain, waitingForFood, OrderIsReady, served, readingCheck, leaving}
 	private CustomerState state = CustomerState.doingNothing;
 	private CustomerEvent event = CustomerEvent.none;
-	public WaiterGui waiterGui;
+	public AnjaliWaiterGui waiterGui = null;
+
 	public enum WaiterState{normal, wantsBreak, pendingBreak, breakAccepted, onBreak, breakDenied, offBreak};
 	private WaiterState waiterState = WaiterState.normal;
 	Timer timer = new Timer();
 	
-	public void setGui(WaiterGui gui) {
+	public void setGui(AnjaliWaiterGui gui) {
 		waiterGui = gui;
 	}
 
-	public WaiterGui getGui() {
+	public AnjaliWaiterGui getGui() {
 		return waiterGui;
 	}
 
-	private HostAgent host;
+	private AnjaliHost host;
+	private AnjaliCook cook;
+	private AnjaliCashier cashier;
 	
-	private CookAgent cook;
-	
-	private CashierAgent cashier;
-	
+	public AnjaliRestaurantGui gui = null;
 	//private Semaphore x = new Semaphore(0);
 	
 	List<myCustomer> customers = new ArrayList<myCustomer>();
 	
 	//public HostGui hostGui = null;
 
-	public WaiterAgent(String name) {
-		
+	private boolean working;
+	
+	public AnjaliNormalWaiterRole(String name) {
+		super();
 		this.name = name;
+		working = false;
 		
+	}
+	
+	public void setPerson(Person p){
+		super.setPerson(p);
+		name = person.getName();
+	}
+	
+	public void setRestGui(AnjaliRestaurantGui gui){
+		this.gui = gui;
 	}
 
 	public String getMaitreDName() {
@@ -114,23 +133,23 @@ public class WaiterAgent extends Agent implements Waiter{
 		return name;
 	}
 	
-	public void setHost(HostAgent host)
+	public void setHost(AnjaliHost host)
 	{
 		this.host = host;
 	}
 	
-	public void setCashier(CashierAgent cashier){
+	public void setCashier(AnjaliCashier cashier){
 		this.cashier = cashier;
 	}
-	public HostAgent getHost()
+	public AnjaliHost getHost()
 	{
 		return host;
 	}
-	public void setCook(CookAgent cook)
+	public void setCook(AnjaliCook cook)
 	{
 		this.cook = cook;
 	}
-	public CookAgent getCook()
+	public AnjaliCook getCook()
 	{
 		return cook;
 	}
@@ -164,26 +183,29 @@ public class WaiterAgent extends Agent implements Waiter{
 	
 	
 	//////////// MESSAGES MESSAGES MESSAGES MESSAGES ///////////
-		public void msgAtTable(){//from animation
+	public void msgStartShift(){
+		working = true;
+		gui.addPerson(name);
+		stateChanged();
+	}
+	public void msgEndShift(){
+		working = false;
+		stateChanged();
+	}
+	public void msgAtTable(){//from animation
 			atTable.release();
-			
 			//Do("released from table");	
 		}
-	public void msgSitThisCustomer(Customer c, Table t){
-		
+	public void msgSitThisCustomer(AnjaliCustomer c, Table t){	
 		Do("Waiter received message from host to sit" + c);
-	
 		customers.add(new myCustomer(c, t, CustomerState.waitingToSit));
-
-		stateChanged();
-		
-			
+		stateChanged();		
 	}
 	
 	
 	
 	
-	public void msgReadyToOrder(Customer c){
+	public void msgReadyToOrder(AnjaliCustomer c){
 	
 		for(myCustomer j : customers){
 			if(j.c == c){
@@ -198,7 +220,7 @@ public class WaiterAgent extends Agent implements Waiter{
 		
 	
 	
-	public void msgHereIsMyChoice(Customer c, String choice){
+	public void msgHereIsMyChoice(AnjaliCustomer c, String choice){
 		for (myCustomer h : customers){
 			if(h.c == c){
 				h.choice = choice;
@@ -243,7 +265,7 @@ public class WaiterAgent extends Agent implements Waiter{
 		
 	}
 	
-	public void msgReadyForCheck(Customer c){
+	public void msgReadyForCheck(AnjaliCustomer c){
 		for(myCustomer z : customers){
 			if(z.c == c){
 				z.s = CustomerState.needsCheck;
@@ -263,7 +285,7 @@ public class WaiterAgent extends Agent implements Waiter{
 			}
 		}
 	}
-	public void msgLeavingTable(Customer c){
+	public void msgLeavingTable(AnjaliCustomer c){
 		for(myCustomer j : customers){
 			if (j.c == c){
 				j.s = CustomerState.leaving;	
@@ -289,7 +311,11 @@ public class WaiterAgent extends Agent implements Waiter{
 	/**
 	 * Scheduler.  Determine what action is called for, and do it.
 	 */
-	protected boolean pickAndExecuteAnAction() {
+	public boolean pickAndExecuteAnAction() {
+	if(!working){
+		leaveRestaurant();
+		return true;
+	}
 	try{
 		if(waiterState == WaiterState.wantsBreak){
 			wantsBreak();
@@ -410,8 +436,10 @@ public class WaiterAgent extends Agent implements Waiter{
 	}
 
 	// Actions
-
-	private void seatCustomer(Waiter w, Customer c, Table t) {
+	private void leaveRestaurant(){
+		person.msgLeftDestination(this);
+	}
+	private void seatCustomer(AnjaliWaiter w, AnjaliCustomer c, Table t) {
 		
 		Do("Waiter seating customer" + c);
 		
@@ -427,7 +455,7 @@ public class WaiterAgent extends Agent implements Waiter{
 		}
 		
 
-		waiterGui.DoBringToTable((CustomerAgent)c, t.getXPosTable(), t.getYPosTable());		
+		waiterGui.DoBringToTable((AnjaliCustomerRole)c, t.getXPosTable(), t.getYPosTable());		
 
 		c.msgFollowMeToTable(t.getXPosTable(), t.getYPosTable(), getMenu(), this);
 

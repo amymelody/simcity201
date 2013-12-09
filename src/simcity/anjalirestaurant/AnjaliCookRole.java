@@ -1,15 +1,22 @@
 package simcity.anjalirestaurant;
-import restaurant.gui.CookGui;
-import agent.Agent;
-import restaurant.gui.CustomerGui;
-import restaurant.gui.HostGui;
-import restaurant.gui.RestaurantPanel;
-import simcity.anjalirestaurant.interfaces.Cook;
-import simcity.anjalirestaurant.interfaces.Market;
-import simcity.anjalirestaurant.interfaces.Waiter;
-
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.Semaphore;
+
+import simcity.ItemOrder;
+import simcity.RestCookRole;
+import simcity.anjalirestaurant.gui.AnjaliCookGui;
+import simcity.anjalirestaurant.interfaces.AnjaliCook;
+import simcity.anjalirestaurant.interfaces.AnjaliMarket;
+import simcity.anjalirestaurant.interfaces.AnjaliWaiter;
+import simcity.interfaces.MarketCashier;
+import simcity.interfaces.Person;
+import simcity.joshrestaurant.JoshWaiterRole;
 
 /**
  * Restaurant Cook Agent
@@ -21,17 +28,32 @@ import java.util.concurrent.Semaphore;
 
 //Works for normative and nonnormative scenarios
 
-public class CookAgent extends Agent implements Cook{
+public class AnjaliCookRole extends RestCookRole implements AnjaliCook{
 	static final int NTABLES = 3;//a global for the number of tables.
 	
+	private boolean unitTesting = false;
+	private boolean working;
+	private String location = "anjaliRestaurant";
+	private boolean orderedItems = false;
+	
+	public AnjaliCookRole(){
+		super();
+		working = false;
+		orderedItems = false;
+	}
+	
+	public void setPerson(Person p){
+		super.setPerson(p);
+		name = person.getName();
+	}
 	private String name;
 	private Semaphore atTable = new Semaphore(0,true);
 	Timer cookTimer = new Timer();
-	private Waiter waiter;
+	private AnjaliWaiter waiter;
 	private String outOfFood;
-	public List<Market> markets = Collections.synchronizedList(new ArrayList<Market>());
+	public List<AnjaliMarket> markets = Collections.synchronizedList(new ArrayList<AnjaliMarket>());
 	private AnjaliCookGui cookGui;
-	public Market market; 
+	public AnjaliMarket market; 
 	private int hasFood = 1;
 	private int hasInventory = 0;
 	private boolean cantPayCashier = false;
@@ -39,13 +61,13 @@ public class CookAgent extends Agent implements Cook{
 	public class Order{
 		
 		 String choice;
-		 Waiter waiter;
+		 AnjaliWaiter waiter;
 		 int tableNumber;
 		 CookState state;
 		 String customerName;
 		
 		
-		Order(String name, String c, int tn, Waiter w, CookState cs){
+		Order(String name, String c, int tn, AnjaliWaiter w, CookState cs){
 			this.choice = c;
 			this.tableNumber = tn;
 			this.waiter = w;
@@ -77,11 +99,7 @@ private CookState state = CookState.nothing;
 	
 
 
-	public CookAgent(String name) {
-		super();
-
-		this.name = name;
-	}
+	
 
 	public String getMaitreDName() {
 		return name;
@@ -103,16 +121,26 @@ private CookState state = CookState.nothing;
 		return cookTime;
 	}
 
-	public void setWaiter(Waiter waiter){
+	public void setWaiter(AnjaliWaiter waiter){
 		this.waiter = waiter;
 	}
 /////MESSAGES////////
+	
+	public void msgStartShift(){
+		working = true;
+		stateChanged();
+	}
+	
+	public void msgEndShift(){
+		working = false;
+		stateChanged();
+	}
 	public void msgAtTable(){//from animation
 		atTable.release();
 		
 		//Do("released from table");	
 	}
-	public void msgHereIsOrder(String name, String choice, int tableNumber, Waiter waiter){
+	public void msgHereIsOrder(String name, String choice, int tableNumber, AnjaliWaiter waiter){
 		Do("Cook has received order for table Number" + tableNumber + "from waiter " + waiter.getName() + "for food " + choice);	
 		//After every order the cook receives, he checks to see whether the inventory is low or not. 
 		//The cook may run out of food, scenario 2
@@ -250,7 +278,7 @@ private CookState state = CookState.nothing;
 		}
 		
 	}
-	public void msgOrderFromMe(Market m){
+	public void msgOrderFromMe(AnjaliMarket m){
 		Do("received message from marekt to order from " + m.getName());
 		//hasInventory = true;
 		this.market = m;
@@ -282,8 +310,11 @@ private CookState state = CookState.nothing;
 	}
 	
 ////////SCHEDULER//////
-	protected boolean pickAndExecuteAnAction() {
-	
+	public boolean pickAndExecuteAnAction() {
+	if(!working){
+		leaveRestaurant();
+		return true;
+	}
 	synchronized(orders){
 	
 		for(Order o : orders){
@@ -356,7 +387,11 @@ private CookState state = CookState.nothing;
 	
 
 	///////// ACTIONS/////////////
-		private void noMoreFood(Order o){
+	private void leaveRestaurant(){
+		person.msgLeftDestination(this);
+	}
+	
+	private void noMoreFood(Order o){
 			//If the cook is out of a certain food, he tells the waiter the customer must reorder. 
 			o.waiter.msgNoMoreFood(o);
 			Do("Sorry, but I am out of " + o.choice + ". Please ask customer to reorder.");
@@ -462,7 +497,7 @@ private CookState state = CookState.nothing;
 		}
 			
 		
-			public void buyFood(String food, Market m){
+			public void buyFood(String food, AnjaliMarket m){
 				Do("Ordering " + food + "from " + market.getName());
 				
 				market.msgOrderSupply(food, this, hasFood, cantPayCashier);	
@@ -471,7 +506,7 @@ private CookState state = CookState.nothing;
 			}
 			
 //UTILITIES		
-		public void addMarket(Market m){
+		public void addMarket(AnjaliMarket m){
 			markets.add(m);
 			Do("" + m.getName() +" created");
 		}
@@ -482,6 +517,34 @@ private CookState state = CookState.nothing;
 		public AnjaliCookGui getGui() {
 			return cookGui;
 		}
+
+		@Override
+		public void addMarket(MarketCashier m, String n) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void msgHereIsOrder(JoshWaiterRole waiter, String choice,
+				int table) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void msgDelivery(List<ItemOrder> order) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void msgHereIsWhatICanFulfill(List<ItemOrder> items,
+				boolean canFulfill) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		
  
 	
 }

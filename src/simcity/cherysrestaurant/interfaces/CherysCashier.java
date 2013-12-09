@@ -1,14 +1,14 @@
-package simcity.cherysrestaurant.interfaces;
+package simcity.Anjalirestaurant.interfaces;
 
-import simcity.cherysrestaurant.CherysCashierCheck;
+import simcity.Anjalirestaurant.AnjaliCashierCheck;
 import simcity.mock.EventLog;
 
-public interface CherysCashier
+public interface AnjaliCashier
 {
 	public EventLog log = new EventLog();
 	
-	public abstract void msgProduceCheck(CherysWaiter w, String choice, int table); //* called from WaiterAgent
-	public abstract void msgGiveCheck(CherysWaiter w, int table); //* called from WaiterAgent
-	public abstract void msgPayment(CherysCustomer cust, CherysCashierCheck c, double cashGiven); //* called from CustomerAgent
-	public abstract void msgPayForDelivery(CherysMarket m, String foodType, int amountDelivered, double wholesalePercentage); //* called from MarketAgent
+	public abstract void msgProduceCheck(AnjaliWaiter w, String choice, int table); //* called from WaiterAgent
+	public abstract void msgGiveCheck(AnjaliWaiter w, int table); //* called from WaiterAgent
+	public abstract void msgPayment(AnjaliCustomer cust, AnjaliCashierCheck c, double cashGiven); //* called from CustomerAgent
+	public abstract void msgPayForDelivery(AnjaliMarket m, String foodType, int amountDelivered, double wholesalePercentage); //* called from MarketAgent
 }

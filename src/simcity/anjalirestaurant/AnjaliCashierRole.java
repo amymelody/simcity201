@@ -1,13 +1,25 @@
 package simcity.anjalirestaurant;
 
-import simcity.RestCashierRole;
-import simcity.anjalirestaurant.interfaces.Cashier;
-import simcity.anjalirestaurant.interfaces.Customer;
-import simcity.anjalirestaurant.interfaces.Market;
-import simcity.anjalirestaurant.interfaces.Waiter;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import java.util.*;
-import java.util.concurrent.Semaphore;
+import simcity.RestCashierRole;
+import simcity.anjalirestaurant.interfaces.AnjaliCashier;
+import simcity.anjalirestaurant.interfaces.AnjaliCustomer;
+import simcity.anjalirestaurant.interfaces.AnjaliMarket;
+import simcity.anjalirestaurant.interfaces.AnjaliWaiter;
+import simcity.interfaces.MarketDeliverer;
+import simcity.interfaces.Person;
+import simcity.mock.LoggedEvent;
+import simcity.trace.AlertLog;
+import simcity.trace.AlertTag;
+import simcity.interfaces.Person;
+import simcity.joshrestaurant.interfaces.JoshCustomer;
+import simcity.joshrestaurant.interfaces.JoshWaiter;
+
 
 /**
  * Restaurant Cashier Agent, Scenario 1
@@ -18,21 +30,31 @@ import java.util.concurrent.Semaphore;
 //is proceeded as he wishes.
 
 //Works for normative and nonnormative scenarios
-public class CashierAgent extends Agent implements Cashier{
+public class AnjaliCashierRole extends RestCashierRole implements AnjaliCashier{
 	static final int NTABLES = 3;//a global for the number of tables.
 	
-	private String name;
-	private Waiter waiter;
-	private Customer customer;
-	private Market market;
+	private String name = null;
+	private AnjaliWaiter waiter;
+	private AnjaliCustomer customer;
+	private AnjaliMarket market;
 	public boolean cantPay = false;
 	public String brokeCashier = "brokeCashier";
-	public CashierAgent(String name) {
+	
+	private boolean working;
+	private int cashierCash;
+	
+	public AnjaliCashierRole(String name) {
 		super();
-
+		working = false;
 		this.name = name;
+		cashierCash = 1000;
+		
 	}
 
+	public void setPerson(Person p){
+		super.setPerson(p);
+		name = person.getName();
+	}
 	public String getMaitreDName() {
 		return name;
 	}
@@ -43,11 +65,11 @@ public class CashierAgent extends Agent implements Cashier{
 	
 	
 
-	public void setWaiter(Waiter waiter){
+	public void setWaiter(AnjaliWaiter waiter){
 		this.waiter = waiter;
 	}
 	
-	public void setCustomer(Customer customer){
+	public void setCustomer(AnjaliCustomer customer){
 		this.customer = customer;
 	}
 	
@@ -65,13 +87,13 @@ public class CashierAgent extends Agent implements Cashier{
 		}
 		
 		public class bill{
-			private Customer c;
-			Waiter w;
+			private AnjaliCustomer c;
+			AnjaliWaiter w;
 			String choice;
 			int tableNumber;
 			CashierState s;
 			
-		public bill(Customer customer, Waiter waiter, String c, int tn, CashierState s){
+		public bill(AnjaliCustomer customer, AnjaliWaiter waiter, String c, int tn, CashierState s){
 			this.setC(customer);
 			this.choice = c;
 			this.tableNumber = tn;
@@ -87,10 +109,10 @@ public class CashierAgent extends Agent implements Cashier{
 		public void setPrice(double price) {
 			this.price = price;
 		}
-		public Customer getC() {
+		public AnjaliCustomer getC() {
 			return c;
 		}
-		public void setC(Customer c) {
+		public void setC(AnjaliCustomer c) {
 			this.c = c;
 		}
 		private double price = 0.00;
@@ -100,11 +122,11 @@ public class CashierAgent extends Agent implements Cashier{
 		public enum paymentState {nothing, receivedCheck, payingCheck, paidCheck};
 
 		public class marketPayment{
-			Market m;
+			AnjaliMarket m;
 			paymentState s;
 			private double price;
 			
-		marketPayment(Market m, double p, paymentState s){
+		marketPayment(AnjaliMarket m, double p, paymentState s){
 			this.m = m;
 			this.s = s;
 			this.setPrice(p);
@@ -149,7 +171,18 @@ public class CashierAgent extends Agent implements Cashier{
 		public Object log;
 		
 /////MESSAGES////////
-	public void msgMakeCheck(Customer c, String choice, int tableNumber, Waiter w){
+	public void msgStartShift(){
+		working = true;
+		stateChanged();
+	}
+	
+	public void msgEndShift(){
+		cashierCash -= person.getSalary();
+		working = false;
+		stateChanged();
+	}
+		
+		public void msgMakeCheck(AnjaliCustomer c, String choice, int tableNumber, AnjaliWaiter w){
 		//Receives order from waiter, creates check for that order	
 		Do("Cashier received message from waiter to make check for " + c.getName());
 		
@@ -174,7 +207,7 @@ public class CashierAgent extends Agent implements Cashier{
 		
 	}
 	*/
-	public void msgTakeMyMoney(Customer c, double p){
+	public void msgTakeMyMoney(AnjaliCustomer c, double p){
 		
 	synchronized(bills){
 		for(bill j : bills){
@@ -187,7 +220,7 @@ public class CashierAgent extends Agent implements Cashier{
 	}
 	}
 	
-	public void msgPayMarket(Market m, boolean broke, double price){
+	public void msgPayMarket(AnjaliMarket m, boolean broke, double price){
 		Do("Cashier received bill from " + m.getName());
 		marketPayments.add(new marketPayment(m, price, paymentState.receivedCheck));
 		//this.market = m;
@@ -207,6 +240,11 @@ public class CashierAgent extends Agent implements Cashier{
 			
 		}
 		*/
+		
+		if(!working){
+			leaveRestaurant();
+			return true;
+		}
 		synchronized(marketPayments){
 			for(marketPayment p : marketPayments){
 				if(p.s == paymentState.receivedCheck){
@@ -253,7 +291,10 @@ public class CashierAgent extends Agent implements Cashier{
 
 	///////// ACTIONS/////////////
 		
- 
+	private void leaveRestaurant(){
+		person.msgLeftDestination(this);
+	}
+	
 	public void giveMeMoney(bill b){
 		Do("Cashier is making check.");
 		for(Map.Entry<String, Double> entry : prices.entrySet()){
@@ -287,7 +328,7 @@ public class CashierAgent extends Agent implements Cashier{
 		bills.remove(b);
 	}
 
-	public void payMarket(Market m, double price){
+	public void payMarket(AnjaliMarket m, double price){
 		
 		if(cantPay == false){
 		cash = cash - price;
@@ -303,10 +344,38 @@ public class CashierAgent extends Agent implements Cashier{
 	}
 
 	@Override
-	public void msgIHaveNoMoney(Customer c) {
+	public void msgIHaveNoMoney(AnjaliCustomer c) {
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public void msgProduceCheck(JoshWaiter w, JoshCustomer c, String choice) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void msgPayment(JoshCustomer c, int cash) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void msgDelivery(int bill, MarketDeliverer deliverer) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void msgThankYou(int change) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	
+
+	
 
 	
 	

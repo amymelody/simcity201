@@ -8,19 +8,19 @@ import java.util.concurrent.Semaphore;
 import simcity.bank.gui.BankDepositorGui;
 import simcity.bank.gui.BankGui;
 import simcity.interfaces.BankDepositor;
-<<<<<<< HEAD
+
 import simcity.interfaces.BankManager;
 import simcity.interfaces.BankTeller;
 import simcity.interfaces.Person;
 
-=======
+
 import simcity.interfaces.Person;
 import simcity.bank.test.mock.MockBankManager;
 import simcity.interfaces.BankManager;
 import simcity.interfaces.BankTeller;
 import simcity.interfaces.MarketCashier;
 import simcity.interfaces.MarketDeliverer;
->>>>>>> anjali
+
 import simcity.role.Role;
 import simcity.trace.AlertLog;
 import simcity.trace.AlertTag;
@@ -259,10 +259,9 @@ public class BankDepositorRole extends Role implements BankDepositor{
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-<<<<<<< HEAD
-=======
+
 		}
->>>>>>> anjali
+
 		if(this.robber){
 			this.robber = false;
 			person.msgGoodGuyAgain();

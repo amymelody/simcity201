@@ -1,7 +1,7 @@
-package simcity.cherysrestaurant.gui;
+package simcity.Anjalirestaurant.gui;
 
-import simcity.cherysrestaurant.CherysCustomerRole;
-import simcity.cherysrestaurant.CherysHostRole;
+import simcity.Anjalirestaurant.AnjaliCustomerRole;
+import simcity.Anjalirestaurant.AnjaliHostRole;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,27 +13,27 @@ import java.util.ArrayList;
  * Subpanel of restaurantPanel. Holds the scroll panes for the customers
  * and waiters
  */
-public class CherysListPanel extends JPanel implements ActionListener
+public class AnjaliListPanel extends JPanel implements ActionListener
 {
     public JScrollPane pane = new JScrollPane(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
     private JPanel view = new JPanel();
-    private List<CherysInputPanel> list = new ArrayList<CherysInputPanel>();
+    private List<AnjaliInputPanel> list = new ArrayList<AnjaliInputPanel>();
     private JButton addPerson = new JButton("Add");
 
-    private CherysRestaurantPanel restPanel;
+    private AnjaliRestaurantPanel restPanel;
     private String type;
-    private CherysInputPanel inPanel;
+    private AnjaliInputPanel inPanel;
 
     /**
      * Constructor for ListPanel. Sets up all the gui.
      * @param rp   reference to the restaurant panel
      * @param type indicates if this is for customers or waiters
      */
-    public CherysListPanel(CherysRestaurantPanel rp, String type) //* called from the RestaurantPanel
+    public AnjaliListPanel(AnjaliRestaurantPanel rp, String type) //* called from the RestaurantPanel
     {
         restPanel = rp;
         this.type = type;
-        inPanel = new CherysInputPanel(this, type);
+        inPanel = new AnjaliInputPanel(this, type);
 
         setLayout(new BoxLayout((Container) this, BoxLayout.Y_AXIS));
         add(new JLabel("<html><pre> <u>" + type + "</u><br></pre></html>"));
@@ -91,7 +91,7 @@ public class CherysListPanel extends JPanel implements ActionListener
       {
 	      if (inPanel.getName() != null)
 	      {
-	    	  CherysInputPanel panel = new CherysInputPanel(this, type);
+	    	  AnjaliInputPanel panel = new AnjaliInputPanel(this, type);
 	    	  panel.setName(inPanel.getName());
 	    	  panel.setCheck(inPanel.getCheck());
 //	    	  Dimension paneSize = pane.getSize();

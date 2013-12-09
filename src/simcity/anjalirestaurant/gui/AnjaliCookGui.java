@@ -4,22 +4,22 @@ package simcity.anjalirestaurant.gui;
 import java.awt.Color;
 import java.awt.Graphics2D;
 
-import restaurant.CookAgent;
+import simcity.anjalirestaurant.AnjaliCookRole;
 
-public class AnjaliCookGui implements Gui {
+public class AnjaliCookGui implements AnjaliGui {
 
-    private CherysCookRole agent = null;
+    private AnjaliCookRole agent = null;
   private boolean isPresent = false;
   private boolean releaseIt = false;
   private String choice = " ";
-  RestaurantGui gui;
+  AnjaliRestaurantGui gui;
     private int xPos = 20, yPos = 20;//default waiter position
     private int xDestination = 20, yDestination = 20;//default start position
     
     private int yHomePosition = 0; 
    
     
-    public AnjaliCookGui(CherysCookRole c, RestaurantGui gui){ //HostAgent m) {
+    public AnjaliCookGui(AnjaliCookRole c, AnjaliRestaurantGui gui){ //HostAgent m) {
     	agent = c;
 		xPos = 0;
 		yPos = 250;

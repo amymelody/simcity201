@@ -1,9 +1,9 @@
-package simcity.cherysrestaurant;
+package simcity.Anjalirestaurant;
 
 import simcity.agent.Agent;
-import simcity.cherysrestaurant.gui.CherysCustomerGui;
-import simcity.cherysrestaurant.gui.CherysRestaurantGui;
-import simcity.cherysrestaurant.interfaces.*;
+import simcity.Anjalirestaurant.gui.AnjaliCustomerGui;
+import simcity.Anjalirestaurant.gui.AnjaliRestaurantGui;
+import simcity.Anjalirestaurant.interfaces.*;
 import simcity.mock.EventLog;
 
 import java.util.*;
@@ -12,7 +12,7 @@ import java.util.concurrent.Semaphore;
 /**
  * Restaurant Customer Agent.
  */
-public class CherysCustomerRole extends Agent implements CherysCustomer
+public class AnjaliCustomerRole extends Agent implements AnjaliCustomer
 {
 	private Semaphore atTable = new Semaphore(0, true);
 	private Semaphore atCashier = new Semaphore(0, true);
@@ -24,9 +24,9 @@ public class CherysCustomerRole extends Agent implements CherysCustomer
 	private int maxHunger = 5000;
 	Timer timer = new Timer();
 	
-	private CherysCustomerGui customerGui = null;
+	private AnjaliCustomerGui customerGui = null;
 
-	private CherysHost host;
+	private AnjaliHost host;
 
 	private enum AgentState
 	{
@@ -49,15 +49,15 @@ public class CherysCustomerRole extends Agent implements CherysCustomer
 	}
 	private List<AgentEvent> events = new ArrayList<AgentEvent>();
 	
-	CherysWaiter waiter;
+	AnjaliWaiter waiter;
 	String choice = null;
 	int orderTime = 2000;
-	Map<Integer, CherysWaiterFood> menu;
+	Map<Integer, AnjaliWaiterFood> menu;
 	List<String> foodsOutOf = new ArrayList<String>();
 	
-	private CherysCashier cashier;
+	private AnjaliCashier cashier;
 	private double money = 0.0;
-	private CherysCashierCheck check;
+	private AnjaliCashierCheck check;
 	
 	public EventLog log = new EventLog();
 	
@@ -65,7 +65,7 @@ public class CherysCustomerRole extends Agent implements CherysCustomer
 	 * Constructor for CustomerAgent class
 	 * @param name name of the customer
 	 */
-	public CherysCustomerRole(String name) //* called in RestaurantPanel
+	public AnjaliCustomerRole(String name) //* called in RestaurantPanel
 	{
 		super();
 		this.name = name;
@@ -75,7 +75,7 @@ public class CherysCustomerRole extends Agent implements CherysCustomer
 	/**
 	 * hack to establish connection to Host agent.
 	 */
-	public void setHost(CherysHost host) //* called in RestaurantPanel.addPerson
+	public void setHost(AnjaliHost host) //* called in RestaurantPanel.addPerson
 	{
 		this.host = host;
 	}
@@ -96,7 +96,7 @@ public class CherysCustomerRole extends Agent implements CherysCustomer
 		hungerLevel = maxHunger;
 		stateChanged();
 	}
-	public void msgFollowMe(CherysWaiter w, Map<Integer, CherysWaiterFood> m, List<String> foo)//int seat) //* called from Waiter
+	public void msgFollowMe(AnjaliWaiter w, Map<Integer, AnjaliWaiterFood> m, List<String> foo)//int seat) //* called from Waiter
 	{
 		Do("recieved msgFollowMe");
 		waiter = w;
@@ -119,7 +119,7 @@ public class CherysCustomerRole extends Agent implements CherysCustomer
 		events.add(AgentEvent.foodRecieved);
 		stateChanged();
 	}
-	public void msgHereIsCheck(CherysCashierCheck ch)
+	public void msgHereIsCheck(AnjaliCashierCheck ch)
 	{
 		Do("recieved msgHereIsCheck");
 		check = ch;
@@ -263,7 +263,7 @@ public class CherysCustomerRole extends Agent implements CherysCustomer
 	 */
 	private void placeOrder()
 	{
-		Map<Integer, CherysWaiterFood> choices = new HashMap<Integer, CherysWaiterFood>();;
+		Map<Integer, AnjaliWaiterFood> choices = new HashMap<Integer, AnjaliWaiterFood>();;
 		int index = 0;
 		do
 		{
@@ -474,15 +474,15 @@ public class CherysCustomerRole extends Agent implements CherysCustomer
 	{
 		return "customer " + getName();
 	}
-	public void setGui(CherysCustomerGui g)
+	public void setGui(AnjaliCustomerGui g)
 	{
 		customerGui = g;
 	}
-	public CherysCustomerGui getGui()
+	public AnjaliCustomerGui getGui()
 	{
 		return customerGui;
 	}
-	public void setCashier(CherysCashier cash)
+	public void setCashier(AnjaliCashier cash)
 	{
 		cashier = cash;
 	}

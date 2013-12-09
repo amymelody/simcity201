@@ -191,8 +191,8 @@ public class BuildingsGui extends JFrame
 		// Restaurants
 		JoshRestaurantGui joshRestaurant = new JoshRestaurantGui("joshRestaurant", this, cd);
 		cityGui.animationPanel.addBuilding(joshRestaurant);
-		/*CherysRestaurantGui cherysRestaurant = new CherysRestaurantGui("cherysRestaurant", this, cd);
-		cityGui.animationPanel.addBuilding(cherysRestaurant);
+		/*AnjaliRestaurantGui AnjaliRestaurant = new AnjaliRestaurantGui("AnjaliRestaurant", this, cd);
+		cityGui.animationPanel.addBuilding(AnjaliRestaurant);
 		AnjaliRestaurantGui anjaliRestaurant = new AnjaliRestaurantGui("anjaliRestaurant", this, cd);
 		cityGui.animationPanel.addBuilding(anjaliRestaurant);
 		JesusRestaurantGui jesusRestaurant = new JesusRestaurantGui("jesusRestaurant", this, cd);

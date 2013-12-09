@@ -1,6 +1,6 @@
 package simcity.anjalirestaurant.interfaces;
 
-import restaurant.HostAgent.Table;
+import simcity.anjalirestaurant.AnjaliHostRole.Table;
 
 /**
  * Restaurant Host Agent
@@ -12,20 +12,20 @@ import restaurant.HostAgent.Table;
 
 //Works for normative and nonnormative scenarios
 
-public interface Host {
+public interface AnjaliHost {
 	
 	//////////// MESSAGES MESSAGES MESSAGES MESSAGES ///////////
 	
 	
-	public abstract void msgIWantFood(Customer cust);
+	public abstract void msgIWantFood(AnjaliCustomer cust);
 		
 	
-	public abstract void msgIWillWait(final Customer c);
+	public abstract void msgIWillWait(final AnjaliCustomer c);
 	
-	public abstract void msgWantBreak(Waiter w);
+	public abstract void msgWantBreak(AnjaliWaiter w);
 	
 	
-	public abstract void msgWaiterBreakDone(Waiter w);
+	public abstract void msgWaiterBreakDone(AnjaliWaiter w);
 	
-	public abstract void msgTableIsFree(Table t, Waiter w);
+	public abstract void msgTableIsFree(Table t, AnjaliWaiter w);
 }

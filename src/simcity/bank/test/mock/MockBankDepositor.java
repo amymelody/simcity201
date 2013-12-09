@@ -2,16 +2,14 @@ package simcity.bank.test.mock;
 
 import java.util.Map;
 
-<<<<<<< HEAD
+
 
 import simcity.interfaces.BankDepositor;
 import simcity.interfaces.BankTeller;
 
-=======
-import simcity.interfaces.BankDepositor;
-import simcity.interfaces.BankTeller;
+
 import simcity.interfaces.BankManager;
->>>>>>> anjali
+
 
 //Works for normative and nonnormative scenarios
 
