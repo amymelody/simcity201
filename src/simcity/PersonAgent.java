@@ -12,7 +12,7 @@ import simcity.interfaces.Person;
 import simcity.interfaces.RestCustomer;
 import simcity.interfaces.MarketCustomer;
 import simcity.interfaces.Resident;
-import simcity.bank.interfaces.BankDepositor;
+import simcity.interfaces.BankDepositor;
 import simcity.interfaces.JobInterface;
 import simcity.interfaces.Bus;
 import simcity.interfaces.BusStop;
