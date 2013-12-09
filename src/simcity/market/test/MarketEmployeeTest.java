@@ -79,7 +79,7 @@ public class MarketEmployeeTest extends TestCase
 		assertEquals("EmployeeState == getting. It isn't", employee.eS, EmployeeState.getting);	
 
 		// Check postconditions for Step 1b
-		assertTrue("Employee's current order should be test1Order. It isn't.", employee.currentOrder == test1Order);
+		assertTrue("Employee's current order should be test1Order. It isn't.", employee.currentOrder.customer == test1Order.customer);
 
 		// Step 1c - Items are now retrieved (Message)
 		employee.msgHaveItems();
@@ -169,7 +169,7 @@ public class MarketEmployeeTest extends TestCase
 
 		// Check postconditions for Step 1b
 		assertEquals("EmployeeState == getting. It isn't", employee.eS, EmployeeState.getting);
-		assertTrue("Employee's current order should be test1Order. It isn't.", employee.currentOrder == test1Order);
+		assertTrue("Employee's current order should be test1Order. It isn't.", employee.currentOrder.customer == test1Order.customer);
 
 		// Step 3a - Receiving third Order (Message)
 		employee.msgGetItems(test3Order);
@@ -178,7 +178,7 @@ public class MarketEmployeeTest extends TestCase
 		assertEquals("Employee should have two orders in List orders. It doesn't.", employee.orders.size(), 2);
 		assertTrue("Employee should have two orders in List orders in which OrderState == none. It doesn't.", employee.orders.peek().getOS() == OrderState.none);
 		assertTrue("Employee should have two orders in List orders NOT for delivery. It doesn't", employee.orders.peek().location == null);
-		assertTrue("Employee's current order should STILL be test1Order. It isn't.", employee.currentOrder == test1Order);
+		assertTrue("Employee's current order should STILL be test1Order. It isn't.", employee.currentOrder.customer == test1Order.customer);
 
 		// Step 3b - Checking Scheduler (Scheduler)
 		assertFalse("Employee's scheduler should have returned false, but didn't.", employee.pickAndExecuteAnAction());
@@ -215,7 +215,7 @@ public class MarketEmployeeTest extends TestCase
 		
 		// Check postconditions for Step 2b
 		assertEquals("EmployeeState == getting. It isn't", employee.eS, EmployeeState.getting);
-		assertTrue("Employee's current order should NOW be test2Order. It isn't.", employee.currentOrder == test2Order);
+		assertTrue("Employee's current order should NOW be test2Order. It isn't.", employee.currentOrder.customer == test2Order.customer);
 
 		// Step 2c - Items are now retrieved (Message)
 		employee.msgHaveItems();
@@ -249,7 +249,7 @@ public class MarketEmployeeTest extends TestCase
 
 		// Check postconditions for Step 3b
 		assertEquals("EmployeeState == getting. It isn't", employee.eS, EmployeeState.getting);
-		assertTrue("Employee's current order should NOW be test3Order. It isn't.", employee.currentOrder == test3Order);
+		assertTrue("Employee's current order should NOW be test3Order. It isn't.", employee.currentOrder.customer == test3Order.customer);
 
 		// Step 3c - Items are now retrieved (Message)
 		employee.msgHaveItems();

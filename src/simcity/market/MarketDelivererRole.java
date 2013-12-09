@@ -93,7 +93,7 @@ public class MarketDelivererRole extends JobRole implements MarketDeliverer {
 
 	// Normative Scenarios
 	public void msgDeliverItems(Order o) {
-		Order temp = new Order(o.cook, o.cashier, o.items, o.location);
+		Order temp = new Order(o);
 		orders.add(temp);
 		dS = DelivererState.nothing;
 		stateChanged();

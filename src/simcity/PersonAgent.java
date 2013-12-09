@@ -46,14 +46,14 @@ public class PersonAgent extends Agent implements Person
 	private boolean testingAnimation;
 	private boolean usingBus;
 	private boolean goingHome;
-	
+
 	private CityDirectory city;
 	private CityGui cG;
-	
+
 	private PersonGui gui;
 	private Semaphore atDestination = new Semaphore(0,true);
 	private Semaphore onBus = new Semaphore(0,true);
-	
+
 	public List<BusStop> busStops = Collections.synchronizedList(new ArrayList<BusStop>());
 	public List<ItemOrder> foodNeeded = Collections.synchronizedList(new ArrayList<ItemOrder>());
 	public List<ItemOrder> groceries = Collections.synchronizedList(new ArrayList<ItemOrder>());
@@ -77,11 +77,11 @@ public class PersonAgent extends Agent implements Person
 	public enum PhysicalState {unknown, fit, average, lazy};
 
 	public PersonState state = new PersonState();
-	
+
 	public PersonAgent(String name) {
 		super();
 		this.name = name;
-		
+
 		haveBankAccount = false;
 		rentDue = false;
 		destination = null;
@@ -89,39 +89,39 @@ public class PersonAgent extends Agent implements Person
 		money = 0;
 		minBalance = 100;
 		maxBalance = 1000;
-		
+
 		state.ns = NourishmentState.normal;
 		state.ls = LocationState.outside;
 		state.ws = WorkingState.notWorking;
 		state.ts = TransportationState.walking;
-		
+
 		houses.add(new Housing("home", "residentRole"));
 		houses.add(new Housing("ownerHouse", "residentRole"));
-		
+
 		restaurants.add(new Restaurant("joshRestaurant", "italian", "joshCustomerRole"));
 		restaurants.add(new Restaurant("cherysRestaurant", "blah", "cherysCustomerRole"));
 		restaurants.add(new Restaurant("jesusRestaurant", "bleh", "jesusCustomerRole"));
 		restaurants.add(new Restaurant("anjaliRestaurant", "blih", "anjaliCustomerRole"));
-		
+
 		markets.add(new Market("market1", "market1CustomerRole"));
 		markets.add(new Market("market2", "market2CustomerRole"));
-		
+
 		banks.add(new Bank("bank1", "bank1DepositorRole"));
 		banks.add(new Bank("bank2", "bank2DepositorRole"));
 	}
-	
+
 	public void setCityDirectory(CityDirectory c) {
 		city = c;
 	}
-	
+
 	public void setCityGui(CityGui g) {
 		cG = g;
 	}
-	
+
 	public void setGui(PersonGui g) {
 		gui = g;
 	}
-	
+
 	public void addResidentRole() {
 		Housing h = houses.get(0);	
 		if (!findRole(h.residentRole)) {
@@ -130,14 +130,14 @@ public class PersonAgent extends Agent implements Person
 			cG.addResident(r, h.location, houses.get(1).location);
 		}
 	}
-	
+
 	public void setHome(String home) {
 		houses.get(0).location = home;
 		if (job != null && job.location.equals("home")) {
 			job.location = home;
 		}
 	}
-	
+
 	public void setOwnerHome(String home) {
 		houses.get(1).location = home;
 		for(MyRole mr : roles)
@@ -152,27 +152,27 @@ public class PersonAgent extends Agent implements Person
 			}
 		}
 	}
-	
+
 	public void setTestingAnimation(boolean tA) {
 		testingAnimation = tA;
 	}
-	
+
 	public void setUsingBus(boolean uB) {
 		usingBus = uB;
 	}
-	
+
 	public void setGoingHome(boolean gH) {
 		goingHome = gH;
 	}
-	
+
 	public String getName() {
 		return name;
 	}
-	
+
 	public int getSalary() {
 		return job.payrate;
 	}
-	
+
 	public String getJobLocation() {
 		return job.location;
 	}
@@ -180,15 +180,15 @@ public class PersonAgent extends Agent implements Person
 	public int getMoney() {
 		return money;
 	}
-	
+
 	public String getHome() {
 		return houses.get(0).location;
 	}
-	
+
 	public String getJob() {
 		return job.role;
 	}
-	
+
 	public Resident getResident() {
 		for (MyRole mr : roles) {
 			if (mr.name.equals("residentRole")) {
@@ -199,23 +199,23 @@ public class PersonAgent extends Agent implements Person
 		}
 		return null;
 	}
-	
+
 	public String getDestination() {
 		return destination;
 	}
-	
+
 	public void setRentDue(boolean b) {
 		rentDue = b;
 	}
-	
+
 	public void setPState(PhysicalState ps) {
 		state.ps = ps;
 	}
-	
+
 	public void setLState(LocationState ls) {
 		state.ls = ls;
 	}
-	
+
 	public void setEState(String es) {
 		switch(es) {
 		case "poor":
@@ -244,7 +244,7 @@ public class PersonAgent extends Agent implements Person
 			break;
 		}
 	}
-	
+
 	public void setPState(String ps) {
 		switch(ps) {
 		case "lazy":
@@ -261,18 +261,18 @@ public class PersonAgent extends Agent implements Person
 			break;
 		}
 	}
-	
+
 	public void addRole(Role r, String n) {
 		r.setPerson(this);
 		roles.add(new MyRole(r, n));
 	}
-	
+
 	public void addBusStops(List<BusStop> stops) {
 		for (BusStop b : stops) {
 			busStops.add(b);
 		}
 	}
-	
+
 	private boolean wantToGoToRestaurant() {
 		if (allRestaurantsClosed()) {
 			return false;
@@ -289,7 +289,7 @@ public class PersonAgent extends Agent implements Person
 		}
 		return true;
 	}
-	
+
 	private BusStop closestBusStop() {
 		int distance = 100000000;
 		BusStop temp = busStops.get(0);
@@ -302,7 +302,7 @@ public class PersonAgent extends Agent implements Person
 		}
 		return temp;
 	}
-	
+
 	private BusStop closestBusStop(String destination) {
 		int distance = 100000000;
 		BusStop temp = busStops.get(0);
@@ -315,7 +315,7 @@ public class PersonAgent extends Agent implements Person
 		}
 		return temp;
 	}
-	
+
 	private boolean nearDestination(String destination) {
 		if (unitTesting) {
 			return false;
@@ -325,11 +325,11 @@ public class PersonAgent extends Agent implements Person
 		}
 		return false;
 	}
-	
+
 	private boolean takeBus(String destination) {
-//		if (job != null && destination.equals(job.location) && (time.plus(30)).greaterThanOrEqualTo(job.startShifts.get(time.getDay())) && !time.greaterThanOrEqualTo(job.endShifts.get(time.getDay()))) {
-//			return true;
-//		}
+		//		if (job != null && destination.equals(job.location) && (time.plus(30)).greaterThanOrEqualTo(job.startShifts.get(time.getDay())) && !time.greaterThanOrEqualTo(job.endShifts.get(time.getDay()))) {
+		//			return true;
+		//		}
 		//
 		if (nearDestination(destination)) {
 			return false;
@@ -349,7 +349,7 @@ public class PersonAgent extends Agent implements Person
 		}
 		return false;
 	}
-	
+
 	private boolean allRestaurantsClosed() {
 		for (Restaurant r : restaurants) {
 			if (!r.closed) {
@@ -358,7 +358,7 @@ public class PersonAgent extends Agent implements Person
 		}
 		return true;
 	}
-	
+
 	private boolean allMarketsClosed() {
 		for (Market m : markets) {
 			if (!m.closed) {
@@ -367,7 +367,7 @@ public class PersonAgent extends Agent implements Person
 		}
 		return true;
 	}
-	
+
 	private boolean allBanksClosed() {
 		for (Bank b : banks) {
 			if (!b.closed) {
@@ -376,7 +376,7 @@ public class PersonAgent extends Agent implements Person
 		}
 		return true;
 	}
-	
+
 	private Restaurant chooseRestaurant() {
 		if (destination != null) {
 			if (destination.equals("joshRestaurant")) {
@@ -397,7 +397,7 @@ public class PersonAgent extends Agent implements Person
 		}
 		return restaurants.get(0);
 	}
-	
+
 	private Restaurant getRestaurant(String building) {
 		for (Restaurant r : restaurants) {
 			if (r.location.equals(building)) {
@@ -406,7 +406,7 @@ public class PersonAgent extends Agent implements Person
 		}
 		return restaurants.get(0);
 	}
-	
+
 	private Market chooseMarket() {
 		if (destination != null) {
 			if (destination.equals("market1")) {
@@ -421,7 +421,7 @@ public class PersonAgent extends Agent implements Person
 		}
 		return markets.get(0);
 	}
-	
+
 	private Market getMarket(String building) {
 		for (Market m : markets) {
 			if (m.location.equals(building)) {
@@ -430,11 +430,11 @@ public class PersonAgent extends Agent implements Person
 		}
 		return markets.get(0);
 	}
-	
+
 	private Bank chooseBank() {
 		return banks.get(0);
 	}
-	
+
 	private Bank getBank(String building) {
 		for (Bank b : banks) {
 			if (b.location.equals(building)) {
@@ -443,13 +443,13 @@ public class PersonAgent extends Agent implements Person
 		}
 		return banks.get(0);
 	}
-	
+
 	public void businessIsClosed(String building, boolean closed) {
 		if (!unitTesting) {
 			cG.businessIsClosed(building, closed);
 		}
 	}
-	
+
 	public void setBusinessClosed(String building, boolean closed) {
 		if (building.contains("market")) {
 			for (Market m : markets) {
@@ -473,7 +473,7 @@ public class PersonAgent extends Agent implements Person
 			}
 		}
 	}
-	
+
 	public boolean businessOpen(String building) {
 		if (building.contains("market")) {
 			for (Market m : markets) {
@@ -504,7 +504,7 @@ public class PersonAgent extends Agent implements Person
 		}
 		return false;
 	}
-	
+
 	private boolean findRole(String roleName) {
 		synchronized(roles) {
 			for (MyRole mr : roles) {
@@ -515,7 +515,7 @@ public class PersonAgent extends Agent implements Person
 		}
 		return false;
 	}
-	
+
 	public void addJobRole() {
 		if (job.role.equals("restWaiter1Role") || job.role.equals("restWaiter2Role")) {
 			if (job.jobRole instanceof RestWaiterRole) {
@@ -540,7 +540,7 @@ public class PersonAgent extends Agent implements Person
 			cG.addLandlord(l, houses.get(0).location);
 		}
 	}
-	
+
 
 	//Messages
 
@@ -548,17 +548,27 @@ public class PersonAgent extends Agent implements Person
 		atDestination.release();
 		stateChanged();
 	}
-	
+
 	public void msgOnBus() {
 		onBus.release();
 		stateChanged();
 	}
-	
+
 	public void msgUpdateWatch(Day d, int h, int m) {
 		log.add(new LoggedEvent("Received msgUpdateWatch"));
 		time.day = d;
 		time.hour = h;
 		time.minute = m;
+		if(time.getHour() == 6) {
+			for(Market market: markets) {
+				market.closed = false;
+			}
+		}
+		if(time.getHour() == 23) {
+			for(Market market: markets) {
+				market.closed = true;
+			}
+		}
 		if (time.getHour() == 7 && time.getMinute() == 0) {
 			if (name.equals("bankDepositor")) {
 				money += 600;
@@ -580,10 +590,10 @@ public class PersonAgent extends Agent implements Person
 				state.ns = NourishmentState.gotHungry;
 			}
 		}
-//		if (!unitTesting && time.getHour() == 8 && time.getMinute() == 0) {
-//			AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "Got hungry");
-//			state.ns = NourishmentState.gotHungry;
-//		}
+		//		if (!unitTesting && time.getHour() == 8 && time.getMinute() == 0) {
+		//			AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "Got hungry");
+		//			state.ns = NourishmentState.gotHungry;
+		//		}
 		stateChanged();
 	}
 
@@ -592,14 +602,14 @@ public class PersonAgent extends Agent implements Person
 		state.ns = NourishmentState.gotHungry;
 		stateChanged();
 	}
-	
+
 	public void msgYoureHired(String role, int payrate, Map<Day,Time> startShifts, Map<Day,Time> endShifts) {
 		JobRole j = city.JobFactory(role);
 		addRole(j, role);
 		job = new Job(j, j.getJobLocation(), role, payrate, startShifts, endShifts);
 		stateChanged();
 	}
-	
+
 	public void msgYoureHired(String jobLocation, String role, int payrate, Map<Day,Time> startShifts, Map<Day,Time> endShifts) {
 		job = new Job(jobLocation, role, payrate, startShifts, endShifts);
 		stateChanged();
@@ -643,7 +653,7 @@ public class PersonAgent extends Agent implements Person
 		foodNeeded.clear();
 		stateChanged();
 	}
-	
+
 	public void msgIncome(int cash) {
 		log.add(new LoggedEvent("Received msgIncome"));
 		money += cash;
@@ -662,30 +672,30 @@ public class PersonAgent extends Agent implements Person
 		state.ws = WorkingState.notWorking;
 		stateChanged();
 	}
-	
+
 	public void msgCreatedAccount() {
 		log.add(new LoggedEvent("Received msgCreatedAccount"));
 		haveBankAccount = true;
 	}
-	
+
 	public void msgBusIsHere(Bus b) {
-        bus = b;
-        stateChanged();
+		bus = b;
+		stateChanged();
 	}
-	
+
 	public void msgGoodGuyAgain() {
 		log.add(new LoggedEvent("Received msgGoodGuyAgain"));
 		robber = false;
 	}
-	
+
 	public void msgAtDestination(String d) {
 		state.ts = TransportationState.walkingFromVehicle;
 		destination = d;
 		stateChanged();
 	}
-	
+
 	//Scheduler
-	
+
 	public boolean pickAndExecuteAnAction() {
 		if (state.ts == TransportationState.walking || state.ts == TransportationState.walkingFromVehicle) {
 			if (job != null && state.ws == WorkingState.notWorking && !job.startShifts.get(time.getDay()).isEqualTo(job.endShifts.get(time.getDay())) && (time.plus(90)).greaterThanOrEqualTo(job.startShifts.get(time.getDay())) && !time.greaterThanOrEqualTo(job.endShifts.get(time.getDay()))) { //if an hour before your shift starts
@@ -794,19 +804,19 @@ public class PersonAgent extends Agent implements Person
 							leaveHouse();
 							return true;
 						} else if (state.ls == LocationState.outside || state.ls == LocationState.atDestination) {
-				        	goToBank(b);
+							goToBank(b);
 							return true;
 						} 
 					}
 				} 
 			} 
 		}
-		
+
 		if (state.ts == TransportationState.waitingForBus && bus != null) {
 			boardBus();
 			return true;
 		}
-		
+
 		boolean anytrue = false;
 		synchronized(roles) {
 			for (MyRole mr : roles) {
@@ -816,12 +826,12 @@ public class PersonAgent extends Agent implements Person
 				}
 			}
 		}
-		
+
 		if (!unitTesting && goingHome && state.ts == TransportationState.walking && state.ls != LocationState.home && state.ls != LocationState.leavingHouse) {
 			goHome(); //if nothing left to do, go home and do whatever
 			return true;
 		}
-		
+
 		return false;
 	}
 
@@ -844,7 +854,7 @@ public class PersonAgent extends Agent implements Person
 			}
 		}
 	}
-	
+
 	private void boardBus() {
 		AlertLog.getInstance().logMessage(AlertTag.PERSON, name, destination);
 		gui.DoBoardBus(closestBusStop().getName(), closestBusStop(destination).getName());
@@ -896,7 +906,7 @@ public class PersonAgent extends Agent implements Person
 			}
 		}
 	}
-	
+
 	private void goEat() {
 		Housing h = houses.get(0); //person's house
 		synchronized(roles) {
@@ -907,8 +917,8 @@ public class PersonAgent extends Agent implements Person
 						mr.r.setPerson(this);
 						mr.active = true;
 						AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "Eating at home");
-		                r.msgEat();
-		                state.ns = NourishmentState.hungry;
+						r.msgEat();
+						state.ns = NourishmentState.hungry;
 					}
 					return;
 				}
@@ -1121,21 +1131,21 @@ public class PersonAgent extends Agent implements Person
 			state.ls = LocationState.atDestination;
 		}
 	}
-	
-	
+
+
 	//inner classes
-	
+
 	public class MyRole {
 		Role r;
 		String name;
 		boolean active;
-		
+
 		MyRole(Role role, String n) {
 			r = role;
 			name = n;
 			active = false;
 		}
-		
+
 		public boolean isActive() {
 			return active;
 		}
@@ -1148,11 +1158,11 @@ public class PersonAgent extends Agent implements Person
 		TransportationState ts;
 		EconomicState es;
 		PhysicalState ps;
-		
+
 		PersonState() {
-			
+
 		}
-		
+
 		public NourishmentState getNState() {
 			return ns;
 		}
@@ -1182,22 +1192,22 @@ public class PersonAgent extends Agent implements Person
 			this.startShifts = startShifts;
 			this.endShifts = endShifts;
 			switch (location) {
-				case "joshRestaurant": case "cherysRestaurant": case "alfredRestaurant": case "anjaliRestaurant": case "jesusRestaurant":
-					jobLocation = LocationState.restaurant;
-					break;
-				case "market1": case "market2":
-					jobLocation = LocationState.market;
-					break;
-				case "home":
-					jobLocation = LocationState.home;
-					break;
-				case "bank1": case "bank2":
-					endShifts.get(Day.Sun).hour = startShifts.get(Day.Sun).hour;	//Banks are closed on weekends
-					endShifts.get(Day.Sat).hour = startShifts.get(Day.Sat).hour;
-					jobLocation = LocationState.bank;
-					break;
-				default:
-					break;
+			case "joshRestaurant": case "cherysRestaurant": case "alfredRestaurant": case "anjaliRestaurant": case "jesusRestaurant":
+				jobLocation = LocationState.restaurant;
+				break;
+			case "market1": case "market2":
+				jobLocation = LocationState.market;
+				break;
+			case "home":
+				jobLocation = LocationState.home;
+				break;
+			case "bank1": case "bank2":
+				endShifts.get(Day.Sun).hour = startShifts.get(Day.Sun).hour;	//Banks are closed on weekends
+				endShifts.get(Day.Sat).hour = startShifts.get(Day.Sat).hour;
+				jobLocation = LocationState.bank;
+				break;
+			default:
+				break;
 			}
 		}
 		Job(String l, String r, int p, Map<Day,Time> startShifts, Map<Day,Time> endShifts) {
@@ -1207,22 +1217,22 @@ public class PersonAgent extends Agent implements Person
 			this.startShifts = startShifts;
 			this.endShifts = endShifts;
 			switch (location) {
-				case "joshRestaurant": case "cherysRestaurant": case "alfredRestaurant": case "anjaliRestaurant": case "jesusRestaurant":
-					jobLocation = LocationState.restaurant;
-					break;
-				case "market1": case "market2":
-					jobLocation = LocationState.market;
-					break;
-				case "home":
-					jobLocation = LocationState.home;
-					break;
-				case "bank1": case "bank2":
-					endShifts.get(Day.Sun).hour = startShifts.get(Day.Sun).hour;	//Banks are closed on weekends
-					endShifts.get(Day.Sat).hour = startShifts.get(Day.Sat).hour;
-					jobLocation = LocationState.bank;
-					break;
-				default:
-					break;
+			case "joshRestaurant": case "cherysRestaurant": case "alfredRestaurant": case "anjaliRestaurant": case "jesusRestaurant":
+				jobLocation = LocationState.restaurant;
+				break;
+			case "market1": case "market2":
+				jobLocation = LocationState.market;
+				break;
+			case "home":
+				jobLocation = LocationState.home;
+				break;
+			case "bank1": case "bank2":
+				endShifts.get(Day.Sun).hour = startShifts.get(Day.Sun).hour;	//Banks are closed on weekends
+				endShifts.get(Day.Sat).hour = startShifts.get(Day.Sat).hour;
+				jobLocation = LocationState.bank;
+				break;
+			default:
+				break;
 			}
 		}
 		JobRole jobRole;
