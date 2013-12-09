@@ -122,9 +122,9 @@ public class JoshRestaurantInputPanel extends JPanel
     	waiterPanel.addPerson(name);
     }
     
-//    public void removePerson(String name) {
-//    	waiterPanel.removePerson(name);
-//    }
+    public void removePerson(String name) {
+    	waiterPanel.removePerson(name);
+    }
     
     public void addWaitingCustomer(JoshCustomerRole c) {
     	for (MyCustomer mc : customers) {
