@@ -8,9 +8,9 @@ import java.util.concurrent.Semaphore;
 import simcity.PersonAgent;
 import simcity.bank.gui.BankDepositorGui;
 import simcity.bank.gui.BankManagerGui;
-import simcity.bank.interfaces.BankDepositor;
-import simcity.bank.interfaces.BankManager;
-import simcity.bank.interfaces.BankTeller;
+import simcity.interfaces.BankDepositor;
+import simcity.interfaces.BankManager;
+import simcity.interfaces.BankTeller;
 import simcity.interfaces.Person;
 import simcity.role.JobRole;
 import simcity.trace.AlertLog;
@@ -453,6 +453,8 @@ public class BankManagerRole extends JobRole implements BankManager  {
 	public void addTeller(BankTeller t){
 		tellers.add(new myTeller(t, TellerState.doingNothing));
 	}
+
+	
 
 	
 

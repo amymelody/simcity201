@@ -11,8 +11,6 @@ import simcity.interfaces.HousingGuiInterface;
 import simcity.interfaces.Resident;
 import simcity.mock.EventLog;
 import simcity.mock.LoggedEvent;
-import simcity.trace.AlertLog;
-import simcity.trace.AlertTag;
 
 public class ResidentGui implements Gui
 {
@@ -136,7 +134,7 @@ public class ResidentGui implements Gui
 				}
 				else
 				{
-					if(!arrived)
+					if(!arrived && xPos != 500 && yPos != 220)
 					{
 						resident.msgAtLocation();
 						arrived = true;

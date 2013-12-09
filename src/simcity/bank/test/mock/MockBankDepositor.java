@@ -3,8 +3,8 @@ package simcity.bank.test.mock;
 import java.util.Map;
 
 
-import simcity.bank.interfaces.BankDepositor;
-import simcity.bank.interfaces.BankTeller;
+import simcity.interfaces.BankDepositor;
+import simcity.interfaces.BankTeller;
 
 
 //Works for normative and nonnormative scenarios
@@ -27,7 +27,8 @@ public class MockBankDepositor extends Mock implements BankDepositor {
 	
 	
 	public void msgMakeDeposit(int cash){
-		log.add(new LoggedEvent("Received message from person agent to take on role of depositor"));
+		log.add(new LoggedEvent("Received message from person agent to take "
+				+ "on role of depositor"));
 	}
 	
 	public void msgMakeWithdrawal(int cash){

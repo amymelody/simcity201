@@ -73,10 +73,14 @@ public class JoshRestaurantGui extends BuildingGui implements ActionListener {
         controlPanel.setPreferredSize(controlDim);
         controlPanel.setMinimumSize(controlDim);
         controlPanel.setMaximumSize(controlDim);
-        //controlPanel.setLayout(new BorderLayout());
-        controlPanel.add(infoPanel, BorderLayout.NORTH);
-        controlPanel.add(inputPanel, BorderLayout.CENTER);
-        controlPanel.add(restLabel, BorderLayout.SOUTH);
+        
+        JPanel waiters = new JPanel();
+        waiters.setLayout(new BorderLayout());
+        waiters.add(infoPanel, BorderLayout.NORTH);
+        waiters.add(inputPanel, BorderLayout.CENTER);
+        
+        controlPanel.add("Menu", restLabel);
+        controlPanel.add("Waiters", waiters);
         controlPanel.setVisible(false);
         bG.add(controlPanel, BorderLayout.WEST);
         
@@ -104,18 +108,6 @@ public class JoshRestaurantGui extends BuildingGui implements ActionListener {
      */
     public void updateInfoPanel(Object person) {
         currentPerson = person;
-
-//        if (person instanceof JoshCustomerRole) {
-//            JoshCustomerRole customer = (JoshCustomerRole) person;
-//            stateCB.setVisible(true);
-//            stateCB.setText("Hungry?");
-//          //Should checkmark be there? 
-//            stateCB.setSelected(customer.getGui().isHungry());
-//          //Is customer hungry? Hack. Should ask customerGui
-//            stateCB.setEnabled(!customer.getGui().isHungry());
-//          // Hack. Should ask customerGui
-//            infoLabel.setText(customer.getName());
-//        } else 
         if (person instanceof JoshWaiterRole) {
         	JoshWaiterRole waiter = (JoshWaiterRole) person;
         	stateCB.setVisible(true);
@@ -172,6 +164,10 @@ public class JoshRestaurantGui extends BuildingGui implements ActionListener {
     	inputPanel.addPerson(name);
     }
     
+    public void removePerson(String name) {
+    	inputPanel.removePerson(name);
+    }
+    
     public void removeWaitingCustomer(JoshCustomerRole c) {
     	inputPanel.removeWaitingCustomer(c);
     }
@@ -199,7 +195,7 @@ public class JoshRestaurantGui extends BuildingGui implements ActionListener {
         //restLabel.setLayout(new BoxLayout((Container)restLabel, BoxLayout.Y_AXIS));
         restLabel.setLayout(new BorderLayout());
         label.setText(
-                "<html><h3><u>Josh's Restaurant</u></h3><table><tr><td>host:</td><td>" + inputPanel.getHost().getName() + "</td></tr></table><table><tr><td>cook:</td><td>" + inputPanel.getCook().getName() + "</td></tr></table><table><tr><td>cashier:</td><td>" + inputPanel.getCashier().getName() + "</td></tr></table><h3><u> Menu</u></h3><table><tr><td>Steak</td><td>$16.00</td></tr><tr><td>Chicken</td><td>$11.00</td></tr><tr><td>Salad</td><td>$6.00</td></tr><tr><td>Pizza</td><td>$9.00</td></tr></table><br></html>");
+                "<html><h3><u>Josh's Restaurant</u></h3><h3><u> Menu</u></h3><table><tr><td>Steak</td><td>$16.00</td></tr><tr><td>Chicken</td><td>$11.00</td></tr><tr><td>Salad</td><td>$6.00</td></tr><tr><td>Pizza</td><td>$9.00</td></tr></table><br></html>");
 
         restLabel.setBorder(BorderFactory.createRaisedBevelBorder());
         restLabel.add(label, BorderLayout.CENTER);

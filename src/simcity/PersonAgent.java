@@ -32,7 +32,7 @@ import simcity.trace.AlertTag;
 import java.util.*;
 import java.util.concurrent.Semaphore;
 
-public class PersonAgent extends Agent implements Person
+public class PersonAgent extends Agent implements Person 
 {
 	private int money;
 	private int maxBalance;
@@ -122,6 +122,15 @@ public class PersonAgent extends Agent implements Person
 		gui = g;
 	}
 	
+	public void addResidentRole() {
+		Housing h = houses.get(0);	
+		if (!findRole(h.residentRole)) {
+			ResidentRole r = city.ResidentFactory(h.residentRole);
+			addRole(r, h.residentRole);
+			cG.addResident(r, h.location, houses.get(1).location);
+		}
+	}
+	
 	public void setHome(String home) {
 		houses.get(0).location = home;
 		if (job != null && job.location.equals("home")) {
@@ -167,6 +176,17 @@ public class PersonAgent extends Agent implements Person
 	
 	public String getJob() {
 		return job.role;
+	}
+	
+	public Resident getResident() {
+		for (MyRole mr : roles) {
+			if (mr.name.equals("residentRole")) {
+				if (mr.r instanceof Resident) {
+					return (Resident)(mr.r);
+				}
+			}
+		}
+		return null;
 	}
 	
 	public String getDestination() {
@@ -506,6 +526,7 @@ public class PersonAgent extends Agent implements Person
 		}
 		if (job.role.equals("landlordRole")) {
 			LandlordRole l = (LandlordRole)(job.jobRole);
+			cG.addLandlord(l, houses.get(0).location);
 		}
 	}
 	
@@ -574,13 +595,14 @@ public class PersonAgent extends Agent implements Person
 	}
 
 	public void msgLeftDestination(Role r) {
+		AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "kdfjdkfkldfjd");
 		log.add(new LoggedEvent("Received msgLeftDestination"));
 		synchronized(roles) {
 			for (MyRole mr : roles) {
 				if (mr.r == r) {
-						mr.active = false;
-						state.ls = LocationState.outside;
-						destination = null;
+					mr.active = false;
+					state.ls = LocationState.outside;
+					destination = null;
 				}
 			}
 		}
@@ -785,6 +807,7 @@ public class PersonAgent extends Agent implements Person
 			}
 		}
 		
+		AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "Fuuuuckkkkk");
 		if (!unitTesting && goingHome && state.ts == TransportationState.walking && state.ls != LocationState.home && state.ls != LocationState.leavingHouse) {
 			goHome(); //if nothing left to do, go home and do whatever
 			return true;
@@ -1228,7 +1251,7 @@ public class PersonAgent extends Agent implements Person
 		Market(String l, String r) {
 			location = l;
 			customerRole = r;
-			closed = false;
+			closed = true;
 		}
 		String customerRole;
 		String location;

@@ -426,7 +426,6 @@ public class CityDirectory
 		default:
 			LandlordRole la = new LandlordRole();
 			la.setJobLocation("home");
-			landlords.add(la);
 			return la;
 		}
 	}
@@ -808,6 +807,7 @@ public class CityDirectory
 		for(PersonAgent p : renters)
 		{
 			p.setOwnerHome(landlords.get(0).getPersonAgent().getHome());
+			landlords.get(0).addRenter(p.getResident());
 		}
 	}
 }

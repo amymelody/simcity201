@@ -380,6 +380,7 @@ public class JoshSharedDataWaiterRole extends JoshWaiterRole implements JoshWait
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		gui.removePerson(name);
 		person.msgLeftDestination(this);
 	}
 	

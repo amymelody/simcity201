@@ -53,10 +53,27 @@ public class HousingAnimationPanel extends JPanel implements ActionListener
 
 	public void actionPerformed(ActionEvent e)
 	{
-		synchronized(guis) {
-			for(Gui gui : guis) {
-				if (gui.isPresent()) {
-					gui.updatePosition();
+		synchronized(guis)
+		{
+			for(Gui gui : guis)
+			{
+				if(gui instanceof ResidentGui)
+				{
+					ResidentGui rg = (ResidentGui)gui;
+					if(rg.getCurrentHouse() == this.superGui)
+					{
+						if (gui.isPresent())
+						{
+							gui.updatePosition();
+						}
+					}
+				}
+				else
+				{
+					if (gui.isPresent())
+					{
+						gui.updatePosition();
+					}
 				}
 			}
 		}

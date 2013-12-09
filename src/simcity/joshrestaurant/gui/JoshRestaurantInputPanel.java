@@ -54,6 +54,7 @@ public class JoshRestaurantInputPanel extends JPanel
     	}
     	
 		cook.setHost(host);
+		cook.setCashier(cashier);
 		cook.setStand(stand);
         
 		cookGui = new JoshCookGui(cook);
@@ -122,9 +123,9 @@ public class JoshRestaurantInputPanel extends JPanel
     	waiterPanel.addPerson(name);
     }
     
-//    public void removePerson(String name) {
-//    	waiterPanel.removePerson(name);
-//    }
+    public void removePerson(String name) {
+    	waiterPanel.removePerson(name);
+    }
     
     public void addWaitingCustomer(JoshCustomerRole c) {
     	for (MyCustomer mc : customers) {

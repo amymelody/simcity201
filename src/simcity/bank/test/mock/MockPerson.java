@@ -17,19 +17,28 @@ import java.util.*;
 
 public class MockPerson extends Mock implements Person
 {
-	public List<ItemOrder> groceries;
-	public boolean rentDue = false;
+	//for testing
+	public int currentMoney;
+	
 	
 	public MockPerson(String name)
 	{
 		super(name);
 	}
 
-	@Override
+	public void setMoney(int m){
+		currentMoney = m;
+	}
+	
+	public int getCurrentMoney(){
+		return currentMoney;
+	}
 	public void msgExpense(int r) //from Resident
 	{
+		currentMoney = currentMoney - r;
 		log.add(new LoggedEvent("Received msgExpense from bankCustomer"));
 	}
+	//
 	@Override
 	public void msgDoneEating() //from Resident
 	{

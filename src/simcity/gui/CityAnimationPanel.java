@@ -33,7 +33,7 @@ import java.util.List;
 
 public class CityAnimationPanel extends JPanel implements ActionListener, MouseListener, MouseMotionListener
 {
-	static final int TIMERINCR = 140;
+	static final int TIMERINCR = 120;
 	private final int WINDOWX = 500;
 	private final int WINDOWY = 500;
 	private Image bufferImage;
@@ -214,6 +214,7 @@ public class CityAnimationPanel extends JPanel implements ActionListener, MouseL
 					HousingGui g = (HousingGui)bG;
 					l.setGui(g);
 					g.addLandlordGui(l.getGui());
+
 				}
 			}
 		}
