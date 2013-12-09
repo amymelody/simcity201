@@ -595,7 +595,6 @@ public class PersonAgent extends Agent implements Person
 	}
 
 	public void msgLeftDestination(Role r) {
-		AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "kdfjdkfkldfjd");
 		log.add(new LoggedEvent("Received msgLeftDestination"));
 		synchronized(roles) {
 			for (MyRole mr : roles) {
@@ -1250,7 +1249,7 @@ public class PersonAgent extends Agent implements Person
 		Market(String l, String r) {
 			location = l;
 			customerRole = r;
-			closed = true;
+			closed = false;
 		}
 		String customerRole;
 		String location;

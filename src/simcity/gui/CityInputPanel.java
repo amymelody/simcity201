@@ -45,6 +45,7 @@ public class CityInputPanel extends JPanel implements ActionListener
 	private JRadioButtonMenuItem button3 = new JRadioButtonMenuItem("Landlord Config");
 	private JRadioButtonMenuItem button4 = new JRadioButtonMenuItem("Bank Config");
 	private JRadioButtonMenuItem button5 = new JRadioButtonMenuItem("Housing Config");
+	private JRadioButtonMenuItem button6 = new JRadioButtonMenuItem("Full City Config");
 	private JButton goButton = new JButton("Run Scenario");
     
 //    @Override
@@ -99,7 +100,7 @@ public class CityInputPanel extends JPanel implements ActionListener
 		
 //        setLayout(new BoxLayout(this, 0));
 		
-		int rows = 7;
+		int rows = 8;
 		int columns = 1;
 		int buffer = 10;
 		view.setLayout(new GridLayout(rows, columns, buffer, buffer)); //view. maybe ought to be deleted
@@ -115,6 +116,8 @@ public class CityInputPanel extends JPanel implements ActionListener
 		add(button4);
 		configGroup.add(button5);
 		add(button5);
+		configGroup.add(button6);
+		add(button6);
 		goButton.addActionListener(this);
 		add(goButton);
 //        add(creationPanel);
@@ -170,6 +173,10 @@ public class CityInputPanel extends JPanel implements ActionListener
 			else if(button5.isSelected())
 			{
 			creationPanel.readConfig("../housingConfig.properties");
+			}
+			else if(button6.isSelected())
+			{
+			creationPanel.readConfig("../fullCityConfig.properties");
 			}
 		}
 //    	for (JButton b : personList)
