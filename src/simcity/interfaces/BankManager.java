@@ -1,11 +1,10 @@
-package simcity.bank.interfaces;
+package simcity.interfaces;
 
 
 
 public interface BankManager {
-	
-/////MESSAGES////////
 
+	
 public abstract void msgStartShift();
 
 public abstract void msgEndShift();
@@ -25,4 +24,5 @@ public abstract void msgProcessLoanRequest(BankTeller t, BankDepositor c);
 public abstract void msgImRobbingYourBank(BankDepositor c, int cash);
 
 public abstract void msgHeresYourMoneyBack(BankDepositor c, int cash);
+	
 }
