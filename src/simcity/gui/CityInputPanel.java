@@ -232,6 +232,8 @@ public class CityInputPanel extends JPanel implements ActionListener
 		
 		people.add(p);
 		cityDirectory.addPerson(p, p.getJobLocation(), housing);
+		p.addResidentRole();
+		p.addJobRole();
 		p.startThread();
 				
 //        JButton temp = new JButton(name);

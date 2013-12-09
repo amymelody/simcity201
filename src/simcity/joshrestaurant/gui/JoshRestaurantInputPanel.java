@@ -30,7 +30,6 @@ public class JoshRestaurantInputPanel extends JPanel
     private Vector<MarketCashierRole> markets = new Vector<MarketCashierRole>();
     private int numCustomers = 0;
 
-    private JPanel restLabel = new JPanel();
     private ListPanel waiterPanel = new ListPanel(this, "Waiters");
     private JPanel group = new JPanel();
 
@@ -66,8 +65,6 @@ public class JoshRestaurantInputPanel extends JPanel
 
         group.add(waiterPanel);
 
-        initRestLabel();
-        add(restLabel);
         add(group);
     }
     
@@ -125,9 +122,9 @@ public class JoshRestaurantInputPanel extends JPanel
     	waiterPanel.addPerson(name);
     }
     
-//    public void removePerson(String name) {
-//    	waiterPanel.removePerson(name);
-//    }
+    public void removePerson(String name) {
+    	waiterPanel.removePerson(name);
+    }
     
     public void addWaitingCustomer(JoshCustomerRole c) {
     	for (MyCustomer mc : customers) {
@@ -162,21 +159,16 @@ public class JoshRestaurantInputPanel extends JPanel
     	return total;
     }
 
-    /**
-     * Sets up the restaurant label that includes the menu,
-     * and host and cook information
-     */
-    private void initRestLabel() {
-        JLabel label = new JLabel();
-        //restLabel.setLayout(new BoxLayout((Container)restLabel, BoxLayout.Y_AXIS));
-        restLabel.setLayout(new BorderLayout());
-        label.setText(
-                "<html><h3><u>Tonight's Staff</u></h3><table><tr><td>host:</td><td>" + host.getName() + "</td></tr></table><table><tr><td>cook:</td><td>" + cook.getName() + "</td></tr></table><table><tr><td>cashier:</td><td>" + cashier.getName() + "</td></tr></table><h3><u> Menu</u></h3><table><tr><td>Steak</td><td>$16.00</td></tr><tr><td>Chicken</td><td>$11.00</td></tr><tr><td>Salad</td><td>$6.00</td></tr><tr><td>Pizza</td><td>$9.00</td></tr></table><br></html>");
-
-        restLabel.setBorder(BorderFactory.createRaisedBevelBorder());
-        restLabel.add(label, BorderLayout.CENTER);
-        restLabel.add(new JLabel("               "), BorderLayout.EAST);
-        restLabel.add(new JLabel("               "), BorderLayout.WEST);
+    public JoshHostRole getHost() {
+    	return host;
+    }
+    
+    public JoshCookRole getCook() {
+    	return cook;
+    }
+    
+    public JoshCashierRole getCashier() {
+    	return cashier;
     }
 
     /**

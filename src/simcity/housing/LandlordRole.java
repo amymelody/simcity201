@@ -1,16 +1,20 @@
 package simcity.housing;
 
+import simcity.interfaces.Landlord;
 import simcity.interfaces.Resident;
 import simcity.housing.gui.HousingGui;
 import simcity.housing.gui.LandlordGui;
 import simcity.mock.EventLog;
 import simcity.mock.LoggedEvent;
 import simcity.role.JobRole;
+import simcity.trace.AlertLog;
+import simcity.trace.AlertTag;
+
 import java.awt.Point;
 import java.util.*;
 import java.util.concurrent.Semaphore;
 
-public class LandlordRole extends JobRole
+public class LandlordRole extends JobRole implements Landlord
 {
 
 //Data
@@ -34,6 +38,7 @@ public class LandlordRole extends JobRole
 	}
 	public enum Command
 	{
+		sit,
 		callRenters,
 		collectRent;
 	}
@@ -49,7 +54,14 @@ public class LandlordRole extends JobRole
 	public LandlordRole()
 	{
 		super();
+		locations.put("Fridge", new Point(200, 140));
+		locations.put("Stove", new Point(60, 140));
+		locations.put("Table", new Point(80, 340));
+		locations.put("Sofa", new Point(360, 240));
+		locations.put("Doorway", new Point(480, 240));
+		locations.put("Exit", new Point(480, 260));
 		gui = new LandlordGui(this);
+		commands.add(Command.sit);
 	}
 	
 	public void setGui(HousingGui g)
@@ -65,16 +77,19 @@ public class LandlordRole extends JobRole
 //Messages
 	public void msgStartShift() //from Person
 	{
+		AlertLog.getInstance().logMessage(AlertTag.BANK, name, "received msgStartShift");
 		log.add(new LoggedEvent("Received msgStartShift from Person. Command.callRenters"));
 		commands.add(Command.callRenters);
 		stateChanged();
 	}
 	public void msgEndShift()
 	{
+		AlertLog.getInstance().logMessage(AlertTag.BANK, name, "WOAH THERE");
 		//dummy method unnecessary for landlord 
 	}
 	public void msgDingDong(Resident r) //from Resident
 	{
+		AlertLog.getInstance().logMessage(AlertTag.BANK, name, "received msgDingDong");
 		log.add(new LoggedEvent("Received msgDingDong from Resident. State.arrived, Command.collectRent"));
 		commands.add(Command.collectRent);
 		for(Renter renter : renters)
@@ -88,11 +103,11 @@ public class LandlordRole extends JobRole
 	}
 	public void msgPayRent(Resident r, int money) //from Resident
 	{
+		AlertLog.getInstance().logMessage(AlertTag.BANK, name, "received msgPayRent. Payment = $" + money);
 		log.add(new LoggedEvent("Received msgPayRent from Resident. State.paid. Payment = $" + money));
 		moneyEarned += money;
 		for(Renter renter : renters)
 		{
-		
 			if(renter.resident == r)
 			{
 				renter.state = RenterState.paid;
@@ -103,6 +118,7 @@ public class LandlordRole extends JobRole
 
 	public void msgAtLocation()
 	{
+		AlertLog.getInstance().logMessage(AlertTag.BANK, name, "received msgAtLocation----------");
 		atLocation.release();
 	}
 
@@ -111,8 +127,18 @@ public class LandlordRole extends JobRole
     {
     	for(Command c : commands)
     	{
+    		if(c == Command.sit)
+    		{
+    	    	goToLocation(locations.get("Sofa"), "");
+    			commands.remove(Command.sit);
+    			return true;
+    		}
+    	}
+    	for(Command c : commands)
+    	{
     		if(c == Command.collectRent)
     		{
+    			AlertLog.getInstance().logMessage(AlertTag.BANK, name, "sendAmountOwed----------");
     			sendAmountOwed(c);
     			return true;
     		}
@@ -122,6 +148,7 @@ public class LandlordRole extends JobRole
     	{
     		if(c == Command.callRenters)
     		{
+    			AlertLog.getInstance().logMessage(AlertTag.BANK, name, "sendRentDue----------");
     			sendRentDue(c);
     			return true;
     		}
@@ -136,9 +163,11 @@ public class LandlordRole extends JobRole
     	}
     	if(allRentCollected)
     	{
+			AlertLog.getInstance().logMessage(AlertTag.BANK, name, "sendEndShift----------");
     		sendEndShift();
     		return true;
     	}
+		AlertLog.getInstance().logMessage(AlertTag.BANK, name, "goToSofa----------");
     	goToLocation(locations.get("Sofa"), "");
     	return false;
     }
@@ -146,6 +175,7 @@ public class LandlordRole extends JobRole
 //Actions
 	private void sendRentDue(Command c)
 	{
+		AlertLog.getInstance().logMessage(AlertTag.BANK, name, "renters size: " + renters.size());
 		commands.remove(c);
 		for(Renter r : renters)
 		{
@@ -203,6 +233,7 @@ public class LandlordRole extends JobRole
 	public void addRenter(Resident r)
 	{
 		renters.add(new Renter(r));
+		r.setLandlord((Landlord)this);
+		AlertLog.getInstance().logMessage(AlertTag.BANK, name, "renters size: " + renters.size());
 	}
-
 }

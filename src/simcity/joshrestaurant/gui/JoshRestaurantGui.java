@@ -20,7 +20,7 @@ import java.awt.event.*;
 public class JoshRestaurantGui extends BuildingGui implements ActionListener {
 	
 	JoshRestaurantAnimationPanel animationPanel = new JoshRestaurantAnimationPanel();
-	private JPanel controlPanel = new JPanel();
+	private JTabbedPane controlPanel = new JTabbedPane();
 	
     /* inputPanel holds 2 panels
      * 1) the staff listing, menu, and lists of current customers all constructed
@@ -33,6 +33,7 @@ public class JoshRestaurantGui extends BuildingGui implements ActionListener {
     private JPanel infoPanel;
     private JTextField infoLabel; //part of infoPanel
     private JCheckBox stateCB;//part of infoLabel
+    private JPanel restLabel = new JPanel();
 
     private Object currentPerson;/* Holds the agent that the info is about.
     								Seems like a hack */
@@ -56,27 +57,30 @@ public class JoshRestaurantGui extends BuildingGui implements ActionListener {
         infoPanel.setMinimumSize(infoDim);
         infoPanel.setMaximumSize(infoDim);
         infoPanel.setBorder(BorderFactory.createTitledBorder("Information"));
-
         stateCB = new JCheckBox();
         stateCB.setText("Break?");
         stateCB.addActionListener(this);
         stateCB.setEnabled(false);
         stateCB.setVisible(false);
-
         infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.PAGE_AXIS));
-        
         infoLabel = new JTextField(); 
-
         infoPanel.add(infoLabel);
         infoPanel.add(stateCB);
+        
+        initRestLabel();
 
         Dimension controlDim = new Dimension((int)(WINDOWX * controlFractionOfWindow), WINDOWY);
         controlPanel.setPreferredSize(controlDim);
         controlPanel.setMinimumSize(controlDim);
         controlPanel.setMaximumSize(controlDim);
-        controlPanel.setLayout(new BorderLayout());
-        controlPanel.add(infoPanel, BorderLayout.NORTH);
-        controlPanel.add(inputPanel, BorderLayout.CENTER);
+        
+        JPanel waiters = new JPanel();
+        waiters.setLayout(new BorderLayout());
+        waiters.add(infoPanel, BorderLayout.NORTH);
+        waiters.add(inputPanel, BorderLayout.CENTER);
+        
+        controlPanel.add("Menu", restLabel);
+        controlPanel.add("Waiters", waiters);
         controlPanel.setVisible(false);
         bG.add(controlPanel, BorderLayout.WEST);
         
@@ -172,6 +176,10 @@ public class JoshRestaurantGui extends BuildingGui implements ActionListener {
     	inputPanel.addPerson(name);
     }
     
+    public void removePerson(String name) {
+    	inputPanel.removePerson(name);
+    }
+    
     public void removeWaitingCustomer(JoshCustomerRole c) {
     	inputPanel.removeWaitingCustomer(c);
     }
@@ -188,6 +196,23 @@ public class JoshRestaurantGui extends BuildingGui implements ActionListener {
                 }
             }
         }
+    }
+    
+    /**
+     * Sets up the restaurant label that includes the menu,
+     * and host and cook information
+     */
+    private void initRestLabel() {
+        JLabel label = new JLabel();
+        //restLabel.setLayout(new BoxLayout((Container)restLabel, BoxLayout.Y_AXIS));
+        restLabel.setLayout(new BorderLayout());
+        label.setText(
+                "<html><h3><u>Josh's Restaurant</u></h3><h3><u> Menu</u></h3><table><tr><td>Steak</td><td>$16.00</td></tr><tr><td>Chicken</td><td>$11.00</td></tr><tr><td>Salad</td><td>$6.00</td></tr><tr><td>Pizza</td><td>$9.00</td></tr></table><br></html>");
+
+        restLabel.setBorder(BorderFactory.createRaisedBevelBorder());
+        restLabel.add(label, BorderLayout.CENTER);
+        restLabel.add(new JLabel("  "), BorderLayout.EAST);
+        restLabel.add(new JLabel("  "), BorderLayout.WEST);
     }
     
     public void changeView(boolean visible) {
