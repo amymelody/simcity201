@@ -8,10 +8,16 @@ import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.swing.JPanel;
 import javax.swing.Timer;
+
+import simcity.gui.Gui;
+import simcity.anjalirestaurant.gui.AnjaliCookGui;
+import simcity.anjalirestaurant.gui.AnjaliCustomerGui;
+import simcity.anjalirestaurant.gui.AnjaliWaiterGui;
 
 public class AnjaliRestaurantAnimationPanel extends JPanel implements ActionListener {
 
@@ -23,7 +29,7 @@ public class AnjaliRestaurantAnimationPanel extends JPanel implements ActionList
     private Image bufferImage;
     private Dimension bufferSize;
 
-    private List<AnjaliGui> guis = new ArrayList<AnjaliGui>();
+	private List<Gui> guis = Collections.synchronizedList(new ArrayList<Gui>());
 
     public AnjaliRestaurantAnimationPanel() {
     	setSize(WINDOWX, WINDOWY);
@@ -37,6 +43,13 @@ public class AnjaliRestaurantAnimationPanel extends JPanel implements ActionList
 
 	public void actionPerformed(ActionEvent e) {
 		repaint();  //Will have paintComponent called
+		synchronized(guis){
+			for(Gui gui: guis){
+				if(gui.isPresent()){
+					gui.updatePosition();
+				}
+			}
+		}
 	}
 
     public void paintComponent(Graphics g) {
@@ -54,12 +67,7 @@ public class AnjaliRestaurantAnimationPanel extends JPanel implements ActionList
         g4.setColor(getBackground());
         g4.fillRect(0,0,WINDOWX, WINDOWY);
         
-        cookArea.setColor(getBackground());
-        cookArea.fillRect(0,0,WINDOWX, WINDOWY);
-        plateArea.setColor(getBackground());
-        plateArea.fillRect(0,0,WINDOWX, WINDOWY);
-        fridge.setColor(getBackground());
-        fridge.fillRect(0,0,WINDOWX, WINDOWY);
+       
         //Here is the table
         g2.setColor(Color.ORANGE);
         g3.setColor(Color.YELLOW);
@@ -67,27 +75,14 @@ public class AnjaliRestaurantAnimationPanel extends JPanel implements ActionList
         g2.fillRect(80, 50, FILLRECT, FILLRECT);//200 and 250 need to be table params
         g3.fillRect(160, 50, FILLRECT, FILLRECT);
         g4.fillRect(240, 50, FILLRECT, FILLRECT);
-        cookArea.fillRect(10, 200, 50, 20);
-        cookArea.drawString("Cook Area", 5, 200);
-        
-        plateArea.fillRect(110, 200, 50, 20);
-        cookArea.drawString("Plate Area", 105, 200);
-        
-        fridge.fillRect(70, 250, 10, 20);
-        fridge.drawString("Fridge", 70, 250);
+      
 
-        for(AnjaliGui gui : guis) {
-            if (gui.isPresent()) {
-                gui.updatePosition();
-            }
-        }
-
-        for(AnjaliGui gui : guis) {
+      
+        for(Gui gui : guis) {
             if (gui.isPresent()) {
                 gui.draw(g2);
                 gui.draw(g3);
                 gui.draw(g4);
-                gui.draw(cookArea);
             }
         }
     }
@@ -95,18 +90,14 @@ public class AnjaliRestaurantAnimationPanel extends JPanel implements ActionList
     
     
     public void addGui(AnjaliCustomerGui gui) {
-        guis.add(gui);
-    }
-    
-    public void addGui(AnjaliWaiterGui gui){
-    	guis.add(gui);
-    	
-    }
+		guis.add(gui);
+	}
 
-    public void addGui(AnjaliHostGui gui) {
-        guis.add(gui);
-    }
-    public void addGui(AnjaliCookGui gui){
-    	guis.add(gui);
-    }
+	public void addGui(AnjaliWaiterGui gui) {
+		guis.add(gui);
+	}
+
+	public void addGui(AnjaliCookGui gui) {
+		guis.add(gui);
+	}
 }

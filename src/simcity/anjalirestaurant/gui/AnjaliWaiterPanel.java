@@ -27,7 +27,7 @@ public class AnjaliWaiterPanel extends JPanel implements ActionListener {
     private List<JButton> list = new ArrayList<JButton>();
     private JButton addWaiterB = new JButton("Add");
 
-    private AnjaliRestaurantPanel restPanel;
+    private AnjaliRestaurantInputPanel restPanel;
     private String type;
     private JTextField waiterName;
     //private JCheckBox isHungry;
@@ -40,7 +40,7 @@ public class AnjaliWaiterPanel extends JPanel implements ActionListener {
      * @param rp   reference to the restaurant panel
      * @param type indicates if this is for customers or waiters
      */
-    public AnjaliWaiterPanel(AnjaliRestaurantPanel rp, String type) {
+    public AnjaliWaiterPanel(AnjaliRestaurantInputPanel rp, String type) {
         restPanel = rp;
         this.type = type;
 
@@ -118,7 +118,7 @@ public class AnjaliWaiterPanel extends JPanel implements ActionListener {
             list.add(button);
             view.add(button);   
            // view.add(name);
-            restPanel.addWaiter(type, name);//puts customer on list
+            //restPanel.addWaiter(type, name);//puts customer on list
             restPanel.showInfo(type, name);//puts hungry button on panel
             validate();
             
