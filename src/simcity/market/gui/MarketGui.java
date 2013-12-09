@@ -23,7 +23,7 @@ public class MarketGui extends BuildingGui
 {
 	MarketAnimationPanel animationPanel;
 	private MarketInputPanel inputPanel;
-	
+
 	private final int WINDOWX = 650;
 	private final int WINDOWY = 500;
 	private final int BUFFERTOP = 50;
@@ -35,51 +35,45 @@ public class MarketGui extends BuildingGui
 	public MarketGui(String n, BuildingsGui bG, CityDirectory cD)
 	{
 		super(n, bG, cD);
-		
+
 		MarketCashierRole cashier;
 		if (n.equals("market1")) {
 			cashier = cD.getMarketCashiers().get(0);
 		} else {
 			cashier = cD.getMarketCashiers().get(1);
 		} 
-		
+
 		animationPanel = new MarketAnimationPanel();
 		inputPanel = new MarketInputPanel(this, n, cashier);
-
-		//input panel
-		double inputFractionOfWindow = 150 / 650;
-		Dimension inputDim = new Dimension((int)(WINDOWX * inputFractionOfWindow), WINDOWY);
-		inputPanel.setPreferredSize(inputDim);
-		inputPanel.setMinimumSize(inputDim);
-		inputPanel.setMaximumSize(inputDim);
-		inputPanel.setVisible(false);
-		bG.add(inputPanel);
-
+		
 		//animation panel
-		double animationFractionOfWindow = 500 / 650;
+		double animationFractionOfWindow = 500.0 / 650.0;
 		Dimension animDim = new Dimension((int)(WINDOWX * animationFractionOfWindow), WINDOWY);
 		animationPanel.setPreferredSize(animDim);
-		animationPanel.setMinimumSize(animDim);
-		animationPanel.setMaximumSize(animDim);
 		animationPanel.setVisible(false);
-		bG.add(animationPanel);
-		
-		
+		bG.add(animationPanel, BorderLayout.CENTER);
+
+		//input panel
+		double inputFractionOfWindow = 150.0 / 650.0;
+		Dimension inputDim = new Dimension((int)(WINDOWX * inputFractionOfWindow), WINDOWY);
+		inputPanel.setPreferredSize(inputDim);
+		inputPanel.setVisible(false);
+		bG.add(inputPanel, BorderLayout.WEST);		
 	}
-	
+
 	public void changeView(boolean visible) {
 		animationPanel.setVisible(visible);
 		inputPanel.setVisible(visible);
 	}
-	
+
 	public void addMarketEmployee(MarketEmployeeRole e) {
 		inputPanel.addEmployee(e);
 	}
-	
+
 	public void addMarketDeliverer(MarketDelivererRole d) {
 		inputPanel.addDeliverer(d);
 	}
-	
+
 	public void addMarketCustomer(MarketCustomerRole c) {
 		inputPanel.addCustomer(c);
 	}
@@ -87,5 +81,5 @@ public class MarketGui extends BuildingGui
 	public void addDelivererGui(DelivererGui dG) {
 		buildingsGui.addDelivererGui(dG);
 	}
-	
+
 }
