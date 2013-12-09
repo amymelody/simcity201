@@ -54,6 +54,7 @@ public class JoshRestaurantInputPanel extends JPanel
     	}
     	
 		cook.setHost(host);
+		cook.setCashier(cashier);
 		cook.setStand(stand);
         
 		cookGui = new JoshCookGui(cook);

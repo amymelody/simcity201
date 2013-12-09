@@ -3,8 +3,8 @@ package simcity.bank.test.mock;
 import java.util.Map;
 
 
-import simcity.bank.interfaces.BankDepositor;
-import simcity.bank.interfaces.BankTeller;
+import simcity.interfaces.BankDepositor;
+import simcity.interfaces.BankTeller;
 
 
 //Works for normative and nonnormative scenarios
@@ -53,7 +53,7 @@ public class MockBankTeller extends Mock implements BankTeller {
 	
 	@Override
 	public void msgMakeRequest(BankDepositor c, int transactionAmount) {
-		// TODO Auto-generated method stub
+		log.add(new LoggedEvent("Received message from customer with his request"));
 		
 	}
 

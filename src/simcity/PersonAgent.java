@@ -12,7 +12,7 @@ import simcity.interfaces.Person;
 import simcity.interfaces.RestCustomer;
 import simcity.interfaces.MarketCustomer;
 import simcity.interfaces.Resident;
-import simcity.bank.interfaces.BankDepositor;
+import simcity.interfaces.BankDepositor;
 import simcity.interfaces.JobInterface;
 import simcity.interfaces.Bus;
 import simcity.interfaces.BusStop;
@@ -610,9 +610,9 @@ public class PersonAgent extends Agent implements Person
 		synchronized(roles) {
 			for (MyRole mr : roles) {
 				if (mr.r == r) {
-						mr.active = false;
-						state.ls = LocationState.outside;
-						destination = null;
+					mr.active = false;
+					state.ls = LocationState.outside;
+					destination = null;
 				}
 			}
 		}
@@ -1260,7 +1260,7 @@ public class PersonAgent extends Agent implements Person
 		Market(String l, String r) {
 			location = l;
 			customerRole = r;
-			closed = true;
+			closed = false;
 		}
 		String customerRole;
 		String location;

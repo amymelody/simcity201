@@ -35,7 +35,6 @@ public class InventoryList {
 	public static final Map<String, MarketItem> inventory = new HashMap<String, MarketItem>();
 	
 	public InventoryList() {
-		inventory.put("Car", new MarketItem("Car", 1000, 10));
 		inventory.put("Salad", new MarketItem("Salad", 3, 10));
 		inventory.put("Steak", new MarketItem("Steak", 10, 10));
 		inventory.put("Pizza", new MarketItem("Pizza", 5, 10));

@@ -239,6 +239,7 @@ public class ResidentRole extends Role implements Resident
 		landlord.msgPayRent(this, rent);
 		person.msgExpense(rent);
 		rent = -1;
+		person.setRentDue(false);
 		state = ResidentState.away;
 		person.msgLeftDestination(this);
 	}

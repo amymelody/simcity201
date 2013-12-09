@@ -13,6 +13,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import simcity.bank.gui.BankManagerGui;
+import simcity.gui.DelivererGui;
 import simcity.market.MarketDelivererRole;
 import simcity.market.MarketEmployeeRole;
 import simcity.market.MarketCustomerRole;
@@ -45,20 +46,34 @@ public class MarketInputPanel extends JPanel
 		marketGui.animationPanel.addGui(cashierGui);
 		cashier.setGui(cashierGui);
         
-        setLayout(new GridLayout(LSPACE, LSPACE));
+		setBounds(0, 0, 150, 500);
+        setLayout(new BorderLayout(LSPACE, LSPACE));
         setBorder(BorderFactory.createBevelBorder(0));
         
         initMarketLabel();
-        add(marketLabel);
+        add(marketLabel, BorderLayout.CENTER);
 	}
 	
+	private String getMName() {
+		if(name == "market1")
+			return "Market 1";
+		else if(name == "market2")
+			return "Market 2";
+		return null;
+	}
+	private String getColor() {
+		if(name == "market1")
+			return "green";
+		else if(name == "market2")
+			return "blue";
+		return null;
+	}
 	private void initMarketLabel() {
         marketLabel.setLayout(new BorderLayout());
         marketInfo.setText(
-                "<html><br/>"
-                + "<h3>Welcome to " + name + "!</h3>"
-                		+ "<h4><u> Menu</u></h4><table>"
-                		+ "<tr><td>Car</td><td>$1,000.00</td></tr>"
+                "<html>"
+                + "<h3 color=" + getColor() + ">Welcome to " + getMName() + "!</h3>"
+                		+ "<h4><u> Menu</u></h4><table cellspacing=0 color=" + getColor() + ">"
                 		+ "<tr><td>Salad</td><td>$3.00</td></tr>"
                 		+ "<tr><td>Steak</td><td>$10.00</td></tr>"
                 		+ "<tr><td>Pizza</td><td>$5.00</td></tr>"
@@ -94,7 +109,9 @@ public class MarketInputPanel extends JPanel
 	
 	public void addDeliverer(MarketDelivererRole d) {
 		MarketDelivererGui g = new MarketDelivererGui(d);
+		DelivererGui dG = new DelivererGui(g, name);
 		marketGui.animationPanel.addGui(g);
+		marketGui.addDelivererGui(dG);
 		d.setGui(g);
 		d.setCashier(cashier);
 		deliverers.add(d);
