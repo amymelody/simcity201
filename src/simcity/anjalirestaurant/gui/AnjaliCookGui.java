@@ -6,7 +6,7 @@ import java.awt.Graphics2D;
 
 import restaurant.CookAgent;
 
-public class CookGui implements Gui {
+public class AnjaliCookGui implements Gui {
 
     private CherysCookRole agent = null;
   private boolean isPresent = false;
@@ -19,7 +19,7 @@ public class CookGui implements Gui {
     private int yHomePosition = 0; 
    
     
-    public CookGui(CherysCookRole c, RestaurantGui gui){ //HostAgent m) {
+    public AnjaliCookGui(CherysCookRole c, RestaurantGui gui){ //HostAgent m) {
     	agent = c;
 		xPos = 0;
 		yPos = 250;

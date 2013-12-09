@@ -13,8 +13,8 @@ import restaurant.CookAgent.Order;
 //import restaurant.Customer.CustomerState;
 import restaurant.HostAgent.Table;
 import restaurant.gui.WaiterGui;
-import restaurant.interfaces.Customer;
-import restaurant.interfaces.Waiter;
+import simcity.anjalirestaurant.interfaces.Customer;
+import simcity.anjalirestaurant.interfaces.Waiter;
 import agent.Agent;
 
 /**

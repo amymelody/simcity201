@@ -5,7 +5,7 @@ import java.awt.Graphics2D;
 
 import restaurant.CustomerAgent;
 
-public class CustomerGui implements Gui{
+public class AnjaliCustomerGui implements Gui{
 
 	private CherysCustomerRole agent = null;
 	private boolean isPresent = false;
@@ -22,7 +22,7 @@ public class CustomerGui implements Gui{
 	public static final int xTable = 200;
 	public static final int yTable = 250;
 	private int xHomePos = 0;
-	public CustomerGui(CherysCustomerRole c, RestaurantGui gui, int xPos){ //HostAgent m) {
+	public AnjaliCustomerGui(CherysCustomerRole c, RestaurantGui gui, int xPos){ //HostAgent m) {
 		this.xHomePos = xPos;
 		agent = c;
 		xPos = -20;

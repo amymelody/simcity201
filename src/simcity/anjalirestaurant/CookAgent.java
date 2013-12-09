@@ -4,9 +4,9 @@ import agent.Agent;
 import restaurant.gui.CustomerGui;
 import restaurant.gui.HostGui;
 import restaurant.gui.RestaurantPanel;
-import restaurant.interfaces.Cook;
-import restaurant.interfaces.Market;
-import restaurant.interfaces.Waiter;
+import simcity.anjalirestaurant.interfaces.Cook;
+import simcity.anjalirestaurant.interfaces.Market;
+import simcity.anjalirestaurant.interfaces.Waiter;
 
 import java.util.*;
 import java.util.concurrent.Semaphore;
@@ -30,7 +30,7 @@ public class CookAgent extends Agent implements Cook{
 	private Waiter waiter;
 	private String outOfFood;
 	public List<Market> markets = Collections.synchronizedList(new ArrayList<Market>());
-	private CookGui cookGui;
+	private AnjaliCookGui cookGui;
 	public Market market; 
 	private int hasFood = 1;
 	private int hasInventory = 0;
@@ -475,11 +475,11 @@ private CookState state = CookState.nothing;
 			markets.add(m);
 			Do("" + m.getName() +" created");
 		}
-		public void setGui(CookGui g) {
+		public void setGui(AnjaliCookGui g) {
 			cookGui = g;
 		}
 
-		public CookGui getGui() {
+		public AnjaliCookGui getGui() {
 			return cookGui;
 		}
  

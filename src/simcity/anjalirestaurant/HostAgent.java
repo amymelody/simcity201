@@ -3,9 +3,9 @@ package simcity.anjalirestaurant;
 import agent.Agent;
 //import restaurant.Waiter.CustomerState;
 import restaurant.gui.HostGui;
-import restaurant.interfaces.Customer;
-import restaurant.interfaces.Host;
-import restaurant.interfaces.Waiter;
+import simcity.anjalirestaurant.interfaces.Customer;
+import simcity.anjalirestaurant.interfaces.Host;
+import simcity.anjalirestaurant.interfaces.Waiter;
 
 import java.util.*;
 import java.util.concurrent.Semaphore;

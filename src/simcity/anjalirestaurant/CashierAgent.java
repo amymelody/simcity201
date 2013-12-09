@@ -1,11 +1,10 @@
 package simcity.anjalirestaurant;
 
-import agent.Agent;
-import restaurant.gui.HostGui;
-import restaurant.interfaces.Cashier;
-import restaurant.interfaces.Customer;
-import restaurant.interfaces.Market;
-import restaurant.interfaces.Waiter;
+import simcity.RestCashierRole;
+import simcity.anjalirestaurant.interfaces.Cashier;
+import simcity.anjalirestaurant.interfaces.Customer;
+import simcity.anjalirestaurant.interfaces.Market;
+import simcity.anjalirestaurant.interfaces.Waiter;
 
 import java.util.*;
 import java.util.concurrent.Semaphore;

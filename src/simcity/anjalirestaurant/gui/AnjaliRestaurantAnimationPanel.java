@@ -89,7 +89,7 @@ public class AnjaliRestaurantAnimationPanel extends JPanel implements ActionList
 
     
     
-    public void addGui(CustomerGui gui) {
+    public void addGui(AnjaliCustomerGui gui) {
         guis.add(gui);
     }
     
@@ -101,7 +101,7 @@ public class AnjaliRestaurantAnimationPanel extends JPanel implements ActionList
     public void addGui(HostGui gui) {
         guis.add(gui);
     }
-    public void addGui(CookGui gui){
+    public void addGui(AnjaliCookGui gui){
     	guis.add(gui);
     }
 }

@@ -14,8 +14,8 @@ import restaurant.CustomerAgent;
 import restaurant.HostAgent;
 import restaurant.MarketAgent;
 import restaurant.WaiterAgent;
-import restaurant.interfaces.Customer;
-import restaurant.interfaces.Waiter;
+import simcity.anjalirestaurant.interfaces.Customer;
+import simcity.anjalirestaurant.interfaces.Waiter;
 
 
 /**
@@ -53,7 +53,7 @@ public class RestaurantPanel extends JPanel {
     
     public RestaurantPanel(RestaurantGui gui) {
         this.gui = gui;
-        CookGui cg= new CookGui(cook, gui);
+        AnjaliCookGui cg= new AnjaliCookGui(cook, gui);
     	gui.animationPanel.addGui(cg);
     	cook.setGui(cg);
        // waiter.setGui(waiterGui);
@@ -146,7 +146,7 @@ public class RestaurantPanel extends JPanel {
     		CherysCustomerRole c = new CherysCustomerRole(name);	
     		customers.add(c);
     		xPos = (50*customers.size());
-    		CustomerGui g = new CustomerGui(c, gui, xPos);
+    		AnjaliCustomerGui g = new AnjaliCustomerGui(c, gui, xPos);
 
     		gui.animationPanel.addGui(g);// dw
     		c.setHost(host);

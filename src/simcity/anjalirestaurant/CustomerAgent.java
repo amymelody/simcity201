@@ -8,9 +8,9 @@ import java.util.TimerTask;
 import java.util.concurrent.Semaphore;
 
 import restaurant.gui.CustomerGui;
-import restaurant.interfaces.Cashier;
-import restaurant.interfaces.Customer;
-import restaurant.interfaces.Waiter;
+import simcity.anjalirestaurant.interfaces.Cashier;
+import simcity.anjalirestaurant.interfaces.Customer;
+import simcity.anjalirestaurant.interfaces.Waiter;
 import agent.Agent;
 
 
@@ -31,7 +31,7 @@ public class CustomerAgent extends Agent implements Customer{
 	private String foodSelection;
 	private int hungerLevel = 5;        // determines length of meal
 	Timer timer = new Timer();
-	private CustomerGui customerGui;
+	private AnjaliCustomerGui customerGui;
 	private Semaphore atTable = new Semaphore(0,true);
 
 	int tableX;
@@ -484,11 +484,11 @@ public class CustomerAgent extends Agent implements Customer{
 		return "customer " + getName();
 	}
 
-	public void setGui(CustomerGui g) {
+	public void setGui(AnjaliCustomerGui g) {
 		customerGui = g;
 	}
 
-	public CustomerGui getGui() {
+	public AnjaliCustomerGui getGui() {
 		return customerGui;
 	}
 }
