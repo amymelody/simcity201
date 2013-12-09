@@ -5,10 +5,10 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 
 import simcity.anjalirestaurant.AnjaliCookRole;
+import simcity.gui.Gui;
 
-public class AnjaliCookGui implements AnjaliGui {
+public class AnjaliCookGui implements Gui {
 
-    private AnjaliCookRole agent = null;
   private boolean isPresent = false;
   private boolean releaseIt = false;
   private String choice = " ";
@@ -20,7 +20,6 @@ public class AnjaliCookGui implements AnjaliGui {
    
     
     public AnjaliCookGui(AnjaliCookRole c, AnjaliRestaurantGui gui){ //HostAgent m) {
-    	agent = c;
 		xPos = 0;
 		yPos = 250;
 		xDestination = 5;
@@ -30,27 +29,11 @@ public class AnjaliCookGui implements AnjaliGui {
 	}
 
     public void updatePosition() {
-        if (xPos < xDestination)
-            xPos++;
-        else if (xPos > xDestination)
-            xPos--;
-
-        if (yPos < yDestination)
-            yPos++;
-        else if (yPos > yDestination)
-            yPos--;
-        if (xPos == xDestination && yPos == yDestination)
-		 {
-        	if(releaseIt){
-        	AtDestination();
-        	}
+        
 		 }
        
         
-        if(xPos == -20 && yPos == -20 && xPos == xDestination && yPos == yDestination){
-       //agent.msgBackFromTable();
-        }
-    }
+       
 
     public void draw(Graphics2D g) {
         g.setColor(Color.YELLOW);
@@ -89,10 +72,7 @@ public class AnjaliCookGui implements AnjaliGui {
     public void drawFoodChoice(String food){
     	choice = food;
     }
-    public void AtDestination(){	 	
-		agent.msgAtTable();	 
-		releaseIt = false;
-}
+  
 
 }
 

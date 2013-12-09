@@ -17,6 +17,8 @@ import simcity.anjalirestaurant.interfaces.AnjaliWaiter;
 import simcity.interfaces.MarketCashier;
 import simcity.interfaces.Person;
 import simcity.joshrestaurant.JoshWaiterRole;
+import simcity.anjalirestaurant.AnjaliWaiterRole;
+import simcity.anjalirestaurant.RevolvingStandMonitor;
 
 /**
  * Restaurant Cook Agent
@@ -35,13 +37,15 @@ public class AnjaliCookRole extends RestCookRole implements AnjaliCook{
 	private boolean working;
 	private String location = "anjaliRestaurant";
 	private boolean orderedItems = false;
-	
+	private RevolvingStandMonitor stand;
 	public AnjaliCookRole(){
 		super();
 		working = false;
 		orderedItems = false;
 	}
-	
+	public AnjaliCookRole(String name){
+		this.name = name;
+	}
 	public void setPerson(Person p){
 		super.setPerson(p);
 		name = person.getName();
@@ -49,7 +53,7 @@ public class AnjaliCookRole extends RestCookRole implements AnjaliCook{
 	private String name;
 	private Semaphore atTable = new Semaphore(0,true);
 	Timer cookTimer = new Timer();
-	private AnjaliWaiter waiter;
+	private AnjaliWaiterRole waiter;
 	private String outOfFood;
 	public List<AnjaliMarket> markets = Collections.synchronizedList(new ArrayList<AnjaliMarket>());
 	private AnjaliCookGui cookGui;
@@ -97,6 +101,9 @@ private int PizzaInventory = 1;
 
 private CookState state = CookState.nothing;
 	
+public void setStand(RevolvingStandMonitor s) {
+	stand = s;
+}
 
 
 	
@@ -121,7 +128,7 @@ private CookState state = CookState.nothing;
 		return cookTime;
 	}
 
-	public void setWaiter(AnjaliWaiter waiter){
+	public void setWaiter(AnjaliWaiterRole waiter){
 		this.waiter = waiter;
 	}
 /////MESSAGES////////
@@ -543,7 +550,7 @@ private CookState state = CookState.nothing;
 			// TODO Auto-generated method stub
 			
 		}
-
+		
 		
  
 	

@@ -13,64 +13,57 @@ import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
 
-import simcity.Anjalirestaurant.AnjaliCustomerRole;
-import simcity.Anjalirestaurant.AnjaliWaiterRole;
+import simcity.CityDirectory;
+import simcity.anjalirestaurant.AnjaliCustomerRole;
+import simcity.anjalirestaurant.AnjaliWaiterRole;
+import simcity.gui.BuildingGui;
+import simcity.gui.BuildingsGui;
+import simcity.joshrestaurant.JoshCustomerRole;
+import simcity.joshrestaurant.JoshWaiterRole;
 /**
  * Main GUI class.
  * Contains the main frame and subsequent panels
  */
-public class AnjaliRestaurantGui extends JFrame implements ActionListener {
-    /* The GUI has two frames, the control frame (in variable gui) 
-     * and the animation frame, (in variable animationFrame within gui)
-     */
-	JFrame animationFrame = new JFrame("Restaurant Animation");
+public class AnjaliRestaurantGui extends BuildingGui implements ActionListener {
+
 	AnjaliRestaurantAnimationPanel animationPanel = new AnjaliRestaurantAnimationPanel();
 
-    /* restPanel holds 2 panels
-     * 1) the staff listing, menu, and lists of current customers all constructed
-     *    in RestaurantPanel()
-     * 2) the infoPanel about the clicked Customer (created just below)
-     */    
-    private AnjaliRestaurantPanel restPanel = new AnjaliRestaurantPanel(this);
+     
+    private AnjaliRestaurantInputPanel inputPanel;
     
     /* infoPanel holds information about the clicked customer, if there is one*/
     private JPanel infoPanel;
+    private JTabbedPane controlPanel = new JTabbedPane();
     private JLabel infoLabel; //part of infoPanel
     public JCheckBox stateCB;//part of infoLabel
     public JCheckBox stateWB;
     private JPanel waiterPanel;
-    private Object currentPerson;/* Holds the agent that the info is about.
+    private Object currentPerson;
+    private JPanel restLabel = new JPanel();
+    private JPanel inventoryPanel = new JPanel();
+    
+   /* Holds the agent that the info is about.
     								Seems like a hack */
 
     /**
      * Constructor for RestaurantGui class.
      * Sets up all the gui components.
      */
-    public AnjaliRestaurantGui() {
-        int WINDOWX = 1000;
-        int WINDOWY = 1000;
+    public AnjaliRestaurantGui(String n, BuildingsGui bG, CityDirectory cD) {
+       super(n, bG, cD);
+    	int WINDOWX = 650;
+        int WINDOWY = 500;
        
+        double controlFractionOfWindow = 150.0 / 650.0;
+        double infoFractionOfWindow = 100.0 / 500.0;
+        Dimension infoDim = new Dimension((int)(WINDOWX * controlFractionOfWindow), (int)(WINDOWY * infoFractionOfWindow));
         
-        /*
-        animationFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        animationFrame.setBounds(100+WINDOWX, 50 , WINDOWX+100, WINDOWY+100);
-        animationFrame.setVisible(true);
-    	animationFrame.add(animationPanel); 
-    	*/
-    	setBounds(50, 50, WINDOWX, WINDOWY);
-
-        setLayout(new BoxLayout((Container) getContentPane(), 
-        		BoxLayout.Y_AXIS));
-
-        Dimension restDim = new Dimension(WINDOWX, (int) (WINDOWY * .3));
-        restPanel.setPreferredSize(restDim);
-        restPanel.setMinimumSize(restDim);
-        restPanel.setMaximumSize(restDim);
-        add((restPanel), BorderLayout.NORTH);
+       
+    	
         
         // Now, setup the info panel
-        Dimension infoDim = new Dimension(WINDOWX, (int) (WINDOWY * .1));
         infoPanel = new JPanel();
         infoPanel.setPreferredSize(infoDim);
         infoPanel.setMinimumSize(infoDim);
@@ -81,29 +74,37 @@ public class AnjaliRestaurantGui extends JFrame implements ActionListener {
         stateCB.setVisible(false);
         stateCB.addActionListener(this);
 
-        infoPanel.setLayout(new GridLayout(1, 2, 30, 0));
+        infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.PAGE_AXIS));
         
         infoLabel = new JLabel(); 
         infoLabel.setText("<html><pre><i>Click Add to make customers</i></pre></html>");
         infoPanel.add(infoLabel);
         infoPanel.add(stateCB);
-        add((infoPanel), BorderLayout.CENTER);
-        
-        Dimension animDim = new Dimension(500, (int) (WINDOWY * .6));
+
+        Dimension controlDim = new Dimension((int)(WINDOWX * controlFractionOfWindow), WINDOWY);
+        controlPanel.setPreferredSize(controlDim);
+        controlPanel.setMinimumSize(controlDim);
+        controlPanel.setMaximumSize(controlDim);
+       
+         JPanel waiters = new JPanel();
+         waiters.setLayout(new BorderLayout());
+         waiters.add(infoPanel, BorderLayout.NORTH);
+         waiters.add(inputPanel, BorderLayout.CENTER);
+         
+       
+         controlPanel.addTab("Menu", restLabel);
+         controlPanel.addTab("Waiters", waiters);
+         controlPanel.addTab("Inventory", inventoryPanel);
+         controlPanel.setVisible(false);
+         bG.add(controlPanel, BorderLayout.WEST);
+         
+         double animFractionOfWindow = 500.0 / 650.0;
+         Dimension animDim = new Dimension((int)(WINDOWX * animFractionOfWindow), WINDOWY);
          animationPanel.setPreferredSize(animDim);
          animationPanel.setMinimumSize(animDim);
          animationPanel.setMaximumSize(animDim);
-         add((animationPanel), BorderLayout.SOUTH);
-        
-         
-         Dimension waiterDim = new Dimension(WINDOWX, WINDOWY);
-         waiterPanel = new JPanel();
-         waiterPanel.setPreferredSize(infoDim);
-         waiterPanel.setMinimumSize(infoDim);
-         waiterPanel.setMaximumSize(infoDim);
-         waiterPanel.setBorder(BorderFactory.createTitledBorder("Waiters"));
-         waiterPanel.setVisible(true);
-         add((waiterPanel), BorderLayout.EAST);
+         animationPanel.setVisible(false);
+         bG.add(animationPanel, BorderLayout.CENTER);
          
     }
     /**
@@ -180,15 +181,40 @@ public class AnjaliRestaurantGui extends JFrame implements ActionListener {
             }
         }
     }
+    
+    public void addCustomer(AnjaliCustomerRole c) {
+    	inputPanel.addCustomer(c);
+    }
+    
+    public void addWaiter(AnjaliWaiterRole w) {
+    	inputPanel.addWaiter(w);
+    }
+    
+    public void addPerson(String name) {
+    	inputPanel.addPerson(name);
+    }
+    
+    public void removePerson(String name) {
+    	inputPanel.removePerson(name);
+    }
     /**
      * Main routine to get gui started
      */
-    public static void main(String[] args) {
-        AnjaliRestaurantGui gui = new AnjaliRestaurantGui();
-        gui.setTitle("csci201 Restaurant");
-        gui.setVisible(true);
-        gui.setLocationRelativeTo(null);
-        gui.setResizable(false);
-        gui.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    private void initRestLabel() {
+        JLabel label = new JLabel();
+        //restLabel.setLayout(new BoxLayout((Container)restLabel, BoxLayout.Y_AXIS));
+        restLabel.setLayout(new BorderLayout());
+        label.setText(
+                "<html><h3><u>Anjali's Restaurant</u></h3><h3><u> Menu</u></h3><table><tr><td>Steak</td><td>$16.00</td></tr><tr><td>Chicken</td><td>$11.00</td></tr><tr><td>Salad</td><td>$6.00</td></tr><tr><td>Pizza</td><td>$9.00</td></tr></table><br></html>");
+
+        restLabel.setBorder(BorderFactory.createRaisedBevelBorder());
+        restLabel.add(label, BorderLayout.CENTER);
+        restLabel.add(new JLabel("  "), BorderLayout.EAST);
+        restLabel.add(new JLabel("  "), BorderLayout.WEST);
     }
+    
+    public void changeView(boolean visible) {
+    	animationPanel.setVisible(visible);
+		controlPanel.setVisible(visible);
+	}
 }

@@ -3,17 +3,20 @@ package simcity.anjalirestaurant.gui;
 import java.awt.Color;
 import java.awt.Graphics2D;
 
-import simcity.Anjalirestaurant.AnjaliCustomerRole;
+import simcity.anjalirestaurant.AnjaliCustomerRole;
+import simcity.gui.Gui;
 
-public class AnjaliCustomerGui implements AnjaliGui{
+public class AnjaliCustomerGui implements Gui{
 
-	private AnjaliCustomerRole agent = null;
+	private AnjaliCustomerRole role = null;
 	private boolean isPresent = false;
 	private boolean isHungry = false;
 
 	//private HostAgent host;
 	AnjaliRestaurantGui gui;
 
+	//AnjaliRestaurantPanel aP;
+	
 	private int xPos, yPos;
 	private int xDestination, yDestination;
 	private enum Command {noCommand, GoToSeat, GoToWaitingArea, LeaveRestaurant};
@@ -24,7 +27,7 @@ public class AnjaliCustomerGui implements AnjaliGui{
 	private int xHomePos = 0;
 	public AnjaliCustomerGui(AnjaliCustomerRole c, AnjaliRestaurantGui gui, int xPos){ //HostAgent m) {
 		this.xHomePos = xPos;
-		agent = c;
+		role = c;
 		xPos = -20;
 		yPos = -20;
 		xDestination = xHomePos;
@@ -45,12 +48,12 @@ public class AnjaliCustomerGui implements AnjaliGui{
 			yPos--;
 
 		if (xPos == xDestination && yPos == yDestination) {
-			if (command==Command.GoToSeat) agent.msgAnimationFinishedGoToSeat();
+			if (command==Command.GoToSeat) role.msgAnimationFinishedGoToSeat();
 			else if (command==Command.LeaveRestaurant) {
-				agent.msgAnimationFinishedLeaveRestaurant();
+				role.msgAnimationFinishedLeaveRestaurant();
 				System.out.println("about to call gui.setCustomerEnabled(agent);");
 				isHungry = false;
-				gui.setCustomerEnabled(agent);
+				//gui.setCustomerEnabled(role);
 			}
 			command=Command.noCommand;
 		}
@@ -67,7 +70,7 @@ public class AnjaliCustomerGui implements AnjaliGui{
 	}
 	public void setHungry() {
 		isHungry = true;
-		agent.gotHungry();
+		role.gotHungry();
 		setPresent(true);
 	}
 	public boolean isHungry() {

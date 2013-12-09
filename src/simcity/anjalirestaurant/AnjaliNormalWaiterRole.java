@@ -82,7 +82,6 @@ public class AnjaliNormalWaiterRole extends  AnjaliWaiterRole implements AnjaliW
 	public enum CustomerEvent {none, seated, readyToOrder, ordering, ordered, orderAgain, orderedAgain, waitingForFood, OrderIsReady, served, readingCheck, leaving}
 	private CustomerState state = CustomerState.doingNothing;
 	private CustomerEvent event = CustomerEvent.none;
-	public AnjaliWaiterGui waiterGui = null;
 
 	public enum WaiterState{normal, wantsBreak, pendingBreak, breakAccepted, onBreak, breakDenied, offBreak};
 	private WaiterState waiterState = WaiterState.normal;
@@ -101,6 +100,9 @@ public class AnjaliNormalWaiterRole extends  AnjaliWaiterRole implements AnjaliW
 	private AnjaliCashier cashier;
 	
 	public AnjaliRestaurantGui gui = null;
+	public AnjaliCookGui cookGui = null;
+	public AnjaliWaiterGui waiterGui = null;
+	
 	//private Semaphore x = new Semaphore(0);
 	
 	List<myCustomer> customers = new ArrayList<myCustomer>();
@@ -437,7 +439,9 @@ public class AnjaliNormalWaiterRole extends  AnjaliWaiterRole implements AnjaliW
 
 	// Actions
 	private void leaveRestaurant(){
+		gui.removePerson(name);
 		person.msgLeftDestination(this);
+		
 	}
 	private void seatCustomer(AnjaliWaiter w, AnjaliCustomer c, Table t) {
 		
@@ -662,6 +666,13 @@ public class AnjaliNormalWaiterRole extends  AnjaliWaiterRole implements AnjaliW
 	
 public void setYPos(int yPosition){
 	this.yPos = yPosition;
+}
+
+
+
+
+public void setGui(AnjaliCookGui gui) {
+	cookGui = gui;	
 }
 
 

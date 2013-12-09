@@ -9,7 +9,6 @@ import java.util.TimerTask;
 import java.util.concurrent.Semaphore;
 
 import simcity.RestHostRole;
-import simcity.anjalirestaurant.gui.AnjaliHostGui;
 import simcity.anjalirestaurant.interfaces.AnjaliCustomer;
 import simcity.anjalirestaurant.interfaces.AnjaliHost;
 import simcity.anjalirestaurant.interfaces.AnjaliWaiter;
@@ -47,11 +46,11 @@ public class AnjaliHostRole extends RestHostRole implements AnjaliHost{
 	private Semaphore atTable = new Semaphore(0,true);
 	
 	private class myWaiter{
-		AnjaliWaiter w;
+		AnjaliWaiterRole w;
 		WaiterState s;
 		private Table t;
 		
-		myWaiter(AnjaliWaiter w, WaiterState s){
+		myWaiter(AnjaliWaiterRole w, WaiterState s){
 			this.w = w;
 			this.s = s;
 		}
@@ -68,7 +67,6 @@ public class AnjaliHostRole extends RestHostRole implements AnjaliHost{
 	
 	int numCust = 0;
 	private List<myWaiter> myWaiters = Collections.synchronizedList(new ArrayList<myWaiter>());
-	public AnjaliHostGui hostGui = null; 
 	Timer waitTimer = new Timer();
 	
 	private boolean working;
@@ -150,7 +148,7 @@ public class AnjaliHostRole extends RestHostRole implements AnjaliHost{
 	
 	
 	
-	public void msgWantBreak(AnjaliWaiter w){
+	public void msgWantBreak(AnjaliWaiterRole w){
 			findWaiter(w).s = state.wantsBreak;
 			stateChanged();
 			//stateChanged();
@@ -158,13 +156,13 @@ public class AnjaliHostRole extends RestHostRole implements AnjaliHost{
 		
 	}
 	
-	public void msgWaiterBreakDone(AnjaliWaiter w){
+	public void msgWaiterBreakDone(AnjaliWaiterRole w){
 		if(findWaiter(w).s == state.onBreak){
 			findWaiter(w).s = state.working;
 			stateChanged();
 		}
 	}
-	public void msgTableIsFree(Table t, AnjaliWaiter w){
+	public void msgTableIsFree(Table t, AnjaliWaiterRole w){
 		t.setOccupant(null);
 		numCust--;
 		print("table " + t.getTableNumber() + " is free");
@@ -228,10 +226,10 @@ public class AnjaliHostRole extends RestHostRole implements AnjaliHost{
 	
 	
 	
-	private AnjaliWaiter selectWaiter(){
+	private AnjaliWaiterRole selectWaiter(){
 		
 	while(!myWaiters.isEmpty()){
-		AnjaliWaiter w = myWaiters.get(waiterSelection%myWaiters.size()).w;
+		AnjaliWaiterRole w = myWaiters.get(waiterSelection%myWaiters.size()).w;
 		myWaiters.get(waiterSelection%myWaiters.size()).waitersCustomers++;
 		Do("size of myWaiters waitingCustomers list: " + myWaiters.get(waiterSelection%myWaiters.size()).waitersCustomers);
 	waiterSelection++;
@@ -251,7 +249,7 @@ public class AnjaliHostRole extends RestHostRole implements AnjaliHost{
 		
 	}
 	
-	private void sitCustomer(AnjaliCustomer c, Table t, AnjaliWaiter w)
+	private void sitCustomer(AnjaliCustomer c, Table t, AnjaliWaiterRole w)
 	{
 		waitingCustomers.remove(c);
 		t.setOccupant(c);
@@ -281,15 +279,9 @@ public class AnjaliHostRole extends RestHostRole implements AnjaliHost{
 	}
 	//utilities
 
-	public void setGui(AnjaliHostGui gui) {
-		hostGui = gui;
-	}
+	
 
-	public AnjaliHostGui getGui() {
-		return hostGui;
-	}
-
-	public void addWaiter(AnjaliWaiter w){
+	public void addWaiter(AnjaliWaiterRole w){
 		//waiters.add(w);
 		myWaiters.add(new myWaiter(w, WaiterState.working));
 		workingWaiters++;
@@ -301,7 +293,7 @@ public class AnjaliHostRole extends RestHostRole implements AnjaliHost{
 		return myWaiters.get(w);
 	}
 	
-	public myWaiter findWaiter(AnjaliWaiter waiter){
+	public myWaiter findWaiter(AnjaliWaiterRole waiter){
 	synchronized(myWaiters){
 		for(myWaiter k : myWaiters){
 			if(k.w == waiter)
@@ -365,6 +357,23 @@ public class AnjaliHostRole extends RestHostRole implements AnjaliHost{
 		public String toString() {
 			return "table " + tableNumber;
 		}
+	}
+	@Override
+	public void msgWantBreak(AnjaliWaiter w) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void msgWaiterBreakDone(AnjaliWaiter w) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void msgTableIsFree(Table t, AnjaliWaiter w) {
+		// TODO Auto-generated method stub
+		
 	}
 }
 	
