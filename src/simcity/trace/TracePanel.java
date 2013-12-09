@@ -8,6 +8,7 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
 import javax.swing.border.BevelBorder;
@@ -250,9 +251,9 @@ public class TracePanel extends JScrollPane implements AlertListener {
 		//add the new alert and update the panel to show it
 		newAlerts.add(alert);
 		updateTracePanel();
-
-		//JScrollBar bar = this.getVerticalScrollBar();
-		// bar.setValue(bar.getMaximum() + bar.getVisibleAmount());
+		
+		JScrollBar bar = this.getVerticalScrollBar();
+		bar.setValue(bar.getMaximum() + bar.getVisibleAmount());
 
 		//Should snap the trace panel to the bottom when a new thing is added (makes it so you don't have to scroll down manually as new stuff gets added in)
 		if (scrollDown) {
