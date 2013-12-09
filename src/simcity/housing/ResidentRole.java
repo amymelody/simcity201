@@ -239,7 +239,8 @@ public class ResidentRole extends Role implements Resident
 		landlord.msgPayRent(this, rent);
 		person.msgExpense(rent);
 		rent = -1;
-		stateChanged();
+		goToLocation(locations.get("Exit"), "Exit");
+		person.msgLeftDestination(this);
 	}
 	private void putGroceriesInFridge(Command c)
 	{
