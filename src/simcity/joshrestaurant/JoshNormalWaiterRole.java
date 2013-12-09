@@ -376,6 +376,7 @@ public class JoshNormalWaiterRole extends JoshWaiterRole implements JoshWaiter {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		gui.removePerson(name);
 		person.msgLeftDestination(this);
 	}
 	

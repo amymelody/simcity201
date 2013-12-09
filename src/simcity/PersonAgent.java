@@ -169,6 +169,17 @@ public class PersonAgent extends Agent implements Person
 		return job.role;
 	}
 	
+	public Resident getResident() {
+		for (MyRole mr : roles) {
+			if (mr.name.equals("residentRole")) {
+				if (mr.r instanceof Resident) {
+					return (Resident)(mr.r);
+				}
+			}
+		}
+		return null;
+	}
+	
 	public String getDestination() {
 		return destination;
 	}

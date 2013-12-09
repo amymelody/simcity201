@@ -21,7 +21,6 @@ public class ListPanel extends JPanel implements ActionListener {
                     JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
     private JPanel view = new JPanel();
     private List<JButton> list = new ArrayList<JButton>();
-    private JButton addPersonB = new JButton("Add");
 
     private JoshRestaurantInputPanel restPanel;
     private String type;
@@ -38,9 +37,6 @@ public class ListPanel extends JPanel implements ActionListener {
 
         setLayout(new BoxLayout((Container) this, BoxLayout.Y_AXIS));
         add(new JLabel("<html><pre> <u>" + type + "</u><br></pre></html>"));
-
-        addPersonB.addActionListener(this);
-        add(addPersonB);
 
         view.setLayout(new BoxLayout((Container) view, BoxLayout.Y_AXIS));
         pane.setViewportView(view);
@@ -74,7 +70,20 @@ public class ListPanel extends JPanel implements ActionListener {
             view.add(button);
             restPanel.showInfo(type, name);
             validate();
-            AlertLog.getInstance().logMessage(AlertTag.JOSH_RESTAURANT, "listpanel", "Waiter added");
         }
+    }
+    
+    public void removePerson(String name) {
+    	for (JButton button : list) {
+//    		AlertLog.getInstance().logMessage(AlertTag.JOSH_RESTAURANT, "listpanel", button.getText());
+//    		AlertLog.getInstance().logMessage(AlertTag.JOSH_RESTAURANT, "listpanel", name);
+    		if (button.getText().equals(name)) {
+    			AlertLog.getInstance().logMessage(AlertTag.JOSH_RESTAURANT, "listpanel", "remove person");
+    			list.remove(button);
+    			view.remove(button);
+    			break;
+    		}
+    	}
+    	validate();
     }
 }
