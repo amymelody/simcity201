@@ -21,22 +21,16 @@ public class JoshRestaurantGui extends BuildingGui implements ActionListener {
 	
 	JoshRestaurantAnimationPanel animationPanel = new JoshRestaurantAnimationPanel();
 	private JTabbedPane controlPanel = new JTabbedPane();
-	
-    /* inputPanel holds 2 panels
-     * 1) the staff listing, menu, and lists of current customers all constructed
-     *    in RestaurantPanel()
-     * 2) the infoPanel about the clicked Customer (created just below)
-     */    
     private JoshRestaurantInputPanel inputPanel;
-    
-    /* infoPanel holds information about the clicked customer, if there is one*/
     private JPanel infoPanel;
-    private JTextField infoLabel; //part of infoPanel
-    private JCheckBox stateCB;//part of infoLabel
+    private JTextField infoLabel;
+    private JCheckBox stateCB;
     private JPanel restLabel = new JPanel();
+    private JPanel inventoryPanel = new JPanel();
+    
+    private Timer timer;
 
-    private Object currentPerson;/* Holds the agent that the info is about.
-    								Seems like a hack */
+    private Object currentPerson;
 
     /**
      * Constructor for RestaurantGui class.
@@ -79,8 +73,9 @@ public class JoshRestaurantGui extends BuildingGui implements ActionListener {
         waiters.add(infoPanel, BorderLayout.NORTH);
         waiters.add(inputPanel, BorderLayout.CENTER);
         
-        controlPanel.add("Menu", restLabel);
-        controlPanel.add("Waiters", waiters);
+        controlPanel.addTab("Menu", restLabel);
+        controlPanel.addTab("Waiters", waiters);
+        controlPanel.addTab("Inventory", inventoryPanel);
         controlPanel.setVisible(false);
         bG.add(controlPanel, BorderLayout.WEST);
         
@@ -91,6 +86,9 @@ public class JoshRestaurantGui extends BuildingGui implements ActionListener {
         animationPanel.setMaximumSize(animDim);
         animationPanel.setVisible(false);
         bG.add(animationPanel, BorderLayout.CENTER);
+        
+        timer = new Timer(6, this );
+		timer.start();
     }
     
     /**
@@ -127,16 +125,8 @@ public class JoshRestaurantGui extends BuildingGui implements ActionListener {
      * For v3, it will propose a break for the waiter.
      */
     public void actionPerformed(ActionEvent e) {
-    
+ //   	AlertLog.getInstance().logMessage(AlertTag.JOSH_RESTAURANT, "restaurantgui", "kdfjkldf");
         if (e.getSource() == stateCB) {
-//        	if (stateCB.getText().equals("Hungry?")) {
-//	            if (currentPerson instanceof JoshCustomerRole) {
-//	                JoshCustomerRole c = (JoshCustomerRole) currentPerson;
-//	                c.getGui().setHungry(inputPanel.getNumCustomers());
-//	                inputPanel.addCustomer(c);
-//	                stateCB.setEnabled(false);
-//	            }
-//        	}
         	if (stateCB.getText().equals("Break?")) {
 	            if (currentPerson instanceof JoshWaiterRole) {
 	                JoshWaiterRole w = (JoshWaiterRole) currentPerson;

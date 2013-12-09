@@ -140,6 +140,17 @@ public class PersonAgent extends Agent implements Person
 
 	public void setOwnerHome(String home) {
 		houses.get(1).location = home;
+		for(MyRole mr : roles)
+		{
+			if(mr.name.equals("residentRole"))
+			{
+				if(mr.r instanceof ResidentRole)
+				{
+					ResidentRole r = (ResidentRole)(mr.r);
+					cG.addResident(r, houses.get(0).location, houses.get(0).location);
+				}
+			}
+		}
 	}
 
 	public void setTestingAnimation(boolean tA) {
@@ -605,7 +616,6 @@ public class PersonAgent extends Agent implements Person
 	}
 
 	public void msgLeftDestination(Role r) {
-		AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "kdfjdkfkldfjd");
 		log.add(new LoggedEvent("Received msgLeftDestination"));
 		synchronized(roles) {
 			for (MyRole mr : roles) {
@@ -1260,7 +1270,7 @@ public class PersonAgent extends Agent implements Person
 		Market(String l, String r) {
 			location = l;
 			customerRole = r;
-			closed = true;
+			closed = false;
 		}
 		String customerRole;
 		String location;
