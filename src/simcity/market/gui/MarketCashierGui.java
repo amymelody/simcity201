@@ -64,7 +64,7 @@ public class MarketCashierGui implements Gui {
 			Collections.rotate(leftAnimation, 1);
 		}
 
-		if (yPos < yDestination) {
+		else if (yPos < yDestination) {
 			yPos+=20;
 			cashierImage = downAnimation.get(0).getImage();
 			Collections.rotate(downAnimation, 1);
