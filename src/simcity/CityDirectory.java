@@ -808,6 +808,7 @@ public class CityDirectory
 		for(PersonAgent p : renters)
 		{
 			p.setOwnerHome(landlords.get(0).getPersonAgent().getHome());
+			landlords.get(0).addRenter(p.getResident());
 		}
 	}
 }

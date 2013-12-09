@@ -118,6 +118,7 @@ public class LandlordRole extends JobRole
 
 	public void msgAtLocation()
 	{
+		AlertLog.getInstance().logMessage(AlertTag.BANK, name, "received msgAtLocation----------");
 		atLocation.release();
 	}
 
@@ -128,7 +129,6 @@ public class LandlordRole extends JobRole
     	{
     		if(c == Command.sit)
     		{
-    			AlertLog.getInstance().logMessage(AlertTag.BANK, name, "Sofa surfing----------");
     	    	goToLocation(locations.get("Sofa"), "");
     			commands.remove(Command.sit);
     			return true;
@@ -231,7 +231,9 @@ public class LandlordRole extends JobRole
 
 	public void addRenter(Resident r)
 	{
+		AlertLog.getInstance().logMessage(AlertTag.BANK, name, "Sofa surfing----------");
 		renters.add(new Renter(r));
+		(ResidentRole)r.setLandlord(this);
 	}
 
 }

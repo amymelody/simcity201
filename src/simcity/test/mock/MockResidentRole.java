@@ -1,5 +1,6 @@
 package simcity.test.mock;
 
+import simcity.interfaces.Landlord;
 import simcity.interfaces.Resident;
 import simcity.mock.LoggedEvent;
 import simcity.role.Role;
@@ -56,6 +57,13 @@ public class MockResidentRole extends Role implements Resident {
 	
 	public String toString() {
 		return "customer " + getName();
+	}
+
+	@Override
+	public void setLandlord(Landlord l)
+	{
+		// TODO Auto-generated method stub
+		
 	}
 
 }

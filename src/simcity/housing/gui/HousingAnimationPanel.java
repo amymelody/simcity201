@@ -57,7 +57,6 @@ public class HousingAnimationPanel extends JPanel implements ActionListener
 		{
 			for(Gui gui : guis)
 			{
-//				System.out.println("LALALALALALALALALALAL");
 				if(gui instanceof ResidentGui)
 				{
 					ResidentGui rg = (ResidentGui)gui;

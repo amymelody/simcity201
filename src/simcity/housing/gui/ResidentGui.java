@@ -134,7 +134,7 @@ public class ResidentGui implements Gui
 				}
 				else
 				{
-					if(!arrived)
+					if(!arrived && xPos != 500 && yPos != 220)
 					{
 						resident.msgAtLocation();
 						arrived = true;

@@ -15,4 +15,6 @@ public interface Resident {
 	public abstract void msgImHome(); //from Person
 	
 	public abstract void msgAtLocation(); //from gui
+	
+	public abstract void setLandlord(Landlord l);
 }

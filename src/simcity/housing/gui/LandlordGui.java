@@ -63,7 +63,6 @@ public class LandlordGui implements Gui
 
 	public void updatePosition()
 	{
-		System.out.println("LALALALALALALALALALAL");
 		log.add(new LoggedEvent("Received updatePosition"));
 
 		if(exiting)
@@ -127,7 +126,7 @@ public class LandlordGui implements Gui
 				}
 				else
 				{
-					if(!arrived)
+					if(!arrived && xPos != 500 && yPos != 220)
 					{
 						landlord.msgAtLocation();
 						arrived = true;
