@@ -1,5 +1,6 @@
 package simcity.housing;
 
+import simcity.interfaces.Landlord;
 import simcity.interfaces.Resident;
 import simcity.housing.gui.HousingGui;
 import simcity.housing.gui.LandlordGui;
@@ -13,7 +14,7 @@ import java.awt.Point;
 import java.util.*;
 import java.util.concurrent.Semaphore;
 
-public class LandlordRole extends JobRole
+public class LandlordRole extends JobRole implements Landlord
 {
 
 //Data
@@ -233,7 +234,7 @@ public class LandlordRole extends JobRole
 	{
 		AlertLog.getInstance().logMessage(AlertTag.BANK, name, "Sofa surfing----------");
 		renters.add(new Renter(r));
-		(ResidentRole)r.setLandlord(this);
+		r.setLandlord((Landlord)this);
 	}
 
 }
