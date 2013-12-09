@@ -378,9 +378,9 @@ public class PersonGui implements Gui {
 			g.setColor(Color.YELLOW);
 			//g.fillRect(xPos, yPos, width, height);
 			g.drawImage(personImage, xPos, yPos, null);
-			g.setColor(Color.BLACK);
+			g.setColor(Color.WHITE);
 			g.setFont(font);
-			//g.drawString(text, xPos-2, yPos+10);
+			g.drawString(text, xPos-2, yPos+10);
 		}
 	}
 	
