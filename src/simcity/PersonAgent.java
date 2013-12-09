@@ -807,7 +807,6 @@ public class PersonAgent extends Agent implements Person
 			}
 		}
 		
-		AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "Fuuuuckkkkk");
 		if (!unitTesting && goingHome && state.ts == TransportationState.walking && state.ls != LocationState.home && state.ls != LocationState.leavingHouse) {
 			goHome(); //if nothing left to do, go home and do whatever
 			return true;
