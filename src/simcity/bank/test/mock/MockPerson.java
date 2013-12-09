@@ -17,10 +17,21 @@ import java.util.*;
 
 public class MockPerson extends Mock implements Person
 {
+<<<<<<< HEAD
 	//for testing
 	public int currentMoney;
 	
+=======
+	public int currentMoney;
+>>>>>>> anjali
 	
+	public void setCurrentMoney(int m){
+		this.currentMoney = m;
+	}
+	
+	public int getCurrentMoney(){
+		return currentMoney;
+	}
 	public MockPerson(String name)
 	{
 		super(name);

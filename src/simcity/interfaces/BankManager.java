@@ -1,4 +1,9 @@
 package simcity.interfaces;
+<<<<<<< HEAD:src/simcity/interfaces/BankManager.java
+=======
+
+
+>>>>>>> anjali:src/simcity/interfaces/BankManager.java
 
 
 

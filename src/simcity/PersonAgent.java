@@ -12,7 +12,7 @@ import simcity.interfaces.Person;
 import simcity.interfaces.RestCustomer;
 import simcity.interfaces.MarketCustomer;
 import simcity.interfaces.Resident;
-import simcity.bank.interfaces.BankDepositor;
+import simcity.interfaces.BankDepositor;
 import simcity.interfaces.JobInterface;
 import simcity.interfaces.Bus;
 import simcity.interfaces.BusStop;
@@ -526,7 +526,10 @@ public class PersonAgent extends Agent implements Person
 		}
 		if (job.role.equals("landlordRole")) {
 			LandlordRole l = (LandlordRole)(job.jobRole);
+<<<<<<< HEAD
 			cG.addLandlord(l, houses.get(0).location);
+=======
+>>>>>>> anjali
 		}
 	}
 	
@@ -1251,7 +1254,7 @@ public class PersonAgent extends Agent implements Person
 		Market(String l, String r) {
 			location = l;
 			customerRole = r;
-			closed = true;
+			closed = false;
 		}
 		String customerRole;
 		String location;
