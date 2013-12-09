@@ -110,6 +110,7 @@ import simcity.trace.AlertTag;
 		
 
 		public void msgStartShift() {
+			person.businessIsClosed(getJobLocation(), false);
 			working = true;
 			synchronized(tellers){
 				for(myTeller tr : tellers) {
@@ -122,6 +123,7 @@ import simcity.trace.AlertTag;
 		
 		
 		public void msgEndShift() {
+			person.businessIsClosed(getJobLocation(), true);
 			working = false;
 			synchronized(tellers){
 				for(myTeller tr: tellers) {
@@ -237,6 +239,10 @@ import simcity.trace.AlertTag;
 		
 		/////SCHEDULER//////
 		public boolean pickAndExecuteAnAction() {
+			if(!working){
+				leaveRestaurant();
+				return true;
+			}
 			synchronized(customers){
 				for(myCustomer c : customers){
 					if(c.cS == CustomerState.arrived && !tellers.isEmpty()){
@@ -298,7 +304,9 @@ import simcity.trace.AlertTag;
 		
 		
 		/* Actions */
-		
+		private void leaveRestaurant(){
+			person.msgLeftDestination(this);
+		}
 		private void leaveBank(){
 			Do("Bank manager is leaving bank");
 			gui.ExitBank();
