@@ -28,11 +28,11 @@ import simcity.anjalirestaurant.AnjaliHostRole;
 import simcity.anjalirestaurant.AnjaliCustomerRole;
 import simcity.anjalirestaurant.AnjaliCookRole;
 import simcity.anjalirestaurant.AnjaliWaiterRole;
-import simcity.cherysrestaurant.CherysCashierRole;
-import simcity.cherysrestaurant.CherysHostRole;
-import simcity.cherysrestaurant.CherysCustomerRole;
-import simcity.cherysrestaurant.CherysCookRole;
-import simcity.cherysrestaurant.CherysWaiterRole;
+import simcity.Anjalirestaurant.AnjaliCashierRole;
+import simcity.Anjalirestaurant.AnjaliHostRole;
+import simcity.Anjalirestaurant.AnjaliCustomerRole;
+import simcity.Anjalirestaurant.AnjaliCookRole;
+import simcity.Anjalirestaurant.AnjaliWaiterRole;
 import simcity.jesusrestaurant.JesusCashierRole;
 import simcity.jesusrestaurant.JesusHostRole;
 import simcity.jesusrestaurant.JesusCustomerRole;
@@ -89,8 +89,8 @@ public class CityDirectory
 	private static final int apartment4Y = 280;
 	private static final int joshRestaurantX = 280;
 	private static final int joshRestaurantY = 300;
-	private static final int cherysRestaurantX = 420;
-	private static final int cherysRestaurantY = 300;
+	private static final int AnjaliRestaurantX = 420;
+	private static final int AnjaliRestaurantY = 300;
 	private static final int jesusRestaurantX = 280;
 	private static final int jesusRestaurantY = 400;
 	private static final int anjaliRestaurantX = 420;
@@ -198,7 +198,7 @@ public class CityDirectory
 			{
 				type = "market";
 			}
-			else if(n == "anjaliRestaurant" || n == "cherysRestaurant" || n == "jesusRestaurant" || n == "joshRestaurant")
+			else if(n == "anjaliRestaurant" || n == "AnjaliRestaurant" || n == "jesusRestaurant" || n == "joshRestaurant")
 			{
 				type = "restaurant";
 			}
@@ -334,7 +334,7 @@ public class CityDirectory
 		addBuilding("bank1", "horizontal", new Point(bank1X, bank1Y));
 		addBuilding("bank2", "horizontal", new Point(bank2X, bank2Y));
 		addBuilding("joshRestaurant", "vertical", new Point(joshRestaurantX, joshRestaurantY));
-		addBuilding("cherysRestaurant", "vertical", new Point(cherysRestaurantX, cherysRestaurantY));
+		addBuilding("AnjaliRestaurant", "vertical", new Point(AnjaliRestaurantX, AnjaliRestaurantY));
 		addBuilding("jesusRestaurant", "vertical", new Point(jesusRestaurantX, jesusRestaurantY));
 		addBuilding("anjaliRestaurant", "vertical", new Point(anjaliRestaurantX, anjaliRestaurantY));
 		addBuilding("busStop1", "vertical", new Point(busStop1X, busStop1Y));
@@ -359,8 +359,8 @@ public class CityDirectory
 			return new JoshCustomerRole();
 		/*case "anjaliCustomerRole":
 			return new AnjaliCustomerRole();
-		case "cherysCustomerRole":
-			return new CherysCustomerRole();
+		case "AnjaliCustomerRole":
+			return new AnjaliCustomerRole();
 		case "alfredCustomerRole":
 			return new AlfredCustomerRole();
 		case "jesusCustomerRole":
@@ -480,7 +480,7 @@ public class CityDirectory
 	
 	public RestWaiterRole addRestWaiter(String role) {
 		/*int num1 = getNumPeople("restWaiterRole","joshRestaurant");
-		int num2 = getNumPeople("restWaiterRole","cherysRestaurant");
+		int num2 = getNumPeople("restWaiterRole","AnjaliRestaurant");
 		int num3 = getNumPeople("restWaiterRole","anjaliRestaurant");
 		int num4 = getNumPeople("restWaiterRole","alfredRestaurant");
 		int num5 = getNumPeople("restWaiterRole","jesusRestaurant");
@@ -510,8 +510,8 @@ public class CityDirectory
 				return w;
 			}
 		/*} else if (num == num2) {
-			CherysWaiterRole w = new CherysWaiterRole();
-			cherysWaiters.add(w);
+			AnjaliWaiterRole w = new AnjaliWaiterRole();
+			AnjaliWaiters.add(w);
 			return w;
 		} else if (num == num3) {
 			AnjaliWaiterRole w = new AnjaliWaiterRole();
@@ -558,7 +558,7 @@ public class CityDirectory
 	
 	public RestCashierRole pickRestCashier() {
 		/*int num1 = getNumPeople("restCashierRole","joshRestaurant");
-		int num2 = getNumPeople("restCashierRole","cherysRestaurant");
+		int num2 = getNumPeople("restCashierRole","AnjaliRestaurant");
 		int num3 = getNumPeople("restCashierRole","anjaliRestaurant");
 		int num4 = getNumPeople("restCashierRole","alfredRestaurant");
 		int num5 = getNumPeople("restCashierRole","jesusRestaurant");
@@ -578,7 +578,7 @@ public class CityDirectory
 		//if (num == num1) {
 			return joshCashier;
 		/*} else if (num == num2) {
-			return cherysCashier;
+			return AnjaliCashier;
 		} else if (num == num3) {
 			return anjaliCashier;
 		} else if (num == num4) {
@@ -590,7 +590,7 @@ public class CityDirectory
 	
 	public RestCookRole pickRestCook() {
 		/*int num1 = getNumPeople("restCookRole","joshRestaurant");
-		int num2 = getNumPeople("restCookRole","cherysRestaurant");
+		int num2 = getNumPeople("restCookRole","AnjaliRestaurant");
 		int num3 = getNumPeople("restCookRole","anjaliRestaurant");
 		int num4 = getNumPeople("restCookRole","alfredRestaurant");
 		int num5 = getNumPeople("restCookRole","jesusRestaurant");
@@ -610,7 +610,7 @@ public class CityDirectory
 		//if (num == num1) {
 			return joshCook;
 		/*} else if (num == num2) {
-			return cherysCook;
+			return AnjaliCook;
 		} else if (num == num3) {
 			return anjaliCook;
 		} else if (num == num4) {
@@ -622,7 +622,7 @@ public class CityDirectory
 	
 	public RestHostRole pickRestHost() {
 		/*int num1 = getNumPeople("restHostRole","joshRestaurant");
-		int num2 = getNumPeople("restHostRole","cherysRestaurant");
+		int num2 = getNumPeople("restHostRole","AnjaliRestaurant");
 		int num3 = getNumPeople("restHostRole","anjaliRestaurant");
 		int num4 = getNumPeople("restHostRole","alfredRestaurant");
 		int num5 = getNumPeople("restHostRole","jesusRestaurant");
@@ -642,7 +642,7 @@ public class CityDirectory
 		//if (num == num1) {
 			return joshHost;
 		/*} else if (num == num2) {
-			return cherysHost;
+			return AnjaliHost;
 		} else if (num == num3) {
 			return anjaliHost;
 		} else if (num == num4) {

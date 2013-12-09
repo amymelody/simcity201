@@ -1,22 +1,22 @@
-package simcity.cherysrestaurant.test;
+package simcity.Anjalirestaurant.test;
 
-import simcity.cherysrestaurant.CherysCashierRole;
-import simcity.cherysrestaurant.interfaces.CherysCustomer;
-import simcity.cherysrestaurant.interfaces.CherysMarket;
-import simcity.cherysrestaurant.interfaces.CherysWaiter;
-import simcity.cherysrestaurant.test.mock.MockCherysCustomer;
-import simcity.cherysrestaurant.test.mock.MockCherysMarket;
-import simcity.cherysrestaurant.test.mock.MockCherysWaiter;
+import simcity.Anjalirestaurant.AnjaliCashierRole;
+import simcity.Anjalirestaurant.interfaces.AnjaliCustomer;
+import simcity.Anjalirestaurant.interfaces.AnjaliMarket;
+import simcity.Anjalirestaurant.interfaces.AnjaliWaiter;
+import simcity.Anjalirestaurant.test.mock.MockAnjaliCustomer;
+import simcity.Anjalirestaurant.test.mock.MockAnjaliMarket;
+import simcity.Anjalirestaurant.test.mock.MockAnjaliWaiter;
 
 import junit.framework.*;
 
-public class CherysOneOrderUnableToPayTest extends TestCase
+public class AnjaliOneOrderUnableToPayTest extends TestCase
 {
 	//these are instantiated for each test separately via the setUp() method.
-	CherysCashierRole cashier;
-	CherysMarket market;
-	CherysWaiter waiter;
-	CherysCustomer customer;
+	AnjaliCashierRole cashier;
+	AnjaliMarket market;
+	AnjaliWaiter waiter;
+	AnjaliCustomer customer;
 
 	/**
 	 * This method is run before each test. You can use it to instantiate the class variables
@@ -25,10 +25,10 @@ public class CherysOneOrderUnableToPayTest extends TestCase
 	public void setUp() throws Exception
 	{
 		super.setUp();
-		cashier = new CherysCashierRole("Cashier");		
-		market = new MockCherysMarket("MockMarket");
-		waiter = new MockCherysWaiter("mockwaiter");
-		customer = new MockCherysCustomer("mockcustomer");
+		cashier = new AnjaliCashierRole("Cashier");		
+		market = new MockAnjaliMarket("MockMarket");
+		waiter = new MockAnjaliWaiter("mockwaiter");
+		customer = new MockAnjaliCustomer("mockcustomer");
 	}	
 	/**
 	 * This tests the cashier under very simple terms: one customer is ready to pay the exact bill.
@@ -53,7 +53,7 @@ public class CherysOneOrderUnableToPayTest extends TestCase
 		assertEquals("Cashier should have 1 bill in it. It doesn't.",
 				1, cashier.bills.size());
 		assertTrue("Bills should contain a bill with state == askedFor. It doesn't.",
-				cashier.bills.get(0).state == CherysCashierRole.CheckState.askedFor);
+				cashier.bills.get(0).state == AnjaliCashierRole.CheckState.askedFor);
 		assertTrue("Bills should contain a bill with total == $100.74. It contains something else instead: $"
 				+ cashier.bills.get(0).total, cashier.bills.get(0).total == 100.74);
 		assertTrue("Cashier should contain balance == $100. It contains something else instead: $" 
@@ -61,7 +61,7 @@ public class CherysOneOrderUnableToPayTest extends TestCase
 		assertTrue("Cashier's scheduler should have returned true (needs to react to market's msgPayForDelivery), but didn't.",
 				cashier.pickAndExecuteAnAction());
 		assertTrue("Bills should contain a bill with state == unPaid. It doesn't.",
-				cashier.bills.get(0).state == CherysCashierRole.CheckState.unpaid);
+				cashier.bills.get(0).state == AnjaliCashierRole.CheckState.unpaid);
 		//Checking logs
 		assertEquals("Cashier should have one event logged after the Cashier's scheduler is called for the first time. Instead, it has "
 				+ cashier.log.size(), 1, cashier.log.size());
@@ -82,7 +82,7 @@ public class CherysOneOrderUnableToPayTest extends TestCase
 		assertTrue("Cashier should contain balance == $108.99. It contains something else instead: $" 
 				+ cashier.balance, cashier.balance == 108.99);
 		assertTrue("Bills should contain a bill with state == askedFor. It doesn't.",
-				cashier.bills.get(0).state == CherysCashierRole.CheckState.askedFor);
+				cashier.bills.get(0).state == AnjaliCashierRole.CheckState.askedFor);
 		assertTrue("Cashier's scheduler should have returned true (needs to react to the bill's stateChanged), but didn't.", 
 				cashier.pickAndExecuteAnAction());
 		assertTrue("MockMarket should have logged \"Received msgPaymentForDelivery\" but didn't. His log reads instead: " 

@@ -1,8 +1,8 @@
-package simcity.cherysrestaurant;
+package simcity.Anjalirestaurant;
 
 import simcity.agent.Agent;
-import simcity.cherysrestaurant.gui.CherysRestaurantGui;
-import simcity.cherysrestaurant.interfaces.*;
+import simcity.Anjalirestaurant.gui.AnjaliRestaurantGui;
+import simcity.Anjalirestaurant.interfaces.*;
 
 import java.util.*;
 import java.util.concurrent.Semaphore;
@@ -10,16 +10,16 @@ import java.util.concurrent.Semaphore;
 /**
  * Restaurant Host Agent
  */
-public class CherysHostRole extends Agent implements CherysHost
+public class AnjaliHostRole extends Agent implements AnjaliHost
 {
 
 	private String name;
 	public List<MyCustomer> customers = new ArrayList<MyCustomer>();
 	private class MyCustomer
 	{
-		CherysCustomer c;
+		AnjaliCustomer c;
 		boolean served;
-		MyCustomer(CherysCustomer c)
+		MyCustomer(AnjaliCustomer c)
 		{
 			this.c = c;
 			served = false;
@@ -39,11 +39,11 @@ public class CherysHostRole extends Agent implements CherysHost
 	private List<MyWaiter> waiters = new ArrayList<MyWaiter>();
 	private class MyWaiter
 	{
-		CherysWaiter w;
+		AnjaliWaiter w;
 		int customersAssigned;
 		boolean wantsBreak;
 		boolean onBreak;
-		MyWaiter(CherysWaiter w)
+		MyWaiter(AnjaliWaiter w)
 		{
 			this.w = w;
 			customersAssigned = 0;
@@ -53,14 +53,14 @@ public class CherysHostRole extends Agent implements CherysHost
 	int numWaiters;
 	int numTables = 5;
 	
-	CherysRestaurantGui gui;
+	AnjaliRestaurantGui gui;
 
 	/**
 	 * Constructor for HostAgent
 	 * @param name agent name
 	 * @param gui  reference to the main gui
 	 */
-	public CherysHostRole(String name, CherysRestaurantGui gui) //* called from RestaurantGui
+	public AnjaliHostRole(String name, AnjaliRestaurantGui gui) //* called from RestaurantGui
 	{
 		super();
 
@@ -85,13 +85,13 @@ public class CherysHostRole extends Agent implements CherysHost
 	}
 	
 	// Messages
-	public void msgImHungry(CherysCustomer c) //* called from Customer.alertHost
+	public void msgImHungry(AnjaliCustomer c) //* called from Customer.alertHost
 	{
 		Do("recieved msgImHungry");
 		customers.add(new MyCustomer(c));
 		stateChanged();
 	}
-	public void msgTableFree(int t, CherysWaiter w, CherysCustomer c) //* called from Waiter.tableAvailible
+	public void msgTableFree(int t, AnjaliWaiter w, AnjaliCustomer c) //* called from Waiter.tableAvailible
 	{
 		Do("recieved msgTableFree");
 		do
@@ -134,7 +134,7 @@ public class CherysHostRole extends Agent implements CherysHost
 		while(false);
 		stateChanged();	
 	}
-	public void msgMayIGoOnBreak(CherysWaiter w)
+	public void msgMayIGoOnBreak(AnjaliWaiter w)
 	{
 		Do("recieved msgMayIGoOnBreak");
 		do
@@ -158,7 +158,7 @@ public class CherysHostRole extends Agent implements CherysHost
 		while(false);
 		stateChanged();
 	}
-	public void msgBackFromBreak(CherysWaiter w)
+	public void msgBackFromBreak(AnjaliWaiter w)
 	{
 		Do("recieved msgBackFromBreak");
 		do
@@ -317,7 +317,7 @@ public class CherysHostRole extends Agent implements CherysHost
 		mw.w.msgPleaseSeatCustomer(mc.c, t.tableNumber);
 		stateChanged();
 	}
-	private void putWaiterOnBreak(CherysWaiter w)
+	private void putWaiterOnBreak(AnjaliWaiter w)
 	{
 		Do("IDK, lemme check");
 		int availibleWaiters = waiters.size() - 1;
@@ -379,7 +379,7 @@ public class CherysHostRole extends Agent implements CherysHost
 	 * Adds another waiter
 	 * @param w reference to new Waiter
 	 */
-	public void setWaiter(CherysWaiter w) //* called from RestaurantPanel.addPerson
+	public void setWaiter(AnjaliWaiter w) //* called from RestaurantPanel.addPerson
 	{
 		waiters.add(new MyWaiter(w));
 		stateChanged();

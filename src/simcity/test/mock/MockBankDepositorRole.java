@@ -1,6 +1,10 @@
 package simcity.test.mock;
 
+<<<<<<< HEAD
 import simcity.interfaces.BankDepositor;
+=======
+import simcity.bank.interfaces.BankDepositor;
+>>>>>>> anjali
 import simcity.interfaces.BankTeller;
 import simcity.mock.LoggedEvent;
 import simcity.role.Role;

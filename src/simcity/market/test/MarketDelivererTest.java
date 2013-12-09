@@ -58,7 +58,7 @@ public class MarketDelivererTest extends TestCase
 		test1Orders.add(new ItemOrder("Lasagna", 2));
 		test1Orders.add(new ItemOrder("Horchata", 5));
 		test1Order.price = 35;
-
+		
 		// Check preconditions for Step 1a
 		assertEquals("Deliverer should have no orders in List orders. It doesn't.", deliverer.orders.size(), 0);		
 		assertEquals("DelivererRole should have an empty event log before msgDeliverItems(...) is called. Instead, the Deliverer's event log reads: "
@@ -231,7 +231,7 @@ public class MarketDelivererTest extends TestCase
 		List<ItemOrder> test1Orders = new ArrayList<ItemOrder>(); // orders Lasagna and Horchata
 		List<ItemOrder> test2Orders = new ArrayList<ItemOrder>(); // orders Pizza and Burgers
 		Order test1Order = new Order(rCook1, rCashier1, test1Orders, "Josh's Restaurant");
-		Order test2Order = new Order(rCook2, rCashier2, test2Orders, "Cherys's Restaurant");
+		Order test2Order = new Order(rCook2, rCashier2, test2Orders, "Anjali's Restaurant");
 		test1Orders.add(new ItemOrder("Lasagna", 2));
 		test1Orders.add(new ItemOrder("Horchata", 5));
 		test2Orders.add(new ItemOrder("Pizza", 2));
@@ -262,17 +262,22 @@ public class MarketDelivererTest extends TestCase
 		assertTrue("Deliverer's scheduler should have returned true, but didn't.", deliverer.pickAndExecuteAnAction());
 
 		// Check postconditions for Step 1b
-		assertTrue("Deliverer's current order should be test1Order. It isn't.", deliverer.currentOrder == deliverer.orders.get(0) && deliverer.currentOrder == test1Order);
+		assertTrue("Deliverer's current order should be test1Order. It isn't.", deliverer.currentOrder == deliverer.orders.get(0) && deliverer.currentOrder.cook == test1Order.cook);
 
-		// Step 2a - Receives second order (Cherys's Restaurant) (Message)
+		// Step 2a - Receives second order (Anjali's Restaurant) (Message)
 		deliverer.msgDeliverItems(test2Order);
 
 		// Check postconditions for Step 2a
 		assertEquals("Deliverer should have two orders in List orders. It doesn't.", deliverer.orders.size(), 2);
 		assertTrue("Deliverer should have two orders in List orders in which OrderState == newDelivery. It doesn't.", deliverer.orders.get(0).getOS() == OrderState.newDelivery && deliverer.orders.get(1).getOS() == OrderState.newDelivery);
 		assertFalse("Deliverer should have two orders in List orders for delivery. It doesn't", deliverer.orders.get(0).location == null || deliverer.orders.get(1).location == null);
+<<<<<<< HEAD
 		assertTrue("Deliverer's current order should STILL be test1Order. It isn't.", deliverer.currentOrder == deliverer.orders.get(0) && deliverer.currentOrder == test1Order);
+		assertTrue("Deliverer should have one order in List orders from Anjali's Restaurant. It doesn't.", deliverer.orders.get(1).cook == rCook2 && deliverer.orders.get(1).cashier == rCashier2);
+=======
+		assertTrue("Deliverer's current order should STILL be test1Order. It isn't.", deliverer.currentOrder == deliverer.orders.get(0) && deliverer.currentOrder.cook == test1Order.cook);
 		assertTrue("Deliverer should have one order in List orders from Cherys's Restaurant. It doesn't.", deliverer.orders.get(1).cook == rCook2 && deliverer.orders.get(1).cashier == rCashier2);
+>>>>>>> 69d94d771c31445ba4d9105f6097bc65d6b7d4f6
 
 		// Step 1c - Arrived at Josh's Restaurant (Message)
 		deliverer.msgArrived();
@@ -324,7 +329,7 @@ public class MarketDelivererTest extends TestCase
 		assertTrue("Deliverer's scheduler should have returned true, but didn't.", deliverer.pickAndExecuteAnAction());
 
 		// Check postconditions for Step 2b
-		assertTrue("Deliverer's current order should be test2Order. It isn't.", deliverer.currentOrder == deliverer.orders.get(0) && deliverer.currentOrder == test2Order);
+		assertTrue("Deliverer's current order should be test2Order. It isn't.", deliverer.currentOrder == deliverer.orders.get(0) && deliverer.currentOrder.cook == test2Order.cook);
 
 		// Step 2c - Arrived at Josh's Restaurant (Message)
 		deliverer.msgArrived();

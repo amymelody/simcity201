@@ -1,36 +1,36 @@
-package simcity.cherysrestaurant.test.mock;
+package simcity.Anjalirestaurant.test.mock;
 
 import java.util.List;
 
-import simcity.cherysrestaurant.CherysCashierCheck;
-import simcity.cherysrestaurant.interfaces.*;
+import simcity.Anjalirestaurant.AnjaliCashierCheck;
+import simcity.Anjalirestaurant.interfaces.*;
 
-public class MockCherysWaiter extends Mock implements CherysWaiter
+public class MockAnjaliWaiter extends Mock implements AnjaliWaiter
 {
 	/**
 	 * Reference to the agent under test that can be set by the unit test.
 	 */
-	public CherysCashier cashier;
-	public CherysCashierCheck check;
+	public AnjaliCashier cashier;
+	public AnjaliCashierCheck check;
 	public EventLog log = new EventLog();
 
-	public MockCherysWaiter(String name)
+	public MockAnjaliWaiter(String name)
 	{
 		super(name);
 	}
 
 	@Override
-	public void msgPleaseSeatCustomer(CherysCustomer c, int table)
+	public void msgPleaseSeatCustomer(AnjaliCustomer c, int table)
 	{
 		log.add(new LoggedEvent("Received msgPleaseSeatCustomer from host. Table = " + table));
 	}
 	@Override
-	public void msgReadyToOrder(CherysCustomer c)
+	public void msgReadyToOrder(AnjaliCustomer c)
 	{
 		log.add(new LoggedEvent("Received msgReadyToOrder from customer."));
 	}
 	@Override
-	public void msgHereIsMyOrder(CherysCustomer c, String choice)
+	public void msgHereIsMyOrder(AnjaliCustomer c, String choice)
 	{
 		log.add(new LoggedEvent("Received msgHereIsMyOrder from customer. Order = " + choice));
 	}
@@ -45,19 +45,19 @@ public class MockCherysWaiter extends Mock implements CherysWaiter
 		log.add(new LoggedEvent("Received msgOrderReady from cook. Order = " + choice + ". Table = " + table));
 	}
 	@Override
-	public void msgDoneEating(CherysCustomer c)
+	public void msgDoneEating(AnjaliCustomer c)
 	{
 		log.add(new LoggedEvent("Received msgDoneEating from customer."));
 	}
 	@Override
-	public void msgHereIsCheck(CherysCashierCheck ch)
+	public void msgHereIsCheck(AnjaliCashierCheck ch)
 	{
 		log.add(new LoggedEvent("Received msgHereIsCheck from cashier. Order = " + ch.order + ". Total = " + ch.total));
 		System.out.println(name + " recieved HereIsCheck");
 		check = ch;
 	}
 	@Override
-	public void msgLeavingRestaurant(CherysCustomer c)
+	public void msgLeavingRestaurant(AnjaliCustomer c)
 	{
 		log.add(new LoggedEvent("Received msgLeavingRestaurant from customer."));
 	}
@@ -67,7 +67,7 @@ public class MockCherysWaiter extends Mock implements CherysWaiter
 		log.add(new LoggedEvent("Received msgGoOnBreak from host. Allowed? = " + tf));
 	}
 	@Override
-	public CherysCashierCheck getCheck()
+	public AnjaliCashierCheck getCheck()
 	{
 		return check;
 	}

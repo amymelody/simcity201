@@ -1,13 +1,13 @@
-package simcity.cherysrestaurant.test.mock;
+package simcity.Anjalirestaurant.test.mock;
 
 
 import java.util.List;
 import java.util.Map;
 
-import simcity.cherysrestaurant.CherysCashierCheck;
-import simcity.cherysrestaurant.CherysWaiterFood;
-import simcity.cherysrestaurant.gui.CherysCustomerGui;
-import simcity.cherysrestaurant.interfaces.*;
+import simcity.Anjalirestaurant.AnjaliCashierCheck;
+import simcity.Anjalirestaurant.AnjaliWaiterFood;
+import simcity.Anjalirestaurant.gui.AnjaliCustomerGui;
+import simcity.Anjalirestaurant.interfaces.*;
 
 /**
  * A sample MockCustomer built to unit test a CashierAgent.
@@ -15,22 +15,22 @@ import simcity.cherysrestaurant.interfaces.*;
  * @author Monroe Ekilah
  *
  */
-public class MockCherysCustomer extends Mock implements CherysCustomer
+public class MockAnjaliCustomer extends Mock implements AnjaliCustomer
 {
 
 	/**
 	 * Reference to the Cashier under test that can be set by the unit test.
 	 */
-	public CherysCashier cashier;
+	public AnjaliCashier cashier;
 	public EventLog log = new EventLog();
 
-	public MockCherysCustomer(String name)
+	public MockAnjaliCustomer(String name)
 	{
 		super(name);
 	}
 
 	@Override
-	public void msgFollowMe(CherysWaiter w, Map<Integer, CherysWaiterFood> m, List<String> foo)
+	public void msgFollowMe(AnjaliWaiter w, Map<Integer, AnjaliWaiterFood> m, List<String> foo)
 	{
 		log.add(new LoggedEvent("Received msgFollowMe from waiter."));
 	}
@@ -45,7 +45,7 @@ public class MockCherysCustomer extends Mock implements CherysCustomer
 		log.add(new LoggedEvent("Received msgOrderServed from waiter. Order served = "+ ch));
 	}
 	@Override
-	public void msgHereIsCheck(CherysCashierCheck ch)
+	public void msgHereIsCheck(AnjaliCashierCheck ch)
 	{
 		log.add(new LoggedEvent("Received msgHereIsCheck from waiter. Order = " + ch.order + ". Total = " + ch.total));	
 		//make this part a psuedo-scheduler
@@ -61,7 +61,7 @@ public class MockCherysCustomer extends Mock implements CherysCustomer
 		return log;
 	}
 	@Override
-	public CherysCustomerGui getGui()
+	public AnjaliCustomerGui getGui()
 	{
 		return null;
 	}

@@ -1,8 +1,8 @@
-package simcity.cherysrestaurant.gui;
+package simcity.Anjalirestaurant.gui;
 
 import java.awt.*;
 
-public interface CherysGui
+public interface AnjaliGui
 {
     public void updatePosition();
     public void draw(Graphics2D g);

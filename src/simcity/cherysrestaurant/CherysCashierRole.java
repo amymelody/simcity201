@@ -1,7 +1,7 @@
-package simcity.cherysrestaurant;
+package simcity.Anjalirestaurant;
 
 import simcity.agent.Agent;
-import simcity.cherysrestaurant.interfaces.*;
+import simcity.Anjalirestaurant.interfaces.*;
 import simcity.mock.EventLog;
 import simcity.mock.LoggedEvent;
 
@@ -11,7 +11,7 @@ import java.util.concurrent.Semaphore;
 /**
  * Restaurant Cashier Agent
  */
-public class CherysCashierRole extends Agent implements CherysCashier
+public class AnjaliCashierRole extends Agent implements AnjaliCashier
 {
 	private String name;
 	List<Food> menu = new ArrayList<Food>();
@@ -25,14 +25,14 @@ public class CherysCashierRole extends Agent implements CherysCashier
 			price = p;
 		}
 	}
-	public List<CherysCashierCheck> checks = new ArrayList<CherysCashierCheck>();
+	public List<AnjaliCashierCheck> checks = new ArrayList<AnjaliCashierCheck>();
 	public class MarketBill
 	{
-		public CherysMarket market;
+		public AnjaliMarket market;
 		public String foodType;
 		public double total;
 		public CheckState state;
-		MarketBill(CherysMarket m, String ft, double t)
+		MarketBill(AnjaliMarket m, String ft, double t)
 		{
 			market = m;
 			foodType = ft;
@@ -58,7 +58,7 @@ public class CherysCashierRole extends Agent implements CherysCashier
 	 * Constructor for CashierAgent
 	 * @param name name of the cashier
 	 */
-	public CherysCashierRole(String name) //* called from RestaurantPanel
+	public AnjaliCashierRole(String name) //* called from RestaurantPanel
 	{
 		super();
 
@@ -76,7 +76,7 @@ public class CherysCashierRole extends Agent implements CherysCashier
 	}
 	
 	//Messages
-	public void msgProduceCheck(CherysWaiter w, String choice, int table)
+	public void msgProduceCheck(AnjaliWaiter w, String choice, int table)
 	{
 		log.add(new LoggedEvent("Received msgProduceCheck from waiter. Choice = " + choice + ". Table = " + table));
 		Do("received msgProduceCheck");
@@ -99,10 +99,10 @@ public class CherysCashierRole extends Agent implements CherysCashier
 			}
 		}
 		while(false);
-		checks.add(new CherysCashierCheck(w, table, choice, price));
+		checks.add(new AnjaliCashierCheck(w, table, choice, price));
 		stateChanged();
 	}
-	public void msgGiveCheck(CherysWaiter w, int table)
+	public void msgGiveCheck(AnjaliWaiter w, int table)
 	{
 		log.add(new LoggedEvent("Received msgGiveCheck from waiter. Table = " + table));
 		Do("received msgGiveCheck");
@@ -110,7 +110,7 @@ public class CherysCashierRole extends Agent implements CherysCashier
 		{
 			try
 			{
-				for(CherysCashierCheck ch : checks)
+				for(AnjaliCashierCheck ch : checks)
 				{
 					if(ch.waiter == w && ch.table == table)
 					{
@@ -126,7 +126,7 @@ public class CherysCashierRole extends Agent implements CherysCashier
 		while(false);
 		stateChanged();
 	}
-	public void msgPayment(CherysCustomer cust, CherysCashierCheck c, double cashGiven)
+	public void msgPayment(AnjaliCustomer cust, AnjaliCashierCheck c, double cashGiven)
 	{
 		log.add(new LoggedEvent("Received msgPayment from customer. Payment = " + cashGiven));
 		Do("received msgPayment. Payment = " + cashGiven);
@@ -134,7 +134,7 @@ public class CherysCashierRole extends Agent implements CherysCashier
 		{
 			try
 			{
-				for(CherysCashierCheck ch : checks)
+				for(AnjaliCashierCheck ch : checks)
 				{
 					if(ch.waiter == c.waiter && ch.table == c.table && ch.order == c.order && ch.total == c.total)
 					{
@@ -151,7 +151,7 @@ public class CherysCashierRole extends Agent implements CherysCashier
 		while(false);
 		stateChanged();
 	}
-	public void msgPayForDelivery(CherysMarket m, String foodType, int amountDelivered, double wholesalePercentage)
+	public void msgPayForDelivery(AnjaliMarket m, String foodType, int amountDelivered, double wholesalePercentage)
 	{
 		log.add(new LoggedEvent("Received msgPayForDelivery from market. Food = " + foodType + ". Amount = " + amountDelivered + ". Percentage = " + wholesalePercentage*100 + "%"));
 		Do("received msgPayForDelivery");
@@ -188,7 +188,7 @@ public class CherysCashierRole extends Agent implements CherysCashier
 		{
 			try
 			{
-				for(CherysCashierCheck ch : checks)
+				for(AnjaliCashierCheck ch : checks)
 				{
 					if(ch.amountPaid > 0 && ch.state != CheckState.paid)
 					{
@@ -207,7 +207,7 @@ public class CherysCashierRole extends Agent implements CherysCashier
 		{
 			try
 			{
-				for(CherysCashierCheck ch : checks)
+				for(AnjaliCashierCheck ch : checks)
 				{
 					if(ch.state == CheckState.askedFor)
 					{
@@ -246,13 +246,13 @@ public class CherysCashierRole extends Agent implements CherysCashier
 	}
 
 	// Actions
-	private void giveWaiterCheck(CherysCashierCheck ch)
+	private void giveWaiterCheck(AnjaliCashierCheck ch)
 	{
 		Do("Waiter, here's your check");
 		ch.waiter.msgHereIsCheck(ch);
 		stateChanged();
 	}
-	private void processPayment(CherysCashierCheck ch)
+	private void processPayment(AnjaliCashierCheck ch)
 	{
 		Do("Processing payment");
 		double change  = ch.amountPaid - ch.total;

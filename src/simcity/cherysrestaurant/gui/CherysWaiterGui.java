@@ -1,17 +1,17 @@
-package simcity.cherysrestaurant.gui;
+package simcity.Anjalirestaurant.gui;
 
 
-import simcity.cherysrestaurant.CherysCustomerRole;
-import simcity.cherysrestaurant.CherysWaiterRole;
-import simcity.cherysrestaurant.gui.CherysRestaurantAnimationPanel.Table;
+import simcity.Anjalirestaurant.AnjaliCustomerRole;
+import simcity.Anjalirestaurant.AnjaliWaiterRole;
+import simcity.Anjalirestaurant.gui.AnjaliRestaurantAnimationPanel.Table;
 
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CherysWaiterGui implements CherysGui
+public class AnjaliWaiterGui implements AnjaliGui
 {
-    private CherysWaiterRole agent = null;
+    private AnjaliWaiterRole agent = null;
 
     private int xPos = 50, yPos = 145;//default waiter position
     private int xDestination = 50, yDestination = 145;//default start position
@@ -49,13 +49,13 @@ public class CherysWaiterGui implements CherysGui
     private List<Table> tables = new ArrayList<Table>();
     static final int numTables = 5;
     
-    CherysRestaurantGui gui;
+    AnjaliRestaurantGui gui;
     
     /**
      * Constructor for WaiterGui
      * @param agent reference to the waiter this gui represents
      */
-    public CherysWaiterGui(CherysWaiterRole agent, CherysRestaurantGui gui, int number)
+    public AnjaliWaiterGui(AnjaliWaiterRole agent, AnjaliRestaurantGui gui, int number)
     {
         this.agent = agent;
     	for(int i = 0; i < numTables; i++)
@@ -155,7 +155,7 @@ public class CherysWaiterGui implements CherysGui
     	gui.setWaiterBusy(agent, false);
     }
 
-    public void doGoToCustomer(CherysCustomerGui cg)
+    public void doGoToCustomer(AnjaliCustomerGui cg)
     {
     	newDestination = true;
     	xCustomer = cg.xDestination + personDimensions;
@@ -176,7 +176,7 @@ public class CherysWaiterGui implements CherysGui
         xDestination = tables.get(tableDestination).x + personDimensions;
         yDestination = tables.get(tableDestination).y - personDimensions;
     }
-    public void doSeatCustomer(CherysCustomerGui cg, int t)
+    public void doSeatCustomer(AnjaliCustomerGui cg, int t)
     {
     	newDestination = true;
     	for(int i = 0; i < tables.size(); i++)

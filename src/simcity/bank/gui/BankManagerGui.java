@@ -71,12 +71,12 @@ public class BankManagerGui implements Gui {
 		xDestination = 45;
 		yDestination = 50;
 		releaseIt = true;
+
 	}
 	
 	public void drawGun(String gun){
-		managerStatus = gun;	
+		this.managerStatus = gun;
 	}
-	
 	public boolean isPresent() {
 		return true;
 	}

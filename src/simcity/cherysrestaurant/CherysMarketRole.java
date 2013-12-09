@@ -1,7 +1,7 @@
-package simcity.cherysrestaurant;
+package simcity.Anjalirestaurant;
 
 import simcity.agent.Agent;
-import simcity.cherysrestaurant.interfaces.*;
+import simcity.Anjalirestaurant.interfaces.*;
 import simcity.mock.EventLog;
 
 import java.util.*;
@@ -10,7 +10,7 @@ import java.util.concurrent.Semaphore;
 /**
  * Restaurant Market Agent
  */
-public class CherysMarketRole extends Agent implements CherysMarket
+public class AnjaliMarketRole extends Agent implements AnjaliMarket
 {
 	private String name;
 	List<Food> stock = new ArrayList<Food>();
@@ -49,8 +49,8 @@ public class CherysMarketRole extends Agent implements CherysMarket
 	
 	private double moneyEarned = 0.0;
 
-	private CherysCook cook;
-	private CherysCashier cashier;
+	private AnjaliCook cook;
+	private AnjaliCashier cashier;
 	
 	public EventLog log = new EventLog();
 
@@ -58,7 +58,7 @@ public class CherysMarketRole extends Agent implements CherysMarket
 	 * Constructor for Cook
 	 * @param name name of the cook
 	 */
-	public CherysMarketRole(String name) //* called from RestaurantPanel
+	public AnjaliMarketRole(String name) //* called from RestaurantPanel
 	{
 		super();
 
@@ -207,11 +207,11 @@ public class CherysMarketRole extends Agent implements CherysMarket
 	}
 	
 	//Utilities
-	public void setCook(CherysCook c)
+	public void setCook(AnjaliCook c)
 	{
 		cook = c;
 	}
-	public void setCashier(CherysCashier c)
+	public void setCashier(AnjaliCashier c)
 	{
 		cashier = c;
 	}

@@ -1,7 +1,7 @@
-package simcity.cherysrestaurant.gui;
+package simcity.Anjalirestaurant.gui;
 
-import simcity.cherysrestaurant.CherysCustomerRole;
-import simcity.cherysrestaurant.CherysWaiterRole;
+import simcity.Anjalirestaurant.AnjaliCustomerRole;
+import simcity.Anjalirestaurant.AnjaliWaiterRole;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,12 +10,12 @@ import java.awt.event.*;
  * Main GUI class.
  * Contains the main frame and subsequent panels, along with the 'main' function
  */
-public class CherysRestaurantGui extends JFrame implements ActionListener
+public class AnjaliRestaurantGui extends JFrame implements ActionListener
 {
 	JFrame animationFrame = new JFrame("Restaurant Animation");
-	CherysRestaurantAnimationPanel animationPanel = new CherysRestaurantAnimationPanel();
+	AnjaliRestaurantAnimationPanel animationPanel = new AnjaliRestaurantAnimationPanel();
 	
-    private CherysRestaurantPanel restPanel = new CherysRestaurantPanel(this);
+    private AnjaliRestaurantPanel restPanel = new AnjaliRestaurantPanel(this);
     
 //    /* infoPanel holds information about the clicked customer, if there is one*/
 //    private JPanel infoPanel;
@@ -34,7 +34,7 @@ public class CherysRestaurantGui extends JFrame implements ActionListener
     /**
      * Constructor for RestaurantGui class. Sets up all the gui components.
      */
-    public CherysRestaurantGui()
+    public AnjaliRestaurantGui()
     {
         int WINDOWX = 750;
         int WINDOWY = 500;
@@ -100,7 +100,7 @@ public class CherysRestaurantGui extends JFrame implements ActionListener
         idPanel.add(imageLabel);
         
         idLabel = new JLabel(); 
-        idLabel.setText("<html><pre><i>Layout edited by Cherys Fair\t\t\t\t\t\t\t\t\t\t\t\t\\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t</i></pre></html>");
+        idLabel.setText("<html><pre><i>Layout edited by Anjali Fair\t\t\t\t\t\t\t\t\t\t\t\t\\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t</i></pre></html>");
         idPanel.add(idLabel);
         
         pauseButton = new JButton("Pause");
@@ -143,17 +143,17 @@ public class CherysRestaurantGui extends JFrame implements ActionListener
     public void updatePerson(Object person, boolean tf) //* called in RestaurantPanel.addPerson/.updateInfo
     {
         currentPerson = person;
-        if(person instanceof CherysCustomerRole) 
+        if(person instanceof AnjaliCustomerRole) 
         {
-        	CherysCustomerRole customer = (CherysCustomerRole) person;
+        	AnjaliCustomerRole customer = (AnjaliCustomerRole) person;
         	if(tf)
         	{
         		customer.getGui().setHungry();
         	}
         }
-        if(person instanceof CherysWaiterRole)
+        if(person instanceof AnjaliWaiterRole)
         {
-        	CherysWaiterRole waiter = (CherysWaiterRole) person;
+        	AnjaliWaiterRole waiter = (AnjaliWaiterRole) person;
         	waiter.getGui().setTired(tf);
         }
     }
@@ -200,7 +200,7 @@ public class CherysRestaurantGui extends JFrame implements ActionListener
      * that customer's "I'm hungry" checkbox.
      * @param c reference to the customer
      */
-    public void setCustomerEnabled(CherysCustomerRole c) //* called from CustomerGui.updatePosition
+    public void setCustomerEnabled(AnjaliCustomerRole c) //* called from CustomerGui.updatePosition
     {
     	restPanel.enableCheck("Customer", c.getName());
 //        if (currentPerson instanceof CustomerAgent)
@@ -218,11 +218,11 @@ public class CherysRestaurantGui extends JFrame implements ActionListener
      * @param w reference to the waiter agent
      * @param tf the value the waiter's "busy" check box is being assigned
      */
-    public void setWaiterEnabled(CherysWaiterRole w) //* called from ~HostAgent.assignCustomer
+    public void setWaiterEnabled(AnjaliWaiterRole w) //* called from ~HostAgent.assignCustomer
     {
     	restPanel.enableCheck("Waiter", w.getName());
     }
-    public void setWaiterBusy(CherysWaiterRole w, boolean tf) //*called from WaiterGui
+    public void setWaiterBusy(AnjaliWaiterRole w, boolean tf) //*called from WaiterGui
     {
     	restPanel.setCheck(w.getName(), tf);
     	restPanel.enableCheck("Waiter", w.getName());
@@ -234,8 +234,8 @@ public class CherysRestaurantGui extends JFrame implements ActionListener
      */
     public static void main(String[] args)
     {
-        CherysRestaurantGui gui = new CherysRestaurantGui();
-        gui.setTitle("Cherys' Restaurant");
+        AnjaliRestaurantGui gui = new AnjaliRestaurantGui();
+        gui.setTitle("Anjali' Restaurant");
         gui.setVisible(true);
         gui.setResizable(false);
         gui.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

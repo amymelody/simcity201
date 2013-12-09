@@ -1,8 +1,8 @@
-package simcity.cherysrestaurant;
+package simcity.Anjalirestaurant;
 
 import simcity.agent.Agent;
-import simcity.cherysrestaurant.CherysCashierRole.CheckState;
-import simcity.cherysrestaurant.interfaces.*;
+import simcity.Anjalirestaurant.AnjaliCashierRole.CheckState;
+import simcity.Anjalirestaurant.interfaces.*;
 
 import java.util.*;
 import java.util.concurrent.Semaphore;
@@ -10,17 +10,17 @@ import java.util.concurrent.Semaphore;
 /**
  * Restaurant Cook Agent
  */
-public class CherysCookRole extends Agent implements CherysCook
+public class AnjaliCookRole extends Agent implements AnjaliCook
 {
 	private String name;
 	private List<Order> orders = new ArrayList<Order>();
 	private class Order
 	{
-		CherysWaiter w;
+		AnjaliWaiter w;
 		String choice;
 		int table;
 		OrderState state;
-		Order(CherysWaiter w, String c, int t)
+		Order(AnjaliWaiter w, String c, int t)
 		{
 			this.w = w;
 			choice = c;
@@ -58,9 +58,9 @@ public class CherysCookRole extends Agent implements CherysCook
 	}
 	private class UnderstockedMarket
 	{
-		CherysMarket m;
+		AnjaliMarket m;
 		int amountInStock;
-		UnderstockedMarket(CherysMarket m, int a)
+		UnderstockedMarket(AnjaliMarket m, int a)
 		{
 			this.m = m;
 			amountInStock = a;
@@ -71,9 +71,9 @@ public class CherysCookRole extends Agent implements CherysCook
 	private List<MyMarket> markets = new ArrayList<MyMarket>();
 	private class MyMarket
 	{
-		CherysMarket m;
+		AnjaliMarket m;
 		int amountOrderedFrom = 0;
-		MyMarket(CherysMarket m)
+		MyMarket(AnjaliMarket m)
 		{
 			this.m = m;
 		}
@@ -88,7 +88,7 @@ public class CherysCookRole extends Agent implements CherysCook
 	 * Constructor for CookAgent
 	 * @param name name of the cook
 	 */
-	public CherysCookRole(String name) //* called from RestaurantPanel
+	public AnjaliCookRole(String name) //* called from RestaurantPanel
 	{
 		super();
 
@@ -124,14 +124,14 @@ public class CherysCookRole extends Agent implements CherysCook
 	}
 	
 	//Messages
-	public void msgCookThis(CherysWaiter w, String choice, int table) //* called from Waiter.takeOrder
+	public void msgCookThis(AnjaliWaiter w, String choice, int table) //* called from Waiter.takeOrder
 	{
 		Do("recieved msgCookThis");
 		orders.add(new Order(w, choice, table));
 		
 		stateChanged();
 	}
-	public void msgDelivery(CherysMarket m, String f, int numberDelivered)
+	public void msgDelivery(AnjaliMarket m, String f, int numberDelivered)
 	{
 		Do("recieved msgDelivery. Food = " + f + " Amount = " + numberDelivered);
 		do
@@ -156,7 +156,7 @@ public class CherysCookRole extends Agent implements CherysCook
 		while(false);
 		stateChanged();
 	}
-	public void msgStockTooLow(CherysMarket m, String f, int numberAvailible)
+	public void msgStockTooLow(AnjaliMarket m, String f, int numberAvailible)
 	{
 		Do("recieved msgStockTooLow");
 		do
@@ -608,7 +608,7 @@ public class CherysCookRole extends Agent implements CherysCook
 	}
 	
 	//Utilities
-	public void setMarket(CherysMarket m)
+	public void setMarket(AnjaliMarket m)
 	{
 		markets.add(new MyMarket(m));
 	}

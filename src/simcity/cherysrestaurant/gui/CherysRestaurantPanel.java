@@ -1,12 +1,12 @@
-package simcity.cherysrestaurant.gui;
+package simcity.Anjalirestaurant.gui;
 
 import simcity.agent.Agent;
-import simcity.cherysrestaurant.CherysCashierRole;
-import simcity.cherysrestaurant.CherysCookRole;
-import simcity.cherysrestaurant.CherysCustomerRole;
-import simcity.cherysrestaurant.CherysHostRole;
-import simcity.cherysrestaurant.CherysMarketRole;
-import simcity.cherysrestaurant.CherysWaiterRole;
+import simcity.Anjalirestaurant.AnjaliCashierRole;
+import simcity.Anjalirestaurant.AnjaliCookRole;
+import simcity.Anjalirestaurant.AnjaliCustomerRole;
+import simcity.Anjalirestaurant.AnjaliHostRole;
+import simcity.Anjalirestaurant.AnjaliMarketRole;
+import simcity.Anjalirestaurant.AnjaliWaiterRole;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,45 +19,45 @@ import java.util.*;
  * including agent list. Has the waiter and customer input panels
  * and the menu.
  */
-public class CherysRestaurantPanel extends JPanel
+public class AnjaliRestaurantPanel extends JPanel
 {
 
     //Host, cook, waiters and customers
 	private Vector<Agent> agents = new Vector<Agent>();
-    private CherysHostRole host;
+    private AnjaliHostRole host;
 //    private HostGui hostGui;
-    private CherysCookRole cook;
-    private CherysMarketRole marketA;
-    private CherysMarketRole marketB;
-    private CherysMarketRole marketC;
-    private CherysCashierRole cashier;
+    private AnjaliCookRole cook;
+    private AnjaliMarketRole marketA;
+    private AnjaliMarketRole marketB;
+    private AnjaliMarketRole marketC;
+    private AnjaliCashierRole cashier;
 
-    private Vector<CherysCustomerRole> customers = new Vector<CherysCustomerRole>();
-    private Vector<CherysWaiterRole> waiters = new Vector<CherysWaiterRole>();
+    private Vector<AnjaliCustomerRole> customers = new Vector<AnjaliCustomerRole>();
+    private Vector<AnjaliWaiterRole> waiters = new Vector<AnjaliWaiterRole>();
 
     private JPanel restLabel = new JPanel();
-    private CherysListPanel custPanel = new CherysListPanel(this, "Customer");
-    private CherysListPanel waitPanel = new CherysListPanel(this, "Waiter");
+    private AnjaliListPanel custPanel = new AnjaliListPanel(this, "Customer");
+    private AnjaliListPanel waitPanel = new AnjaliListPanel(this, "Waiter");
     private JPanel custGroup = new JPanel();
     private JPanel waitGroup = new JPanel();
 
-    private CherysRestaurantGui gui; //reference to main gui
+    private AnjaliRestaurantGui gui; //reference to main gui
 
     /**
      * Constructor for RestaurantPanel. Sets up the gui.
      * @param gui reference to the main gui class
      */
-    public CherysRestaurantPanel(CherysRestaurantGui gui) //* called from RestaurantGui
+    public AnjaliRestaurantPanel(AnjaliRestaurantGui gui) //* called from RestaurantGui
     {
         this.gui = gui;
         
-        host = new CherysHostRole("HOST", gui);
+        host = new AnjaliHostRole("HOST", gui);
 //        hostGui = new HostGui(host);
-        cook = new CherysCookRole("COOK");
-        marketA = new CherysMarketRole("MARKET A");
-        marketB = new CherysMarketRole("MARKET B");
-        marketC = new CherysMarketRole("MARKET C");
-        cashier = new CherysCashierRole("CASHIER");
+        cook = new AnjaliCookRole("COOK");
+        marketA = new AnjaliMarketRole("MARKET A");
+        marketB = new AnjaliMarketRole("MARKET B");
+        marketC = new AnjaliMarketRole("MARKET C");
+        cashier = new AnjaliCashierRole("CASHIER");
         
 //        host.setGui(hostGui);
         agents.add(host);
@@ -138,7 +138,7 @@ public class CherysRestaurantPanel extends JPanel
         {
             for (int i = 0; i < customers.size(); i++)
             {
-                CherysCustomerRole temp = customers.get(i);
+                AnjaliCustomerRole temp = customers.get(i);
                 if(temp.getName().equals(name))
                 {
                     gui.updatePerson(temp, tf);
@@ -150,7 +150,7 @@ public class CherysRestaurantPanel extends JPanel
         {
             for (int i = 0; i < waiters.size(); i++)
             {
-                CherysWaiterRole temp = waiters.get(i);
+                AnjaliWaiterRole temp = waiters.get(i);
                 if(temp.getName().equals(name))
                 {
                     gui.updatePerson(temp, tf);
@@ -197,8 +197,8 @@ public class CherysRestaurantPanel extends JPanel
     {
     	if (type.equals("Customer"))
     	{
-    		CherysCustomerRole c = new CherysCustomerRole(name);	
-    		CherysCustomerGui g = new CherysCustomerGui(c, gui, customers.size());
+    		AnjaliCustomerRole c = new AnjaliCustomerRole(name);	
+    		AnjaliCustomerGui g = new AnjaliCustomerGui(c, gui, customers.size());
 
     		gui.animationPanel.addGui(g);// dw
     		c.setHost(host);
@@ -211,8 +211,8 @@ public class CherysRestaurantPanel extends JPanel
     	}
     	if (type.equals("Waiter"))
     	{
-    		CherysWaiterRole w = new CherysWaiterRole(name, host, cook, cashier);	
-    		CherysWaiterGui g = new CherysWaiterGui(w, gui, waiters.size());
+    		AnjaliWaiterRole w = new AnjaliWaiterRole(name, host, cook, cashier);	
+    		AnjaliWaiterGui g = new AnjaliWaiterGui(w, gui, waiters.size());
 
     		gui.animationPanel.addGui(g);
     		w.setGui(g);

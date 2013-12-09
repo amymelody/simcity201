@@ -1,31 +1,31 @@
-package simcity.cherysrestaurant.test.mock;
+package simcity.Anjalirestaurant.test.mock;
 
-import simcity.cherysrestaurant.interfaces.*;
+import simcity.Anjalirestaurant.interfaces.*;
 
-public class MockCherysCook extends Mock implements CherysCook
+public class MockAnjaliCook extends Mock implements AnjaliCook
 {
 	/**
 	 * Reference to the agent under test that can be set by the unit test.
 	 */
 	//public Cashier cashier;
 
-	public MockCherysCook(String name)
+	public MockAnjaliCook(String name)
 	{
 		super(name);
 	}
 
 	@Override
-	public void msgCookThis(CherysWaiter w, String choice, int table)
+	public void msgCookThis(AnjaliWaiter w, String choice, int table)
 	{
 		log.add(new LoggedEvent("Received msgCookThis from waiter. Choice = " + choice + ". Table = " + table));
 	}
 	@Override
-	public void msgDelivery(CherysMarket m, String f, int numberDelivered)
+	public void msgDelivery(AnjaliMarket m, String f, int numberDelivered)
 	{
 		log.add(new LoggedEvent("Received msgDelivery from market. Food = " + f + ". Amount = " + numberDelivered));
 	}
 	@Override
-	public void msgStockTooLow(CherysMarket m, String f, int numberAvailible)
+	public void msgStockTooLow(AnjaliMarket m, String f, int numberAvailible)
 	{
 		log.add(new LoggedEvent("Received msgStockTooLow from market. Food = " + f + ". Amount left = " + numberAvailible));
 	}

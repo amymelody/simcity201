@@ -35,7 +35,11 @@ public class BankDepositorTest extends TestCase
                 customer.setManager(manager);
                 customer.setPerson(person);
                 
+<<<<<<< HEAD
                 person.setMoney(1000);
+=======
+                person.setCurrentMoney(1000);
+>>>>>>> anjali
                 
         }
 
@@ -48,7 +52,11 @@ public class BankDepositorTest extends TestCase
 
                 // Check preconditions 
                 assertEquals("Customer transactionAmount should be 0", 0, customer.getTransactionAmount());
+<<<<<<< HEAD
                 assertTrue("Customer should have customer state entered", customer.getCustomerState() == CustomerState.entered);
+=======
+                //assertTrue("Customer should have customer state entered", customer.getCustomerState() == CustomerState.entered);
+>>>>>>> anjali
                 assertFalse("Customer's scheduler should return false, nothing to do", customer.pickAndExecuteAnAction());
                 
                 assertEquals("MockCustomer should have an empty event log before scheduler is called for the first time. Instead, the MockCustomer's event log reads: "
@@ -57,12 +65,20 @@ public class BankDepositorTest extends TestCase
                 
                 //Person sends message to customer to make a deposit of 500
                 customer.msgMakeDeposit(500);
+<<<<<<< HEAD
                 //assertTrue("MockCustomer should have recieved logged event to take on role of customer"
                   //      + customer.log.getLastLoggedEvent().toString(), customer.log.containsString("Received message from person agent to take on role of depositor"));
+=======
+                assertTrue("Customer's scheduler should have returned true", customer.pickAndExecuteAnAction());
+
+                assertTrue("MockCustomer should have recieved logged event to take on role of customer"
+                        + customer.log.getLastLoggedEvent().toString(), customer.log.containsString("Received message from person agent to take on role of depositor"));
+>>>>>>> anjali
                 assertTrue("Customer should have customerState making Transaction", 
                 		customer.getCustomerState() == CustomerState.makingTransaction);
                 assertEquals("Customer transactionAmount should be 500", 500, customer.getTransactionAmount());
                 
+<<<<<<< HEAD
                 assertTrue("Customer's scheduler should have returned true", customer.pickAndExecuteAnAction());
                 assertTrue("Customer's state should be waiting", customer.getCustomerState() == CustomerState.waiting);
                 assertTrue("MockManager should have recieved logged event to take on customer"
@@ -70,6 +86,14 @@ public class BankDepositorTest extends TestCase
                 
                 
                 
+=======
+                assertTrue("Customer's state should be waiting", customer.getCustomerState() == CustomerState.waiting);
+                assertTrue("MockManager should have recieved logged event to take on customer"
+                        + manager.log.getLastLoggedEvent().toString(), manager.log.containsString("Received message from customer that he wants to make a transaction"));
+                
+                
+                
+>>>>>>> anjali
                 //Teller sends customer message to be helped
                 customer.msgMakeRequest(teller);
                 
