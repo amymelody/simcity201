@@ -7,13 +7,11 @@ import java.util.concurrent.Semaphore;
 
 import simcity.bank.gui.BankDepositorGui;
 import simcity.bank.gui.BankGui;
-import simcity.bank.interfaces.BankDepositor;
-import simcity.bank.interfaces.BankManager;
-import simcity.bank.interfaces.BankTeller;
+import simcity.interfaces.BankDepositor;
+import simcity.interfaces.BankManager;
+import simcity.interfaces.BankTeller;
 import simcity.interfaces.Person;
-import simcity.bank.test.mock.MockBankManager;
-import simcity.interfaces.MarketCashier;
-import simcity.interfaces.MarketDeliverer;
+
 import simcity.role.Role;
 import simcity.trace.AlertLog;
 import simcity.trace.AlertTag;
@@ -184,7 +182,6 @@ public class BankDepositorRole extends Role implements BankDepositor{
 	public boolean pickAndExecuteAnAction() {
 		if(cS == CustomerState.makingTransaction) {
 			MakeTransaction();
-			cS = CustomerState.waiting;
 			return true;
 		}
 		if(cS == CustomerState.makingRequest){
