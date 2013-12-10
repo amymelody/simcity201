@@ -41,6 +41,7 @@ public class JesusCookRole extends JobRole implements RestCook {
 	public enum stockState {none, checkFood, outOfFood, ordered, stockReplenished};
 	stockState sState = stockState.none;
 	boolean open = false;
+	myMarket currentMarket;
 
 	Timer timer = new Timer();
 
@@ -107,6 +108,14 @@ public class JesusCookRole extends JobRole implements RestCook {
 			for(Food f: foods) {
 				if(f.name.equals(n)) {
 					f.inventory += num;
+					f.amtLeft -= num;
+					if(f.amtLeft > 0) {
+						f.needsRestock = true;
+					}
+					else {
+						f.amtLeft = 0;
+						f.needsRestock = false;
+					}
 				}
 			}
 		}
@@ -183,79 +192,44 @@ public class JesusCookRole extends JobRole implements RestCook {
 		orders.add(new Order(choice, wait, customerName));
 		stateChanged();
 	}
-
-	/*public void msgNoStock(String mName, String foodName, boolean everything) {
-		synchronized(markets){
-			for(myMarket m: markets) {
-				if(m.market.getName().equals(mName)) {
-					for(Map.Entry<String, Boolean> entry: m.outStock.entrySet()) {
-						m.outStock.put(entry.getKey(), true);
-					}
-					for(Food f: foods) {
-						if(f.name.equals(foodName)) {
-							f.needsRestock = true;
-						}
-					}
-					sState = stockState.outOfFood;
-					stateChanged();
-				}
-			}
-		}
-	}
-	public void msgNoStock(String mName, String foodName) {
-		synchronized(markets){
-			for(myMarket m: markets) {
-				if(m.market.getName().equals(mName)) {
-					m.outStock.put(foodName, true);
-					for(Food f: foods) {
-						if(f.name.equals(foodName)) {
-							f.needsRestock = true;
-						}
-					}
-					sState = stockState.outOfFood;
-					stateChanged();
-				}
-			}
-		}
-	}
-	public void msgOrderSent(String foodName, int amt, int amtLeft, String mName) {
-		if(!open)
-			open = true;
-		synchronized(foods){
-			for(Food f: foods) {
-				if(f.name.equals(foodName)) {
-					addInventory(foodName, amt);
-					if(amtLeft == 0) {
-						sState = stockState.stockReplenished;
-						f.amtLeft = 0;
-						f.needsRestock = false;
-					}
-					else {
-						synchronized(markets) {
-							for(myMarket m: markets) {
-								if(m.market.getName().equals(mName)){
-									m.outStock.put(foodName, true);
-									f.needsRestock = true;
-									f.amtLeft = amtLeft;
-									sState = stockState.outOfFood;
-								}
-							}
-						}
-					}
-					stateChanged();
-				}
-			}
-		}
-	}*/
 	
-	public void msgHereIsWhatICanFulfill(List<ItemOrder> orders,
-			boolean canFulfill) {
-		
+	public void msgHereIsWhatICanFulfill(List<ItemOrder> orders, boolean canFulfill) {
+		if(canFulfill) {
+			
+		}
+		else {
+			for(ItemOrder iO: orders) {
+				currentMarket.outStock.put(iO.getFoodItem(), true);
+				for(Food f: foods) {
+					if(f.name.equals(iO.getFoodItem())) {
+						f.needsRestock = true;
+					}
+				}
+			}
+			sState = stockState.outOfFood;
+		}
+		stateChanged();
 	}
 
 	public void msgDelivery(List<ItemOrder> orders) {
-		
-		
+		boolean notFulfilled = false;
+		for(ItemOrder iO: orders) {
+			addInventory(iO.getFoodItem(), iO.getAmount());
+			if(iO.getAmount() == 0) {
+				notFulfilled = true;
+				for(Food f: foods) {
+					if(f.name.equals(iO.getFoodItem())) {
+						f.needsRestock = true;
+					}
+				}
+			}
+		}
+		if(notFulfilled) {
+			sState = stockState.outOfFood;
+		}
+		else {
+			sState = stockState.stockReplenished;
+		}
 	}
 	
 	public void left() {
@@ -417,6 +391,7 @@ public class JesusCookRole extends JobRole implements RestCook {
 				f.needsRestock = false;
 			}
 		}
+		currentMarket = m;
 		m.market.msgIWantDelivery(this, cashier, list, getJobLocation());
 		sState = stockState.ordered;
 	}

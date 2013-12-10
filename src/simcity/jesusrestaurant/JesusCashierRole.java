@@ -125,11 +125,12 @@ public class JesusCashierRole extends RestCashierRole implements JesusCashier {
 	}*/
 	
 	public void msgDelivery(int bill, MarketDeliverer deliverer) {
-		
+		bills.add(new Bill(deliverer, bill));
+		stateChanged();
 	}
 
 	public void msgThankYou(int change) {
-		
+		money += change;
 	}
 	
 	public void left() {
@@ -227,12 +228,13 @@ public class JesusCashierRole extends RestCashierRole implements JesusCashier {
 		if(b.bS == BillState.paid) {
 			print("Bill paid fully. $" + money + "left");
 			log.add(new LoggedEvent("Bill paid"));
-			b.market.msgPayingBill(b.id, b.amountPaid);
+			b.market.msgPayment(this, b.amountDue);
 		}
 		else if(b.bS == BillState.owe) {
 			print("Bill not fully paid. Owe " + b.amountDue);
 			log.add(new LoggedEvent("Bill not paid completely"));
-			b.market.msgPayingBill(b.id, b.amountPaid);
+			b.market.msgPayment(this, money);
+			money = 0;
 		}
 	}
 
@@ -279,14 +281,12 @@ public class JesusCashierRole extends RestCashierRole implements JesusCashier {
 		}
 	}
 	public class Bill {
-		int id;
-		public JesusMarket market;
+		public MarketDeliverer market;
 		public int amountDue;
 		public BillState bS;
 		public int amountPaid;
 
-		public Bill(int i, JesusMarket m, int aD) {
-			id = i;
+		public Bill(MarketDeliverer m, int aD) {
 			market = m;
 			amountDue = aD;
 			bS = BillState.none;
@@ -308,16 +308,6 @@ public class JesusCashierRole extends RestCashierRole implements JesusCashier {
 		public void addAmount(double num) {
 			amountDue += num;
 		}
-	}
-	public Bill getBill(int i) {
-		synchronized(bills){
-			for(Bill b: bills) {
-				if(b.id == i) {
-					return b;
-				}
-			}
-		}
-		return null;
 	}
 	
 }
