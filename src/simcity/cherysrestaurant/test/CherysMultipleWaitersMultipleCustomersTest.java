@@ -1,21 +1,21 @@
-package simcity.Anjalirestaurant.test;
+package simcity.cherysrestaurant.test; 
 
-import simcity.Anjalirestaurant.AnjaliCashierRole;
-import simcity.Anjalirestaurant.interfaces.AnjaliCustomer;
-import simcity.Anjalirestaurant.interfaces.AnjaliWaiter;
-import simcity.Anjalirestaurant.test.mock.MockAnjaliCustomer;
-import simcity.Anjalirestaurant.test.mock.MockAnjaliWaiter;
+import simcity.cherysrestaurant.CherysCashierRole;
+import simcity.cherysrestaurant.interfaces.CherysCustomer;
+import simcity.cherysrestaurant.interfaces.CherysWaiter;
+import simcity.cherysrestaurant.test.mock.MockCherysCustomer;
+import simcity.cherysrestaurant.test.mock.MockCherysWaiter;
 
 import junit.framework.*;
 
-public class AnjaliMultipleWaitersMultipleCustomersTest extends TestCase
+public class CherysMultipleWaitersMultipleCustomersTest extends TestCase
 {
 	//these are instantiated for each test separately via the setUp() method.
-	AnjaliCashierRole cashier;
-	AnjaliWaiter w1;
-	AnjaliWaiter w2;
-	AnjaliCustomer c1;
-	AnjaliCustomer c2;
+	CherysCashierRole cashier;
+	CherysWaiter w1;
+	CherysWaiter w2;
+	CherysCustomer c1;
+	CherysCustomer c2;
 
 	/**
 	 * This method is run before each test. You can use it to instantiate the class variables
@@ -24,11 +24,11 @@ public class AnjaliMultipleWaitersMultipleCustomersTest extends TestCase
 	public void setUp() throws Exception
 	{
 		super.setUp();
-		cashier = new AnjaliCashierRole("Cashier");
-		w1 = new MockAnjaliWaiter("W1");
-		w2 = new MockAnjaliWaiter("W2");
-		c1 = new MockAnjaliCustomer("C1");
-		c2 = new MockAnjaliCustomer("C2");
+		cashier = new CherysCashierRole("Cashier");
+		w1 = new MockCherysWaiter("W1");
+		w2 = new MockCherysWaiter("W2");
+		c1 = new MockCherysCustomer("C1");
+		c2 = new MockCherysCustomer("C2");
 	}	
 	/**
 	 * This tests the cashier under very simple terms: one customer is ready to pay the exact bill.
@@ -99,7 +99,7 @@ public class AnjaliMultipleWaitersMultipleCustomersTest extends TestCase
 		assertTrue("CashierAgent should have logged \"Received msgGiveCheck\" but didn't. His log reads instead: "
 				+ cashier.log.getLastLoggedEvent().toString(), cashier.log.containsString("Received msgGiveCheck from waiter. Table = 2"));
 		assertTrue("Checks should contain a bill with state == askedFor. It doesn't.",
-				cashier.checks.get(0).state == AnjaliCashierRole.CheckState.askedFor);
+				cashier.checks.get(0).state == CherysCashierRole.CheckState.askedFor);
 		assertTrue("Cashier's scheduler should have returned true (needs to react to customer's msgGiveCheck), but didn't.", 
 				cashier.pickAndExecuteAnAction());
 		assertTrue("W2 should have logged \"Received msgHereIsCheck\" but didn't. His log reads instead: " 
@@ -122,7 +122,7 @@ public class AnjaliMultipleWaitersMultipleCustomersTest extends TestCase
 		assertTrue("CashierAgent should have logged \"Received msgPayment\" but didn't. His log reads instead: " 
 				+ cashier.log.getLastLoggedEvent().toString(), cashier.log.containsString("Received msgPayment from customer. Payment = 9.0"));
 		assertTrue("Checks should contain a bill with state != paid. It doesn't.",
-				cashier.checks.get(0).state != AnjaliCashierRole.CheckState.paid);
+				cashier.checks.get(0).state != CherysCashierRole.CheckState.paid);
 		assertTrue("Checks should contain a bill of price = $8.99. It contains something else instead: $" 
 				+ cashier.checks.get(0).total, cashier.checks.get(0).total == 8.99);
 		assertTrue("Checks should contain a bill with amountPaid = $9.00. Instead, amountPaid = $" 
@@ -170,7 +170,7 @@ public class AnjaliMultipleWaitersMultipleCustomersTest extends TestCase
 		assertTrue("CashierAgent should have logged \"Received msgGiveCheck\" but didn't. His log reads instead: "
 				+ cashier.log.getLastLoggedEvent().toString(), cashier.log.containsString("Received msgGiveCheck from waiter. Table = 1"));
 		assertTrue("Checks should contain a bill with state == askedFor. It doesn't.",
-				cashier.checks.get(0).state == AnjaliCashierRole.CheckState.askedFor);
+				cashier.checks.get(0).state == CherysCashierRole.CheckState.askedFor);
 		assertTrue("Cashier's scheduler should have returned true (needs to react to customer's msgGiveCheck), but didn't.", 
 				cashier.pickAndExecuteAnAction());
 		assertTrue("W1 should have logged \"Received msgHereIsCheck\" but didn't. His log reads instead: " 
@@ -193,7 +193,7 @@ public class AnjaliMultipleWaitersMultipleCustomersTest extends TestCase
 		assertTrue("CashierAgent should have logged \"Received msgPayment\" but didn't. His log reads instead: " 
 				+ cashier.log.getLastLoggedEvent().toString(), cashier.log.containsString("Received msgPayment from customer. Payment = 16.0"));
 		assertTrue("Checks should contain a bill with state != paid. It doesn't.",
-				cashier.checks.get(0).state != AnjaliCashierRole.CheckState.paid);
+				cashier.checks.get(0).state != CherysCashierRole.CheckState.paid);
 		assertTrue("Checks should contain a bill of price = $15.99. It contains something else instead: $" 
 				+ cashier.checks.get(0).total, cashier.checks.get(0).total == 15.99);
 		assertTrue("Checks should contain a bill with amountPaid = $16.00. Instead, amountPaid = $" 
