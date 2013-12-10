@@ -1,8 +1,12 @@
 package simcity.cherysrestaurant;
 
+import simcity.ItemOrder;
+import simcity.RestCookRole;
 import simcity.agent.Agent;
 import simcity.cherysrestaurant.CherysCashierRole.CheckState;
 import simcity.cherysrestaurant.interfaces.*;
+import simcity.interfaces.MarketCashier;
+import simcity.joshrestaurant.JoshWaiterRole;
 
 import java.util.*;
 import java.util.concurrent.Semaphore;
@@ -10,7 +14,7 @@ import java.util.concurrent.Semaphore;
 /**
  * Restaurant Cook Agent
  */
-public class CherysCookRole extends Agent implements CherysCook
+public class CherysCookRole extends RestCookRole implements CherysCook
 {
 	private String name;
 	private List<Order> orders = new ArrayList<Order>();
@@ -83,6 +87,9 @@ public class CherysCookRole extends Agent implements CherysCook
 	private int cookTimeChicken = 10000;
 	private int cookTimeSalad = 5000;
 	private int cookTimePizza = 8000;
+	
+	private boolean working;
+	private boolean goingHome;
 
 	/**
 	 * Constructor for CookAgent
@@ -93,10 +100,10 @@ public class CherysCookRole extends Agent implements CherysCook
 		super();
 
 		this.name = name;
-		menu.add(new Food("Steak", cookTimeSteak, 1));
-		menu.add(new Food("Chicken", cookTimeChicken, 10));
-		menu.add(new Food("Salad", cookTimeSalad, 1));
-		menu.add(new Food("Pizza", cookTimePizza, 1));
+		menu.add(new Food("Steak", cookTimeSteak, 10000));
+		menu.add(new Food("Chicken", cookTimeChicken, 10000));
+		menu.add(new Food("Salad", cookTimeSalad, 10000));
+		menu.add(new Food("Pizza", cookTimePizza, 10000));
 
 		do
 		{
@@ -182,11 +189,31 @@ public class CherysCookRole extends Agent implements CherysCook
 		stateChanged();
 		
 	}
+
+	@Override
+	public void msgStartShift()
+	{
+		working = true;
+		goingHome = false;
+		cashier.msgPaySalary(person.getSalary());
+		stateChanged();
+	}
+
+	@Override
+	public void msgEndShift()
+	{
+		working = false;
+		stateChanged();
+	}
+	public void msgGoHome()
+	{
+		goingHome = true;
+	}
 	
 	/**
 	 * Scheduler.  Determine what action is called for, and do it.
 	 */
-	protected boolean pickAndExecuteAnAction()
+	public boolean pickAndExecuteAnAction()
 	{
 		do
 		{
@@ -278,10 +305,15 @@ public class CherysCookRole extends Agent implements CherysCook
 			}
 		}
 		while(false);
+		if(orders.size() == 0 && !working && goingHome)
+		{
+			leaveRestaurant();
+			return true;
+		}
 		return false;
 	}
 
-	// Actions
+// Actions
 	/**
 	 * "Cooks" the given order for the cook time of that food
 	 * @param o the order to be cooked
@@ -607,9 +639,43 @@ public class CherysCookRole extends Agent implements CherysCook
 		}
 	}
 	
+	private void leaveRestaurant()
+	{
+		person.msgLeftDestination(this);
+	}
+	
 	//Utilities
 	public void setMarket(CherysMarket m)
 	{
 		markets.add(new MyMarket(m));
+	}
+
+	@Override
+	public void addMarket(MarketCashier m, String n)
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void msgHereIsOrder(JoshWaiterRole waiter, String choice, int table)
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void msgDelivery(List<ItemOrder> order)
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void msgHereIsWhatICanFulfill(List<ItemOrder> items,
+			boolean canFulfill)
+	{
+		// TODO Auto-generated method stub
+		
 	}
 }

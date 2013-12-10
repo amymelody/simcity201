@@ -19,7 +19,7 @@ import simcity.trace.AlertTag;
 public class ResidentRole extends Role implements Resident
 {
 
-//Data	
+	//Data	
 	Landlord landlord = null;
 
 	public enum ResidentState
@@ -72,7 +72,7 @@ public class ResidentRole extends Role implements Resident
 		locations.put("Exit", new Point(480, 260));
 		gui = new ResidentGui(this);
 	}
-	
+
 	public void setLandlord(Landlord l)
 	{
 		landlord = l;
@@ -85,13 +85,13 @@ public class ResidentRole extends Role implements Resident
 	{
 		landlordHome = g;
 	}
-	
+
 	public ResidentGui getGui()
 	{
 		return gui;
 	}
-	
-//Messages
+
+	//Messages
 	public void msgRentDue() //from Landlord
 	{
 		AlertLog.getInstance().logMessage(AlertTag.BANK, name, "received msgRentDue");
@@ -151,83 +151,101 @@ public class ResidentRole extends Role implements Resident
 		atLocation.release();
 	}
 
-//Scheduler
-    public boolean pickAndExecuteAnAction()
-    {
-    	if(state == ResidentState.atHome)
-	    {
-    		for(Command c : commands)
-    		{
-    			if(c == Command.putAwayGroceries)
-    			{
-        			sitting = false;
-    				putGroceriesInFridge(c);
-        	    	return true;
-    			}
-    		}
-    		for(Command c : commands)
-    		{
-    			if(c == Command.eat)
-    			{
-        			sitting = false;
-    				prepareFood(c);
-        	    	return true;
-    			}
-    		}
-    		for(Command c : commands)
-    		{
-    			if(c == Command.leave)
-    			{
-        			sitting = false;
-    				leaveHousing(c);
-        	    	return true;
-    			}
-    		}
-    		if(maintenanceSchedule <= 0)
-    		{
-    			sitting = false;
-    			clean();
-    	    	return true;
-    		}
-    		if(commands.size() == 0 && !sitting)
-    		{
-    			sitting = true;
-    			goToLocation(locations.get("Sofa"), "");
-    		}
-        	return false;
+	//Scheduler
+	public boolean pickAndExecuteAnAction()
+	{
+		if(state == ResidentState.atHome)
+		{
+			synchronized(commands)
+			{
+				for(Command c : commands)
+				{
+					if(c == Command.putAwayGroceries)
+					{
+						sitting = false;
+						putGroceriesInFridge(c);
+						return true;
+					}
+				}
+			}
+			synchronized(commands)
+			{
+				for(Command c : commands)
+				{
+					if(c == Command.eat)
+					{
+						sitting = false;
+						prepareFood(c);
+						return true;
+					}
+				}
+			}
+			synchronized(commands)
+			{
+				for(Command c : commands)
+				{
+					if(c == Command.leave)
+					{
+						sitting = false;
+						leaveHousing(c);
+						return true;
+					}
+				}
+			}
+			if(maintenanceSchedule <= 0)
+			{
+				sitting = false;
+				clean();
+				return true;
+			}
+			if(commands.size() == 0 && !sitting)
+			{
+				sitting = true;
+				goToLocation(locations.get("Sofa"), "");
+			}
+			return false;
 		}
-    	if(state == ResidentState.atLandlord)
+		if(state == ResidentState.atLandlord)
 		{
 			sitting = false;
-    		for(Command c : commands)
-    		{
-    			if(c == Command.talkToLandlord)
-    			{
-    				sendDingDong(c);
-        	    	return true;
-    			}
-    		}
-    		for(Command c : commands)
-    		{
-    			if(c == Command.payLandlord)
-    			{
-    				sendPayRent(c);
-        	    	return true;
-    			}
-    		}
-    		for(Command c : commands)
-    		{
-    			if(c == Command.leave)
-    			{
-    				leaveHousing(c);
-        	    	return true;
-    			}
-    		}
+			synchronized(commands)
+			{
+				for(Command c : commands)
+				{
+					if(c == Command.talkToLandlord)
+					{
+						sendDingDong(c);
+						return true;
+					}
+				}
+			}
+			synchronized(commands)
+			{
+				for(Command c : commands)
+				{
+					if(c == Command.payLandlord)
+					{
+						sendPayRent(c);
+						return true;
+					}
+				}
+			}
+			synchronized(commands)
+			{
+				for(Command c : commands)
+				{
+					if(c == Command.leave)
+					{
+						leaveHousing(c);
+						return true;
+					}
+				}
+			}
 		}
-    	return false;
-    }
+		return false;
+	}
 
-//Actions
+	//Actions
 	private void sendDingDong(Command c)
 	{
 		commands.remove(c);
@@ -267,7 +285,7 @@ public class ResidentRole extends Role implements Resident
 		final Command com = Command.preparing;
 		commands.add(com);
 		goToLocation(locations.get("Fridge"), "Get food");
-		
+
 		ItemOrder food = foodInFridge.get(random.nextInt(foodInFridge.size()));
 		final List<ItemOrder> groceryList = new ArrayList<ItemOrder>();
 		for(ItemOrder i : foodInFridge)
@@ -296,12 +314,12 @@ public class ResidentRole extends Role implements Resident
 		else
 		{
 			timer.schedule(new TimerTask() 
+			{
+				public void run()
 				{
-					public void run()
-					{
-						eat(groceryList, com);
-					}
-				}, 5000);
+					eat(groceryList, com);
+				}
+			}, 5000);
 		}
 	}
 	public void eat(final List<ItemOrder> gList, Command c)
@@ -317,12 +335,12 @@ public class ResidentRole extends Role implements Resident
 		else
 		{
 			timer.schedule(new TimerTask() 
+			{
+				public void run()
 				{
-					public void run()
-					{
-						groceryCheck(gList, com);
-					}
-				}, 2000);
+					groceryCheck(gList, com);
+				}
+			}, 2000);
 		}
 	}
 	public void groceryCheck(List<ItemOrder> gList, Command c)

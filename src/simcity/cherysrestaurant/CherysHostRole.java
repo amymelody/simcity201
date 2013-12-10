@@ -1,5 +1,6 @@
 package simcity.cherysrestaurant;
 
+import simcity.RestHostRole;
 import simcity.agent.Agent;
 import simcity.cherysrestaurant.gui.CherysRestaurantGui;
 import simcity.cherysrestaurant.interfaces.*;
@@ -10,9 +11,8 @@ import java.util.concurrent.Semaphore;
 /**
  * Restaurant Host Agent
  */
-public class CherysHostRole extends Agent implements CherysHost
+public class CherysHostRole extends RestHostRole implements CherysHost
 {
-
 	private String name;
 	public List<MyCustomer> customers = new ArrayList<MyCustomer>();
 	private class MyCustomer
@@ -43,15 +43,22 @@ public class CherysHostRole extends Agent implements CherysHost
 		int customersAssigned;
 		boolean wantsBreak;
 		boolean onBreak;
+		boolean onDuty;
 		MyWaiter(CherysWaiter w)
 		{
 			this.w = w;
 			customersAssigned = 0;
 			wantsBreak = false;
 		}
+		void setOnDuty(boolean tf)
+		{
+			onDuty = tf;
+		}
 	}
 	int numWaiters;
 	int numTables = 5;
+	
+	private boolean working;
 	
 	CherysRestaurantGui gui;
 
@@ -180,11 +187,48 @@ public class CherysHostRole extends Agent implements CherysHost
 		}
 		while(false);
 	}
+	public void msgOnDty(CherysWaiter w, boolean tf)
+	{
+		do
+		{
+			try
+			{
+				for(MyWaiter waiter : waiters)
+				{
+					if(waiter.w == w)
+					{
+						waiter.onDuty = tf;
+					}
+				}
+			}
+			catch(ConcurrentModificationException cme)
+			{
+				continue;
+			}
+		}
+		while(false);
+	}
+	
+	@Override
+	public void msgStartShift()
+	{
+		person.businessIsClosed(getJobLocation(), false);
+		working = true;
+		cashier.msgPaySalary(person.getSalary());
+		stateChanged();
+	}
 
+	@Override
+	public void msgEndShift()
+	{
+		person.businessIsClosed(getJobLocation(), true);
+		working = false;
+		stateChanged();
+	}
 	/**
 	 * Scheduler.  Determine what action is called for, and do it.
 	 */
-	protected boolean pickAndExecuteAnAction()
+	public boolean pickAndExecuteAnAction()
 	{
 		MyCustomer mc = null;
 		Table t = null;
@@ -281,7 +325,7 @@ public class CherysHostRole extends Agent implements CherysHost
 			{
 				for(MyWaiter waiter : waiters)
 				{
-					if(waiter.wantsBreak == true)
+					if(waiter.wantsBreak)
 					{
 						putWaiterOnBreak(waiter.w);
 						return true;
@@ -294,7 +338,33 @@ public class CherysHostRole extends Agent implements CherysHost
 			}
 		}
 		while(false);
-
+		if(!working)
+		{
+			boolean allGone = true;
+			do
+			{
+				try
+				{
+					for(MyWaiter waiter : waiters)
+					{
+						if(waiter.onDuty)
+						{
+							allGone = false;
+						}
+					}
+				}
+				catch(ConcurrentModificationException cme)
+				{
+					continue;
+				}
+			}
+			while(false);
+			if(allGone)
+			{
+				leaveRestaurant();
+				return true;
+			}
+		}
 		return false;
 	}
 
@@ -373,6 +443,13 @@ public class CherysHostRole extends Agent implements CherysHost
 		while(false);
 		stateChanged();
 	}
+	
+	private void leaveRestaurant()
+	{
+		cashier.msgGoHome();
+		cook.msgGoHome();
+		person.msgLeftDestination(this);
+	}
 
 	//utilities
 	/**
@@ -384,6 +461,7 @@ public class CherysHostRole extends Agent implements CherysHost
 		waiters.add(new MyWaiter(w));
 		stateChanged();
 	}
+
 
 //	private class Table
 //	{

@@ -40,7 +40,7 @@ public class HousingGui extends BuildingGui implements HousingGuiInterface
 		inputPanel.setMinimumSize(inputDim);
 		inputPanel.setMaximumSize(inputDim);
 		inputPanel.setVisible(false);
-		bG.add(inputPanel);
+		bG.add(inputPanel, BorderLayout.WEST);
 
 		//animation panel
 		double animationFractionOfWindow = 500.0 / 650.0;
@@ -50,7 +50,7 @@ public class HousingGui extends BuildingGui implements HousingGuiInterface
 		animationPanel.setMaximumSize(animDim);
 		animationPanel.setVisible(false);
 		animationPanel.setHousingGui(this);
-		bG.add(animationPanel);
+		bG.add(animationPanel, BorderLayout.CENTER);
 		
 		for(int i = 0; i < 25; i++)
 		{
@@ -116,12 +116,7 @@ public class HousingGui extends BuildingGui implements HousingGuiInterface
 	{
 		try
 		{
-			boxBlock[y][x].acquire(); //this doesn't also "try" to return, right?
-			if(x == 24 && y == 13)
-			{
-				System.out.println("X = " + x + ", Y = " + y);
-				System.out.println(boxes[y][x].getOpen());
-			}
+			boxBlock[y][x].acquire();
 			return boxes[y][x];
 		}
 		catch (InterruptedException e)
@@ -140,10 +135,6 @@ public class HousingGui extends BuildingGui implements HousingGuiInterface
 				{
 					if(boxes[i][j] == b)
 					{
-//						if(j == 24 && i == 13)
-//						{
-//							System.out.println("X = " + j + ", Y = " + i);
-//						}
 						boxes[i][j].setOpen(b.getOpen());
 						boxBlock[i][j].release();
 					}

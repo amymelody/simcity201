@@ -108,7 +108,7 @@ public class CherysMarketRole extends Agent implements CherysMarket
 	/**
 	 * Scheduler.  Determine what action is called for, and do it.
 	 */
-	protected boolean pickAndExecuteAnAction()
+	public boolean pickAndExecuteAnAction()
 	{
 		do
 		{

@@ -15,7 +15,7 @@ public interface CherysCustomer
 	public abstract void msgWhatIsYourOrder(List<String> foo); //* called from WaiterAgent
 	public abstract void msgOrderServed(String ch); //* called from WaiterAgent
 	public abstract void msgHereIsCheck(CherysCashierCheck ch); //* called from WaiterAgent
-	public abstract void msgChange(double change); //* called from CashierAgent
+	public abstract void msgChange(int change); //* called from CashierAgent
 
 	public abstract EventLog getLog();
 	public abstract CherysCustomerGui getGui();

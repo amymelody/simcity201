@@ -1,5 +1,6 @@
 package simcity.cherysrestaurant;
 
+import simcity.RestCustomerRole;
 import simcity.agent.Agent;
 import simcity.cherysrestaurant.gui.CherysCustomerGui;
 import simcity.cherysrestaurant.gui.CherysRestaurantGui;
@@ -12,7 +13,7 @@ import java.util.concurrent.Semaphore;
 /**
  * Restaurant Customer Agent.
  */
-public class CherysCustomerRole extends Agent implements CherysCustomer
+public class CherysCustomerRole extends RestCustomerRole implements CherysCustomer
 {
 	private Semaphore atTable = new Semaphore(0, true);
 	private Semaphore atCashier = new Semaphore(0, true);
@@ -56,7 +57,7 @@ public class CherysCustomerRole extends Agent implements CherysCustomer
 	List<String> foodsOutOf = new ArrayList<String>();
 	
 	private CherysCashier cashier;
-	private double money = 0.0;
+	private int money = 0;
 	private CherysCashierCheck check;
 	
 	public EventLog log = new EventLog();
@@ -89,8 +90,7 @@ public class CherysCustomerRole extends Agent implements CherysCustomer
 	public void gotHungry() //* called from animation
 	{
 		Do("I'm hungry");
-		money += (double)random.nextInt(15) + 5.0;
-		money = Math.round(money * 100.0) / 100.0;
+		money = person.getMoney();
 		events.add(AgentEvent.arrived);
 		state = null;
 		hungerLevel = maxHunger;
@@ -126,11 +126,10 @@ public class CherysCustomerRole extends Agent implements CherysCustomer
 		events.add(AgentEvent.gotCheck);
 		stateChanged();
 	}
-	public void msgChange(double change)
+	public void msgChange(int change)
 	{
 		Do("recieved msgChange");
 		money += change;
-		money = Math.round(money * 100.0) / 100.0;
 		Do("I now have $" + money);
 		events.add(AgentEvent.transactionComplete);
 		stateChanged();
@@ -157,7 +156,7 @@ public class CherysCustomerRole extends Agent implements CherysCustomer
 	/**
 	 * Scheduler.  Determine what action is called for, and do it.
 	 */
-	protected boolean pickAndExecuteAnAction()
+	public boolean pickAndExecuteAnAction()
 	{
 		if(events.size() > 0)
 		{
@@ -346,16 +345,11 @@ public class CherysCustomerRole extends Agent implements CherysCustomer
 	}
 	private void payCashier()
 	{
-		double amountPaying = (double)Math.ceil(check.total);
-		amountPaying = Math.round(amountPaying * 100.0) / 100.0;
-		if(money >= amountPaying)
-		{
-			Do("Here is my bill");
-			money -= amountPaying;
-			money = Math.round(money * 100.0) / 100.0;
-			cashier.msgPayment(this, check, amountPaying);
-			check = null;
-		}
+		Do("Here is my bill");
+		money -= check.total;
+		person.msgExpense(check.total);
+		cashier.msgPayment(this, check, check.total);
+		check = null;
 	}
 	private void done()
 	{
@@ -363,6 +357,7 @@ public class CherysCustomerRole extends Agent implements CherysCustomer
 		hungerLevel = 0;
 		events.clear();
 		doExitRestaurant();
+		person.msgLeftDestination(this);
 	}
 	/**
 	 * Customer tells the host that they want a table
@@ -489,6 +484,13 @@ public class CherysCustomerRole extends Agent implements CherysCustomer
 	public EventLog getLog()
 	{
 		return log;
+	}
+
+	@Override
+	public void setCash(int c)
+	{
+		// TODO Auto-generated method stub
+		
 	}
 }
 

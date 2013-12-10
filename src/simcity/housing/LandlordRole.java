@@ -17,7 +17,7 @@ import java.util.concurrent.Semaphore;
 public class LandlordRole extends JobRole implements Landlord
 {
 
-//Data
+	//Data
 	public List<Renter> renters = Collections.synchronizedList(new ArrayList<Renter>());
 	public class Renter
 	{
@@ -63,18 +63,18 @@ public class LandlordRole extends JobRole implements Landlord
 		gui = new LandlordGui(this);
 		commands.add(Command.sit);
 	}
-	
+
 	public void setGui(HousingGui g)
 	{
 		gui.setGui(g);
 	}
-	
+
 	public LandlordGui getGui()
 	{
 		return gui;
 	}
-	
-//Messages
+
+	//Messages
 	public void msgStartShift() //from Person
 	{
 		AlertLog.getInstance().logMessage(AlertTag.BANK, name, "received msgStartShift");
@@ -120,56 +120,64 @@ public class LandlordRole extends JobRole implements Landlord
 		atLocation.release();
 	}
 
-//Scheduler
-    public boolean pickAndExecuteAnAction()
-    {
-    	for(Command c : commands)
-    	{
-    		if(c == Command.sit)
-    		{
-    	    	goToLocation(locations.get("Sofa"), "");
-    			commands.remove(Command.sit);
-    			return true;
-    		}
-    	}
-    	for(Command c : commands)
-    	{
-    		if(c == Command.collectRent)
-    		{
-    			AlertLog.getInstance().logMessage(AlertTag.BANK, name, "sendAmountOwed----------");
-    			sendAmountOwed(c);
-    			return true;
-    		}
-    	}
-    	
-    	for(Command c : commands)
-    	{
-    		if(c == Command.callRenters)
-    		{
-    			AlertLog.getInstance().logMessage(AlertTag.BANK, name, "sendRentDue----------");
-    			sendRentDue(c);
-    			return true;
-    		}
-    	}
-    	boolean allRentCollected = true;
-    	for(Renter r : renters)
-    	{ 
-    		if(r.state != RenterState.paid)
-    		{
-    			allRentCollected = false;
-    		}
-    	}
-    	if(allRentCollected)
-    	{
+	//Scheduler
+	public boolean pickAndExecuteAnAction()
+	{
+		synchronized(commands)
+		{
+			for(Command c : commands)
+			{
+				if(c == Command.sit)
+				{
+					goToLocation(locations.get("Sofa"), "");
+					commands.remove(Command.sit);
+					return true;
+				}
+			}
+		}
+		synchronized(commands)
+		{
+			for(Command c : commands)
+			{
+				if(c == Command.collectRent)
+				{
+					AlertLog.getInstance().logMessage(AlertTag.BANK, name, "sendAmountOwed----------");
+					sendAmountOwed(c);
+					return true;
+				}
+			}
+		}
+		synchronized(commands)
+		{
+			for(Command c : commands)
+			{
+				if(c == Command.callRenters)
+				{
+					AlertLog.getInstance().logMessage(AlertTag.BANK, name, "sendRentDue----------");
+					sendRentDue(c);
+					return true;
+				}
+			}
+		}
+		boolean allRentCollected = true;
+		for(Renter r : renters)
+		{ 
+			if(r.state != RenterState.paid)
+			{
+				allRentCollected = false;
+			}
+		}
+		if(allRentCollected)
+		{
 			AlertLog.getInstance().logMessage(AlertTag.BANK, name, "sendEndShift----------");
-    		sendEndShift();
-    		return true;
-    	}
-    	goToLocation(locations.get("Sofa"), "");
-    	return false;
-    }
+			sendEndShift();
+			return true;
+		}
+		goToLocation(locations.get("Sofa"), "");
+		return false;
+	}
 
-//Actions
+	//Actions
 	private void sendRentDue(Command c)
 	{
 		AlertLog.getInstance().logMessage(AlertTag.BANK, name, "renters size: " + renters.size());

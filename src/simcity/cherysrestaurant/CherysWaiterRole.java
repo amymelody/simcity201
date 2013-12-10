@@ -1,5 +1,6 @@
 package simcity.cherysrestaurant;
 
+import simcity.RestWaiterRole;
 import simcity.agent.Agent;
 import simcity.cherysrestaurant.gui.CherysWaiterGui;
 import simcity.cherysrestaurant.interfaces.*;
@@ -11,7 +12,7 @@ import java.util.concurrent.Semaphore;
 /**
  * Restaurant Waiter Agent
  */
-public class CherysWaiterRole extends Agent implements CherysWaiter
+public class CherysWaiterRole extends RestWaiterRole implements CherysWaiter
 {
 	private Semaphore atLobby = new Semaphore(0, true);
 	private Semaphore atTable = new Semaphore(0, true);
@@ -82,10 +83,10 @@ public class CherysWaiterRole extends Agent implements CherysWaiter
 	}
 	private Command command = Command.noCommand;
 
-	private double priceSteak = 15.99;
-	private double priceChicken = 10.99;
-	private double priceSalad = 5.99;
-	private double pricePizza = 8.99;
+	private int priceSteak = 15;
+	private int priceChicken = 10;
+	private int priceSalad = 5;
+	private int pricePizza = 8;
 
 	enum AgentState
 	{
@@ -99,6 +100,8 @@ public class CherysWaiterRole extends Agent implements CherysWaiter
 	private boolean permissionToBreak = false;
 	private boolean denied = false;
 	Timer timer = new Timer();
+	
+	private boolean working;
 	
 	public CherysWaiterGui waiterGui = null;
 
@@ -312,6 +315,21 @@ public class CherysWaiterRole extends Agent implements CherysWaiter
 		stateChanged();
 	}
 
+	@Override
+	public void msgStartShift()
+	{
+		working = true;
+		cashier.msgPaySalary(person.getSalary());
+		stateChanged();
+	}
+
+	@Override
+	public void msgEndShift()
+	{
+		working = false;
+		stateChanged();
+	}
+ 	
 	public void msgGotTired() //* called from animation
 	{
 		Do("I'm tired");
@@ -339,7 +357,7 @@ public class CherysWaiterRole extends Agent implements CherysWaiter
 	/**
 	 * Scheduler.  Determine what action is called for, and do it.
 	 */
-	protected boolean pickAndExecuteAnAction()
+	public boolean pickAndExecuteAnAction()
 	{
 		if(tired)
 		{
@@ -756,6 +774,11 @@ public class CherysWaiterRole extends Agent implements CherysWaiter
 				return true;
 			}
 		}
+		if(customers.size() == 0 && !working)
+		{
+			leaveRestaurant();
+			return true;
+		}
 		return false;
 	}
 
@@ -931,6 +954,13 @@ public class CherysWaiterRole extends Agent implements CherysWaiter
 		{
 			e.printStackTrace();
 		}
+	}
+	
+	private void leaveRestaurant()
+	{
+		state = null;
+		command = Command.noCommand;
+		person.msgLeftDestination(this);
 	}
 	
 	//utilities

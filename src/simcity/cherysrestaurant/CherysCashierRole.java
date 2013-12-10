@@ -1,7 +1,11 @@
 package simcity.cherysrestaurant;
 
+import simcity.RestCashierRole;
 import simcity.agent.Agent;
 import simcity.cherysrestaurant.interfaces.*;
+import simcity.interfaces.MarketDeliverer;
+import simcity.joshrestaurant.interfaces.JoshCustomer;
+import simcity.joshrestaurant.interfaces.JoshWaiter;
 import simcity.mock.EventLog;
 import simcity.mock.LoggedEvent;
 
@@ -11,15 +15,15 @@ import java.util.concurrent.Semaphore;
 /**
  * Restaurant Cashier Agent
  */
-public class CherysCashierRole extends Agent implements CherysCashier
+public class CherysCashierRole extends RestCashierRole implements CherysCashier
 {
 	private String name;
 	List<Food> menu = new ArrayList<Food>();
 	public class Food
 	{
 		String name;
-		double price;
-		Food(String n, double p)
+		int price;
+		Food(String n, int p)
 		{
 			name = n;
 			price = p;
@@ -30,9 +34,9 @@ public class CherysCashierRole extends Agent implements CherysCashier
 	{
 		public CherysMarket market;
 		public String foodType;
-		public double total;
+		public int total;
 		public CheckState state;
-		MarketBill(CherysMarket m, String ft, double t)
+		MarketBill(CherysMarket m, String ft, int t)
 		{
 			market = m;
 			foodType = ft;
@@ -47,12 +51,17 @@ public class CherysCashierRole extends Agent implements CherysCashier
 		unpaid,
 		paid;
 	}
-	public double balance = 100;
+	public int balance = 250;
 	
-	private double priceSteak = 15.99;
-	private double priceChicken = 10.99;
-	private double priceSalad = 5.99;
-	private double pricePizza = 8.99;
+	private int priceSteak = 15;
+	private int priceChicken = 10;
+	private int priceSalad = 5;
+	private int pricePizza = 8;
+
+	private boolean working;
+	private boolean goingHome;
+
+	public EventLog log = new EventLog();
 	
 	/**
 	 * Constructor for CashierAgent
@@ -80,7 +89,7 @@ public class CherysCashierRole extends Agent implements CherysCashier
 	{
 		log.add(new LoggedEvent("Received msgProduceCheck from waiter. Choice = " + choice + ". Table = " + table));
 		Do("received msgProduceCheck");
-		double price = 0;
+		int price = 0;
 		do
 		{
 			try
@@ -126,7 +135,7 @@ public class CherysCashierRole extends Agent implements CherysCashier
 		while(false);
 		stateChanged();
 	}
-	public void msgPayment(CherysCustomer cust, CherysCashierCheck c, double cashGiven)
+	public void msgPayment(CherysCustomer cust, CherysCashierCheck c, int cashGiven)
 	{
 		log.add(new LoggedEvent("Received msgPayment from customer. Payment = " + cashGiven));
 		Do("received msgPayment. Payment = " + cashGiven);
@@ -155,7 +164,7 @@ public class CherysCashierRole extends Agent implements CherysCashier
 	{
 		log.add(new LoggedEvent("Received msgPayForDelivery from market. Food = " + foodType + ". Amount = " + amountDelivered + ". Percentage = " + wholesalePercentage*100 + "%"));
 		Do("received msgPayForDelivery");
-		double total = 0;
+		int total = 0;
 		do
 		{
 			try
@@ -164,8 +173,7 @@ public class CherysCashierRole extends Agent implements CherysCashier
 				{
 					if(food.name.equals(foodType))
 					{
-						total = food.price*amountDelivered*wholesalePercentage;
-						total = Math.round(total * 100.0) / 100.0;
+						total = (int)(food.price*amountDelivered*wholesalePercentage);
 					}
 				}
 			}
@@ -177,6 +185,31 @@ public class CherysCashierRole extends Agent implements CherysCashier
 		while(false);
 		bills.add(new MarketBill(m, foodType, total));
 		stateChanged();
+	}
+
+	public void msgPaySalary(int salary)
+	{
+		balance -= salary;
+	}
+	
+	@Override
+	public void msgStartShift()
+	{
+		working = true;
+		goingHome = false;
+		msgPaySalary(person.getSalary());
+		stateChanged();
+	}
+
+	@Override
+	public void msgEndShift()
+	{
+		working = false;
+		stateChanged();
+	}
+	public void msgGoHome()
+	{
+		goingHome = true;
 	}
 	
 	/**
@@ -242,6 +275,11 @@ public class CherysCashierRole extends Agent implements CherysCashier
 			}
 		}
 		while(false);
+		if(checks.size() == 0 && !working && goingHome)
+		{
+			leaveRestaurant();
+			return true;
+		}
 		return false;
 	}
 
@@ -255,10 +293,8 @@ public class CherysCashierRole extends Agent implements CherysCashier
 	private void processPayment(CherysCashierCheck ch)
 	{
 		Do("Processing payment");
-		double change  = ch.amountPaid - ch.total;
-		change = Math.round(change * 100.0) / 100.0;
+		int change  = ch.amountPaid - ch.total;
 		balance += ch.total;
-		balance = Math.round(balance * 100.0) / 100.0;
 		do
 		{
 			try
@@ -284,13 +320,11 @@ public class CherysCashierRole extends Agent implements CherysCashier
 	}
 	private void tryToPay(MarketBill b)
 	{
-		b.total = Math.round(b.total * 100.0) / 100.0;
 		Do("Trying to pay " + b.foodType + " bill for $" + b.total + ". I have $" + balance);
 		if(b.total <= balance)
 		{
 			b.market.msgPaymentForDelivery(b.total);
 			balance -= b.total;
-			balance = Math.round(balance * 100.0) / 100.0;
 			bills.remove(b);
 		}
 		else
@@ -299,5 +333,38 @@ public class CherysCashierRole extends Agent implements CherysCashier
 			b.state = CheckState.unpaid;
 		}
 		stateChanged();
+	}
+	
+	private void leaveRestaurant()
+	{
+		person.msgLeftDestination(this);
+	}
+
+	@Override
+	public void msgProduceCheck(JoshWaiter w, JoshCustomer c, String choice)
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void msgPayment(JoshCustomer c, int cash)
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void msgDelivery(int bill, MarketDeliverer deliverer)
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void msgThankYou(int change)
+	{
+		// TODO Auto-generated method stub
+		
 	}
 }

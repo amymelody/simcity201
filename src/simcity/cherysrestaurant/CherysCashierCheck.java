@@ -9,11 +9,11 @@ public class CherysCashierCheck
 	public CherysCustomer customer;
 	public int table;
 	public String order;
-	public double total;
-	public double amountPaid = 0.0;
+	public int total;
+	public int amountPaid = 0;
 	public CheckState state = null;
 	
-	public CherysCashierCheck(CherysWaiter w, int table, String o, double t)
+	public CherysCashierCheck(CherysWaiter w, int table, String o, int t)
 	{
 		waiter = w;
 		this.table = table;
