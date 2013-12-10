@@ -17,6 +17,9 @@ import simcity.anjalirestaurant.interfaces.AnjaliWaiter;
 import simcity.interfaces.MarketCashier;
 import simcity.interfaces.Person;
 import simcity.joshrestaurant.JoshWaiterRole;
+import simcity.mock.LoggedEvent;
+import simcity.trace.AlertLog;
+import simcity.trace.AlertTag;
 import simcity.anjalirestaurant.AnjaliWaiterRole;
 import simcity.anjalirestaurant.RevolvingStandMonitor;
 
@@ -55,7 +58,10 @@ public class AnjaliCookRole extends RestCookRole implements AnjaliCook{
 	Timer cookTimer = new Timer();
 	private AnjaliWaiterRole waiter;
 	private String outOfFood;
-	public List<AnjaliMarket> markets = Collections.synchronizedList(new ArrayList<AnjaliMarket>());
+	private AnjaliCashierRole cashier;
+	public List<Market> markets = Collections.synchronizedList(new ArrayList<Market>());
+	public List<ItemOrder> itemOrders = new ArrayList<ItemOrder>();
+	
 	private AnjaliCookGui cookGui;
 	public AnjaliMarket market; 
 	private int hasFood = 1;
@@ -94,10 +100,10 @@ public class AnjaliCookRole extends RestCookRole implements AnjaliCook{
 private List<Order> orders = Collections.synchronizedList(new ArrayList<Order>());
 public enum CookState{nothing, received, inventoryLow, checkingInventory, buyingFood, buying, partOrderFulfilled, outOfFood, waitingForOrder, unfulfilledOrder, cooking, cooked, delivered}; 
 
-private int SteakInventory = 3;
-private int SaladInventory = 3;
-private int ChickenInventory = 3;
-private int PizzaInventory = 3;
+private int SteakInventory = 1;
+private int SaladInventory = 1;
+private int ChickenInventory = 1;
+private int PizzaInventory = 1;
 
 private CookState state = CookState.nothing;
 	
@@ -161,6 +167,7 @@ public void setStand(RevolvingStandMonitor s) {
 				
 			if(SteakInventory == 1){
 				state = CookState.inventoryLow;
+				itemOrders.add(new ItemOrder("Steak", 3));
 				orderThis = choice; 
 				orders.add(new Order(name, choice, tableNumber, waiter, CookState.received));
 				
@@ -189,6 +196,8 @@ public void setStand(RevolvingStandMonitor s) {
 		
 		if(SaladInventory == 1){
 			state = CookState.inventoryLow;
+			itemOrders.add(new ItemOrder("Salad", 3));
+
 			orderThis = choice; 
 			orders.add(new Order(name, choice, tableNumber, waiter, CookState.received));
 
@@ -214,6 +223,9 @@ public void setStand(RevolvingStandMonitor s) {
 		
 		if(ChickenInventory == 1){
 			state = CookState.inventoryLow;
+
+			itemOrders.add(new ItemOrder("Chicken", 3));
+
 			orderThis = choice; 
 			orders.add(new Order(name, choice, tableNumber, waiter, CookState.received));
 
@@ -241,6 +253,8 @@ public void setStand(RevolvingStandMonitor s) {
 		
 		if(PizzaInventory == 1){
 			state = CookState.inventoryLow;
+			itemOrders.add(new ItemOrder("Chicken", 3));
+
 			orderThis = choice; 
 			orders.add(new Order(name, choice, tableNumber, waiter, CookState.received));
 
@@ -269,53 +283,36 @@ public void setStand(RevolvingStandMonitor s) {
 		
 		}
 	
-	public void msgHereIsMoreFood(String food){
-		Do("Cook has received more " +  food + " from market");
-		if(food == "Steak"){
-			SteakInventory = SteakInventory + 2;	
-		}
-		if(food == "Chicken"){
-			ChickenInventory = ChickenInventory + 2;	
-		}
-		if(food == "Salad"){
-			SaladInventory = SaladInventory + 2;	
-		}
-		if(food == "Pizza"){
-			PizzaInventory = PizzaInventory + 2;
-		}
+	public void msgHereIsWhatICanFulfill(List<ItemOrder> orders, boolean canFulfill) {
 		
 	}
-	public void msgOrderFromMe(AnjaliMarket m){
-		Do("received message from marekt to order from " + m.getName());
-		//hasInventory = true;
-		this.market = m;
-		//Do("Market name is " + market.getName());
-		state = CookState.buyingFood;
-		stateChanged();
+	public void msgDelivery(List<ItemOrder> orders){
+		List<ItemOrder> temp = new ArrayList<ItemOrder>();
+		for (ItemOrder o : orders) {
+			temp.add(o);
+		}
 		
-	}
-	public void msgPartOrderFulfilled(String food){
-		
-		Do("Cook received message from Market to order from another market as well.");
-		//hasFood = false;
-		//this.market = null;
-		//hasInventory = false;
-		this.orderThis = food;
-		state = CookState.partOrderFulfilled;
-		stateChanged();
-		
-	}
-	public void msgNoMarketSupply(String food){
-		this.outOfFood = food;
-		for(Order o : orders){
-			if(o.state == CookState.waitingForOrder){
-				o.state = CookState.unfulfilledOrder;
+		for(ItemOrder o : temp){
+			if(o.getFoodItem().equals("Steak")){
+				SteakInventory += o.getAmount();
+			}
+			if(o.getFoodItem().equals("Chicken")){
+				SteakInventory += o.getAmount();
+			}
+			if(o.getFoodItem().equals("Salad")){
+				SteakInventory += o.getAmount();
+			}
+			if(o.getFoodItem().equals("Pizza")){
+				SteakInventory += o.getAmount();
 			}
 		}
-	//	state = CookState.unfulfilledOrder;
 		stateChanged();
 	}
 	
+		
+	
+	
+		
 ////////SCHEDULER//////
 	public boolean pickAndExecuteAnAction() {
 	if(!working){
@@ -330,7 +327,7 @@ public void setStand(RevolvingStandMonitor s) {
 				
 				Do("cook state is out of food");
 				noMoreFood(o);
-				checkInventory(o.choice);
+				checkInventory();
 				o.state= CookState.waitingForOrder;
 				return true;
 			}
@@ -355,24 +352,20 @@ public void setStand(RevolvingStandMonitor s) {
 		//If the inventory of a certain food is low, the cook orders food from the market.
 		Do("Inventory of " + orderThis + " is low. Cook is buying more food from market");
 		state = CookState.checkingInventory;
-		checkInventory(orderThis);
+		checkInventory();
 		return true;
 	}
 	
 	
 	
-	if(state == CookState.buyingFood){
-		buyFood(orderThis, market);
-		state = CookState.buying;
-		return true;
-	}
+		
 	
 	if(state == CookState.partOrderFulfilled){
 		Do("Cook is trying to fulfill the rest of the order.");
 		market = null;
 		hasInventory = 1;
 		state = CookState.checkingInventory;
-		checkInventory(orderThis);
+		checkInventory();
 		//state = CookState.buyingFood;
 		return true;
 	}
@@ -482,25 +475,24 @@ public void setStand(RevolvingStandMonitor s) {
 			
 		}
 		
-		private void checkInventory(String food){
-			//Cook has 3 markets to order from. If a market has at least 1 of the requested items, he orders from that market. 
-			
-			//Cook checking inventory to decide which market to order from
-			synchronized(markets){
-			
-				if(hasInventory == 0){
-					markets.get(0).msgCheckInventory(food, this);
-					hasInventory = -1;
+		private void checkInventory(){
+			int index = markets.size()-1;
+			if (markets.size() > 1) {
+				for (int i = markets.size()-2; i>=0; i--) {
+					if (markets.get(i).orderedFrom <= markets.get(index).orderedFrom && (unitTesting || person.businessOpen(markets.get(i).marketName))) {
+						index = i;
+					}
 				}
-				else if(hasInventory == 1){
-					
-						markets.get(1).msgCheckInventory(food, this);	
-					
-				}
-				
-					
 			}
 			
+			if (person.businessOpen(markets.get(index).marketName)) {
+				AlertLog.getInstance().logMessage(AlertTag.ANJALI_RESTAURANT, name, "I am ordering from " + markets.get(index).market.getName());
+								
+				markets.get(index).market.msgIWantDelivery(this, cashier, itemOrders, location);
+				markets.get(index).incrementOrderedFrom();
+				markets.get(index).ordered = true;
+				itemOrders.clear();
+			}
 		}
 			
 		
@@ -513,10 +505,7 @@ public void setStand(RevolvingStandMonitor s) {
 			}
 			
 //UTILITIES		
-		public void addMarket(AnjaliMarket m){
-			markets.add(m);
-			Do("" + m.getName() +" created");
-		}
+		
 		public void setGui(AnjaliCookGui g) {
 			cookGui = g;
 		}
@@ -525,25 +514,46 @@ public void setStand(RevolvingStandMonitor s) {
 			return cookGui;
 		}
 
-		@Override
+	
 		public void addMarket(MarketCashier m, String n) {
-			// TODO Auto-generated method stub
-			
+			markets.add(new Market(m,n));
 		}
 
-		@Override
-		public void msgDelivery(List<ItemOrder> order) {
-			// TODO Auto-generated method stub
-			
-		}
-
-		@Override
-		public void msgHereIsWhatICanFulfill(List<ItemOrder> items,
-				boolean canFulfill) {
-			// TODO Auto-generated method stub
-			
-		}
+	
 		
+		private class Market {
+			MarketCashier market;
+			int orderedFrom;
+			String marketName;
+			boolean ordered;
+			
+			Market(MarketCashier m, String n) {
+				market = m;
+				orderedFrom = 0;
+				marketName = n;
+				ordered = false;
+			}
+			
+			public void incrementOrderedFrom() {
+				orderedFrom++;
+			}
+		}
+
+
+	
+		public void setCashier(AnjaliCashierRole cashier) {
+			this.cashier = cashier;
+		}
+		@Override
+		public void msgPartOrderFulfilled(String food) {
+			// TODO Auto-generated method stub
+			
+		}
+		@Override
+		public void msgNoMarketSupply(String food) {
+			// TODO Auto-generated method stub
+			
+		}
 		
  
 	
