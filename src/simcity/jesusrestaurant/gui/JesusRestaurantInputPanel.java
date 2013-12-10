@@ -106,13 +106,15 @@ public class JesusRestaurantInputPanel extends JPanel implements ActionListener
  		w.setCashier(cashier);
  		w.setCook(cook);
  		w.setGui(g);
- 		host.setWaiters(w);
+ 		host.setWaiters(w, w.getPersonAgent().getSalary());
     	waiters.add(w);
     }
     
     public void setCashier(JesusCashierRole c) {
     	JesusCashierGui g = new JesusCashierGui(c);
     	c.setGui(g);
+    	c.setHost(host);
+    	c.setCook(cook);
     	cashier = c;
     }
     
@@ -127,6 +129,7 @@ public class JesusRestaurantInputPanel extends JPanel implements ActionListener
     public void setHost(JesusHostRole h) {
     	JesusHostGui g = new JesusHostGui(h);
     	h.setGui(g);
+    	h.setCashier(cashier);
     	host = h;
     }
 }

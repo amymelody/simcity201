@@ -51,6 +51,8 @@ public class MockPerson extends Mock implements Person
 	@Override
 	public void msgLeftDestination(Role r) //from Resident
 	{
+		log.add(new LoggedEvent("left destination"));
+
 	}
 
 	@Override
@@ -123,7 +125,7 @@ public class MockPerson extends Mock implements Person
 	@Override
 	public void msgGoodGuyAgain()
 	{
-		// TODO Auto-generated method stub
+		log.add(new LoggedEvent("goodGuyAgain"));
 		
 	}
 

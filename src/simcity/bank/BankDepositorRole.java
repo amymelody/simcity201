@@ -172,6 +172,7 @@ public class BankDepositorRole extends Role implements BankDepositor{
 	}
 	
 	public void msgYoureDead(){
+		
 		cS = CustomerState.robberKilled;
 		stateChanged();
 	}
@@ -281,13 +282,15 @@ public class BankDepositorRole extends Role implements BankDepositor{
 		}
 		}
 		AlertLog.getInstance().logMessage(AlertTag.BANK, name, "I'm robbing the bank biotch");
-
 		manager.msgImRobbingYourBank(this, 300);
+		person.msgIncome(300);
+
 		
 	}
 	
 	public void ReturnMoney(){
 		manager.msgHeresYourMoneyBack(this, 300);
+		person.msgExpense(300);
 		AlertLog.getInstance().logMessage(AlertTag.BANK, name, "Fine take your money back");
 
 	}

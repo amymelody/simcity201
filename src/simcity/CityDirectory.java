@@ -486,6 +486,133 @@ public class CityDirectory
 		}
 	}
 	
+	public JobRole JobFactory(String role, String location) {
+		switch(role) {
+		case "landlordRole":
+			LandlordRole l = new LandlordRole();
+			l.setJobLocation("home");
+			landlords.add(l);
+			return l;
+		case "marketCashierRole":
+			switch(location) {
+			case "market1":
+				return market1Cashier;
+			case "market2":
+				return market2Cashier;
+			}
+		case "marketDelivererRole":
+			MarketDelivererRole d = new MarketDelivererRole();
+			switch(location) {
+			case "market1":
+				d.setJobLocation("market1");
+				market1Deliverers.add(d);
+				return d;
+			case "market2":
+				d.setJobLocation("market2");
+				market2Deliverers.add(d);
+				return d;
+			}
+		case "marketEmployeeRole":
+			MarketEmployeeRole e  = new MarketEmployeeRole();
+			switch(location) {
+			case "market1":
+				e.setJobLocation("market1");
+				market1Employees.add(e);
+				return e;
+			case "market2":
+				e.setJobLocation("market2");
+				market2Employees.add(e);
+				return e;
+			}
+		case "bankTellerRole":
+			BankTellerRole t = new BankTellerRole();
+			switch(location) {
+			case "bank1":
+				t.setJobLocation("bank1");
+				bank1Tellers.add(t);
+				return t;
+			case "bank2":
+				t.setJobLocation("bank2");
+				bank2Tellers.add(t);
+				return t;
+			}
+		case "bankManagerRole":
+			switch(location) {
+			case "bank1":
+				return bank1Manager;
+			case "bank2":
+				return bank2Manager;
+			}
+		case "restCashierRole":
+			switch(location) {
+			case "joshRestaurant":
+				return joshCashier;
+//			case "cherysRestaurant":
+//				return cherysCashier;
+			case "anjaliRestaurant":
+				return anjaliCashier;
+			case "jesusRestaurant":
+				return jesusCashier;
+			}
+		case "restCookRole":
+			switch(location) {
+			case "joshRestaurant":
+				return joshCook;
+//			case "cherysRestaurant":
+//				return cherysCook;
+			case "anjaliRestaurant":
+				return anjaliCook;
+			case "jesusRestaurant":
+				return jesusCook;
+			}
+		case "restHostRole":
+			switch(location) {
+			case "joshRestaurant":
+				return joshHost;
+//			case "cherysRestaurant":
+//				return cherysHost;
+			case "anjaliRestaurant":
+				return anjaliHost;
+			case "jesusRestaurant":
+				return jesusHost;
+			}
+		case "restWaiter1Role": case "restWaiter2Role":
+			switch(location) {
+			case "joshRestaurant":
+				if (role.equals("restWaiter1Role")) {
+					JoshNormalWaiterRole w = new JoshNormalWaiterRole();
+					w.setJobLocation("joshRestaurant");
+					joshWaiters.add(w);
+					return w;
+				} else {
+					JoshSharedDataWaiterRole w = new JoshSharedDataWaiterRole();
+					w.setJobLocation("joshRestaurant");
+					joshWaiters.add(w);
+					return w;
+				}
+//			case "cherysRestaurant":
+//				CherysNormalWaiterRole cw = new CherysNormalWaiterRole();
+//				cw.setJobLocation("cherysRestaurant");
+//				cherysWaiters.add(cw);
+//				return cw;
+			case "anjaliRestaurant":
+				AnjaliNormalWaiterRole aw = new AnjaliNormalWaiterRole();
+				aw.setJobLocation("anjaliRestaurant");
+				anjaliWaiters.add(aw);
+				return aw;
+//			case "jesusRestaurant":
+//				JesusNormalWaiterRole jw = new JesusNormalWaiterRole();
+//				jw.setJobLocation("jesusRestaurant");
+//				jesusWaiters.add(jw);
+//				return jw;
+			}
+		default:
+			LandlordRole la = new LandlordRole();
+			la.setJobLocation("home");
+			return la;
+		}
+	}
+	
 	public void addMarketDeliverer(MarketDelivererRole d) {
 		int num1 = getNumPeople("marketDelivererRole","market1");
 		int num2 = getNumPeople("marketDelivererRole","market2");

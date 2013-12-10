@@ -532,13 +532,6 @@ public void setStand(RevolvingStandMonitor s) {
 		}
 
 		@Override
-		public void msgHereIsOrder(JoshWaiterRole waiter, String choice,
-				int table) {
-			// TODO Auto-generated method stub
-			
-		}
-
-		@Override
 		public void msgDelivery(List<ItemOrder> order) {
 			// TODO Auto-generated method stub
 			

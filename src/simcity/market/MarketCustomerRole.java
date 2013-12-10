@@ -1,5 +1,6 @@
 package simcity.market;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Semaphore;
 
@@ -69,10 +70,9 @@ public class MarketCustomerRole extends Role implements MarketCustomer {
 	/* Data */
 
 	// Order items information
-	public List<ItemOrder> items;
-	public List<ItemOrder> itemsReceived;
+	public List<ItemOrder> items = new ArrayList<ItemOrder>();
+	public List<ItemOrder> itemsReceived = new ArrayList<ItemOrder>();
 	public int cost;
-	public int change;
 	boolean delivery;
 
 	// References to other roles
@@ -105,13 +105,16 @@ public class MarketCustomerRole extends Role implements MarketCustomer {
 	}
 
 	public void msgHereAreItemsandPrice(List<ItemOrder> i, int price) {
+		for(ItemOrder iO: i) {
+			itemsReceived.add(new ItemOrder(iO.getFoodItem(), iO.getAmount()));
+		}
 		cost = price;
 		cS = CustomerState.getting;
 		stateChanged();
 	}
 
-	public void msgThankYou(int chnge) {
-		change = chnge;
+	public void msgThankYou(int change) {
+		person.msgIncome(change);
 		cS = CustomerState.leaving;
 		stateChanged();
 	}
@@ -132,6 +135,7 @@ public class MarketCustomerRole extends Role implements MarketCustomer {
 
 	public void msgOut() {
 		cS = CustomerState.out;
+		person.msgReceivedItems(itemsReceived);
 		person.msgLeftDestination(this);
 		stateChanged();
 	}
@@ -139,6 +143,10 @@ public class MarketCustomerRole extends Role implements MarketCustomer {
 
 	/* Scheduler */
 	public boolean pickAndExecuteAnAction() {
+		if(cS == CustomerState.leaving) {
+			GetOut();
+			return true;
+		}
 		if(cS == CustomerState.arrived) {
 			GoToCashier();
 			return true;
@@ -161,14 +169,6 @@ public class MarketCustomerRole extends Role implements MarketCustomer {
 		}
 		if(cS == CustomerState.getting) {
 			GetItems();
-			return true;
-		}
-		if(cS == CustomerState.leaving) {
-			GetOut();
-			return true;
-		}
-		if(cS == CustomerState.out) {
-			updateInfo();
 			return true;
 		}
 		return false;
@@ -216,8 +216,8 @@ public class MarketCustomerRole extends Role implements MarketCustomer {
 	}
 
 	private void GetItems() {
-		cashier.msgPayment(this, cost);
 		person.msgExpense(cost);
+		cashier.msgPayment(this, cost);
 		cS = CustomerState.paying;
 		cost = 0;
 	}
@@ -232,7 +232,6 @@ public class MarketCustomerRole extends Role implements MarketCustomer {
 	}
 
 	private void updateInfo() {
-		person.msgIncome(change);
 		person.msgReceivedItems(itemsReceived);
 	}
 

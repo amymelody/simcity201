@@ -6,7 +6,7 @@ public interface JesusWaiter {
 	
 	public abstract void msgMyOrder (String name, String order);
 
-	public abstract void msgCheckComputed (JesusCustomer cust, double amount, String name);
+	public abstract void msgCheckComputed (JesusCustomer cust, int amount, String name);
 
 	public abstract void msgLeavingTable (String n);
 	

@@ -33,6 +33,7 @@ public class JesusWaiterRole extends JobRole implements JesusWaiter {
 	private JesusCashierRole cashier;
 
 	boolean breakTime = false;
+	boolean working, start;
 
 	public enum customerState {waitingSeat, seated, readyToOrder, 
 		ordering, waitingOrder, orderReady, eating, doneEating, leaving, takingPlate, orderGiven, check};
@@ -80,6 +81,16 @@ public class JesusWaiterRole extends JobRole implements JesusWaiter {
 		}
 
 		// Messages
+		public void msgStartShift() {
+			working = true;
+			start = true;
+			stateChanged();
+		}
+
+		public void msgEndShift() {
+			working = false;
+			stateChanged();
+		}
 		public void msgGoOnBreak() {
 			breakTime = true;
 			event = AgentEvent.goOnBreak;
@@ -150,7 +161,7 @@ public class JesusWaiterRole extends JobRole implements JesusWaiter {
 			stateChanged();
 		}
 
-		public void msgCheckComputed(JesusCustomerRole cust, double amount, String name) {
+		public void msgCheckComputed(JesusCustomer cust, int amount, String name) {
 			synchronized(myCustomers){
 				for(myCustomer mc: myCustomers) {
 					if(mc.name.equals(name)) {
@@ -208,11 +219,22 @@ public class JesusWaiterRole extends JobRole implements JesusWaiter {
 			event = AgentEvent.clean;
 			stateChanged();
 		}
+		public void left() {
+			person.msgLeftDestination(this);
+		}
 
 		/**
 		 * Scheduler.  Determine what action is called for, and do it.
 		 */
 		public boolean pickAndExecuteAnAction() {
+			if(!working) {
+				leaveRestaurant();
+				return true;
+			}
+			if(start) {
+				startWork();
+				return true;
+			}
 			if(event == AgentEvent.noBreak) {
 				state = AgentState.DoingNothing;
 				event = AgentEvent.none;
@@ -463,7 +485,13 @@ public class JesusWaiterRole extends JobRole implements JesusWaiter {
 		}
 
 		// Actions
-
+		private void leaveRestaurant() {
+			jesusWaiterGui.leave();
+		}
+		private void startWork() {
+			jesusWaiterGui.work();
+			start = false;
+		}
 		private void goOnBreak() {
 			//print(name + " going on break...");
 			host.msgGoingOnBreak(this);
@@ -656,7 +684,7 @@ public class JesusWaiterRole extends JobRole implements JesusWaiter {
 			int tableNumber;
 			customerState state;
 			String foodChoice;
-			double amountDue;
+			int amountDue;
 
 			myCustomer(JesusCustomerRole c, int tN, String n) {
 				customer = c;
@@ -668,22 +696,4 @@ public class JesusWaiterRole extends JobRole implements JesusWaiter {
 			}
 		}
 
-		@Override
-		public void msgCheckComputed(JesusCustomer cust, double amount,
-				String name) {
-			// TODO Auto-generated method stub
-			
-		}
-
-		@Override
-		public void msgStartShift() {
-			// TODO Auto-generated method stub
-			
-		}
-
-		@Override
-		public void msgEndShift() {
-			// TODO Auto-generated method stub
-			
-		}
 }

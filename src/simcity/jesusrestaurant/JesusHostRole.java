@@ -1,6 +1,7 @@
 package simcity.jesusrestaurant;
 
 import simcity.role.JobRole;
+import simcity.interfaces.Person;
 import simcity.jesusrestaurant.gui.JesusHostGui;
 
 import java.util.*;
@@ -30,13 +31,12 @@ public class JesusHostRole extends JobRole {
 	//Later we will see how it is implemented
 
 	private String name;
-	
+	boolean working, start = false;
 	public JesusHostGui jesusHostGui = null;
-
+	private JesusCashierRole cashier = null;
 	public JesusHostRole() {
 		super();
-
-		this.name = name;
+		
 		// make some tables
 		tables = new ArrayList<Table>(NTABLES);
 		for (int ix = 1; ix <= NTABLES; ix++) {
@@ -45,10 +45,12 @@ public class JesusHostRole extends JobRole {
 	}
 
 	/*hack to set waiters*/
-	public void setWaiters(JesusWaiterRole w) {
-		waiters.add(new myWaiter(w));
+	public void setWaiters(JesusWaiterRole w, int s) {
+		waiters.add(new myWaiter(w,s));
 	}
-	
+	public void setCashier(JesusCashierRole ch) {
+		cashier = ch;
+	}
 	public String getMaitreDName() {
 		return name;
 	}
@@ -64,8 +66,24 @@ public class JesusHostRole extends JobRole {
 	public Collection getTables() {
 		return tables;
 	}
+	
+	public void setPerson(Person p) {
+		super.setPerson(p);
+		name = p.getName();
+	}
 	// Messages
 
+	
+	public void msgStartShift() {
+		working = true;
+		start = true;
+		stateChanged();
+	}
+
+	public void msgEndShift() {
+		working = false;
+		stateChanged();
+	}
 	public void msgOpen() {
 		open = true;
 		stateChanged();
@@ -130,6 +148,10 @@ public class JesusHostRole extends JobRole {
 			}
 		}
 	}
+	
+	public void left() {
+		person.msgLeftDestination(this);
+	}
 
 	/**
 	 * Scheduler.  Determine what action is called for, and do it.
@@ -140,6 +162,14 @@ public class JesusHostRole extends JobRole {
             so that table is unoccupied and customer is waiting.
             If so seat him at the table.
 		 */
+		if(!working) {
+			leaveRestaurant();
+			return true;
+		}
+		if(start) {
+			startWork();
+			return true;
+		}
 		if(!waitingCustomers.isEmpty()) {
 			if(open == false) {
 				closed();
@@ -192,12 +222,21 @@ public class JesusHostRole extends JobRole {
 
 	// Actions
 
+	private void startWork() {
+		jesusHostGui.work();
+		person.businessIsClosed(getJobLocation(), false);
+	}
+	private void leaveRestaurant() {
+		jesusHostGui.leave();
+	}
 	private void closed() {
+		person.businessIsClosed(getJobLocation(), true);
 		print("Sorry, we're closed. Please come again later when we are open.");
 		while(!waitingCustomers.isEmpty()) {
 			waitingCustomers.get(0).customer.msgWereClosed();
 			waitingCustomers.remove(waitingCustomers.get(0));
 		}
+		cashier.msgPayEmployees(waiters);
 	}
 	private void confirmBreak(myWaiter w) {
 		if(waiters.size() - waitersOnBreak <= 1) {
@@ -247,14 +286,16 @@ public class JesusHostRole extends JobRole {
 		return jesusHostGui;
 	}
 
-	private class myWaiter {
+	public class myWaiter {
 		JesusWaiterRole waiter;
 		int numOfCust;
+		int salary;
 		String name;
 		wState state;
 		
-		myWaiter(JesusWaiterRole w) {
+		public myWaiter(JesusWaiterRole w, int s) {
 			this.waiter = w;
+			salary = s;
 			numOfCust = 0;
 			name = w.getName();
 			state = wState.working;
@@ -319,17 +360,5 @@ public class JesusHostRole extends JobRole {
 		}
 		else
 			return "Sorry, We're Closed.";
-	}
-
-	@Override
-	public void msgStartShift() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void msgEndShift() {
-		// TODO Auto-generated method stub
-		
 	}
 }

@@ -20,7 +20,7 @@ import java.util.List;
 
 public class CityInputPanel extends JPanel implements ActionListener
 {
-	static final int TIMERINCR = 3500;
+	static final int TIMERINCR = 1600;
 	
 	private Vector<PersonAgent> people = new Vector<PersonAgent>();
 	private List<BusStop> busStops = new ArrayList<BusStop>();
@@ -47,6 +47,8 @@ public class CityInputPanel extends JPanel implements ActionListener
 	private JRadioButtonMenuItem button5 = new JRadioButtonMenuItem("Housing Config");
 	private JRadioButtonMenuItem button6 = new JRadioButtonMenuItem("Full City Config");
 	private JRadioButtonMenuItem button7 = new JRadioButtonMenuItem("Normative A Config");
+	private JRadioButtonMenuItem button8 = new JRadioButtonMenuItem("Normative B Config");
+	private JRadioButtonMenuItem button9 = new JRadioButtonMenuItem("Non-Norms Config");
 	private JButton goButton = new JButton("Run Scenario");
     
 //    @Override
@@ -121,6 +123,10 @@ public class CityInputPanel extends JPanel implements ActionListener
 		add(button6);
 		configGroup.add(button7);
 		add(button7);
+		configGroup.add(button8);
+		add(button8);
+		configGroup.add(button9);
+		add(button9);
 		goButton.addActionListener(this);
 		add(goButton);
 //        add(creationPanel);
@@ -188,6 +194,14 @@ public class CityInputPanel extends JPanel implements ActionListener
 			{
 			creationPanel.readConfig("../normAConfig.properties");
 			}
+			else if(button8.isSelected())
+			{
+			creationPanel.readConfig("../normBConfig.properties");
+			}
+			else if(button9.isSelected())
+			{
+			creationPanel.readConfig("../nonNormsConfig.properties");
+			}
 		}
 //    	for (JButton b : personList)
 //    	{
@@ -214,7 +228,7 @@ public class CityInputPanel extends JPanel implements ActionListener
     	}
     }
     
-    public void addPerson(String name, String job, int pay, int startShift, int endShift, String eco, String physical, String housing, String preference, CityDirectory c, boolean tA, boolean uB, boolean gH) 
+    public void addPerson(String name, String job, String jobLocation, int pay, int startShift, int endShift, String eco, String physical, String housing, String preference, CityDirectory c, boolean tA, boolean uB, boolean gH) 
     {
     	PersonAgent p = new PersonAgent(name);
 		PersonGui g = new PersonGui(p, gui, c);
@@ -242,7 +256,11 @@ public class CityInputPanel extends JPanel implements ActionListener
 		endShifts.put(Day.Fri, new Time(Day.Fri, endShift, 0));
 		endShifts.put(Day.Sat, new Time(Day.Sat, endShift, 0));
 		
-		p.msgYoureHired(job, pay, startShifts, endShifts);
+		if (!jobLocation.equals("derp")) {
+			p.msgYoureHired(job, pay, startShifts, endShifts, jobLocation);
+		} else {
+			p.msgYoureHired(job, pay, startShifts, endShifts);
+		}
 		p.setEState(eco);
 		p.setPState(physical);
 		p.setPreference(preference);

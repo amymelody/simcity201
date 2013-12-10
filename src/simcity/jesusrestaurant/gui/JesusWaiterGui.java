@@ -12,12 +12,12 @@ import javax.swing.ImageIcon;
 
 public class JesusWaiterGui implements Gui {
 
-	private JesusWaiterRole agent = null;
+	private JesusWaiterRole role = null;
 
 	private int xPos = 460, yPos = 0;//default waiter position
 	private int xDestination, yDestination;//default waiter destination
 	private int xHome, yHome;//waiter home position
-	private int xCook = 19, yCook = 14;
+	private int xCook = 380, yCook = 280;
 	private int xBreak = 460, yBreak = 0;
 	
 	boolean onBreak = false;
@@ -46,8 +46,10 @@ public class JesusWaiterGui implements Gui {
 	state gS = state.none;
 	boolean breakDeciding = false;
 
-	public JesusWaiterGui(JesusWaiterRole agent, JesusRestaurantGui g, int xh, int yh) {
-		this.agent = agent;
+	boolean leave;
+	
+	public JesusWaiterGui(JesusWaiterRole role, JesusRestaurantGui g, int xh, int yh) {
+		this.role = role;
 		gui = g;
 		
 		xHome = xh;
@@ -99,17 +101,17 @@ public class JesusWaiterGui implements Gui {
 			if (xPos == xDestination && yPos == yDestination
 					& xDestination == p.x + 20 && yDestination == p.y - 40) {
 				if(gS == state.ordering) {
-					agent.msgFinishedGoForOrder();
+					role.msgFinishedGoForOrder();
 				}
 				else if(gS == state.handing) {
 					fx = -40;
 					fy = -40;
-					agent.msgFinishedGoWithPlate();
+					role.msgFinishedGoWithPlate();
 					DoLeaveCustomer();
 					gS = state.none;
 				}
 				else if(gS == state.clearing) {
-					agent.msgFinishedClearing();
+					role.msgFinishedClearing();
 					DoLeaveCustomer();
 					gS = state.none;
 				}
@@ -120,27 +122,30 @@ public class JesusWaiterGui implements Gui {
 		}
 		if(xPos == xHome && yPos == yHome) {
 			if(gS == state.seating) {
-				agent.msgAtTable();
+				role.msgAtTable();
 				xDestination = xHome;
 				yDestination = yHome;
 			}
 		}
 		if(xPos == xCook*20 && yPos == yCook*20) {
 			if(gS == state.sending) {
-				agent.msgFinishedGoToCook();
+				role.msgFinishedGoToCook();
 				xDestination = xHome;
 				yDestination = yHome;
 			}
 		}
 		if(xPos == xCook*20 && yPos == yCook*20) {
 			if(gS == state.pickUp) {
-				agent.msgFinishedPickUp();
+				role.msgFinishedPickUp();
 			}
 		}
 		if(xPos == 120 && yPos == 40) {
 			if(gS == state.customer) {
-				agent.msgAtVait();
+				role.msgAtVait();
 			}
+		}
+		if(xDestination == xPos && yDestination == yPos && leave) {
+			role.left();
 		}
 	}
 
@@ -154,6 +159,15 @@ public class JesusWaiterGui implements Gui {
 		return true;
 	}
 
+	public void leave() {
+		xDestination = -20;
+		yDestination = 20;
+		leave = true;
+	}
+	public void work() {
+		xDestination = xHome;
+		yDestination = yHome;
+	}
 	public void breakDecision(boolean p) {
 		breakDeciding = false;
 		onBreak = p;
@@ -165,12 +179,12 @@ public class JesusWaiterGui implements Gui {
 	public void goOnBreak() {
 		breakDeciding = true;
 		if(onBreak) {
-			agent.msgReturnToWork();
+			role.msgReturnToWork();
 			xDestination = xHome;
 			yDestination = yHome;
 		}
 		else {
-			agent.msgGoOnBreak();
+			role.msgGoOnBreak();
 			
 		}
 	}
@@ -198,13 +212,13 @@ public class JesusWaiterGui implements Gui {
 		gS = state.ordering;
 	}
 	public void DoGoToCook() {
-		xDestination = xCook*20;
-		yDestination = yCook*20;
+		xDestination = xCook;
+		yDestination = yCook;
 		gS = state.sending;
 	}
 	public void DoGetPlate(String foodChoice) {
-		xDestination = xCook*20;
-		yDestination = yCook*20;
+		xDestination = xCook;
+		yDestination = yCook;
 		fImage = foodImages.get(foodChoice);
 		gS = state.pickUp;
 	}
