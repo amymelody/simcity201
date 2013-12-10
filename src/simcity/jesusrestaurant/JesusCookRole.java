@@ -5,10 +5,14 @@ import simcity.PersonAgent;
 import simcity.role.JobRole;
 import simcity.jesusrestaurant.JesusCookRole;
 import simcity.jesusrestaurant.gui.JesusCookGui;
+import simcity.joshrestaurant.JoshWaiterRole;
 import simcity.market.MarketCashierRole;
+import simcity.interfaces.MarketCashier;
+import simcity.interfaces.RestCook;
 
 import java.util.*;
 import java.util.concurrent.Semaphore;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -19,7 +23,7 @@ import java.util.TimerTask;
 //does all the rest. Rather than calling the other agent a waiter, we called him
 //the HostAgent. A Host is the manager of a restaurant who sees that all
 //is proceeded as he wishes.
-public class JesusCookRole extends JobRole {
+public class JesusCookRole extends JobRole implements RestCook {
 	private static final int steakTime = 7000;
 	private static final int saladTime = 4000;
 	private static final int pizzaTime = 2000;
@@ -73,7 +77,7 @@ public class JesusCookRole extends JobRole {
 		cashier = ch;
 	}
 	
-	public void addMarket(MarketCashierRole c, String mName) {
+	public void addMarket(MarketCashier c, String mName) {
 		markets.add(new myMarket(c, mName));
 	}
 
@@ -147,6 +151,13 @@ public class JesusCookRole extends JobRole {
 		}
 		return true;
 	}
+	public boolean marketOut(myMarket m) {
+		for(Map.Entry<String, Boolean> entry: m.outStock.entrySet()) {
+			if(!entry.getValue())
+				return false;
+		}
+		return true;
+	}
 
 	// Messages
 	public void msgStartShift() {
@@ -173,7 +184,7 @@ public class JesusCookRole extends JobRole {
 		stateChanged();
 	}
 
-	public void msgNoStock(String mName, String foodName, boolean everything) {
+	/*public void msgNoStock(String mName, String foodName, boolean everything) {
 		synchronized(markets){
 			for(myMarket m: markets) {
 				if(m.market.getName().equals(mName)) {
@@ -235,7 +246,18 @@ public class JesusCookRole extends JobRole {
 				}
 			}
 		}
+	}*/
+	
+	public void msgHereIsWhatICanFulfill(List<ItemOrder> orders,
+			boolean canFulfill) {
+		
 	}
+
+	public void msgDelivery(List<ItemOrder> orders) {
+		
+		
+	}
+	
 	public void left() {
 		person.msgLeftDestination(this);
 	}
@@ -278,14 +300,15 @@ public class JesusCookRole extends JobRole {
 			return true;
 		}
 		synchronized(foods){
-			for(Food f: foods) {
-				if(f.needsRestock) {
-					for(myMarket m: markets) {
+			for(myMarket m: markets) {
+				if(!marketOut(m)) {
+					for(Food f: foods) {
 						if(!m.outStock.get(f.name)) {
-							restock(f, m);
-							return true;
+							needToRestock.add(new ItemOrder(f.name, f.amtLeft));
 						}
 					}
+					restock(needToRestock, m);
+					return true;
 				}
 			}
 		}
@@ -307,8 +330,10 @@ public class JesusCookRole extends JobRole {
 		if(noInventory() && !markets.isEmpty()) {
 			host.msgClosed();
 			for(Food f: foods) {
-				restock(f, markets.get(0));
+				f.amtLeft = restockAmount;
+				needToRestock.add(new ItemOrder(f.name, f.amtLeft));
 			}
+			markets.get(0).market.msgIWantDelivery(this, cashier, needToRestock, getJobLocation());
 			host.msgOpen();
 			open = true;
 		}
@@ -384,14 +409,16 @@ public class JesusCookRole extends JobRole {
 		orders.remove(o);
 	}
 
-	public void restock(Food f, myMarket m) {
-	/*	if(f.amtLeft == 0)
-			m.market.msgNeedRestock(this, f.name, restockAmount);
-		else
-			m.market.msgNeedRestock(this, f.name, f.amtLeft);
-		f.needsRestock = false;
+	public void restock(List<ItemOrder> list, myMarket m) {
+		synchronized(foods) {
+			for(Food f: foods) {
+				if(f.amtLeft == 0)
+					f.amtLeft = restockAmount;
+				f.needsRestock = false;
+			}
+		}
+		m.market.msgIWantDelivery(this, cashier, list, getJobLocation());
 		sState = stockState.ordered;
-		*/
 	}
 
 	// The animation DoXYZ() routines
@@ -441,11 +468,11 @@ public class JesusCookRole extends JobRole {
 	}
 
 	private class myMarket {
-		MarketCashierRole market;
+		MarketCashier market;
 		String name;
 		Map<String, Boolean> outStock;
 
-		myMarket(MarketCashierRole m, String mName) {
+		myMarket(MarketCashier m, String mName) {
 			market = m;
 			name = mName;
 			outStock = new HashMap<String, Boolean>();

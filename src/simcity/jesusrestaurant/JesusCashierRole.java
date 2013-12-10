@@ -1,13 +1,17 @@
 package simcity.jesusrestaurant;
 
 import simcity.PersonAgent;
+import simcity.RestCashierRole;
 import simcity.role.JobRole;
+import simcity.interfaces.MarketDeliverer;
 import simcity.jesusrestaurant.JesusHostRole.myWaiter;
 import simcity.jesusrestaurant.gui.JesusCashierGui;
 import simcity.jesusrestaurant.interfaces.JesusCashier;
 import simcity.jesusrestaurant.interfaces.JesusCustomer;
 import simcity.jesusrestaurant.interfaces.JesusMarket;
 import simcity.jesusrestaurant.interfaces.JesusWaiter;
+import simcity.joshrestaurant.interfaces.JoshCustomer;
+import simcity.joshrestaurant.interfaces.JoshWaiter;
 import simcity.market.gui.MarketCustomerGui.GuiState;
 import simcity.mock.EventLog;
 import simcity.mock.LoggedEvent;
@@ -22,7 +26,7 @@ import java.util.concurrent.Semaphore;
 //does all the rest. Rather than calling the other agent a waiter, we called him
 //the HostAgent. A Host is the manager of a simcity.jesusrestaurant who sees that all
 //is proceeded as he wishes.
-public class JesusCashierRole extends JobRole implements JesusCashier {
+public class JesusCashierRole extends RestCashierRole implements JesusCashier {
 	public List<Check> checks = Collections.synchronizedList(new ArrayList<Check>());
 	public List<Bill> bills = Collections.synchronizedList(new ArrayList<Bill>());
 	public int money;
@@ -115,9 +119,17 @@ public class JesusCashierRole extends JobRole implements JesusCashier {
 		}
 	}
 
-	public void msgHereIsBill(JesusMarket m, int amount, int id) {
+	/*public void msgHereIsBill(JesusMarket m, int amount, int id) {
 		bills.add(new Bill(id, m, amount));
 		stateChanged();
+	}*/
+	
+	public void msgDelivery(int bill, MarketDeliverer deliverer) {
+		
+	}
+
+	public void msgThankYou(int change) {
+		
 	}
 	
 	public void left() {
