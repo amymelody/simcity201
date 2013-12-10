@@ -609,6 +609,12 @@ public class PersonAgent extends Agent implements Person
 				AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "Food is low");
 			}
 		}
+		if (name.contains("hungryResident") || name.equals("restCustomer")) {
+			if (time.getHour() == 3 && time.getMinute() == 0) {
+				AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "Got hungry");
+				state.ns = NourishmentState.gotHungry;
+			}
+		}
 		if (time.getHour() == 8 && time.getMinute() == 0) {
 			if (name.equals("bankDepositor")) {
 				money += 600;
@@ -618,10 +624,6 @@ public class PersonAgent extends Agent implements Person
 				robber = true;
 				money = minBalance;
 				AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "I now have $" + money);
-			}
-			if (name.contains("hungryResident") || name.equals("restCustomer")) {
-				AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "Got hungry");
-				state.ns = NourishmentState.gotHungry;
 			}
 		}
 		if (name.equals("normA")) {
