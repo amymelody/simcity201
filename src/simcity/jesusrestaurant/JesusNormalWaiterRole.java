@@ -1,5 +1,7 @@
 package simcity.jesusrestaurant;
 
+import simcity.PersonAgent;
+import simcity.RestWaiterRole;
 import simcity.role.JobRole;
 import simcity.jesusrestaurant.gui.JesusWaiterGui;
 import simcity.jesusrestaurant.interfaces.JesusCustomer;
@@ -15,7 +17,7 @@ import java.util.concurrent.Semaphore;
 //does all the rest. Rather than calling the other agent a waiter, we called him
 //the HostAgent. A Host is the manager of a restaurant who sees that all
 //is proceeded as he wishes.
-public class JesusWaiterRole extends JobRole implements JesusWaiter {
+public class JesusNormalWaiterRole extends RestWaiterRole implements JesusWaiter {
 	//Notice that we implement waitingCustomers using ArrayList, but type it
 	//with List semantics.
 	public List<myCustomer> myCustomers = Collections.synchronizedList(new ArrayList<myCustomer>());
@@ -50,10 +52,13 @@ public class JesusWaiterRole extends JobRole implements JesusWaiter {
 		AgentState state = AgentState.DoingNothing;
 		AgentEvent event = AgentEvent.none;
 
-		public JesusWaiterRole(String name) {
+		public JesusNormalWaiterRole() {
 			super();
-
-			this.name = name;
+		}
+		
+		public void setPerson(PersonAgent p) {
+			super.setPerson(p);
+			name = p.getName();
 		}
 
 		public String getMaitreDName() {

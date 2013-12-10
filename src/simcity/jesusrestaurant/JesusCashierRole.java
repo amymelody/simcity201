@@ -309,16 +309,5 @@ public class JesusCashierRole extends RestCashierRole implements JesusCashier {
 			amountDue += num;
 		}
 	}
-	@Override
-	public void msgProduceCheck(JoshWaiter w, JoshCustomer c, String choice) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void msgPayment(JoshCustomer c, int cash) {
-		// TODO Auto-generated method stub
-		
-	}
 	
 }
