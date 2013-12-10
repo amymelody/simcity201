@@ -249,7 +249,7 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 	public void msgImHere(MarketCustomer c) {
 		synchronized(orders) {
 			for(Order o: orders) {
-				if(o.customer.equals(c)) {
+				if(o.customer != null && o.customer.equals(c)) {
 					o.oS = OrderState.here;
 				}
 			}
@@ -260,7 +260,7 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 	public void msgHereAreItems(Order order, MarketEmployee e) {
 		synchronized(orders) {
 			for(Order o: orders) {
-				if(o.customer.equals(order.customer)) {
+				if(o.customer != null && o.customer.equals(order.customer)) {
 					o.oS = OrderState.ready;
 				}
 			}
@@ -277,7 +277,7 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 	public void msgPayment(MarketCustomer c, int money) {
 		synchronized(orders) {
 			for(Order o: orders) {
-				if(o.customer.equals(c)) {
+				if(o.customer != null && o.customer.equals(c)) {
 					o.oS = OrderState.done;
 					o.amountPaid = money;
 					transaction(o);

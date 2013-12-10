@@ -801,7 +801,7 @@ public class PersonAgent extends Agent implements Person
 					return true;
 				}
 			}
-			if (state.ws == WorkingState.working && time.greaterThanOrEqualTo(job.endShifts.get(time.getDay()) ) && !job.role.equals("landlordRole")) { //if your shift ends
+			if (state.ws == WorkingState.working && job.endShifts.get(time.getDay()).hour != 24 && time.greaterThanOrEqualTo(job.endShifts.get(time.getDay()) ) && !job.role.equals("landlordRole")) { //if your shift ends
 				endShift();
 				return true;
 			} 
