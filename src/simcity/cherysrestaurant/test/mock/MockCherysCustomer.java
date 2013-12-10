@@ -1,13 +1,13 @@
-package simcity.Anjalirestaurant.test.mock;
+package simcity.cherysrestaurant.test.mock; 
 
 
 import java.util.List;
 import java.util.Map;
 
-import simcity.Anjalirestaurant.AnjaliCashierCheck;
-import simcity.Anjalirestaurant.AnjaliWaiterFood;
-import simcity.Anjalirestaurant.gui.AnjaliCustomerGui;
-import simcity.Anjalirestaurant.interfaces.*;
+import simcity.cherysrestaurant.CherysCashierCheck;
+import simcity.cherysrestaurant.CherysWaiterFood;
+import simcity.cherysrestaurant.gui.CherysCustomerGui;
+import simcity.cherysrestaurant.interfaces.*;
 
 /**
  * A sample MockCustomer built to unit test a CashierAgent.
@@ -15,22 +15,22 @@ import simcity.Anjalirestaurant.interfaces.*;
  * @author Monroe Ekilah
  *
  */
-public class MockAnjaliCustomer extends Mock implements AnjaliCustomer
+public class MockCherysCustomer extends Mock implements CherysCustomer
 {
 
 	/**
 	 * Reference to the Cashier under test that can be set by the unit test.
 	 */
-	public AnjaliCashier cashier;
+	public CherysCashier cashier;
 	public EventLog log = new EventLog();
 
-	public MockAnjaliCustomer(String name)
+	public MockCherysCustomer(String name)
 	{
 		super(name);
 	}
 
 	@Override
-	public void msgFollowMe(AnjaliWaiter w, Map<Integer, AnjaliWaiterFood> m, List<String> foo)
+	public void msgFollowMe(CherysWaiter w, Map<Integer, CherysWaiterFood> m, List<String> foo)
 	{
 		log.add(new LoggedEvent("Received msgFollowMe from waiter."));
 	}
@@ -45,7 +45,7 @@ public class MockAnjaliCustomer extends Mock implements AnjaliCustomer
 		log.add(new LoggedEvent("Received msgOrderServed from waiter. Order served = "+ ch));
 	}
 	@Override
-	public void msgHereIsCheck(AnjaliCashierCheck ch)
+	public void msgHereIsCheck(CherysCashierCheck ch)
 	{
 		log.add(new LoggedEvent("Received msgHereIsCheck from waiter. Order = " + ch.order + ". Total = " + ch.total));	
 		//make this part a psuedo-scheduler
@@ -61,7 +61,7 @@ public class MockAnjaliCustomer extends Mock implements AnjaliCustomer
 		return log;
 	}
 	@Override
-	public AnjaliCustomerGui getGui()
+	public CherysCustomerGui getGui()
 	{
 		return null;
 	}

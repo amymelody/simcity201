@@ -1,16 +1,16 @@
-package simcity.Anjalirestaurant.test.mock;
+package simcity.cherysrestaurant.test.mock; 
 
-import simcity.Anjalirestaurant.interfaces.*;
+import simcity.cherysrestaurant.interfaces.*;
 
-public class MockAnjaliMarket extends Mock implements AnjaliMarket
+public class MockCherysMarket extends Mock implements CherysMarket
 {
 	/**
 	 * Reference to the agent under test that can be set by the unit test.
 	 */
-	public AnjaliCashier cashier;
+	public CherysCashier cashier;
 	public EventLog log = new EventLog();
 
-	public MockAnjaliMarket(String name)
+	public MockCherysMarket(String name)
 	{
 		super(name);
 	}
