@@ -102,7 +102,6 @@ public class JesusCustomerGui implements Gui {
 			else if (command==Command.LeaveRestaurant) {
 				agent.msgAnimationFinishedLeaveRestaurant();
 				isHungry = false;
-				gui.setCustomerEnabled(agent);
 			}
 			else if(xPos == cashierxloc && yPos == cashieryloc) {
 				agent.msgAnimationFinishedGoToCashier();

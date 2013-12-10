@@ -16,6 +16,10 @@ import simcity.market.MarketCashierRole;
 import simcity.market.MarketDelivererRole;
 import simcity.market.MarketCustomerRole;
 import simcity.RestCustomerRole;
+import simcity.jesusrestaurant.JesusCashierRole;
+import simcity.jesusrestaurant.JesusCookRole;
+import simcity.jesusrestaurant.JesusHostRole;
+import simcity.jesusrestaurant.JesusWaiterRole;
 import simcity.joshrestaurant.JoshCashierRole;
 import simcity.joshrestaurant.JoshHostRole;
 import simcity.joshrestaurant.JoshCustomerRole;
@@ -50,7 +54,7 @@ public class CityDirectory
 	private Vector<JoshWaiterRole> joshWaiters = new Vector<JoshWaiterRole>();
 	private Vector<AnjaliWaiterRole> anjaliWaiters = new Vector<AnjaliWaiterRole>();
 //	private Vector<CherysWaiterRole> cherysWaiters = new Vector<CherysWaiterRole>();
-//	private Vector<JesusWaiterRole> jesusWaiters = new Vector<JesusWaiterRole>();
+	private Vector<JesusWaiterRole> jesusWaiters = new Vector<JesusWaiterRole>();
 	private Vector<MarketEmployeeRole> market1Employees = new Vector<MarketEmployeeRole>();
 	private Vector<MarketEmployeeRole> market2Employees = new Vector<MarketEmployeeRole>();
 	private Vector<MarketDelivererRole> market1Deliverers = new Vector<MarketDelivererRole>();
@@ -71,9 +75,9 @@ public class CityDirectory
 //	private CherysCashierRole cherysCashier = new CherysCashierRole();
 //	private CherysCookRole cherysCook = new CherysCookRole();
 //	private CherysHostRole cherysHost = new CherysHostRole();
-//	private JesusCashierRole jesusCashier = new JesusCashierRole();
-//	private JesusCookRole jesusCook = new JesusCookRole();
-//	private JesusHostRole jesusHost = new JesusHostRole();
+	private JesusCashierRole jesusCashier = new JesusCashierRole();
+	private JesusCookRole jesusCook = new JesusCookRole();
+	private JesusHostRole jesusHost = new JesusHostRole();
 	
 	private List<PersonAgent> renters = new ArrayList<PersonAgent>();
 	
@@ -287,17 +291,17 @@ public class CityDirectory
 //		return cherysHost;
 //	}
 //	
-//	public JesusCashierRole getJesusCashier() {
-//		return jesusCashier;
-//	}
-//	
-//	public JesusCookRole getJesusCook() {
-//		return jesusCook;
-//	}
-//	
-//	public JesusHostRole getJesusHost() {
-//		return joshHost;
-//	}
+	public JesusCashierRole getJesusCashier() {
+		return jesusCashier;
+	}
+	
+	public JesusCookRole getJesusCook() {
+		return jesusCook;
+	}
+	
+	public JesusHostRole getJesusHost() {
+		return jesusHost;
+	}
 	
 	public CityDirectory()
 	{
