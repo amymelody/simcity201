@@ -76,7 +76,7 @@ public class ListPanel extends JPanel implements ActionListener {
     public void removePerson(String name) {
     	for (JButton button : list) {
     		if (button.getText().equals(name)) {
-    			AlertLog.getInstance().logMessage(AlertTag.JOSH_RESTAURANT, "listpanel", "remove person");
+    			//AlertLog.getInstance().logMessage(AlertTag.JOSH_RESTAURANT, "listpanel", "remove person");
     			list.remove(button);
     			view.remove(button);
     			break;

@@ -62,9 +62,8 @@ public class AnjaliCustomerRole extends RestCustomerRole implements AnjaliCustom
 	 * @param gui  reference to the customergui so the customer can send it messages
 	 */
 	
-	public AnjaliCustomerRole (String name){
+	public AnjaliCustomerRole (){
 		super();
-		this.name = name;
 		cash = 30;
 	}
 	

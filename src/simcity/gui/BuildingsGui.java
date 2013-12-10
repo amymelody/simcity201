@@ -11,6 +11,7 @@ import java.util.List;
 
 import simcity.CityDirectory;
 import simcity.market.gui.MarketGui;
+import simcity.anjalirestaurant.gui.AnjaliRestaurantGui;
 import simcity.bank.gui.BankGui;
 import simcity.housing.gui.HousingGui;
 import simcity.joshrestaurant.gui.JoshRestaurantGui;
@@ -191,12 +192,12 @@ public class BuildingsGui extends JFrame
 		// Restaurants
 		JoshRestaurantGui joshRestaurant = new JoshRestaurantGui("joshRestaurant", this, cd);
 		cityGui.animationPanel.addBuilding(joshRestaurant);
-		/*AnjaliRestaurantGui AnjaliRestaurant = new AnjaliRestaurantGui("AnjaliRestaurant", this, cd);
-		cityGui.animationPanel.addBuilding(AnjaliRestaurant);
+//		CherysRestaurantGui cherysRestaurant = new CherysRestaurantGui("cherysRestaurant", this, cd);
+//		cityGui.animationPanel.addBuilding(cherysRestaurant);
 		AnjaliRestaurantGui anjaliRestaurant = new AnjaliRestaurantGui("anjaliRestaurant", this, cd);
 		cityGui.animationPanel.addBuilding(anjaliRestaurant);
-		JesusRestaurantGui jesusRestaurant = new JesusRestaurantGui("jesusRestaurant", this, cd);
-		cityGui.animationPanel.addBuilding(jesusRestaurant);*/
+//		JesusRestaurantGui jesusRestaurant = new JesusRestaurantGui("jesusRestaurant", this, cd);
+//		cityGui.animationPanel.addBuilding(jesusRestaurant);
 
 	}
 

@@ -184,8 +184,8 @@ public class CityGui extends JFrame
 		animationPanel.addGui(g);
 	}
 
-	public void addRestCustomer(RestCustomerRole c) {
-		animationPanel.addRestCustomer(c);
+	public void addRestCustomer(RestCustomerRole c, String location) {
+		animationPanel.addRestCustomer(c, location);
 	}
 
 	public void addRestWaiter(RestWaiterRole w) {
@@ -212,8 +212,8 @@ public class CityGui extends JFrame
 		animationPanel.addMarketDeliverer(d);
 	}
 	
-	public void addBankDepositor(BankDepositorRole d) {
-		animationPanel.addBankDepositor(d);
+	public void addBankDepositor(BankDepositorRole d, String location) {
+		animationPanel.addBankDepositor(d, location);
 	}
 	
 	public void addBankTeller(BankTellerRole t) {

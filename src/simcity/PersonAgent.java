@@ -46,6 +46,7 @@ public class PersonAgent extends Agent implements Person
 	private boolean testingAnimation;
 	private boolean usingBus;
 	private boolean goingHome;
+	private String foodPreference;
 
 	private CityDirectory city;
 	private CityGui cG;
@@ -99,7 +100,7 @@ public class PersonAgent extends Agent implements Person
 		houses.add(new Housing("ownerHouse", "residentRole"));
 
 		restaurants.add(new Restaurant("joshRestaurant", "italian", "joshCustomerRole"));
-		restaurants.add(new Restaurant("AnjaliRestaurant", "blah", "AnjaliCustomerRole"));
+		restaurants.add(new Restaurant("cherysRestaurant", "blah", "AnjaliCustomerRole"));
 		restaurants.add(new Restaurant("jesusRestaurant", "bleh", "jesusCustomerRole"));
 		restaurants.add(new Restaurant("anjaliRestaurant", "blih", "anjaliCustomerRole"));
 
@@ -163,6 +164,10 @@ public class PersonAgent extends Agent implements Person
 
 	public void setGoingHome(boolean gH) {
 		goingHome = gH;
+	}
+	
+	public void setPreference(String p) {
+		foodPreference = p;
 	}
 
 	public String getName() {
@@ -382,20 +387,25 @@ public class PersonAgent extends Agent implements Person
 			if (destination.equals("joshRestaurant")) {
 				return restaurants.get(0);
 			}
-			if (destination.equals("AnjaliRestaurant")) {
+			if (destination.equals("cherysRestaurant")) {
 				return restaurants.get(1);
 			}
 			if (destination.equals("jesusRestaurant")) {
 				return restaurants.get(2);
 			}
-			if (destination.equals("alfredRestaurant")) {
+			if (destination.equals("anjaliRestaurant")) {
 				return restaurants.get(3);
 			}
-			if (destination.equals("anjaliRestaurant")) {
-				return restaurants.get(4);
-			}
 		}
-		return restaurants.get(0);
+		if (foodPreference.equals("anjaliRestaurant")) {
+			return restaurants.get(3);
+		} else if (foodPreference.equals("cherysRestaurant")) {
+			return restaurants.get(1);
+		} else if (foodPreference.equals("jesusRestaurant")) {
+			return restaurants.get(2);
+		} else {
+			return restaurants.get(0);
+		}
 	}
 
 	private Restaurant getRestaurant(String building) {
@@ -987,7 +997,7 @@ public class PersonAgent extends Agent implements Person
 			if (!findRole(r.customerRole)) {
 				RestCustomerRole c = city.RestCustomerFactory(r.customerRole);
 				addRole(c, r.customerRole);
-				cG.addRestCustomer(c);
+				cG.addRestCustomer(c, r.location);
 			}
 			synchronized(roles) {
 				for (MyRole mr : roles) {
@@ -1046,7 +1056,7 @@ public class PersonAgent extends Agent implements Person
 			if (!findRole(b.depositorRole)) {
 				BankDepositorRole d = city.BankDepositorFactory(b.depositorRole);
 				addRole(d, b.depositorRole);
-				cG.addBankDepositor(d);
+				cG.addBankDepositor(d, b.location);
 			}
 			synchronized(roles) {
 				for (MyRole mr : roles) {
@@ -1195,7 +1205,7 @@ public class PersonAgent extends Agent implements Person
 			this.endShifts = endShifts;
 			switch (location) {
 
-				case "joshRestaurant": case "AnjaliRestaurant": case "alfredRestaurant": case "anjaliRestaurant": case "jesusRestaurant":
+				case "joshRestaurant": case "cherysRestaurant": case "alfredRestaurant": case "anjaliRestaurant": case "jesusRestaurant":
 					jobLocation = LocationState.restaurant;
 					break;
 				case "market1": case "market2":
@@ -1222,7 +1232,7 @@ public class PersonAgent extends Agent implements Person
 			this.endShifts = endShifts;
 			switch (location) {
 
-				case "joshRestaurant": case "AnjaliRestaurant": case "alfredRestaurant": case "anjaliRestaurant": case "jesusRestaurant":
+				case "joshRestaurant": case "cherysRestaurant": case "alfredRestaurant": case "anjaliRestaurant": case "jesusRestaurant":
 					jobLocation = LocationState.restaurant;
 					break;
 				case "market1": case "market2":

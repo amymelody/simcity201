@@ -43,10 +43,9 @@ public class AnjaliCashierRole extends RestCashierRole implements AnjaliCashier{
 	private boolean working;
 	private int cashierCash;
 	
-	public AnjaliCashierRole(String name) {
+	public AnjaliCashierRole() {
 		super();
 		working = false;
-		this.name = name;
 		cashierCash = 1000;
 		
 	}

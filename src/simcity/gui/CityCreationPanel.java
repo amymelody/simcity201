@@ -372,10 +372,17 @@ public class CityCreationPanel extends JPanel //implements ActionListener
 					}
 				}
 			}
+			if (key.contains("preference")) {
+				for (PersonInfo pI : info) {
+					if (key.contains(Integer.toString(pI.id))){
+						pI.preference = cityConfig.getProperty(key);
+					}
+				}
+			}
 	    }
 		
 		for (PersonInfo pI : info) {
-			inputPanel.addPerson(pI.name, pI.job, pI.pay, pI.start, pI.end, pI.eco, pI.physical, pI.housing, cityDirectory, testingAnimation, usingBus, goingHome);
+			inputPanel.addPerson(pI.name, pI.job, pI.pay, pI.start, pI.end, pI.eco, pI.physical, pI.housing, pI.preference, cityDirectory, testingAnimation, usingBus, goingHome);
 		}
 		cityDirectory.assignLandlord();
 		inputPanel.startBus(busNonNorm);
@@ -391,7 +398,7 @@ public class CityCreationPanel extends JPanel //implements ActionListener
 		public int start;
 		public int end;
 		public int pay;
-		public String car;
+		public String preference;
 		PersonInfo(String n, int i) {
 			name = n;
 			id = i;
@@ -402,7 +409,7 @@ public class CityCreationPanel extends JPanel //implements ActionListener
 			start = -1;
 			end = -1;
 			pay = -1;
-			car = null;
+			preference = "joshRestaurant";
 		}
 	}
 }

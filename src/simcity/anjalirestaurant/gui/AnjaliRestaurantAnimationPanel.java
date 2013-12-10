@@ -37,7 +37,7 @@ public class AnjaliRestaurantAnimationPanel extends JPanel implements ActionList
         
         bufferSize = this.getSize();
  
-    	Timer timer = new Timer(20, this );
+    	Timer timer = new Timer(5, this );
     	timer.start();
     }
 
@@ -60,11 +60,11 @@ public class AnjaliRestaurantAnimationPanel extends JPanel implements ActionList
         Graphics2D plateArea = (Graphics2D)g;
         Graphics2D fridge = (Graphics2D)g;
         //Clear the screen by painting a rectangle the size of the frame
-        g2.setColor(getBackground());
+        g2.setColor(Color.WHITE);
         g2.fillRect(0, 0, WINDOWX, WINDOWY );
-        g3.setColor(getBackground());
+        g3.setColor(Color.WHITE);
         g3.fillRect(0,0, WINDOWX, WINDOWY);
-        g4.setColor(getBackground());
+        g4.setColor(Color.WHITE);
         g4.fillRect(0,0,WINDOWX, WINDOWY);
         
        

@@ -22,6 +22,7 @@ import simcity.gui.BuildingGui;
 import simcity.gui.BuildingsGui;
 import simcity.joshrestaurant.JoshCustomerRole;
 import simcity.joshrestaurant.JoshWaiterRole;
+import simcity.joshrestaurant.gui.JoshRestaurantInputPanel;
 /**
  * Main GUI class.
  * Contains the main frame and subsequent panels
@@ -53,6 +54,8 @@ public class AnjaliRestaurantGui extends BuildingGui implements ActionListener {
      */
     public AnjaliRestaurantGui(String n, BuildingsGui bG, CityDirectory cD) {
        super(n, bG, cD);
+       inputPanel = new AnjaliRestaurantInputPanel(this, cD.getAnjaliCashier(), cD.getAnjaliCook(), cD.getAnjaliHost(), cD.getMarketCashiers());
+       
     	int WINDOWX = 650;
         int WINDOWY = 500;
        
