@@ -2,9 +2,13 @@ package simcity.cherysrestaurant.gui;
 
 import javax.swing.*;
 
+import simcity.gui.Gui;
+import simcity.housing.gui.ResidentGui;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Collections;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -27,7 +31,7 @@ public class CherysRestaurantAnimationPanel extends JPanel implements ActionList
     private Dimension bufferSize;
     private int buff = 1;
 
-    private List<CherysGui> guis = new ArrayList<CherysGui>();
+    private List<CherysGui> guis = Collections.synchronizedList(new ArrayList<CherysGui>());
     
     class Table
     {
@@ -69,6 +73,20 @@ public class CherysRestaurantAnimationPanel extends JPanel implements ActionList
      */
 	public void actionPerformed(ActionEvent e)
 	{
+		synchronized(guis)
+		{
+			for(CherysGui gui : guis)
+			{
+//				if(gui instanceof CherysCustomerGui)
+//				{
+//					System.out.println("Size: " + guis.size());
+//				}
+				if (gui.isPresent())
+				{
+					gui.updatePosition();
+				}
+			}
+		}
 		repaint();  //Will have paintComponent called
 	}
 	/**

@@ -13,13 +13,13 @@ public class CherysWaiterGui implements CherysGui
 {
     private CherysWaiterRole agent = null;
 
-    private int xPos = 50, yPos = 145;//default waiter position
-    private int xDestination = 50, yDestination = 145;//default start position
+    private int xExit = -20, yExit = 0;//default waiter position
+    private int xPos = -20, yPos = 0;//default waiter position
+    private int xDestination = -20, yDestination = -20;//default start position
     private int personDimensions = 20;
     private int xDesk = -20, yDesk = 0;
     private int xKitchen = 750, yKitchen = 0;
-    private int xHome = xPos, yHome = yPos;
-    private int xCustomer, yCustomer;
+    private int xHome = 500, yHome = 150;
     
     private int tableDestination = 0;
     
@@ -55,7 +55,7 @@ public class CherysWaiterGui implements CherysGui
      * Constructor for WaiterGui
      * @param agent reference to the waiter this gui represents
      */
-    public CherysWaiterGui(CherysWaiterRole agent, CherysRestaurantGui gui, int number)
+    public CherysWaiterGui(CherysWaiterRole agent, CherysRestaurantGui gui)
     {
         this.agent = agent;
     	for(int i = 0; i < numTables; i++)
@@ -63,10 +63,6 @@ public class CherysWaiterGui implements CherysGui
 	    	Table temp = new Table(i + 1, xTableInitial + (tableDimensions + tableBuffer)*i, yTable);
 	    	tables.add(temp);
     	}
-
-    	xPos = xHome + 30*number;
-    	xHome = xPos;
-    	xDestination = xPos;
     	
     	this.gui = gui;
     }
@@ -96,7 +92,7 @@ public class CherysWaiterGui implements CherysGui
 	        if (xPos == xDestination && yPos == yDestination)
 	        {
 	        	newDestination = false;
-	        	if(xDestination == xCustomer && yDestination == yCustomer)
+	        	if(xDestination == xDesk && yDestination == yDesk)
 	        	{
 	        		agent.msgAtLobby();
 	        	}
@@ -108,6 +104,10 @@ public class CherysWaiterGui implements CherysGui
 	        	if(xDestination == xKitchen && yDestination == yKitchen)
 	        	{
 	        		agent.msgAtKitchen();
+	        	}
+	        	if(xDestination == xExit && yDestination == yExit)
+	        	{
+	        		agent.msgExited();
 	        	}
 //	        	if(xDestination == xHome && yDestination == yHome)
 //	        	{
@@ -155,13 +155,17 @@ public class CherysWaiterGui implements CherysGui
 //    	gui.setWaiterBusy(agent, false);
 //    }
 
-    public void doGoToCustomer(CherysCustomerGui cg)
+    public void doExit()
     {
     	newDestination = true;
-    	xCustomer = cg.xDestination + personDimensions;
-    	yCustomer = cg.yDestination - personDimensions;
-        xDestination = xCustomer;
-        yDestination = yCustomer;
+        xDestination = xExit;
+        yDestination = yExit;
+    }
+    public void doGoToCustomer()
+    {
+    	newDestination = true;
+        xDestination = xDesk;
+        yDestination = yDesk;
     }
     public void doGoToTable(int t)
     {

@@ -48,11 +48,6 @@ public class MockRestCook extends Mock implements RestCook {
 		
 	}
 
-	@Override
-	public void msgHereIsOrder(JoshWaiterRole waiter, String choice, int table) {
-		// TODO Auto-generated method stub
-		
-	}
 
 	@Override
 	public void msgHereIsWhatICanFulfill(List<ItemOrder> orders,

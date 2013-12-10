@@ -5,6 +5,8 @@ import simcity.cherysrestaurant.gui.CherysCustomerGui;
 import simcity.cherysrestaurant.gui.CherysRestaurantGui;
 import simcity.cherysrestaurant.interfaces.*;
 import simcity.mock.EventLog;
+import simcity.trace.AlertLog;
+import simcity.trace.AlertTag;
 
 import java.util.*;
 import java.util.concurrent.Semaphore;
@@ -67,7 +69,6 @@ public class CherysCustomerRole extends RestCustomerRole implements CherysCustom
 	public CherysCustomerRole() //* called in RestaurantPanel
 	{
 		super();
-		stateChanged();
 	}
 
 	/**
@@ -94,16 +95,17 @@ public class CherysCustomerRole extends RestCustomerRole implements CherysCustom
 	// Messages
 	public void gotHungry() //* called from animation
 	{
-		Do("I'm hungry");
+		AlertLog.getInstance().logMessage(AlertTag.CHERYS_RESTAURANT, name, "received gotHungry");
 		money = person.getMoney();
 		events.add(AgentEvent.arrived);
 		state = null;
 		hungerLevel = maxHunger;
+		customerGui.setPresent(true);
 		stateChanged();
 	}
 	public void msgFollowMe(CherysWaiter w, Map<Integer, CherysWaiterFood> m, List<String> foo)//int seat) //* called from Waiter
 	{
-		Do("recieved msgFollowMe");
+		AlertLog.getInstance().logMessage(AlertTag.CHERYS_RESTAURANT, name, "received msgFollowMe");
 		waiter = w;
 		menu = m;
 		foodsOutOf = foo;
@@ -112,50 +114,47 @@ public class CherysCustomerRole extends RestCustomerRole implements CherysCustom
 	}
 	public void msgWhatIsYourOrder(List<String> foo) //* called from Waiter
 	{
-		Do("recieved msgWhatIsYourOrder");
+		AlertLog.getInstance().logMessage(AlertTag.CHERYS_RESTAURANT, name, "received msgWhatIsYourOrder");
 		foodsOutOf = foo;
 		events.add(AgentEvent.askedForOrder);
 		stateChanged();
 	}
 	public void msgOrderServed(String ch) //* called from Waiter
 	{
-		Do("recieved msgOrderServed");
+		AlertLog.getInstance().logMessage(AlertTag.CHERYS_RESTAURANT, name, "received msgOrderServed");
 		doGetFood(ch);
 		events.add(AgentEvent.foodRecieved);
 		stateChanged();
 	}
 	public void msgHereIsCheck(CherysCashierCheck ch)
 	{
-		Do("recieved msgHereIsCheck");
+		AlertLog.getInstance().logMessage(AlertTag.CHERYS_RESTAURANT, name, "received msgHereIsCheck");
 		check = ch;
 		events.add(AgentEvent.gotCheck);
 		stateChanged();
 	}
 	public void msgChange(int change)
 	{
-		Do("recieved msgChange");
+		AlertLog.getInstance().logMessage(AlertTag.CHERYS_RESTAURANT, name, "received msgChange. I now have $" + money);
 		money += change;
-		Do("I now have $" + money);
 		events.add(AgentEvent.transactionComplete);
 		stateChanged();
 	}
 	
 	public void msgAtTable() //* called from animation
 	{
-		Do("AT TABLE RELEASE");
 		events.add(AgentEvent.satDown);
 		atTable.release();
 	}
 	public void msgAtCashier() //* called from animation
 	{
-		Do("AT CASHIER RELEASE");
 		events.add(AgentEvent.readyToPay);
 		atCashier.release();
 	}
 	public void msgLeftRestaurant() //* called from animation
 	{
-		Do("LEFT RESTAURANT RELEASE");
 		leftRestaurant.release();
+		customerGui.setPresent(false);
 	}
 
 	/**

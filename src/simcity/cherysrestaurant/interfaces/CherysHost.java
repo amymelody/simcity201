@@ -10,4 +10,5 @@ public interface CherysHost
 	public abstract void msgTableFree(int t, CherysWaiter w, CherysCustomer c); //* called from WaiterAgent.tableAvailible
 	public abstract void msgMayIGoOnBreak(CherysWaiter w); //*called from WaiterAgent
 	public abstract void msgBackFromBreak(CherysWaiter w); //*called from WaiterAgent
+	public abstract void msgOnDuty(CherysWaiter w, boolean tf);
 }
