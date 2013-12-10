@@ -67,7 +67,6 @@ public class CherysCustomerRole extends RestCustomerRole implements CherysCustom
 	public CherysCustomerRole() //* called in RestaurantPanel
 	{
 		super();
-		stateChanged();
 	}
 
 	/**

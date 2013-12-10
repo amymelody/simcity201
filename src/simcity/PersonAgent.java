@@ -100,7 +100,7 @@ public class PersonAgent extends Agent implements Person
 		houses.add(new Housing("ownerHouse", "residentRole"));
 
 		restaurants.add(new Restaurant("joshRestaurant", "italian", "joshCustomerRole"));
-		restaurants.add(new Restaurant("cherysRestaurant", "blah", "AnjaliCustomerRole"));
+		restaurants.add(new Restaurant("cherysRestaurant", "blah", "cherysCustomerRole"));
 		restaurants.add(new Restaurant("jesusRestaurant", "bleh", "jesusCustomerRole"));
 		restaurants.add(new Restaurant("anjaliRestaurant", "blih", "anjaliCustomerRole"));
 

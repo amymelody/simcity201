@@ -13,7 +13,7 @@ import java.util.ArrayList;
  * Subpanel of ListPanel.
  * Holds the name text field and checkbox for customers and waiters
  */
-public class CherysInputPanel extends JPanel implements ActionListener
+public class CherysInputPanel extends JPanel //implements ActionListener
 {
     private CherysListPanel listPanel;
     private String type;
@@ -33,10 +33,10 @@ public class CherysInputPanel extends JPanel implements ActionListener
         type = t;
         textLength = 10;
         name = new JTextField("", textLength);
-        name.addActionListener(this);
+//        name.addActionListener(this);
         check = new JCheckBox("", false);
     	check.setEnabled(true);
-        check.addActionListener(this);
+//        check.addActionListener(this);
         setLayout(new FlowLayout());
 
         if(type.equals("Waiter"))
@@ -52,24 +52,24 @@ public class CherysInputPanel extends JPanel implements ActionListener
         add(name);
         add(check);
     }
-    /**
-     * Action listener method that reacts to the checkbox being clicked
-     */
-    public void actionPerformed(ActionEvent e)
-    {
-        if(e.getSource() == check)
-        {
-        	if(check.isSelected())
-        	{
-        		check.setEnabled(false);
-        	}
-        	else
-    		{
-    			check.setText(originalText);
-    		}
-        	listPanel.updatePerson(name.getText(), check.isSelected());
-        }
-    }
+//    /**
+//     * Action listener method that reacts to the checkbox being clicked
+//     */
+//    public void actionPerformed(ActionEvent e)
+//    {
+//        if(e.getSource() == check)
+//        {
+//        	if(check.isSelected())
+//        	{
+//        		check.setEnabled(false);
+//        	}
+//        	else
+//    		{
+//    			check.setText(originalText);
+//    		}
+//        	listPanel.updatePerson(name.getText(), check.isSelected());
+//        }
+//    }
     /**
      * Disables the ability to edit the textfield once an agent has
      * already been added

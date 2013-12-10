@@ -12,6 +12,9 @@ import simcity.bank.BankDepositorRole;
 import simcity.bank.BankTellerRole;
 import simcity.bank.gui.BankDepositorGui;
 import simcity.bank.gui.BankGui;
+import simcity.cherysrestaurant.CherysCustomerRole;
+import simcity.cherysrestaurant.CherysWaiterRole;
+import simcity.cherysrestaurant.gui.CherysRestaurantGui;
 import simcity.housing.LandlordRole;
 import simcity.housing.ResidentRole;
 import simcity.housing.gui.HousingGui;
@@ -124,12 +127,12 @@ public class CityAnimationPanel extends JPanel implements ActionListener, MouseL
 							AnjaliCustomerRole jC = (AnjaliCustomerRole)(c);
 							g.addCustomer(jC);
 						}
-//					} else if (location.equals("cherysRestaurant")) {
-//						CherysRestaurantGui g = (CherysRestaurantGui)bG;
-//						if (c instanceof CherysCustomerRole) {
-//							CherysCustomerRole jC = (CherysCustomerRole)(c);
-//							g.addCustomer(jC);
-//						}
+					} else if (location.equals("cherysRestaurant")) {
+						CherysRestaurantGui g = (CherysRestaurantGui)bG;
+						if (c instanceof CherysCustomerRole) {
+							CherysCustomerRole jC = (CherysCustomerRole)(c);
+							g.addCustomer(jC);
+						}
 //					} else if (location.equals("jesusRestaurant")) {
 //						JesusRestaurantGui g = (JesusRestaurantGui)bG;
 //						if (c instanceof JesusCustomerRole) {
@@ -161,7 +164,13 @@ public class CityAnimationPanel extends JPanel implements ActionListener, MouseL
 						if (w instanceof AnjaliNormalWaiterRole) {
 							AnjaliNormalWaiterRole aW = (AnjaliNormalWaiterRole)(w);
 							g.addWaiter(aW);
-						}
+						} 
+					} else if (w.getJobLocation().equals("cherysRestaurant")) {
+							CherysRestaurantGui g = (CherysRestaurantGui)bG;
+							if (w instanceof CherysWaiterRole) {
+								CherysWaiterRole cW = (CherysWaiterRole)(w);
+								g.addWaiter(cW);
+							}
 //						if (w instanceof AnjaliSharedDataWaiterRole) {
 //							AnjaliSharedDataWaiterRole aW = (AnjaliSharedDataWaiterRole)(w);
 //							g.addWaiter(aW);
