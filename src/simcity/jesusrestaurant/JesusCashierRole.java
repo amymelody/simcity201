@@ -1,6 +1,6 @@
 package simcity.jesusrestaurant;
 
-import simcity.PersonAgent;
+import simcity.interfaces.Person;
 import simcity.RestCashierRole;
 import simcity.role.JobRole;
 import simcity.interfaces.MarketDeliverer;
@@ -57,7 +57,7 @@ public class JesusCashierRole extends RestCashierRole implements JesusCashier {
 		return name;
 	}
 	
-	public void setPerson(PersonAgent p) {
+	public void setPerson(Person p) {
 		super.setPerson(p);
 		name = p.getName();
 	}

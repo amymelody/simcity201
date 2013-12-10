@@ -1,5 +1,6 @@
 package simcity.jesusrestaurant;
 
+import simcity.RestHostRole;
 import simcity.role.JobRole;
 import simcity.interfaces.Person;
 import simcity.jesusrestaurant.gui.JesusHostGui;
@@ -14,7 +15,7 @@ import java.util.concurrent.Semaphore;
 //does all the rest. Rather than calling the other agent a waiter, we called him
 //the HostAgent. A Host is the manager of a restaurant who sees that all
 //is proceeded as he wishes.
-public class JesusHostRole extends JobRole {
+public class JesusHostRole extends RestHostRole {
 	static final int NTABLES = 4;//a global for the number of tables.
 	//Notice that we implement waitingCustomers using ArrayList, but type it
 	//with List semantics.

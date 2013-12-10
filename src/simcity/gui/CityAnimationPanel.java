@@ -13,7 +13,7 @@ import simcity.bank.BankTellerRole;
 import simcity.bank.gui.BankDepositorGui;
 import simcity.bank.gui.BankGui;
 import simcity.cherysrestaurant.CherysCustomerRole;
-import simcity.cherysrestaurant.CherysWaiterRole;
+import simcity.cherysrestaurant.CherysNormalWaiterRole;
 import simcity.cherysrestaurant.gui.CherysRestaurantGui;
 import simcity.housing.LandlordRole;
 import simcity.housing.ResidentRole;
@@ -170,8 +170,8 @@ public class CityAnimationPanel extends JPanel implements ActionListener, MouseL
 						} 
 					} else if (w.getJobLocation().equals("cherysRestaurant")) {
 						CherysRestaurantGui g = (CherysRestaurantGui)bG;
-						if (w instanceof CherysWaiterRole) {
-							CherysWaiterRole cW = (CherysWaiterRole)(w);
+						if (w instanceof CherysNormalWaiterRole) {
+							CherysNormalWaiterRole cW = (CherysNormalWaiterRole)(w);
 							g.addWaiter(cW);
 						}
 						//						if (w instanceof AnjaliSharedDataWaiterRole) {

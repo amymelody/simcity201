@@ -1,6 +1,7 @@
 package simcity.jesusrestaurant;
 
 import simcity.RestCustomerRole;
+import simcity.interfaces.Person;
 import simcity.jesusrestaurant.gui.JesusCustomerGui;
 import simcity.jesusrestaurant.interfaces.JesusCashier;
 import simcity.jesusrestaurant.interfaces.JesusCustomer;
@@ -50,16 +51,17 @@ public class JesusCustomerRole extends RestCustomerRole implements JesusCustomer
 		 * @param name name of the customer
 		 * @param gui  reference to the customergui so the customer can send it messages
 		 */
-		public JesusCustomerRole(String name){
+		public JesusCustomerRole(){
 			super();
-			this.name = name;
 			foodChoice = "";
 			menu = null;
 		}
 
-		/**
-		 * hack to establish connection to Host agent.
-		 */
+		public void setPerson(Person p) {
+			super.setPerson(p);
+			name = p.getName();
+		}
+		
 		public void setHost(JesusHostRole host) {
 			this.host = host;
 		}

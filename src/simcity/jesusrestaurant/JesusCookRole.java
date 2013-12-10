@@ -1,7 +1,8 @@
 package simcity.jesusrestaurant;
 
 import simcity.ItemOrder;
-import simcity.PersonAgent;
+import simcity.RestCookRole;
+import simcity.interfaces.Person;
 import simcity.role.JobRole;
 import simcity.jesusrestaurant.JesusCookRole;
 import simcity.jesusrestaurant.gui.JesusCookGui;
@@ -23,7 +24,7 @@ import java.util.TimerTask;
 //does all the rest. Rather than calling the other agent a waiter, we called him
 //the HostAgent. A Host is the manager of a restaurant who sees that all
 //is proceeded as he wishes.
-public class JesusCookRole extends JobRole implements RestCook {
+public class JesusCookRole extends RestCookRole implements RestCook {
 	private static final int enchiladaTime = 5000;
 	private static final int tacosTime = 2000;
 	private static final int pozoleTime = 4000;
@@ -67,7 +68,7 @@ public class JesusCookRole extends JobRole implements RestCook {
 		return name;
 	}
 	
-	public void setPerson(PersonAgent p) {
+	public void setPerson(Person p) {
 		super.setPerson(p);
 		name = p.getName();
 	}
