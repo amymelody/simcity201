@@ -32,7 +32,7 @@ public class JesusCookRole extends JobRole {
 	public List<myMarket> markets = Collections.synchronizedList(new ArrayList<myMarket>());
 	public JesusHostRole host;
 	public JesusCashierRole cashier;
-
+	boolean start, working;
 	public enum orderState {waiting, preparing, ready};
 	public enum stockState {none, checkFood, outOfFood, ordered, stockReplenished};
 	stockState sState = stockState.none;
@@ -149,7 +149,16 @@ public class JesusCookRole extends JobRole {
 	}
 
 	// Messages
+	public void msgStartShift() {
+		working = true;
+		start = true;
+		stateChanged();
+	}
 
+	public void msgEndShift() {
+		working = false;
+		stateChanged();
+	}
 	public void msgGotPlate(String foodChoice) {
 		jesusCookGui.GotFood(foodChoice);
 	}
@@ -227,11 +236,22 @@ public class JesusCookRole extends JobRole {
 			}
 		}
 	}
+	public void left() {
+		person.msgLeftDestination(this);
+	}
 
 	/**
 	 * Scheduler.  Determine what action is called for, and do it.
 	 */
 	public boolean pickAndExecuteAnAction() {
+		if(!working) {
+			leaveRestaurant();
+			return true;
+		}
+		if(start) {
+			startWork();
+			return true;
+		}
 		if(sState == stockState.checkFood) {
 			sState = stockState.none;
 			checkInventory();
@@ -276,8 +296,14 @@ public class JesusCookRole extends JobRole {
 	}
 
 	// Actions
-
-	public void checkInventory() {
+	private void startWork() {
+		start = false;
+		jesusCookGui.work();
+	}
+	private void leaveRestaurant() {
+		jesusCookGui.leave();
+	}
+	private void checkInventory() {
 		if(noInventory() && !markets.isEmpty()) {
 			host.msgClosed();
 			for(Food f: foods) {
@@ -438,16 +464,5 @@ public class JesusCookRole extends JobRole {
 		updateInventory("Salad", sI);
 		updateInventory("Pizza", pI);
 	}
-
-	@Override
-	public void msgStartShift() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void msgEndShift() {
-		// TODO Auto-generated method stub
-		
-	}
+	
 }

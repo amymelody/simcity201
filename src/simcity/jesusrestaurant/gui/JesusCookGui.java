@@ -15,10 +15,10 @@ import javax.swing.ImageIcon;
 
 public class JesusCookGui implements Gui {
 
-	private JesusCookRole agent = null;
+	private JesusCookRole role = null;
 
-	private int xPos = 400, yPos = 400;//default cook position
-	private int xDestination = 400, yDestination = 400;//default cook destination
+	private int xPos = -20, yPos = 20;//default cook position
+	private int xDestination = -20, yDestination = 20;//default cook destination
 	private int xHome = 400, yHome = 400;//cook home position
 
 	Image cookImage;
@@ -31,9 +31,10 @@ public class JesusCookGui implements Gui {
 	int platewxloc = 19, platewyloc = 16;
 	int platexloc = 19, plateyloc = 16;
 	public static final Map<String, Image> foodImages = new HashMap<String, Image>();
+	boolean leave = false;
 	
-	public JesusCookGui(JesusCookRole agent) {
-		this.agent = agent;
+	public JesusCookGui(JesusCookRole role) {
+		this.role = role;
 
 		ImageIcon cookIcon = new ImageIcon(this.getClass().getResource("images/luigi.png"));
 		cookImage = cookIcon.getImage();
@@ -86,6 +87,9 @@ public class JesusCookGui implements Gui {
 				}
 			}
 		}
+		else if(xDestination == xPos && xDestination == -20 && yDestination == yPos && yDestination == 20 && leave) {
+			role.left();
+		}
 	}
 
 	public void draw(Graphics2D g) {
@@ -101,6 +105,15 @@ public class JesusCookGui implements Gui {
 		return true;
 	}
 
+	public void work() {
+		xDestination = xHome;
+		yDestination = yHome;
+	}
+	public void leave() {
+		xDestination = -20;
+		yDestination = 20;
+		leave = true;
+	}
 	public void DoCookFood(String foodItem) {
 		foods.add(new fImage(foodItem, foodImages.get(foodItem)));
 		xDestination = cookwxloc*20;
@@ -143,11 +156,11 @@ public class JesusCookGui implements Gui {
 	}
 	
 	public void checkInventory() {
-		agent.msgCheckInventory();
+		role.msgCheckInventory();
 	}
 
 	public void updateInventory(Integer stI, Integer sI, Integer pI) {
-		agent.updateInventory(stI, sI, pI);
+		role.updateInventory(stI, sI, pI);
 	}
 	
 	public class fImage {
