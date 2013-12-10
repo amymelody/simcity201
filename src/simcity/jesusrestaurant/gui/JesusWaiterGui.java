@@ -1,7 +1,7 @@
 package simcity.jesusrestaurant.gui;
 
 import simcity.gui.Gui;
-import simcity.jesusrestaurant.JesusWaiterRole;
+import simcity.jesusrestaurant.JesusNormalWaiterRole;
 import simcity.jesusrestaurant.interfaces.JesusCustomer;
 
 import java.awt.*;
@@ -12,9 +12,9 @@ import javax.swing.ImageIcon;
 
 public class JesusWaiterGui implements Gui {
 
-	private JesusWaiterRole role = null;
+	private JesusNormalWaiterRole role = null;
 
-	private int xPos = 460, yPos = 0;//default waiter position
+	private int xPos = -20, yPos = 20;//default waiter position
 	private int xDestination, yDestination;//default waiter destination
 	private int xHome, yHome;//waiter home position
 	private int xCook = 380, yCook = 280;
@@ -48,14 +48,14 @@ public class JesusWaiterGui implements Gui {
 
 	boolean leave;
 	
-	public JesusWaiterGui(JesusWaiterRole role, JesusRestaurantGui g, int xh, int yh) {
+	public JesusWaiterGui(JesusNormalWaiterRole role, JesusRestaurantGui g, int xh, int yh) {
 		this.role = role;
 		gui = g;
 		
 		xHome = xh;
 		yHome = yh;
-		xDestination = xHome;
-		yDestination = yHome;
+		xDestination = -20;
+		yDestination = 20;
 		
 		ImageIcon waiterIcon = new ImageIcon(this.getClass().getResource("images/yoshi.png"));
 		waiterImage = waiterIcon.getImage();
@@ -67,9 +67,10 @@ public class JesusWaiterGui implements Gui {
 		ImageIcon saladIcon = new ImageIcon(this.getClass().getResource("images/salad.png"));
 		salad = saladIcon.getImage();
 		
-		foodImages.put("Steak", steak);
-		foodImages.put("Salad", salad);
-		foodImages.put("Pizza", pizza);
+		foodImages.put("Enchiladas", steak);
+		foodImages.put("Horchata", salad);
+		foodImages.put("Tacos", pizza);
+		foodImages.put("Pozole", pizza);
 		
 		fx = -40;
 		fy = -40;
@@ -77,22 +78,22 @@ public class JesusWaiterGui implements Gui {
 
 	public void updatePosition() {
 		if (xPos < xDestination) {
-			xPos++;
+			xPos+= 20;
 			if(gS == state.handing)
 				fx = xPos - 10;
 		}
 		else if (xPos > xDestination) {
-			xPos--;
+			xPos-= 20;
 			if(gS == state.handing)
 				fx = xPos - 10;
 		}
-		if (yPos < yDestination) {
-			yPos++;
+		else if (yPos < yDestination) {
+			yPos+=20;
 			if(gS == state.handing)
 				fy = yPos - 10;
 		}
 		else if (yPos > yDestination) {
-			yPos--;
+			yPos-=20;
 			if(gS == state.handing)
 				fy = yPos - 10;
 		}

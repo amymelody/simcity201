@@ -46,21 +46,22 @@ public class JesusCookGui implements Gui {
 		ImageIcon saladIcon = new ImageIcon(this.getClass().getResource("images/salad.png"));
 		salad = saladIcon.getImage();
 		
-		foodImages.put("Steak", steak);
-		foodImages.put("Salad", salad);
-		foodImages.put("Pizza", pizza);
+		foodImages.put("Enchilada", steak);
+		foodImages.put("Horchata", salad);
+		foodImages.put("Tacos", pizza);
+		foodImages.put("Pozole", steak);
 	}
 
 	public void updatePosition() {
 		if (xPos < xDestination)
-			xPos++;
+			xPos+= 20;
 		else if (xPos > xDestination)
-			xPos--;
+			xPos-= 20;
 
-		if (yPos < yDestination)
-			yPos++;
+		else if (yPos < yDestination)
+			yPos+= 20;
 		else if (yPos > yDestination)
-			yPos--;
+			yPos-= 20;
 		
 		if(xDestination == xPos && yDestination == yPos && xPos == cookwxloc*20 && yPos == cookwyloc*20) {
 			synchronized(foods) {
@@ -159,8 +160,8 @@ public class JesusCookGui implements Gui {
 		role.msgCheckInventory();
 	}
 
-	public void updateInventory(Integer stI, Integer sI, Integer pI) {
-		role.updateInventory(stI, sI, pI);
+	public void updateInventory(Integer eI, Integer hI, Integer pI, Integer tI) {
+		role.updateInventory(eI, hI, pI, tI);
 	}
 	
 	public class fImage {

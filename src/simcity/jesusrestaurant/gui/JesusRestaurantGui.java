@@ -4,7 +4,7 @@ import simcity.CityDirectory;
 import simcity.gui.BuildingGui;
 import simcity.gui.BuildingsGui;
 import simcity.jesusrestaurant.JesusCustomerRole;
-import simcity.jesusrestaurant.JesusWaiterRole;
+import simcity.jesusrestaurant.JesusNormalWaiterRole;
 import simcity.joshrestaurant.JoshCustomerRole;
 import simcity.joshrestaurant.JoshWaiterRole;
 
@@ -51,7 +51,7 @@ public class JesusRestaurantGui extends BuildingGui {
     	inputPanel.addCustomer(c);
     }
     
-    public void addWaiter(JesusWaiterRole w) {
+    public void addWaiter(JesusNormalWaiterRole w) {
     	inputPanel.addWaiter(w);
     }
 	

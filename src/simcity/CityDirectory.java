@@ -19,7 +19,7 @@ import simcity.RestCustomerRole;
 import simcity.jesusrestaurant.JesusCashierRole;
 import simcity.jesusrestaurant.JesusCookRole;
 import simcity.jesusrestaurant.JesusHostRole;
-import simcity.jesusrestaurant.JesusWaiterRole;
+import simcity.jesusrestaurant.JesusNormalWaiterRole;
 import simcity.joshrestaurant.JoshCashierRole;
 import simcity.joshrestaurant.JoshHostRole;
 import simcity.joshrestaurant.JoshCustomerRole;
@@ -38,12 +38,7 @@ import simcity.cherysrestaurant.CherysCashierRole;
 import simcity.cherysrestaurant.CherysHostRole;
 import simcity.cherysrestaurant.CherysCustomerRole;
 import simcity.cherysrestaurant.CherysCookRole;
-import simcity.cherysrestaurant.CherysWaiterRole;
-import simcity.jesusrestaurant.JesusCashierRole;
-import simcity.jesusrestaurant.JesusHostRole;
-import simcity.jesusrestaurant.JesusCustomerRole;
-import simcity.jesusrestaurant.JesusCookRole;
-import simcity.jesusrestaurant.JesusWaiterRole;*/
+import simcity.cherysrestaurant.CherysWaiterRole;*/
 
 public class CityDirectory
 {
@@ -54,7 +49,7 @@ public class CityDirectory
 	private Vector<JoshWaiterRole> joshWaiters = new Vector<JoshWaiterRole>();
 	private Vector<AnjaliWaiterRole> anjaliWaiters = new Vector<AnjaliWaiterRole>();
 //	private Vector<CherysWaiterRole> cherysWaiters = new Vector<CherysWaiterRole>();
-	private Vector<JesusWaiterRole> jesusWaiters = new Vector<JesusWaiterRole>();
+	private Vector<JesusNormalWaiterRole> jesusWaiters = new Vector<JesusNormalWaiterRole>();
 	private Vector<MarketEmployeeRole> market1Employees = new Vector<MarketEmployeeRole>();
 	private Vector<MarketEmployeeRole> market2Employees = new Vector<MarketEmployeeRole>();
 	private Vector<MarketDelivererRole> market1Deliverers = new Vector<MarketDelivererRole>();
@@ -323,9 +318,9 @@ public class CityDirectory
 //		cherysCashier.setJobLocation("cherysRestaurant");
 //		cherysCook.setJobLocation("cherysRestaurant");
 //		cherysHost.setJobLocation("cherysRestaurant");
-//		jesusCashier.setJobLocation("jesusRestaurant");
-//		jesusCook.setJobLocation("jesusRestaurant");
-//		jesusHost.setJobLocation("jesusRestaurant");
+		jesusCashier.setJobLocation("jesusRestaurant");
+		jesusCook.setJobLocation("jesusRestaurant");
+		jesusHost.setJobLocation("jesusRestaurant");
 		
 		//add Buildings
 		addBuilding("house1", "vertical", new Point(house1X, house1Y));
@@ -608,11 +603,11 @@ public class CityDirectory
 				aw.setJobLocation("anjaliRestaurant");
 				anjaliWaiters.add(aw);
 				return aw;
-//			case "jesusRestaurant":
-//				JesusNormalWaiterRole jw = new JesusNormalWaiterRole();
-//				jw.setJobLocation("jesusRestaurant");
-//				jesusWaiters.add(jw);
-//				return jw;
+			case "jesusRestaurant":
+				JesusNormalWaiterRole jw = new JesusNormalWaiterRole();
+				jw.setJobLocation("jesusRestaurant");
+				jesusWaiters.add(jw);
+				return jw;
 			}
 		default:
 			LandlordRole la = new LandlordRole();

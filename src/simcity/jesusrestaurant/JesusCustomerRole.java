@@ -1,5 +1,6 @@
 package simcity.jesusrestaurant;
 
+import simcity.RestCustomerRole;
 import simcity.jesusrestaurant.gui.JesusCustomerGui;
 import simcity.jesusrestaurant.interfaces.JesusCashier;
 import simcity.jesusrestaurant.interfaces.JesusCustomer;
@@ -13,7 +14,7 @@ import java.util.TimerTask;
 /**
  * Restaurant customer agent.
  */
-public class JesusCustomerRole extends Role implements JesusCustomer {
+public class JesusCustomerRole extends RestCustomerRole implements JesusCustomer {
 	private String name;
 	private int hungerLevel = 5; // determines length of meal
 	private int amountDue = 0;
@@ -257,13 +258,8 @@ public class JesusCustomerRole extends Role implements JesusCustomer {
 				jesusCustomerGui.DoExitRestaurant();
 			}
 			else {
-				if(name.equals("Salad") || name.equals("Steak") || name.equals("Pizza")) {
-					foodChoice = name;
-				}
-				else {
-					Random rnd = new Random();
-					foodChoice = menu.getMenuItemName(rnd.nextInt(3));
-				}
+				Random rnd = new Random();
+				foodChoice = menu.getMenuItemName(rnd.nextInt(3));
 				jesusCustomerGui.DoOrder(tableNum, foodChoice);
 				print("Ordered " + foodChoice);
 				waiter.msgMyOrder(name, foodChoice);
@@ -355,6 +351,10 @@ public class JesusCustomerRole extends Role implements JesusCustomer {
 
 		public JesusCustomerGui getGui() {
 			return jesusCustomerGui;
+		}
+
+		public void setCash(int c) {
+			
 		}
 
 }

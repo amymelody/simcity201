@@ -4,7 +4,7 @@ package simcity.jesusrestaurant.gui;
 //import simcity.jesusrestaurant.RevolvingStandMonitor;
 import simcity.jesusrestaurant.JesusCustomerRole;
 import simcity.jesusrestaurant.JesusHostRole;
-import simcity.jesusrestaurant.JesusWaiterRole;
+import simcity.jesusrestaurant.JesusNormalWaiterRole;
 import simcity.jesusrestaurant.JesusCookRole;
 import simcity.jesusrestaurant.JesusCashierRole;
 import simcity.jesusrestaurant.gui.JesusCookGui;
@@ -27,7 +27,7 @@ public class JesusRestaurantInputPanel extends JPanel implements ActionListener
     private JesusCashierRole cashier;
     //private RevolvingStandMonitor stand = new RevolvingStandMonitor();
     private Vector<JesusCustomerRole> customers = new Vector<JesusCustomerRole>();
-    private Vector<JesusWaiterRole> waiters = new Vector<JesusWaiterRole>();
+    private Vector<JesusNormalWaiterRole> waiters = new Vector<JesusNormalWaiterRole>();
     private Vector<MarketCashierRole> markets = new Vector<MarketCashierRole>();
 
     private JPanel restLabel = new JPanel();
@@ -45,9 +45,9 @@ public class JesusRestaurantInputPanel extends JPanel implements ActionListener
 		setVisible(false);
     	
     	gui = g;
-    	cashier = jesusCashierRole;
-    	cook = jesusCookRole;
-    	host = jesusHostRole;
+    	setCashier(jesusCashierRole);
+    	setCook(jesusCookRole);
+    	setHost(jesusHostRole);
     	for (MarketCashierRole c : cashiers) {
     		markets.add(c);
     	}
@@ -59,13 +59,6 @@ public class JesusRestaurantInputPanel extends JPanel implements ActionListener
     			cook.addMarket(c,"market2");
     		}
     	}
-    	
-		cook.setHost(host);
-		//cook.setStand(stand);
-        
-		cookGui = new JesusCookGui(cook);
-		gui.animationPanel.addGui(cookGui);
-		cook.setGui(cookGui);
 		
         initRestLabel();
         add(restLabel);
@@ -99,8 +92,8 @@ public class JesusRestaurantInputPanel extends JPanel implements ActionListener
     	customers.add(c);
     }
     
-    public void addWaiter(JesusWaiterRole w) {
-    	JesusWaiterGui g = new JesusWaiterGui(w, gui, 0, 0);
+    public void addWaiter(JesusNormalWaiterRole w) {
+    	JesusWaiterGui g = new JesusWaiterGui(w, gui, 60, 60);
     	gui.animationPanel.addGui(g);
  		w.setHost(host);
  		w.setCashier(cashier);
@@ -112,6 +105,7 @@ public class JesusRestaurantInputPanel extends JPanel implements ActionListener
     
     public void setCashier(JesusCashierRole c) {
     	JesusCashierGui g = new JesusCashierGui(c);
+    	gui.animationPanel.addGui(g);
     	c.setGui(g);
     	c.setHost(host);
     	c.setCook(cook);
@@ -120,6 +114,9 @@ public class JesusRestaurantInputPanel extends JPanel implements ActionListener
     
     public void setCook(JesusCookRole c) {
     	JesusCookGui g = new JesusCookGui(c);
+    	gui.animationPanel.addGui(g);
+    	c.setHost(host);
+		//c.setStand(stand);
     	c.setCashier(cashier);
     	c.setGui(g);
     	c.setHost(host);
@@ -128,6 +125,7 @@ public class JesusRestaurantInputPanel extends JPanel implements ActionListener
     
     public void setHost(JesusHostRole h) {
     	JesusHostGui g = new JesusHostGui(h);
+    	gui.animationPanel.addGui(g);
     	h.setGui(g);
     	h.setCashier(cashier);
     	host = h;

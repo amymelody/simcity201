@@ -45,7 +45,7 @@ public class JesusHostRole extends JobRole {
 	}
 
 	/*hack to set waiters*/
-	public void setWaiters(JesusWaiterRole w, int s) {
+	public void setWaiters(JesusNormalWaiterRole w, int s) {
 		waiters.add(new myWaiter(w,s));
 	}
 	public void setCashier(JesusCashierRole ch) {
@@ -92,7 +92,7 @@ public class JesusHostRole extends JobRole {
 		open = false;
 		stateChanged();
 	}
-	public void msgGoingOnBreak(JesusWaiterRole wait) {
+	public void msgGoingOnBreak(JesusNormalWaiterRole wait) {
 		synchronized(waiters){
 		for(myWaiter w: waiters) {
 			if(w.waiter.getName().equals(wait.getName())) {
@@ -102,7 +102,7 @@ public class JesusHostRole extends JobRole {
 		}
 		}
 	}
-	public void msgReturningToWork(JesusWaiterRole wait) {
+	public void msgReturningToWork(JesusNormalWaiterRole wait) {
 		synchronized(waiters){
 		for(myWaiter w: waiters) {
 			if(w.waiter.getName().equals(wait.getName())) {
@@ -287,13 +287,13 @@ public class JesusHostRole extends JobRole {
 	}
 
 	public class myWaiter {
-		JesusWaiterRole waiter;
+		JesusNormalWaiterRole waiter;
 		int numOfCust;
 		int salary;
 		String name;
 		wState state;
 		
-		public myWaiter(JesusWaiterRole w, int s) {
+		public myWaiter(JesusNormalWaiterRole w, int s) {
 			this.waiter = w;
 			salary = s;
 			numOfCust = 0;

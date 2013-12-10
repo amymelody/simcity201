@@ -15,6 +15,9 @@ import simcity.bank.gui.BankGui;
 import simcity.housing.LandlordRole;
 import simcity.housing.ResidentRole;
 import simcity.housing.gui.HousingGui;
+import simcity.jesusrestaurant.JesusCustomerRole;
+import simcity.jesusrestaurant.JesusNormalWaiterRole;
+import simcity.jesusrestaurant.gui.JesusRestaurantGui;
 import simcity.joshrestaurant.JoshCustomerRole;
 import simcity.market.gui.MarketCustomerGui;
 import simcity.market.gui.MarketGui;
@@ -45,25 +48,25 @@ public class CityAnimationPanel extends JPanel implements ActionListener, MouseL
 	private List<Gui> guis = Collections.synchronizedList(new ArrayList<Gui>());
 	private CityGui cityGui;
 	List<BuildingGui> buildings = Collections.synchronizedList(new ArrayList<BuildingGui>());
-	
+
 	BuildingGui currentBG;
-	
+
 	Image bg;
-	
+
 	public CityAnimationPanel(CityGui cG) {
 		setSize(WINDOWX, WINDOWY);
 		setVisible(true);
-		
+
 		cityGui = cG;
-		
+
 		ImageIcon bgIcon = new ImageIcon(this.getClass().getResource("images/simcity.png"));
 		bg = bgIcon.getImage();
-		
+
 		bufferSize = this.getSize();
 
 		Timer timer = new Timer(TIMERINCR, this );
 		timer.start();
-		
+
 		addMouseListener(this);
 		addMouseMotionListener(this);
 	}
@@ -82,7 +85,7 @@ public class CityAnimationPanel extends JPanel implements ActionListener, MouseL
 
 		//background
 		g2.drawImage(bg, 0, 0, null);
-		
+
 		synchronized(guis) {	
 			for(Gui gui : guis) {
 				if (gui.isPresent()) {
@@ -95,19 +98,19 @@ public class CityAnimationPanel extends JPanel implements ActionListener, MouseL
 	public void addGui(PersonGui g) {
 		guis.add(g);
 	}
-	
+
 	public void addGui(BusGui g) {
 		guis.add(g);
 	}
-	
+
 	public void addGui(DelivererGui g) {
 		guis.add(g);
 	}
-	
+
 	public void addBuilding(BuildingGui bG) {
 		buildings.add(bG);
 	}
-	
+
 	public void addRestCustomer(RestCustomerRole c, String location) {
 		synchronized(buildings) {
 			for(BuildingGui bG: buildings) {
@@ -124,18 +127,18 @@ public class CityAnimationPanel extends JPanel implements ActionListener, MouseL
 							AnjaliCustomerRole jC = (AnjaliCustomerRole)(c);
 							g.addCustomer(jC);
 						}
-//					} else if (location.equals("cherysRestaurant")) {
-//						CherysRestaurantGui g = (CherysRestaurantGui)bG;
-//						if (c instanceof CherysCustomerRole) {
-//							CherysCustomerRole jC = (CherysCustomerRole)(c);
-//							g.addCustomer(jC);
-//						}
-//					} else if (location.equals("jesusRestaurant")) {
-//						JesusRestaurantGui g = (JesusRestaurantGui)bG;
-//						if (c instanceof JesusCustomerRole) {
-//							JesusCustomerRole jC = (JesusCustomerRole)(c);
-//							g.addCustomer(jC);
-//						}
+						//					} else if (location.equals("cherysRestaurant")) {
+						//						CherysRestaurantGui g = (CherysRestaurantGui)bG;
+						//						if (c instanceof CherysCustomerRole) {
+						//							CherysCustomerRole jC = (CherysCustomerRole)(c);
+						//							g.addCustomer(jC);
+						//						}
+					} else if (location.equals("jesusRestaurant")) {
+						JesusRestaurantGui g = (JesusRestaurantGui)bG;
+						if (c instanceof JesusCustomerRole) {
+							JesusCustomerRole jC = (JesusCustomerRole)(c);
+							g.addCustomer(jC);
+						}
 					}
 				}
 			}
@@ -162,30 +165,30 @@ public class CityAnimationPanel extends JPanel implements ActionListener, MouseL
 							AnjaliNormalWaiterRole aW = (AnjaliNormalWaiterRole)(w);
 							g.addWaiter(aW);
 						}
-//						if (w instanceof AnjaliSharedDataWaiterRole) {
-//							AnjaliSharedDataWaiterRole aW = (AnjaliSharedDataWaiterRole)(w);
-//							g.addWaiter(aW);
-//						}
-//					} else if (w.getJobLocation().equals("cherysRestaurant")) {
-//						CherysRestaurantGui g = (CherysRestaurantGui)bG;
-//						if (w instanceof CherysNormalWaiterRole) {
-//							CherysNormalWaiterRole aW = (CherysNormalWaiterRole)(w);
-//							g.addWaiter(aW);
-//						}
-////						if (w instanceof CherysSharedDataWaiterRole) {
-////							CherysSharedDataWaiterRole aW = (CherysSharedDataWaiterRole)(w);
-////							g.addWaiter(aW);
-////						}
-//					} else if (w.getJobLocation().equals("jesusRestaurant")) {
-//						JesusRestaurantGui g = (JesusRestaurantGui)bG;
-//						if (w instanceof JesusNormalWaiterRole) {
-//							JesusNormalWaiterRole aW = (JesusNormalWaiterRole)(w);
-//							g.addWaiter(aW);
-//						}
-////						if (w instanceof JesusSharedDataWaiterRole) {
-////							JesusSharedDataWaiterRole aW = (JesusSharedDataWaiterRole)(w);
-////							g.addWaiter(aW);
-////						}
+						//						if (w instanceof AnjaliSharedDataWaiterRole) {
+						//							AnjaliSharedDataWaiterRole aW = (AnjaliSharedDataWaiterRole)(w);
+						//							g.addWaiter(aW);
+						//						}
+						//					} else if (w.getJobLocation().equals("cherysRestaurant")) {
+						//						CherysRestaurantGui g = (CherysRestaurantGui)bG;
+						//						if (w instanceof CherysNormalWaiterRole) {
+						//							CherysNormalWaiterRole aW = (CherysNormalWaiterRole)(w);
+						//							g.addWaiter(aW);
+						//						}
+						////						if (w instanceof CherysSharedDataWaiterRole) {
+						////							CherysSharedDataWaiterRole aW = (CherysSharedDataWaiterRole)(w);
+						////							g.addWaiter(aW);
+						////						}
+					} else if (w.getJobLocation().equals("jesusRestaurant")) {
+						JesusRestaurantGui g = (JesusRestaurantGui)bG;
+						if (w instanceof JesusNormalWaiterRole) {
+							JesusNormalWaiterRole aW = (JesusNormalWaiterRole)(w);
+							g.addWaiter(aW);
+						}
+						//						if (w instanceof JesusSharedDataWaiterRole) {
+						//							JesusSharedDataWaiterRole aW = (JesusSharedDataWaiterRole)(w);
+						//							g.addWaiter(aW);
+						//						}
 					}
 				}
 			}
@@ -201,7 +204,7 @@ public class CityAnimationPanel extends JPanel implements ActionListener, MouseL
 			}
 		}
 	}
-	
+
 	public void addBankTeller(BankTellerRole t){
 		synchronized(buildings){
 			for(BuildingGui bG : buildings){
@@ -212,7 +215,7 @@ public class CityAnimationPanel extends JPanel implements ActionListener, MouseL
 			}
 		}
 	}
-	
+
 	public void addMarketEmployee(MarketEmployeeRole e){
 		synchronized(buildings){
 			for(BuildingGui bG : buildings){
@@ -223,7 +226,7 @@ public class CityAnimationPanel extends JPanel implements ActionListener, MouseL
 			}
 		}
 	}
-	
+
 	public void addMarketDeliverer(MarketDelivererRole d){
 		synchronized(buildings){
 			for(BuildingGui bG : buildings){
@@ -234,7 +237,7 @@ public class CityAnimationPanel extends JPanel implements ActionListener, MouseL
 			}
 		}
 	}
-	
+
 	public void addMarketCustomer(MarketCustomerRole c, String location){
 		synchronized(buildings){
 			for(BuildingGui bG : buildings){
@@ -245,7 +248,7 @@ public class CityAnimationPanel extends JPanel implements ActionListener, MouseL
 			}
 		}
 	}
-	
+
 	public void addResident(ResidentRole r, String homeName, String ownerHomeName) {
 		synchronized(buildings) {
 			for(BuildingGui bG: buildings) {
@@ -274,7 +277,7 @@ public class CityAnimationPanel extends JPanel implements ActionListener, MouseL
 			}
 		}
 	}
-	
+
 
 	@Override
 	public void mouseClicked(MouseEvent event) {
@@ -1074,7 +1077,7 @@ public class CityAnimationPanel extends JPanel implements ActionListener, MouseL
 						}
 					}
 				}
-				
+
 			}
 			if(x > 355 && x < 389 && y > 370 && y < 420) {
 				// Market 2
@@ -1101,7 +1104,7 @@ public class CityAnimationPanel extends JPanel implements ActionListener, MouseL
 						}
 					}
 				}
-				
+
 			}
 			if(x > 320 && x < 354 && y > 370 && y < 420) {
 				// Bank 2
@@ -1184,13 +1187,13 @@ public class CityAnimationPanel extends JPanel implements ActionListener, MouseL
 	}
 
 	public void mouseReleased(MouseEvent event) {
-	
+
 	}
 	public void mouseDragged(MouseEvent arg0) {
-		
+
 	}
 	public void mouseMoved(MouseEvent event) {
 
 	}
-    
+
 }
