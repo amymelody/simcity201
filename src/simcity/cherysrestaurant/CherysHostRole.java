@@ -13,7 +13,6 @@ import java.util.concurrent.Semaphore;
  */
 public class CherysHostRole extends RestHostRole implements CherysHost
 {
-	private String name;
 	public List<MyCustomer> customers = new ArrayList<MyCustomer>();
 	private class MyCustomer
 	{
@@ -59,7 +58,9 @@ public class CherysHostRole extends RestHostRole implements CherysHost
 	int numTables = 5;
 	
 	private boolean working;
-	
+
+	private CherysCashier cashier;
+	private CherysCook cook;
 	CherysRestaurantGui gui;
 
 	/**
@@ -67,28 +68,38 @@ public class CherysHostRole extends RestHostRole implements CherysHost
 	 * @param name agent name
 	 * @param gui  reference to the main gui
 	 */
-	public CherysHostRole(String name, CherysRestaurantGui gui) //* called from RestaurantGui
+	public CherysHostRole() //* called from RestaurantGui
 	{
 		super();
 
-		this.name = name;
 		// make some tables
 		tables = new ArrayList<Table>(numTables);
 		for (int ix = 1; ix <= numTables; ix++)
 		{
 			tables.add(new Table(ix));//how you add to a collections
 		}
-		
-		this.gui = gui;
 	}
 
 	public String getName()
 	{
 		return name;
 	}
-	public List getCustomers()
+	public void setCashier(CherysCashier c)
 	{
-		return customers;
+		cashier = c;
+	}
+	public void setCook(CherysCook c)
+	{
+		cook = c;
+	}
+	public void setWaiter(CherysWaiter w) //* called from RestaurantPanel.addPerson
+	{
+		waiters.add(new MyWaiter(w));
+		stateChanged();
+	}
+	public void setGui(CherysRestaurantGui g)
+	{
+		gui = g;
 	}
 	
 	// Messages
@@ -452,15 +463,6 @@ public class CherysHostRole extends RestHostRole implements CherysHost
 	}
 
 	//utilities
-	/**
-	 * Adds another waiter
-	 * @param w reference to new Waiter
-	 */
-	public void setWaiter(CherysWaiter w) //* called from RestaurantPanel.addPerson
-	{
-		waiters.add(new MyWaiter(w));
-		stateChanged();
-	}
 
 
 //	private class Table

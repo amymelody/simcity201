@@ -17,7 +17,6 @@ import java.util.concurrent.Semaphore;
  */
 public class CherysCashierRole extends RestCashierRole implements CherysCashier
 {
-	private String name;
 	List<Food> menu = new ArrayList<Food>();
 	public class Food
 	{
@@ -67,11 +66,10 @@ public class CherysCashierRole extends RestCashierRole implements CherysCashier
 	 * Constructor for CashierAgent
 	 * @param name name of the cashier
 	 */
-	public CherysCashierRole(String name) //* called from RestaurantPanel
+	public CherysCashierRole() //* called from RestaurantPanel
 	{
 		super();
 
-		this.name = name;
 		menu.add(new Food("Steak", priceSteak));
 		menu.add(new Food("Chicken", priceChicken));
 		menu.add(new Food("Salad", priceSalad));

@@ -1,7 +1,6 @@
 package simcity.cherysrestaurant;
 
 import simcity.RestWaiterRole;
-import simcity.agent.Agent;
 import simcity.cherysrestaurant.gui.CherysWaiterGui;
 import simcity.cherysrestaurant.interfaces.*;
 import simcity.mock.EventLog;
@@ -19,7 +18,6 @@ public class CherysWaiterRole extends RestWaiterRole implements CherysWaiter
 	private Semaphore atKitchen = new Semaphore(0, true);
 	private Semaphore onBreak = new Semaphore(0, true);
 	
-	private String name;
 	private List<MyCustomer> customers = new ArrayList<MyCustomer>();
 	private class MyCustomer
 	{
@@ -113,13 +111,9 @@ public class CherysWaiterRole extends RestWaiterRole implements CherysWaiter
 	 * @param h    reference to the host agent
 	 * @param c    reference to the cook agent
 	 */
-	public CherysWaiterRole(String name, CherysHost h, CherysCook c, CherysCashier cash)
+	public CherysWaiterRole()
 	{
 		super();
-		this.name = name;
-		host = h;
-		cook = c;
-		cashier = cash;
 		menu = new HashMap<Integer, CherysWaiterFood>();
 		menu.put(0, new CherysWaiterFood("Steak", "ST", priceSteak));
 		menu.put(1, new CherysWaiterFood("Chicken", "CK", priceChicken));
@@ -964,6 +958,18 @@ public class CherysWaiterRole extends RestWaiterRole implements CherysWaiter
 	}
 	
 	//utilities
+	public void setCashier(CherysCashier c)
+	{
+		cashier = c;
+	}
+	public void setCook(CherysCook c)
+	{
+		cook = c;
+	}
+	public void setHost(CherysHost h)
+	{
+		host = h;
+	}
 	public void setGui(CherysWaiterGui gui)
 	{
 		waiterGui = gui;

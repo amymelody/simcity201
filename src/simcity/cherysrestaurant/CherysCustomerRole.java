@@ -1,7 +1,6 @@
 package simcity.cherysrestaurant;
 
 import simcity.RestCustomerRole;
-import simcity.agent.Agent;
 import simcity.cherysrestaurant.gui.CherysCustomerGui;
 import simcity.cherysrestaurant.gui.CherysRestaurantGui;
 import simcity.cherysrestaurant.interfaces.*;
@@ -19,7 +18,6 @@ public class CherysCustomerRole extends RestCustomerRole implements CherysCustom
 	private Semaphore atCashier = new Semaphore(0, true);
 	private Semaphore leftRestaurant = new Semaphore(0, true);
 	
-	private String name;
 	private Random random = new Random();
 	private int hungerLevel = 0;
 	private int maxHunger = 5000;
@@ -66,10 +64,9 @@ public class CherysCustomerRole extends RestCustomerRole implements CherysCustom
 	 * Constructor for CustomerAgent class
 	 * @param name name of the customer
 	 */
-	public CherysCustomerRole(String name) //* called in RestaurantPanel
+	public CherysCustomerRole() //* called in RestaurantPanel
 	{
 		super();
-		this.name = name;
 		stateChanged();
 	}
 
@@ -79,6 +76,14 @@ public class CherysCustomerRole extends RestCustomerRole implements CherysCustom
 	public void setHost(CherysHost host) //* called in RestaurantPanel.addPerson
 	{
 		this.host = host;
+	}
+	public void setCashier(CherysCashier cash)
+	{
+		cashier = cash;
+	}
+	public void setGui(CherysCustomerGui g)
+	{
+		customerGui = g;
 	}
 
 	public String getCustomerName()
@@ -469,17 +474,9 @@ public class CherysCustomerRole extends RestCustomerRole implements CherysCustom
 	{
 		return "customer " + getName();
 	}
-	public void setGui(CherysCustomerGui g)
-	{
-		customerGui = g;
-	}
 	public CherysCustomerGui getGui()
 	{
 		return customerGui;
-	}
-	public void setCashier(CherysCashier cash)
-	{
-		cashier = cash;
 	}
 	public EventLog getLog()
 	{

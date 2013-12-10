@@ -5,7 +5,6 @@ import simcity.cherysrestaurant.CherysCashierRole;
 import simcity.cherysrestaurant.CherysCookRole;
 import simcity.cherysrestaurant.CherysCustomerRole;
 import simcity.cherysrestaurant.CherysHostRole;
-import simcity.cherysrestaurant.CherysMarketRole;
 import simcity.cherysrestaurant.CherysWaiterRole;
 
 import javax.swing.*;
@@ -27,9 +26,6 @@ public class CherysRestaurantPanel extends JPanel
     private CherysHostRole host;
 //    private HostGui hostGui;
     private CherysCookRole cook;
-    private CherysMarketRole marketA;
-    private CherysMarketRole marketB;
-    private CherysMarketRole marketC;
     private CherysCashierRole cashier;
 
     private Vector<CherysCustomerRole> customers = new Vector<CherysCustomerRole>();
@@ -54,38 +50,12 @@ public class CherysRestaurantPanel extends JPanel
         host = new CherysHostRole("HOST", gui);
 //        hostGui = new HostGui(host);
         cook = new CherysCookRole("COOK");
-        marketA = new CherysMarketRole("MARKET A");
-        marketB = new CherysMarketRole("MARKET B");
-        marketC = new CherysMarketRole("MARKET C");
         cashier = new CherysCashierRole("CASHIER");
         
 //        host.setGui(hostGui);
         agents.add(host);
         agents.add(cook);
-        agents.add(marketA);
-        agents.add(marketB);
-        agents.add(marketC);
         agents.add(cashier);
-		cook.setMarket(marketA);
-		cook.setMarket(marketB);
-		cook.setMarket(marketC);
-		marketA.setCook(cook);
-		marketA.setCashier(cashier);
-		marketA.setAmount("Pizza", 0);
-		marketB.setCook(cook);
-		marketB.setCashier(cashier);
-		marketB.setAmount("Pizza", 2);
-		marketC.setCook(cook);
-		marketC.setCashier(cashier);
-		marketC.setAmount("Pizza", 6);
-//        gui.animationPanel.addGui(hostGui);
-        
-        host.startThread();
-        cook.startThread();
-        marketA.startThread();
-        marketB.startThread();
-        marketC.startThread();
-        cashier.startThread();
 
 
         int panelRows = 1;
@@ -206,7 +176,6 @@ public class CherysRestaurantPanel extends JPanel
     		c.setCashier(cashier);
     		customers.add(c);
     	    agents.add(c);
-    		c.startThread();
     		gui.updatePerson(c, tf);
     	}
     	if (type.equals("Waiter"))
@@ -218,7 +187,6 @@ public class CherysRestaurantPanel extends JPanel
     		w.setGui(g);
     		waiters.add(w);
     	    agents.add(w);
-    		w.startThread();
     		gui.updatePerson(w, tf);
     		
     		host.setWaiter(w);

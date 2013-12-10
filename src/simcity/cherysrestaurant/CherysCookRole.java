@@ -16,7 +16,6 @@ import java.util.concurrent.Semaphore;
  */
 public class CherysCookRole extends RestCookRole implements CherysCook
 {
-	private String name;
 	private List<Order> orders = new ArrayList<Order>();
 	private class Order
 	{
@@ -90,16 +89,16 @@ public class CherysCookRole extends RestCookRole implements CherysCook
 	
 	private boolean working;
 	private boolean goingHome;
+	
+	private CherysCashier cashier;
 
 	/**
 	 * Constructor for CookAgent
 	 * @param name name of the cook
 	 */
-	public CherysCookRole(String name) //* called from RestaurantPanel
+	public CherysCookRole() //* called from RestaurantPanel
 	{
 		super();
-
-		this.name = name;
 		menu.add(new Food("Steak", cookTimeSteak, 10000));
 		menu.add(new Food("Chicken", cookTimeChicken, 10000));
 		menu.add(new Food("Salad", cookTimeSalad, 10000));
@@ -128,6 +127,10 @@ public class CherysCookRole extends RestCookRole implements CherysCook
 	public String getName()
 	{
 		return name;
+	}
+	public void setCashier(CherysCashier c)
+	{
+		cashier = c;
 	}
 	
 	//Messages
