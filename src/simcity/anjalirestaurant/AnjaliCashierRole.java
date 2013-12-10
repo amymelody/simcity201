@@ -370,6 +370,8 @@ public class AnjaliCashierRole extends RestCashierRole implements AnjaliCashier{
 	}
 	
 	public void payBill(marketBill bill){
+		AlertLog.getInstance().logMessage(AlertTag.ANJALI_RESTAURANT, name, "Cashier is paying market");
+
 		cash -= bill.charge;
 		bill.deliverer.msgPayment(this, bill.charge);
 		marketBills.remove(bill);

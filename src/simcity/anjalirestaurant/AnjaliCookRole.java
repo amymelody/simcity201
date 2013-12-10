@@ -98,7 +98,7 @@ public class AnjaliCookRole extends RestCookRole implements AnjaliCook{
 		}
 	}
 private List<Order> orders = Collections.synchronizedList(new ArrayList<Order>());
-public enum CookState{nothing, received, inventoryLow, checkingInventory, buyingFood, buying, partOrderFulfilled, outOfFood, waitingForOrder, unfulfilledOrder, cooking, cooked, delivered}; 
+public enum CookState{nothing, received, inventoryLow, checkingInventory, buyingFood, buying, partOrderFulfilled, orderFulfilled, outOfFood, waitingForOrder, unfulfilledOrder, cooking, cooked, delivered}; 
 
 private int SteakInventory = 1;
 private int SaladInventory = 1;
@@ -284,9 +284,12 @@ public void setStand(RevolvingStandMonitor s) {
 		}
 	
 	public void msgHereIsWhatICanFulfill(List<ItemOrder> orders, boolean canFulfill) {
-		
+		AlertLog.getInstance().logMessage(AlertTag.ANJALI_RESTAURANT, name, "Market telling me what he can fulfill");
+
 	}
 	public void msgDelivery(List<ItemOrder> orders){
+		AlertLog.getInstance().logMessage(AlertTag.ANJALI_RESTAURANT, name, "Market fulfilling order");
+
 		List<ItemOrder> temp = new ArrayList<ItemOrder>();
 		for (ItemOrder o : orders) {
 			temp.add(o);
@@ -306,6 +309,7 @@ public void setStand(RevolvingStandMonitor s) {
 				SteakInventory += o.getAmount();
 			}
 		}
+		state = CookState.orderFulfilled;
 		stateChanged();
 	}
 	
@@ -369,6 +373,7 @@ public void setStand(RevolvingStandMonitor s) {
 		//state = CookState.buyingFood;
 		return true;
 	}
+	
 	
 	/*
 	if(state == CookState.unfulfilledOrder){
@@ -476,6 +481,8 @@ public void setStand(RevolvingStandMonitor s) {
 		}
 		
 		private void checkInventory(){
+			AlertLog.getInstance().logMessage(AlertTag.ANJALI_RESTAURANT, name, "inventory low, ordering from market");
+
 			int index = markets.size()-1;
 			if (markets.size() > 1) {
 				for (int i = markets.size()-2; i>=0; i--) {
