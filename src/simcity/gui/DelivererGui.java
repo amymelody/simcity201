@@ -113,7 +113,7 @@ public class DelivererGui implements Gui {
 
 	public void draw(Graphics2D g) {
 		g.setColor(Color.GREEN);
-		g.fillRect(xPos, yPos, 10, 10);
+		g.drawImage(delivererImage, xPos, yPos, null);
 	}
 
 	public boolean isPresent() {
