@@ -84,6 +84,7 @@ public class JoshRestaurantGui extends BuildingGui implements ActionListener {
         controlPanel.setPreferredSize(controlDim);
         controlPanel.setMinimumSize(controlDim);
         controlPanel.setMaximumSize(controlDim);
+        controlPanel.setBounds(0, 0, 150, 500);
         
         JPanel waiters = new JPanel();
         waiters.setLayout(new BorderLayout());

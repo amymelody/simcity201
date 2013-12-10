@@ -280,6 +280,7 @@ public class PersonAgent extends Agent implements Person
 
 	private boolean wantToGoToRestaurant() {
 		if (allRestaurantsClosed()) {
+			AlertLog.getInstance().logDebug(AlertTag.PERSON, name, "AAAAAAAAAAAAA");
 			return false;
 		}
 		if (state.ps == PhysicalState.fit) {
@@ -397,11 +398,11 @@ public class PersonAgent extends Agent implements Person
 				return restaurants.get(3);
 			}
 		}
-		if (foodPreference.equals("anjaliRestaurant")) {
+		if (foodPreference.equals("anjaliRestaurant") && !restaurants.get(3).closed) {
 			return restaurants.get(3);
-		} else if (foodPreference.equals("cherysRestaurant")) {
+		} else if (foodPreference.equals("cherysRestaurant") && !restaurants.get(1).closed) {
 			return restaurants.get(1);
-		} else if (foodPreference.equals("jesusRestaurant")) {
+		} else if (foodPreference.equals("jesusRestaurant") && !restaurants.get(2).closed) {
 			return restaurants.get(2);
 		} else {
 			return restaurants.get(0);
@@ -581,7 +582,7 @@ public class PersonAgent extends Agent implements Person
 				market.closed = true;
 			}
 		}
-		if (time.getHour() == 7 && time.getMinute() == 0) {
+		if (time.getHour() == 8 && time.getMinute() == 0) {
 			if (name.equals("bankDepositor")) {
 				money += 600;
 				AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "I now have $" + money);
@@ -1212,6 +1213,12 @@ public class PersonAgent extends Agent implements Person
 					jobLocation = LocationState.market;
 					break;
 				case "home":
+					endShifts.get(Day.Mon).hour = startShifts.get(Day.Mon).hour;	//Landlord only collects rent once per week
+					endShifts.get(Day.Tue).hour = startShifts.get(Day.Tue).hour;
+					endShifts.get(Day.Wed).hour = startShifts.get(Day.Wed).hour;
+					endShifts.get(Day.Thu).hour = startShifts.get(Day.Thu).hour;
+					endShifts.get(Day.Fri).hour = startShifts.get(Day.Fri).hour;
+					endShifts.get(Day.Sun).hour = startShifts.get(Day.Sun).hour;
 					jobLocation = LocationState.home;
 					break;
 				case "bank1": case "bank2":
@@ -1239,6 +1246,12 @@ public class PersonAgent extends Agent implements Person
 					jobLocation = LocationState.market;
 					break;
 				case "home":
+					endShifts.get(Day.Mon).hour = startShifts.get(Day.Mon).hour;	//Landlord only collects rent once per week
+					endShifts.get(Day.Tue).hour = startShifts.get(Day.Tue).hour;
+					endShifts.get(Day.Wed).hour = startShifts.get(Day.Wed).hour;
+					endShifts.get(Day.Thu).hour = startShifts.get(Day.Thu).hour;
+					endShifts.get(Day.Fri).hour = startShifts.get(Day.Fri).hour;
+					endShifts.get(Day.Sun).hour = startShifts.get(Day.Sun).hour;
 					jobLocation = LocationState.home;
 					break;
 				case "bank1": case "bank2":

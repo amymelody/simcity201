@@ -32,6 +32,7 @@ public class JoshRestaurantAnimationPanel extends JPanel implements ActionListen
 		setVisible(true);
 
 		bufferSize = this.getSize();
+		setBounds(150, 0, 500, 500);
 
 		timer = new Timer(6, this );
 		timer.start();
