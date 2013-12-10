@@ -44,7 +44,7 @@ public class JesusCustomerGui implements Gui {
 	
 	private int xPos, yPos;
 	private int xDestination, yDestination;
-	private int xWait, yWait;
+	private int xHome, yHome;
 	private enum Command {noCommand, GoToSeat, LeaveRestaurant};
 	private Command command=Command.noCommand;
 
@@ -56,8 +56,8 @@ public class JesusCustomerGui implements Gui {
 		yPos = -40;
 		xDestination = -40;
 		yDestination = -40;
-		xWait = xW;
-		yWait = yW;
+		xHome = xW;
+		yHome = yW;
 		//maitreD = m;
 		this.gui = gui;
 		
@@ -123,8 +123,8 @@ public class JesusCustomerGui implements Gui {
 		isHungry = true;
 		agent.gotHungry();
 		setPresent(true);
-		xDestination = xWait;
-		yDestination = yWait;
+		xDestination = xHome;
+		yDestination = yHome;
 	}
 	public boolean isHungry() {
 		return isHungry;
@@ -135,8 +135,8 @@ public class JesusCustomerGui implements Gui {
 	}
 
 	public void vait() {
-		xDestination = xWait;
-		yDestination = yWait;
+		xDestination = xHome;
+		yDestination = yHome;
 	}
 	
 	public void DoGoToSeat(int seatnumber) {
@@ -172,8 +172,5 @@ public class JesusCustomerGui implements Gui {
 		yDestination = -40;
 		command = Command.LeaveRestaurant;
 	}
-	
-	public void updateMoney(Double m) {
-		agent.updateMoney(m);
-	}
+
 }

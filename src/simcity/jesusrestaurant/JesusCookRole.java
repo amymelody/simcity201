@@ -5,10 +5,14 @@ import simcity.PersonAgent;
 import simcity.role.JobRole;
 import simcity.jesusrestaurant.JesusCookRole;
 import simcity.jesusrestaurant.gui.JesusCookGui;
+import simcity.joshrestaurant.JoshWaiterRole;
 import simcity.market.MarketCashierRole;
+import simcity.interfaces.MarketCashier;
+import simcity.interfaces.RestCook;
 
 import java.util.*;
 import java.util.concurrent.Semaphore;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -19,7 +23,7 @@ import java.util.TimerTask;
 //does all the rest. Rather than calling the other agent a waiter, we called him
 //the HostAgent. A Host is the manager of a restaurant who sees that all
 //is proceeded as he wishes.
-public class JesusCookRole extends JobRole {
+public class JesusCookRole extends JobRole implements RestCook {
 	private static final int steakTime = 7000;
 	private static final int saladTime = 4000;
 	private static final int pizzaTime = 2000;
@@ -32,11 +36,12 @@ public class JesusCookRole extends JobRole {
 	public List<myMarket> markets = Collections.synchronizedList(new ArrayList<myMarket>());
 	public JesusHostRole host;
 	public JesusCashierRole cashier;
-
+	boolean start, working;
 	public enum orderState {waiting, preparing, ready};
 	public enum stockState {none, checkFood, outOfFood, ordered, stockReplenished};
 	stockState sState = stockState.none;
 	boolean open = false;
+	myMarket currentMarket;
 
 	Timer timer = new Timer();
 
@@ -73,7 +78,7 @@ public class JesusCookRole extends JobRole {
 		cashier = ch;
 	}
 	
-	public void addMarket(MarketCashierRole c, String mName) {
+	public void addMarket(MarketCashier c, String mName) {
 		markets.add(new myMarket(c, mName));
 	}
 
@@ -103,6 +108,14 @@ public class JesusCookRole extends JobRole {
 			for(Food f: foods) {
 				if(f.name.equals(n)) {
 					f.inventory += num;
+					f.amtLeft -= num;
+					if(f.amtLeft > 0) {
+						f.needsRestock = true;
+					}
+					else {
+						f.amtLeft = 0;
+						f.needsRestock = false;
+					}
 				}
 			}
 		}
@@ -147,9 +160,25 @@ public class JesusCookRole extends JobRole {
 		}
 		return true;
 	}
+	public boolean marketOut(myMarket m) {
+		for(Map.Entry<String, Boolean> entry: m.outStock.entrySet()) {
+			if(!entry.getValue())
+				return false;
+		}
+		return true;
+	}
 
 	// Messages
+	public void msgStartShift() {
+		working = true;
+		start = true;
+		stateChanged();
+	}
 
+	public void msgEndShift() {
+		working = false;
+		stateChanged();
+	}
 	public void msgGotPlate(String foodChoice) {
 		jesusCookGui.GotFood(foodChoice);
 	}
@@ -163,75 +192,62 @@ public class JesusCookRole extends JobRole {
 		orders.add(new Order(choice, wait, customerName));
 		stateChanged();
 	}
+	
+	public void msgHereIsWhatICanFulfill(List<ItemOrder> orders, boolean canFulfill) {
+		if(canFulfill) {
+			
+		}
+		else {
+			for(ItemOrder iO: orders) {
+				currentMarket.outStock.put(iO.getFoodItem(), true);
+				for(Food f: foods) {
+					if(f.name.equals(iO.getFoodItem())) {
+						f.needsRestock = true;
+					}
+				}
+			}
+			sState = stockState.outOfFood;
+		}
+		stateChanged();
+	}
 
-	public void msgNoStock(String mName, String foodName, boolean everything) {
-		synchronized(markets){
-			for(myMarket m: markets) {
-				if(m.market.getName().equals(mName)) {
-					for(Map.Entry<String, Boolean> entry: m.outStock.entrySet()) {
-						m.outStock.put(entry.getKey(), true);
+	public void msgDelivery(List<ItemOrder> orders) {
+		boolean notFulfilled = false;
+		for(ItemOrder iO: orders) {
+			addInventory(iO.getFoodItem(), iO.getAmount());
+			if(iO.getAmount() == 0) {
+				notFulfilled = true;
+				for(Food f: foods) {
+					if(f.name.equals(iO.getFoodItem())) {
+						f.needsRestock = true;
 					}
-					for(Food f: foods) {
-						if(f.name.equals(foodName)) {
-							f.needsRestock = true;
-						}
-					}
-					sState = stockState.outOfFood;
-					stateChanged();
 				}
 			}
+		}
+		if(notFulfilled) {
+			sState = stockState.outOfFood;
+		}
+		else {
+			sState = stockState.stockReplenished;
 		}
 	}
-	public void msgNoStock(String mName, String foodName) {
-		synchronized(markets){
-			for(myMarket m: markets) {
-				if(m.market.getName().equals(mName)) {
-					m.outStock.put(foodName, true);
-					for(Food f: foods) {
-						if(f.name.equals(foodName)) {
-							f.needsRestock = true;
-						}
-					}
-					sState = stockState.outOfFood;
-					stateChanged();
-				}
-			}
-		}
-	}
-	public void msgOrderSent(String foodName, int amt, int amtLeft, String mName) {
-		if(!open)
-			open = true;
-		synchronized(foods){
-			for(Food f: foods) {
-				if(f.name.equals(foodName)) {
-					addInventory(foodName, amt);
-					if(amtLeft == 0) {
-						sState = stockState.stockReplenished;
-						f.amtLeft = 0;
-						f.needsRestock = false;
-					}
-					else {
-						synchronized(markets) {
-							for(myMarket m: markets) {
-								if(m.market.getName().equals(mName)){
-									m.outStock.put(foodName, true);
-									f.needsRestock = true;
-									f.amtLeft = amtLeft;
-									sState = stockState.outOfFood;
-								}
-							}
-						}
-					}
-					stateChanged();
-				}
-			}
-		}
+	
+	public void left() {
+		person.msgLeftDestination(this);
 	}
 
 	/**
 	 * Scheduler.  Determine what action is called for, and do it.
 	 */
 	public boolean pickAndExecuteAnAction() {
+		if(!working) {
+			leaveRestaurant();
+			return true;
+		}
+		if(start) {
+			startWork();
+			return true;
+		}
 		if(sState == stockState.checkFood) {
 			sState = stockState.none;
 			checkInventory();
@@ -258,14 +274,15 @@ public class JesusCookRole extends JobRole {
 			return true;
 		}
 		synchronized(foods){
-			for(Food f: foods) {
-				if(f.needsRestock) {
-					for(myMarket m: markets) {
+			for(myMarket m: markets) {
+				if(!marketOut(m)) {
+					for(Food f: foods) {
 						if(!m.outStock.get(f.name)) {
-							restock(f, m);
-							return true;
+							needToRestock.add(new ItemOrder(f.name, f.amtLeft));
 						}
 					}
+					restock(needToRestock, m);
+					return true;
 				}
 			}
 		}
@@ -276,13 +293,21 @@ public class JesusCookRole extends JobRole {
 	}
 
 	// Actions
-
-	public void checkInventory() {
+	private void startWork() {
+		start = false;
+		jesusCookGui.work();
+	}
+	private void leaveRestaurant() {
+		jesusCookGui.leave();
+	}
+	private void checkInventory() {
 		if(noInventory() && !markets.isEmpty()) {
 			host.msgClosed();
 			for(Food f: foods) {
-				restock(f, markets.get(0));
+				f.amtLeft = restockAmount;
+				needToRestock.add(new ItemOrder(f.name, f.amtLeft));
 			}
+			markets.get(0).market.msgIWantDelivery(this, cashier, needToRestock, getJobLocation());
 			host.msgOpen();
 			open = true;
 		}
@@ -358,14 +383,17 @@ public class JesusCookRole extends JobRole {
 		orders.remove(o);
 	}
 
-	public void restock(Food f, myMarket m) {
-	/*	if(f.amtLeft == 0)
-			m.market.msgNeedRestock(this, f.name, restockAmount);
-		else
-			m.market.msgNeedRestock(this, f.name, f.amtLeft);
-		f.needsRestock = false;
+	public void restock(List<ItemOrder> list, myMarket m) {
+		synchronized(foods) {
+			for(Food f: foods) {
+				if(f.amtLeft == 0)
+					f.amtLeft = restockAmount;
+				f.needsRestock = false;
+			}
+		}
+		currentMarket = m;
+		m.market.msgIWantDelivery(this, cashier, list, getJobLocation());
 		sState = stockState.ordered;
-		*/
 	}
 
 	// The animation DoXYZ() routines
@@ -415,11 +443,11 @@ public class JesusCookRole extends JobRole {
 	}
 
 	private class myMarket {
-		MarketCashierRole market;
+		MarketCashier market;
 		String name;
 		Map<String, Boolean> outStock;
 
-		myMarket(MarketCashierRole m, String mName) {
+		myMarket(MarketCashier m, String mName) {
 			market = m;
 			name = mName;
 			outStock = new HashMap<String, Boolean>();
@@ -438,16 +466,5 @@ public class JesusCookRole extends JobRole {
 		updateInventory("Salad", sI);
 		updateInventory("Pizza", pI);
 	}
-
-	@Override
-	public void msgStartShift() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void msgEndShift() {
-		// TODO Auto-generated method stub
-		
-	}
+	
 }

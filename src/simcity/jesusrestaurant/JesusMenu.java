@@ -26,9 +26,10 @@ public class JesusMenu {
 	
 	JesusMenu() {
 		menu = new ArrayList<menuItem>();
-		menu.add(new menuItem("Steak", 15));
-		menu.add(new menuItem("Pizza", 8));
-		menu.add(new menuItem("Salad", 5));
+		menu.add(new menuItem("Enchiladas", 15));
+		menu.add(new menuItem("Pozole", 10));
+		menu.add(new menuItem("Tacos", 8));
+		menu.add(new menuItem("Horchata", 5));
 	}
 	
 	public menuItem getMenuItem(String name) {

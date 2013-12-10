@@ -13,11 +13,13 @@ import javax.swing.ImageIcon;
 
 public class JesusCashierGui implements Gui {
 
-	private JesusCashierRole agent = null;
+	private JesusCashierRole role = null;
 
-	private int xPos = 0, yPos = 80;//default host position
-	private int xDestination = 0, yDestination = 80;//default host destination
-
+	private int xPos = -20, yPos = 20; // default cashier position
+	private int xDestination = -20, yDestination = 20; // default cashier destination
+	private int xHome = 0, yHome = 80;
+	private boolean leave = false;
+	
 	public static final Map<Integer, Point> tableLocations = new HashMap<Integer, Point>();
 	static {
 		tableLocations.put(1, new Point(100, 50));
@@ -27,8 +29,8 @@ public class JesusCashierGui implements Gui {
 	}
 
 	Image hostImage;
-	public JesusCashierGui(JesusCashierRole agent) {
-		this.agent = agent;
+	public JesusCashierGui(JesusCashierRole role) {
+		this.role = role;
 
 		ImageIcon hostIcon = new ImageIcon(this.getClass().getResource("images/mario.png"));
 		hostImage = hostIcon.getImage();
@@ -45,10 +47,9 @@ public class JesusCashierGui implements Gui {
 		else if (yPos > yDestination)
 			yPos--;
 
-		for(Point p : tableLocations.values()) {
-		if (xPos == xDestination && yPos == yDestination
-				& ((xDestination == p.x + 20 && yDestination == p.y - 20))) {
-		}
+		if (xPos == xDestination && yPos == yDestination)
+			if(leave) {
+				role.left();
 		}
 	}
 
@@ -67,5 +68,15 @@ public class JesusCashierGui implements Gui {
 
 	public int getYPos() {
 		return yPos;
+	}
+	
+	public void work() {
+		xDestination = xHome;
+		yDestination = yHome;	
+	}
+	public void leave() {
+		xDestination = -20;
+		yDestination = 20;
+		leave = true;
 	}
 }

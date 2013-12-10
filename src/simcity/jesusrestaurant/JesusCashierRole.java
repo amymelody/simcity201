@@ -1,12 +1,18 @@
 package simcity.jesusrestaurant;
 
 import simcity.PersonAgent;
+import simcity.RestCashierRole;
 import simcity.role.JobRole;
+import simcity.interfaces.MarketDeliverer;
+import simcity.jesusrestaurant.JesusHostRole.myWaiter;
 import simcity.jesusrestaurant.gui.JesusCashierGui;
 import simcity.jesusrestaurant.interfaces.JesusCashier;
 import simcity.jesusrestaurant.interfaces.JesusCustomer;
 import simcity.jesusrestaurant.interfaces.JesusMarket;
 import simcity.jesusrestaurant.interfaces.JesusWaiter;
+import simcity.joshrestaurant.interfaces.JoshCustomer;
+import simcity.joshrestaurant.interfaces.JoshWaiter;
+import simcity.market.gui.MarketCustomerGui.GuiState;
 import simcity.mock.EventLog;
 import simcity.mock.LoggedEvent;
 
@@ -20,10 +26,10 @@ import java.util.concurrent.Semaphore;
 //does all the rest. Rather than calling the other agent a waiter, we called him
 //the HostAgent. A Host is the manager of a simcity.jesusrestaurant who sees that all
 //is proceeded as he wishes.
-public class JesusCashierRole extends JobRole implements JesusCashier {
+public class JesusCashierRole extends RestCashierRole implements JesusCashier {
 	public List<Check> checks = Collections.synchronizedList(new ArrayList<Check>());
 	public List<Bill> bills = Collections.synchronizedList(new ArrayList<Bill>());
-	public double money = 400.00;
+	public int money;
 
 	public enum CheckState {none, ready, paying, paid, owe};
 	public enum BillState {none, paying, owe, paid};
@@ -35,7 +41,10 @@ public class JesusCashierRole extends JobRole implements JesusCashier {
 	JesusMenu m = new JesusMenu();
 
 	public EventLog log = new EventLog();
-
+	JesusHostRole host;
+	JesusCookRole cook;
+	boolean working, start = false;
+	
 	public JesusCashierRole() {
 		super();
 	}
@@ -52,18 +61,33 @@ public class JesusCashierRole extends JobRole implements JesusCashier {
 		super.setPerson(p);
 		name = p.getName();
 	}
-
+	public void setHost(JesusHostRole h) {
+		host = h;
+	}
+	public void setCook(JesusCookRole c) {
+		cook = c;
+	}
+	public void setMoney(int m) {
+		money = m;
+	}
 	// Messages
-	@Override
 	public void msgStartShift() {
-		// TODO Auto-generated method stub
-		
+		working = true;
+		start = true;
+		stateChanged();
 	}
 
-	@Override
 	public void msgEndShift() {
-		// TODO Auto-generated method stub
-		
+		working = false;
+		stateChanged();
+	}
+	public void msgPayEmployees(List<myWaiter> waiters) {
+		for(myWaiter mW: waiters) {
+			money -= mW.salary;
+		}
+		money -= getPersonAgent().getSalary();
+		money -= host.getPersonAgent().getSalary();
+		money -= cook.getPersonAgent().getSalary();
 	}
 	public void msgComputeCheck(JesusWaiter w, JesusCustomer c, String foodItem, String name) {
 		synchronized(checks) {
@@ -82,7 +106,7 @@ public class JesusCashierRole extends JobRole implements JesusCashier {
 		stateChanged();
 	}
 
-	public void msgCustomerPayment(JesusCustomer c, double m, String name) {
+	public void msgCustomerPayment(JesusCustomer c, int m, String name) {
 		synchronized(checks) {
 			for(Check ch: checks) {
 				if(ch.name.equals(name)) {
@@ -95,15 +119,36 @@ public class JesusCashierRole extends JobRole implements JesusCashier {
 		}
 	}
 
-	public void msgHereIsBill(JesusMarket m, double amount, int id) {
+	/*public void msgHereIsBill(JesusMarket m, int amount, int id) {
 		bills.add(new Bill(id, m, amount));
 		stateChanged();
+	}*/
+	
+	public void msgDelivery(int bill, MarketDeliverer deliverer) {
+		bills.add(new Bill(deliverer, bill));
+		stateChanged();
+	}
+
+	public void msgThankYou(int change) {
+		money += change;
+	}
+	
+	public void left() {
+		person.msgLeftDestination(this);
 	}
 
 	/**
 	 * Scheduler.  Determine what action is called for, and do it.
 	 */
 	public boolean pickAndExecuteAnAction() {
+		if(!working) {
+			leaveRestaurant();
+			return true;
+		}
+		if(start) {
+			startWork();
+			return true;
+		}
 		if(!(checks.isEmpty())) {
 			synchronized(checks) {
 				for(Check ch: checks) {
@@ -142,6 +187,12 @@ public class JesusCashierRole extends JobRole implements JesusCashier {
 	}
 
 	// Actions
+	private void startWork() {
+		jesusCashierGui.work();
+	}
+	private void leaveRestaurant() {
+		jesusCashierGui.leave();
+	}
 	public void computeCheck(Check ch) {
 		print("Computing check for " + ch.name);
 		log.add(new LoggedEvent ("Check computed"));
@@ -177,12 +228,13 @@ public class JesusCashierRole extends JobRole implements JesusCashier {
 		if(b.bS == BillState.paid) {
 			print("Bill paid fully. $" + money + "left");
 			log.add(new LoggedEvent("Bill paid"));
-			b.market.msgPayingBill(b.id, b.amountPaid);
+			b.market.msgPayment(this, b.amountDue);
 		}
 		else if(b.bS == BillState.owe) {
 			print("Bill not fully paid. Owe " + b.amountDue);
 			log.add(new LoggedEvent("Bill not paid completely"));
-			b.market.msgPayingBill(b.id, b.amountPaid);
+			b.market.msgPayment(this, money);
+			money = 0;
 		}
 	}
 
@@ -200,8 +252,8 @@ public class JesusCashierRole extends JobRole implements JesusCashier {
 		JesusWaiter waiter;
 		JesusCustomer customer;
 		public String name;
-		public double amount;
-		double amountPaid;
+		public int amount;
+		int amountPaid;
 		String foodItem;
 		public CheckState cS;
 
@@ -229,14 +281,12 @@ public class JesusCashierRole extends JobRole implements JesusCashier {
 		}
 	}
 	public class Bill {
-		int id;
-		public JesusMarket market;
-		public double amountDue;
+		public MarketDeliverer market;
+		public int amountDue;
 		public BillState bS;
-		public double amountPaid;
+		public int amountPaid;
 
-		public Bill(int i, JesusMarket m, double aD) {
-			id = i;
+		public Bill(MarketDeliverer m, int aD) {
 			market = m;
 			amountDue = aD;
 			bS = BillState.none;
@@ -258,16 +308,6 @@ public class JesusCashierRole extends JobRole implements JesusCashier {
 		public void addAmount(double num) {
 			amountDue += num;
 		}
-	}
-	public Bill getBill(int i) {
-		synchronized(bills){
-			for(Bill b: bills) {
-				if(b.id == i) {
-					return b;
-				}
-			}
-		}
-		return null;
 	}
 	
 }

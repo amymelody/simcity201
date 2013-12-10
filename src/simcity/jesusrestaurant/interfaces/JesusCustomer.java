@@ -14,10 +14,10 @@ public interface JesusCustomer {
 	
 	public abstract void msgEnjoyOrder (String choice);
 	
-	public abstract void msgHereIsCheck (double aDue);
+	public abstract void msgHereIsCheck (int aDue);
 	
-	public abstract void msgChange (double change);
+	public abstract void msgChange (int change);
 	
-	public abstract void msgPayNextTime (double amount);
+	public abstract void msgPayNextTime (int amount);
 
 }
