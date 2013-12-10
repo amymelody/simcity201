@@ -102,6 +102,7 @@ public class BankTellerRole extends JobRole implements BankTeller   {
 	}
 	public void msgEndShift(){
 		working = false;
+		stateChanged();
 	}
 	public void msgPay(){
 		person.msgEndShift();
@@ -150,6 +151,11 @@ public void msgLoanDenied(BankDepositor c){
 }
 ///SCHEDULER
 public boolean pickAndExecuteAnAction(){
+	if(!working){
+		LeaveBank();
+		return true;
+	}
+	
 	for(myCustomer c : customers){
 		if(c.cS == CustomerState.waitingForTeller){
 			c.cS = CustomerState.waiting;
@@ -201,6 +207,9 @@ public boolean pickAndExecuteAnAction(){
 }
 
 ///ACTIONS////
+private void LeaveBank(){
+	person.msgLeftDestination(this);
+}
 private void helpCustomer(BankDepositor c){
 	gui.GoToManager();
 	try {
