@@ -1,22 +1,22 @@
-package simcity.Anjalirestaurant.interfaces;
-
-import simcity.Anjalirestaurant.AnjaliCashierCheck;
-import simcity.Anjalirestaurant.AnjaliWaiterFood;
-import simcity.Anjalirestaurant.gui.AnjaliCustomerGui;
+package simcity.cherysrestaurant.interfaces;
+ 
+import simcity.cherysrestaurant.CherysCashierCheck;
+import simcity.cherysrestaurant.CherysWaiterFood;
+import simcity.cherysrestaurant.gui.CherysCustomerGui;
 import simcity.mock.EventLog;
 
 import java.util.List;
 import java.util.Map;
 
 
-public interface AnjaliCustomer
+public interface CherysCustomer
 {	
-	public abstract void msgFollowMe(AnjaliWaiter w, Map<Integer, AnjaliWaiterFood> m, List<String> foo); //int seat) //* called from WaiterAgent
+	public abstract void msgFollowMe(CherysWaiter w, Map<Integer, CherysWaiterFood> m, List<String> foo); //int seat) //* called from WaiterAgent
 	public abstract void msgWhatIsYourOrder(List<String> foo); //* called from WaiterAgent
 	public abstract void msgOrderServed(String ch); //* called from WaiterAgent
-	public abstract void msgHereIsCheck(AnjaliCashierCheck ch); //* called from WaiterAgent
-	public abstract void msgChange(double change); //* called from CashierAgent
+	public abstract void msgHereIsCheck(CherysCashierCheck ch); //* called from WaiterAgent
+	public abstract void msgChange(int change); //* called from CashierAgent
 
 	public abstract EventLog getLog();
-	public abstract AnjaliCustomerGui getGui();
+	public abstract CherysCustomerGui getGui();
 }
