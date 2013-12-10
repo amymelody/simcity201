@@ -40,15 +40,18 @@ public class CityInputPanel extends JPanel implements ActionListener
 	private Vector<JRadioButtonMenuItem> configs = new Vector<JRadioButtonMenuItem>();
 	private ButtonGroup configGroup = new ButtonGroup();
 	private JLabel scenario = new JLabel("CHOOSE A SCENARIO");
-	private JRadioButtonMenuItem button1 = new JRadioButtonMenuItem("Restaurant Config");
-	private JRadioButtonMenuItem button2 = new JRadioButtonMenuItem("Market Config");
-	private JRadioButtonMenuItem button3 = new JRadioButtonMenuItem("Landlord Config");
-	private JRadioButtonMenuItem button4 = new JRadioButtonMenuItem("Bank Config");
-	private JRadioButtonMenuItem button5 = new JRadioButtonMenuItem("Housing Config");
-	private JRadioButtonMenuItem button6 = new JRadioButtonMenuItem("Full City Config");
-	private JRadioButtonMenuItem button7 = new JRadioButtonMenuItem("Normative A Config");
-	private JRadioButtonMenuItem button8 = new JRadioButtonMenuItem("Normative B Config");
-	private JRadioButtonMenuItem button9 = new JRadioButtonMenuItem("Non-Norms Config");
+	private JRadioButtonMenuItem button1 = new JRadioButtonMenuItem("Market Config");
+	private JRadioButtonMenuItem button2 = new JRadioButtonMenuItem("Landlord Config");
+	private JRadioButtonMenuItem button3 = new JRadioButtonMenuItem("Bank Config");
+	private JRadioButtonMenuItem button4 = new JRadioButtonMenuItem("Housing Config");
+	private JRadioButtonMenuItem button5 = new JRadioButtonMenuItem("Full City Config");
+	private JRadioButtonMenuItem button6 = new JRadioButtonMenuItem("Normative A Config");
+	private JRadioButtonMenuItem button7 = new JRadioButtonMenuItem("Normative B Config");
+	private JRadioButtonMenuItem button8 = new JRadioButtonMenuItem("Non-Norms Config");
+	private JRadioButtonMenuItem button9 = new JRadioButtonMenuItem("Cherys Restaurant Config");
+	private JRadioButtonMenuItem button10 = new JRadioButtonMenuItem("Josh Restaurant Config");
+	private JRadioButtonMenuItem button11 = new JRadioButtonMenuItem("Jesus Restaurant Config");
+	private JRadioButtonMenuItem button12 = new JRadioButtonMenuItem("Anjali Restaurant Config");
 	private JButton goButton = new JButton("Run Scenario");
     
 //    @Override
@@ -127,6 +130,12 @@ public class CityInputPanel extends JPanel implements ActionListener
 		add(button8);
 		configGroup.add(button9);
 		add(button9);
+		configGroup.add(button10);
+		add(button10);
+		configGroup.add(button11);
+		add(button11);
+		configGroup.add(button12);
+		add(button12);
 		goButton.addActionListener(this);
 		add(goButton);
 //        add(creationPanel);
@@ -168,39 +177,51 @@ public class CityInputPanel extends JPanel implements ActionListener
 		{
 			if(button1.isSelected())
 			{
-				creationPanel.readConfig("../restaurantConfig.properties");
+				creationPanel.readConfig("../marketConfig.properties");
 			}
 			else if(button2.isSelected())
 			{
-				creationPanel.readConfig("../marketConfig.properties");
+			creationPanel.readConfig("../landlordConfig.properties");
 			}
 			else if(button3.isSelected())
 			{
-			creationPanel.readConfig("../landlordConfig.properties");
+			creationPanel.readConfig("../bankConfig.properties");
 			}
 			else if(button4.isSelected())
 			{
-			creationPanel.readConfig("../bankConfig.properties");
+			creationPanel.readConfig("../housingConfig.properties");
 			}
 			else if(button5.isSelected())
 			{
-			creationPanel.readConfig("../housingConfig.properties");
+			creationPanel.readConfig("../fullCityConfig.properties");
 			}
 			else if(button6.isSelected())
 			{
-			creationPanel.readConfig("../fullCityConfig.properties");
+			creationPanel.readConfig("../normAConfig.properties");
 			}
 			else if(button7.isSelected())
 			{
-			creationPanel.readConfig("../normAConfig.properties");
+			creationPanel.readConfig("../normBConfig.properties");
 			}
 			else if(button8.isSelected())
 			{
-			creationPanel.readConfig("../normBConfig.properties");
+			creationPanel.readConfig("../nonNormsConfig.properties");
+			} 
+			else if(button9.isSelected())
+			{
+				creationPanel.readConfig("../cherysRestaurantConfig.properties");
 			}
 			else if(button9.isSelected())
 			{
-			creationPanel.readConfig("../nonNormsConfig.properties");
+				creationPanel.readConfig("../joshRestaurantConfig.properties");
+			}
+			else if(button9.isSelected())
+			{
+				creationPanel.readConfig("../jesusRestaurantConfig.properties");
+			}
+			else if(button9.isSelected())
+			{
+				creationPanel.readConfig("../anjaliRestaurantConfig.properties");
 			}
 		}
 //    	for (JButton b : personList)

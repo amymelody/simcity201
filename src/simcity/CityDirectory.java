@@ -548,8 +548,8 @@ public class CityDirectory
 			switch(location) {
 			case "joshRestaurant":
 				return joshCashier;
-//			case "cherysRestaurant":
-//				return cherysCashier;
+			case "cherysRestaurant":
+				return cherysCashier;
 			case "anjaliRestaurant":
 				return anjaliCashier;
 			case "jesusRestaurant":
