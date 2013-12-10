@@ -37,7 +37,7 @@ public class JesusRestaurantPanel extends JPanel implements ActionListener, Mous
 	}
 	
     //Host, cook, waiters and customers
-    private JesusHostRole host = new JesusHostRole("Jesus");
+    private JesusHostRole host = new JesusHostRole();
     private JesusHostGui jesusHostGui = new JesusHostGui(host);
     
     private JesusCookRole cook = new JesusCookRole();
