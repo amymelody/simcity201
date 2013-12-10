@@ -124,7 +124,11 @@ public class BankDepositorTest extends TestCase
     				person.log.containsString("left destination")); 
         	}
         	
+        
+        
+        public void testLoan(){
         	
+        }
         	
         }
 
