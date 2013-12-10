@@ -589,7 +589,7 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 		}
 		calculatePrice(o);
 		if(o.location != null)
-			o.cook.msgHereIsWhatICanFulfill(o.fulfilling, HaveSomeItems(o.fulfilling));
+			o.cook.msgHereIsWhatICanFulfill(o.fulfilling, HaveSomeItems(o.fulfilling), this);
 		else {
 			o.customer.msgHereIsWhatICanFulfill(o.fulfilling, HaveSomeItems(o.fulfilling), (int)chairLocations.get(chairCnt).getX(), (int)chairLocations.get(chairCnt).getY());
 			if(chairCnt == 19)

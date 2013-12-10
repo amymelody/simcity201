@@ -196,7 +196,7 @@ public class JesusCookRole extends RestCookRole implements RestCook {
 		stateChanged();
 	}
 	
-	public void msgHereIsWhatICanFulfill(List<ItemOrder> orders, boolean canFulfill) {
+	public void msgHereIsWhatICanFulfill(List<ItemOrder> orders, boolean canFulfill, MarketCashier mC) {
 		if(canFulfill) {
 			
 		}
