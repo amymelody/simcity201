@@ -91,6 +91,8 @@ import simcity.trace.AlertTag;
 		private Semaphore managerAnimation = new Semaphore(0,true);
 		BankManagerGui gui = new BankManagerGui(this);
 		
+		
+		
 		public void setGui(BankManagerGui g){
 			gui = g;
 		}

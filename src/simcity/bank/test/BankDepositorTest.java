@@ -75,7 +75,6 @@ public class BankDepositorTest extends TestCase
                 customer.msgTransactionComplete();                
                 assertTrue("Customer's state should be leaving", customer.getCustomerState() == CustomerState.leaving);
                 assertEquals("MockPerson should now have current money - 500", 500, person.getCurrentMoney());
-                assertEquals("MockManager should now have current money + 500", 1500, manager.getBankMoney() );
                 assertTrue("Customer's scheduler should have returned true", customer.pickAndExecuteAnAction());
                       
                 
@@ -84,9 +83,55 @@ public class BankDepositorTest extends TestCase
         //Tests robbery
         public void testRobbery(){
         	person.setCurrentMoney(1000);
+        	assertEquals("Persons money should be 1000", 1000, person.getCurrentMoney());
+            assertEquals("Customer transactionAmount should be 0", 0, customer.getTransactionAmount());
+            assertFalse("Customer's scheduler should return false, nothing to do", customer.pickAndExecuteAnAction());               
+            assertEquals("MockCustomer should have an empty event log before scheduler is called for the first time. Instead, the MockCustomer's event log reads: "
+					+ customer.log.toString(), 0, customer.log.size());
+            assertFalse("Customer's scheduler should have returned false", customer.pickAndExecuteAnAction());                               
+
+            
+        	customer.msgImARobber();
+        	
+        	assertEquals("Customer transactionAmount should be 0", 0, customer.getTransactionAmount());
+        	assertTrue("person should have bool robber is true", customer.getRobberStatus());
+        	assertTrue("Customer state should be robber entered", customer.getCustomerState() == CustomerState.robberEntered);
+        	assertTrue("Customers scheduler should have returned true", customer.pickAndExecuteAnAction());
+        	
+        	//post conditions
+        	assertTrue("Manager should have logged \"Manager is being robbed\" but didn't",
+    				manager.log.containsString("Manager is being robbed")); 
+        	assertEquals("Customer should now have 300 more after action robBank", 1300, person.getCurrentMoney()); 
+        	
+        	
+        	customer.msgYoureDead();
+
+        	assertEquals("Customer transactionAmount should be 0", 0, customer.getTransactionAmount());
+        	assertTrue("customer should have customer state robber killed", customer.getCustomerState() == CustomerState.robberKilled);
+        	assertTrue("Customers scheduler should have returned true", customer.pickAndExecuteAnAction());
+        	assertEquals("Customer should have given money back to manager, should now have 1000 again", 1000, person.getCurrentMoney());
+        	assertTrue("Manager should have logged \"Got my money back\" but didn't",
+    				manager.log.containsString("Got my money back")); 	
+        	
+        	customer.msgLeaveMyBank();
+        	
+        	assertTrue("Customer should have customer state leaving", customer.getCustomerState() == CustomerState.leaving);
+        	assertTrue("Customers scheduler should have returned true", customer.pickAndExecuteAnAction());
+        	assertFalse("Robber status should now be false", customer.getRobberStatus());
+        	assertTrue("Person should have logged \"goodGuyAgain\" but didn't",
+    				person.log.containsString("goodGuyAgain"));    
+        	assertTrue("Person should have logged \"left destination\" but didn't",
+    				person.log.containsString("left destination")); 
+        	}
+        	
+        
+        
+        public void testLoan(){
+        	
+        }
         	
         }
 
                 
                 
-        }
+        

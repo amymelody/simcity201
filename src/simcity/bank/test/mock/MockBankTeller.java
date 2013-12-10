@@ -2,12 +2,11 @@ package simcity.bank.test.mock;
 
 import java.util.Map;
 
-
 import simcity.interfaces.BankDepositor;
 import simcity.interfaces.BankTeller;
-
-
 import simcity.interfaces.BankManager;
+import simcity.mock.LoggedEvent;
+import simcity.mock.Mock;
 
 
 
