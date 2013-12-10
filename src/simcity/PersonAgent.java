@@ -307,6 +307,19 @@ public class PersonAgent extends Agent implements Person
 		}
 		return temp;
 	}
+	
+	private Bank closestBank() {
+		int distance = 100000000;
+		Bank temp = banks.get(0);
+		for (Bank b : banks) {
+			int sum = Math.abs(gui.getXPos()-city.getBuildingEntrance(b.location).x) + Math.abs(gui.getYPos()-city.getBuildingEntrance(b.location).y);
+			if (sum < distance) {
+				distance = sum;
+				temp = b;
+			}
+		}
+		return temp;
+	}
 
 	private BusStop closestBusStop(String destination) {
 		int distance = 100000000;
@@ -425,11 +438,12 @@ public class PersonAgent extends Agent implements Person
 			if (destination.equals("market2")) {
 				return markets.get(1);
 			}
-			if (destination.equals("market3")) {
-				return markets.get(2);
-			}
 		}
-		return markets.get(0);
+		if (houses.get(0).location.contains("house") || houses.get(0).location.contains("apartment1") || houses.get(0).location.contains("apartment2")) {
+			return markets.get(0);
+		} else {
+			return markets.get(1);
+		}
 	}
 
 	private Market getMarket(String building) {
@@ -442,7 +456,16 @@ public class PersonAgent extends Agent implements Person
 	}
 
 	private Bank chooseBank() {
-		return banks.get(0);
+		int distance = 100000000;
+		Bank temp = banks.get(0);
+		for (Bank b : banks) {
+			int sum = Math.abs(gui.getXPos()-city.getBuildingEntrance(b.location).x) + Math.abs(gui.getYPos()-city.getBuildingEntrance(b.location).y);
+			if (sum < distance) {
+				distance = sum;
+				temp = b;
+			}
+		}
+		return temp;
 	}
 
 	private Bank getBank(String building) {
@@ -594,6 +617,8 @@ public class PersonAgent extends Agent implements Person
 		}
 		if (name.equals("normA")) {
 			if (time.getHour() == 5 && time.getMinute() == 0) {
+				money = 200;
+				AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "I now have $" + money);
 				AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "Got hungry");
 				state.ns = NourishmentState.gotHungry;
 			}
