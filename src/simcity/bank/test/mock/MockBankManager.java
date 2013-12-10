@@ -54,8 +54,7 @@ public class MockBankManager extends Mock implements BankManager {
 	}
 	
 	public void msgTransaction(BankDepositor c){
-		log.add(new LoggedEvent("Received message from customer that he wants to make a transaction"));
-
+		log.add(new LoggedEvent("starting transaction"));
 	}
 	public void msgProcessTransaction(BankTeller t){
 		log.add(new LoggedEvent("Received message from teller to process the transaction."));
