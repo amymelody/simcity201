@@ -13,8 +13,6 @@ public interface RestCook {
 	
 	public abstract void addMarket(MarketCashier m, String n);
 	
-	public abstract void msgHereIsOrder(JoshWaiterRole waiter, String choice, int table);
-	
 	public abstract void msgHereIsWhatICanFulfill(List<ItemOrder> orders, boolean canFulfill);
 	
 	public abstract void msgDelivery(List<ItemOrder> orders);

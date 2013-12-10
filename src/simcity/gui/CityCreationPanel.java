@@ -343,6 +343,14 @@ public class CityCreationPanel extends JPanel //implements ActionListener
 					}
 				}
 			}
+			if (key.contains("jL")) {
+				for (PersonInfo pI : info) {
+					if (key.contains(Integer.toString(pI.id))) {
+						pI.jobLocation = cityConfig.getProperty(key);
+						break;
+					}
+				}
+			}
 			if (key.contains("eco")) {
 				for (PersonInfo pI : info) {
 					if (key.contains(Integer.toString(pI.id))) {
@@ -401,7 +409,7 @@ public class CityCreationPanel extends JPanel //implements ActionListener
 	    }
 		
 		for (PersonInfo pI : info) {
-			inputPanel.addPerson(pI.name, pI.job, pI.pay, pI.start, pI.end, pI.eco, pI.physical, pI.housing, pI.preference, cityDirectory, testingAnimation, usingBus, goingHome);
+			inputPanel.addPerson(pI.name, pI.job, pI.jobLocation, pI.pay, pI.start, pI.end, pI.eco, pI.physical, pI.housing, pI.preference, cityDirectory, testingAnimation, usingBus, goingHome);
 		}
 		cityDirectory.assignLandlord();
 		inputPanel.startSimulation(day, busNonNorm);
@@ -411,6 +419,7 @@ public class CityCreationPanel extends JPanel //implements ActionListener
 		public String name;
 		public int id;
 		public String job;
+		public String jobLocation;
 		public String eco;
 		public String physical;
 		public String housing;
@@ -422,6 +431,7 @@ public class CityCreationPanel extends JPanel //implements ActionListener
 			name = n;
 			id = i;
 			job = null;
+			jobLocation = "derp";
 			eco = null;
 			physical = null;
 			housing = null;

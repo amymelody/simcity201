@@ -439,6 +439,9 @@ public class PersonAgent extends Agent implements Person
 				return markets.get(1);
 			}
 		}
+		if (unitTesting) {
+			return markets.get(0);
+		}
 		if (houses.get(0).location.contains("house") || houses.get(0).location.contains("apartment1") || houses.get(0).location.contains("apartment2")) {
 			return markets.get(0);
 		} else {
@@ -456,6 +459,9 @@ public class PersonAgent extends Agent implements Person
 	}
 
 	private Bank chooseBank() {
+		if (unitTesting) {
+			return banks.get(0);
+		}
 		int distance = 100000000;
 		Bank temp = banks.get(0);
 		for (Bank b : banks) {
@@ -594,6 +600,16 @@ public class PersonAgent extends Agent implements Person
 		time.day = d;
 		time.hour = h;
 		time.minute = m;
+		
+		//A lot of hacks to get the different scenarios to run
+		if (name.equals("marketCustomer")) {
+			if (time.getHour() == 3 && time.getMinute() == 0) {
+				foodNeeded.add(new ItemOrder("Steak",2));
+				foodNeeded.add(new ItemOrder("Pozole",2));
+				foodNeeded.add(new ItemOrder("Chicken",2));
+				AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "Food is low");
+			}
+		}
 		if (time.getHour() == 8 && time.getMinute() == 0) {
 			if (name.equals("bankDepositor")) {
 				money += 600;
@@ -604,13 +620,7 @@ public class PersonAgent extends Agent implements Person
 				money = minBalance;
 				AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "I now have $" + money);
 			}
-			if (name.equals("marketCustomer")) {
-				foodNeeded.add(new ItemOrder("Steak",2));
-				foodNeeded.add(new ItemOrder("Pozole",2));
-				foodNeeded.add(new ItemOrder("Chicken",2));
-				AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "Food is low");
-			}
-			if (name.equals("hungryResident") || name.equals("restCustomer")) {
+			if (name.contains("hungryResident") || name.equals("restCustomer")) {
 				AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "Got hungry");
 				state.ns = NourishmentState.gotHungry;
 			}
@@ -651,11 +661,24 @@ public class PersonAgent extends Agent implements Person
 				state.ps = PhysicalState.lazy;
 				state.ns = NourishmentState.gotHungry;
 			}
-			if (time.getHour() == 16 && time.getMinute() == 0) {
+			if (time.getHour() == 17 && time.getMinute() == 0) {
 				if (money > minBalance) {
 					money = minBalance;
 					AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "I now have $" + money);
 				}
+			}
+		}
+		if (name.contains("nonNormF")) {
+			if (time.getHour() == 4 && time.getMinute() == 0) {
+				money = 200;
+				AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "I now have $" + money);
+				AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "Got hungry");
+				state.ns = NourishmentState.gotHungry;
+			}
+			if (time.getHour() == 9 && time.getMinute() == 0) {
+				AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "Got hungry");
+				state.ps = PhysicalState.lazy;
+				state.ns = NourishmentState.gotHungry;
 			}
 		}
 		stateChanged();
@@ -669,6 +692,13 @@ public class PersonAgent extends Agent implements Person
 
 	public void msgYoureHired(String role, int payrate, Map<Day,Time> startShifts, Map<Day,Time> endShifts) {
 		JobRole j = city.JobFactory(role);
+		addRole(j, role);
+		job = new Job(j, j.getJobLocation(), role, payrate, startShifts, endShifts);
+		stateChanged();
+	}
+	
+	public void msgYoureHired(String role, int payrate, Map<Day,Time> startShifts, Map<Day,Time> endShifts, String location) {
+		JobRole j = city.JobFactory(role, location);
 		addRole(j, role);
 		job = new Job(j, j.getJobLocation(), role, payrate, startShifts, endShifts);
 		stateChanged();
