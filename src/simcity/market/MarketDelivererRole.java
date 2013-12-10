@@ -182,9 +182,16 @@ public class MarketDelivererRole extends JobRole implements MarketDeliverer {
 	}
 
 	private void deliverOrder(Order o) {
-		o.oS = OrderState.ready;
-		o.cook.msgDelivery(o.items);
-		o.cashier.msgDelivery(o.price, (simcity.interfaces.MarketDeliverer) this);
+		if(person.businessOpen(o.location)) {
+			o.oS = OrderState.ready;
+			o.cook.msgDelivery(o.items);
+			o.cashier.msgDelivery(o.price, (simcity.interfaces.MarketDeliverer) this);
+			o.complete = true;
+		}
+		else {
+			if(!unitTest)
+				DoGoBack();
+		}
 	}
 
 	private void takePayment(Order o) {
@@ -196,7 +203,10 @@ public class MarketDelivererRole extends JobRole implements MarketDeliverer {
 	}
 
 	private void finishDelivery(Order o) {
-		cashier.msgDelivered(currentOrder, this);
+		if(currentOrder.complete) 
+			cashier.msgDelivered(currentOrder, this);
+		else
+			cashier.msgNotDelivererd(currentOrder, this);
 		currentOrder = null;
 		orders.remove(o);
 		stateChanged();

@@ -466,5 +466,11 @@ public class JesusCookRole extends JobRole implements RestCook {
 		updateInventory("Salad", sI);
 		updateInventory("Pizza", pI);
 	}
+
+	@Override
+	public void msgHereIsOrder(JoshWaiterRole waiter, String choice, int table) {
+		// TODO Auto-generated method stub
+		
+	}
 	
 }
