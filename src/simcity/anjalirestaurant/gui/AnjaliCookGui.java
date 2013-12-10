@@ -9,6 +9,7 @@ import simcity.gui.Gui;
 
 public class AnjaliCookGui implements Gui {
 
+	private AnjaliCookRole role = null;
   private boolean isPresent = false;
   private boolean releaseIt = false;
   private String choice = " ";
@@ -20,7 +21,8 @@ public class AnjaliCookGui implements Gui {
    
     
     public AnjaliCookGui(AnjaliCookRole c, AnjaliRestaurantGui gui){ //HostAgent m) {
-		xPos = 0;
+		role = c;
+    	xPos = 0;
 		yPos = 250;
 		xDestination = 5;
 		yDestination = 250;
@@ -29,14 +31,28 @@ public class AnjaliCookGui implements Gui {
 	}
 
     public void updatePosition() {
-        
+    	if (xPos < xDestination)
+            xPos++;
+        else if (xPos > xDestination)
+            xPos--;
+
+        if (yPos < yDestination)
+            yPos++;
+        else if (yPos > yDestination)
+            yPos--;
+        if (xPos == xDestination && yPos == yDestination)
+		 {
+        	if(releaseIt){
+        	AtDestination();
+        	}
+        	
 		 }
        
         
-       
+    }  
 
     public void draw(Graphics2D g) {
-        g.setColor(Color.YELLOW);
+        g.setColor(Color.RED);
         g.fillRect(xPos,yPos, 30, 30);
         g.drawString(choice, xPos, yPos);
     }
@@ -72,7 +88,10 @@ public class AnjaliCookGui implements Gui {
     public void drawFoodChoice(String food){
     	choice = food;
     }
+    public void AtDestination(){	 	
+		role.msgAtTable();	 
+		releaseIt = false;
   
 
+    }
 }
-

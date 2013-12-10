@@ -194,11 +194,11 @@ public class AnjaliRestaurantGui extends BuildingGui implements ActionListener {
     }
     
     public void addPerson(String name) {
-    	inputPanel.addPerson(name);
+    	//inputPanel.addPerson(name);
     }
     
     public void removePerson(String name) {
-    	inputPanel.removePerson(name);
+    	//inputPanel.removePerson(name);
     }
     /**
      * Main routine to get gui started

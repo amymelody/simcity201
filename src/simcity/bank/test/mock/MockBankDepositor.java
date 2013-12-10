@@ -31,8 +31,7 @@ public class MockBankDepositor extends Mock implements BankDepositor {
 	
 	
 	public void msgMakeDeposit(int cash){
-		log.add(new LoggedEvent("Received message from person agent to take "
-				+ "on role of depositor"));
+		log.add(new LoggedEvent("msg make deposit"));
 	}
 	
 	public void msgMakeWithdrawal(int cash){
@@ -53,33 +52,38 @@ public class MockBankDepositor extends Mock implements BankDepositor {
 		
 	}
 
-	@Override
+
 	public void msgGoToTellerDesk() {
-		// TODO Auto-generated method stub
+		log.add(new LoggedEvent("Msg go to teller desk"));
 		
 	}
 
-	@Override
+
 	public void msgBusinessDeposit(int cash) {
-		// TODO Auto-generated method stub
+		log.add(new LoggedEvent("msg business deposit"));
 		
 	}
 
-	@Override
+
 	public void msgLoanDenied() {
-		// TODO Auto-generated method stub
+		log.add(new LoggedEvent("msg loan denied"));
 		
 	}
 
-	@Override
+
 	public void msgYoureDead() {
-		// TODO Auto-generated method stub
+		log.add(new LoggedEvent("msg you're dead"));
 		
 	}
 
-	@Override
+
 	public void msgLeaveMyBank() {
-		// TODO Auto-generated method stub
+		log.add(new LoggedEvent("msg leave my bank"));
+		
+	}
+
+	public void msgImARobber() {
+		log.add(new LoggedEvent("msg im a robber"));
 		
 	}
 	

@@ -110,6 +110,7 @@ public class MarketInputPanel extends JPanel
 	public void addDeliverer(MarketDelivererRole d) {
 		MarketDelivererGui g = new MarketDelivererGui(d);
 		DelivererGui dG = new DelivererGui(g, name);
+		g.setDelivererGui(dG);
 		marketGui.animationPanel.addGui(g);
 		marketGui.addDelivererGui(dG);
 		d.setGui(g);
