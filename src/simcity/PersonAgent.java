@@ -610,7 +610,7 @@ public class PersonAgent extends Agent implements Person
 			}
 		}
 		if (name.contains("hungryResident") || name.equals("restCustomer")) {
-			if (time.getHour() == 3 && time.getMinute() == 0) {
+			if (time.getHour() == 5 && time.getMinute() == 0) {
 				AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "Got hungry");
 				state.ns = NourishmentState.gotHungry;
 			}
