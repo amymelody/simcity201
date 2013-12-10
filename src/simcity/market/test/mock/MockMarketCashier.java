@@ -116,4 +116,10 @@ public class MockMarketCashier extends Mock implements MarketCashier {
 		log.add(new LoggedEvent("At desk to pick up"));
 	}
 
+	@Override
+	public void msgNotDelivererd(Order o, MarketDeliverer d) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

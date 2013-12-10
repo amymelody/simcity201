@@ -13,7 +13,7 @@ import java.util.concurrent.Semaphore;
 /**
  * Restaurant Waiter Agent
  */
-public class CherysWaiterRole extends RestWaiterRole implements CherysWaiter
+public class CherysNormalWaiterRole extends RestWaiterRole implements CherysWaiter
 {
 	private Semaphore atLobby = new Semaphore(0, true);
 	private Semaphore atTable = new Semaphore(0, true);
@@ -114,7 +114,7 @@ public class CherysWaiterRole extends RestWaiterRole implements CherysWaiter
 	 * @param h    reference to the host agent
 	 * @param c    reference to the cook agent
 	 */
-	public CherysWaiterRole()
+	public CherysNormalWaiterRole()
 	{
 		super();
 		menu = new HashMap<Integer, CherysWaiterFood>();

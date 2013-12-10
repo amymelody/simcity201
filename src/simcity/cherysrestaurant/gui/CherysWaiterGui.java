@@ -2,7 +2,7 @@ package simcity.cherysrestaurant.gui;
 
 
 import simcity.cherysrestaurant.CherysCustomerRole;
-import simcity.cherysrestaurant.CherysWaiterRole;
+import simcity.cherysrestaurant.CherysNormalWaiterRole;
 import simcity.cherysrestaurant.gui.CherysRestaurantAnimationPanel.Table;
 
 import java.awt.*;
@@ -11,7 +11,7 @@ import java.util.List;
 
 public class CherysWaiterGui implements CherysGui
 {
-    private CherysWaiterRole agent = null;
+    private CherysNormalWaiterRole agent = null;
 
     private int xExit = -20, yExit = 0;//default waiter position
     private int xPos = -20, yPos = 0;//default waiter position
@@ -55,7 +55,7 @@ public class CherysWaiterGui implements CherysGui
      * Constructor for WaiterGui
      * @param agent reference to the waiter this gui represents
      */
-    public CherysWaiterGui(CherysWaiterRole agent, CherysRestaurantGui gui)
+    public CherysWaiterGui(CherysNormalWaiterRole agent, CherysRestaurantGui gui)
     {
         this.agent = agent;
     	for(int i = 0; i < numTables; i++)

@@ -666,13 +666,6 @@ public class CherysCookRole extends RestCookRole implements CherysCook
 	}
 
 	@Override
-	public void msgHereIsOrder(JoshWaiterRole waiter, String choice, int table)
-	{
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
 	public void msgDelivery(List<ItemOrder> order)
 	{
 		// TODO Auto-generated method stub

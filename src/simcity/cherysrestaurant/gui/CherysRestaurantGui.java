@@ -2,7 +2,7 @@ package simcity.cherysrestaurant.gui;
 
 import simcity.CityDirectory;
 import simcity.cherysrestaurant.CherysCustomerRole;
-import simcity.cherysrestaurant.CherysWaiterRole;
+import simcity.cherysrestaurant.CherysNormalWaiterRole;
 import simcity.gui.BuildingGui;
 import simcity.gui.BuildingsGui;
 import simcity.gui.CityGui;
@@ -139,7 +139,7 @@ public class CherysRestaurantGui extends BuildingGui
     	restPanel.addCustomer(c);
 		
 	}
-	public void addWaiter(CherysWaiterRole w)
+	public void addWaiter(CherysNormalWaiterRole w)
 	{
     	restPanel.addWaiter(w);
 	}

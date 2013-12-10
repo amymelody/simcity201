@@ -1,6 +1,6 @@
 package simcity.jesusrestaurant;
 
-import simcity.PersonAgent;
+import simcity.interfaces.Person;
 import simcity.RestCashierRole;
 import simcity.role.JobRole;
 import simcity.interfaces.MarketDeliverer;
@@ -57,7 +57,7 @@ public class JesusCashierRole extends RestCashierRole implements JesusCashier {
 		return name;
 	}
 	
-	public void setPerson(PersonAgent p) {
+	public void setPerson(Person p) {
 		super.setPerson(p);
 		name = p.getName();
 	}
@@ -308,17 +308,6 @@ public class JesusCashierRole extends RestCashierRole implements JesusCashier {
 		public void addAmount(double num) {
 			amountDue += num;
 		}
-	}
-	@Override
-	public void msgProduceCheck(JoshWaiter w, JoshCustomer c, String choice) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void msgPayment(JoshCustomer c, int cash) {
-		// TODO Auto-generated method stub
-		
 	}
 	
 }
