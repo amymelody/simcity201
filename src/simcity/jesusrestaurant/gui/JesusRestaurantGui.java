@@ -5,6 +5,8 @@ import simcity.gui.BuildingGui;
 import simcity.gui.BuildingsGui;
 import simcity.jesusrestaurant.JesusCustomerRole;
 import simcity.jesusrestaurant.JesusWaiterRole;
+import simcity.joshrestaurant.JoshCustomerRole;
+import simcity.joshrestaurant.JoshWaiterRole;
 
 import javax.swing.*;
 
@@ -44,5 +46,13 @@ public class JesusRestaurantGui extends BuildingGui {
 		animationPanel.setVisible(visible);
 		inputPanel.setVisible(visible);
 	}
+	
+	public void addCustomer(JesusCustomerRole c) {
+    	inputPanel.addCustomer(c);
+    }
+    
+    public void addWaiter(JesusWaiterRole w) {
+    	inputPanel.addWaiter(w);
+    }
 	
 }
