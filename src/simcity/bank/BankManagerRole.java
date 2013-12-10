@@ -360,8 +360,8 @@ import simcity.trace.AlertTag;
 		
 		private void checkLoan(BankDepositor c){
 			if(bankMoney > 300 && findCustomer(c).cashInBank == 0){
-				bankMoney = bankMoney - 100;
-				findCustomer(c).cashInBank += 100;
+				bankMoney = bankMoney - 300;
+				findCustomer(c).cashInBank += 300;
 				teller.msgLoanApproved(c, findCustomer(c).cashInBank);
 			}
 			else
