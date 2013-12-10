@@ -36,5 +36,7 @@ public interface MarketCashier {
 	public abstract void msgIWantDelivery(RestCook rCk, RestCashier rCh, List<ItemOrder> i, String location);
 	
 	public abstract void msgDelivered(Order order, MarketDeliverer d);
+
+	public abstract void msgNotDelivererd(Order o, MarketDeliverer d);
 	
 }

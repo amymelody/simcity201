@@ -18,6 +18,7 @@ public class Order {
 	public int amountPaid;
 	public int change;
 	public String location;
+	public boolean complete = false;
 	
 	public Order(MarketCustomer c, List<ItemOrder> i) {
 		customer = c;
@@ -57,5 +58,5 @@ public class Order {
 		return oS;
 	}
 	
-	public enum OrderState {none, newDelivery, handing, getting, ready, paying, paid, done, delivered, here, know};
+	public enum OrderState {none, newDelivery, handing, getting, ready, paying, paid, done, delivered, here, know, needToComplete};
 }
