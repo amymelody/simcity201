@@ -238,7 +238,11 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 
 	// Normative Scenario #1
 	public void msgIWantItems(MarketCustomer c, List<ItemOrder> items) {
-		orders.add(new Order(c, items));
+		List<ItemOrder> temp = new ArrayList<ItemOrder>();
+		for(ItemOrder iO: items) {
+			temp.add(new ItemOrder(iO.getFoodItem(), iO.getAmount()));
+		}
+		orders.add(new Order(c, temp));
 		stateChanged();
 	}
 	
@@ -285,7 +289,11 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 
 	// Normative Scenario #2
 	public void msgIWantDelivery(RestCook rCk, RestCashier rCh, List<ItemOrder> i, String location) {
-		orders.add(new Order(rCk, rCh, i, location));
+		List<ItemOrder> temp = new ArrayList<ItemOrder>();
+		for(ItemOrder iO: i) {
+			temp.add(new ItemOrder(iO.getFoodItem(), iO.getAmount()));
+		}
+		orders.add(new Order(rCk, rCh, temp, location));
 		stateChanged();
 	}
 	public void msgDelivered(Order order, MarketDeliverer d) {
