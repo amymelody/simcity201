@@ -5,6 +5,8 @@ import java.util.Map;
 import simcity.interfaces.BankDepositor;
 import simcity.interfaces.BankManager;
 import simcity.interfaces.BankTeller;
+import simcity.mock.LoggedEvent;
+import simcity.mock.Mock;
 
 
 //Works for normative and nonnormative scenarios
@@ -68,7 +70,7 @@ public class MockBankManager extends Mock implements BankManager {
 
 	
 	public void msgProcessTransaction(BankTeller t, BankDepositor c, int cash) {
-		bankMoney += cash;
+		System.out.println(" " + bankMoney);
 	}
 
 	@Override
@@ -79,13 +81,13 @@ public class MockBankManager extends Mock implements BankManager {
 
 	@Override
 	public void msgImRobbingYourBank(BankDepositor c, int cash) {
-		// TODO Auto-generated method stub
+		log.add(new LoggedEvent("Manager is being robbed"));
 		
 	}
 
 	@Override
 	public void msgHeresYourMoneyBack(BankDepositor c, int cash) {
-		// TODO Auto-generated method stub
+		log.add(new LoggedEvent("Got my money back"));
 		
 	}
 	
