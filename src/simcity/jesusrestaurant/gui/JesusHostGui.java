@@ -12,11 +12,13 @@ import javax.swing.ImageIcon;
 
 public class JesusHostGui implements Gui {
 
-	private JesusHostRole agent = null;
+	private JesusHostRole role = null;
 
-	private int xPos = -20, yPos = -20;//default host position
-	private int xDestination = -20, yDestination = -20;//default host destination
-
+	private int xPos = -20, yPos = 20;//default host position
+	private int xDestination = -20, yDestination = 20;//default host destination
+	private int xHome = 80, yHome = 80;
+	private boolean leaving = false;
+	
 	public static final Map<Integer, Point> tableLocations = new HashMap<Integer, Point>();
 	static {
 		tableLocations.put(1, new Point(40, 160));
@@ -26,8 +28,8 @@ public class JesusHostGui implements Gui {
 	}
 
 	Image hostImage;
-	public JesusHostGui(JesusHostRole agent) {
-		this.agent = agent;
+	public JesusHostGui(JesusHostRole r) {
+		this.role = r;
 
 		ImageIcon hostIcon = new ImageIcon(this.getClass().getResource("images/mario.png"));
 		hostImage = hostIcon.getImage();
@@ -44,10 +46,14 @@ public class JesusHostGui implements Gui {
 		else if (yPos > yDestination)
 			yPos--;
 
-		for(Point p : tableLocations.values()) {
-		if (xPos == xDestination && yPos == yDestination
-				& ((xDestination == p.x + 20 && yDestination == p.y - 20))) {
-		}
+		if (xPos == xDestination && yPos == yDestination) {
+			if(xDestination == xHome && yDestination == yHome) {
+				
+			}
+			else if(xDestination == -20 && yDestination == 20 && leaving) {
+				role.left();
+				leaving = false;
+			}
 		}
 	}
 
@@ -68,6 +74,15 @@ public class JesusHostGui implements Gui {
 		return yPos;
 	}
 
+	public void work() {
+		xDestination = xHome;
+		yDestination = yHome;
+	}
+	public void  leave() {
+		xDestination = -20;
+		yDestination = 20;
+		leaving = true;
+	}
 	public static int getNTab() {
 		return JesusHostRole.getNTables();
 	}

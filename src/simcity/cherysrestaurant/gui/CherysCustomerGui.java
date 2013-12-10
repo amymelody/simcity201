@@ -1,23 +1,23 @@
-package simcity.Anjalirestaurant.gui;
+package simcity.cherysrestaurant.gui; 
 
-import simcity.Anjalirestaurant.AnjaliCustomerRole;
-import simcity.Anjalirestaurant.AnjaliHostRole;
+import simcity.cherysrestaurant.CherysCustomerRole;
+import simcity.cherysrestaurant.CherysHostRole;
 
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Semaphore;
 
-public class AnjaliCustomerGui implements AnjaliGui
+public class CherysCustomerGui implements CherysGui
 {
 	private Semaphore follow = new Semaphore(0, true);
 	
-	private AnjaliCustomerRole agent = null;
+	private CherysCustomerRole agent = null;
 	private boolean isPresent = false;
 	private boolean isHungry = false;
 
 	//private HostAgent host;
-	AnjaliRestaurantGui gui;
+	CherysRestaurantGui gui;
 
 	private int xPos, yPos;
 	public int xDestination, yDestination;
@@ -39,7 +39,7 @@ public class AnjaliCustomerGui implements AnjaliGui
 	}
 	private Command command = Command.noCommand;
 
-	public AnjaliCustomerGui(AnjaliCustomerRole c, AnjaliRestaurantGui gui, int number)
+	public CherysCustomerGui(CherysCustomerRole c, CherysRestaurantGui gui, int number)
 	{
 		agent = c;
 		xPos = 50 + 30*number;
@@ -94,7 +94,7 @@ public class AnjaliCustomerGui implements AnjaliGui
 			{
 				agent.msgLeftRestaurant();
 				isHungry = false;
-				gui.setCustomerEnabled(agent);
+//				gui.setCustomerEnabled(agent);
 			}
 			command = Command.noCommand;
 		}

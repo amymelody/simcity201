@@ -1,7 +1,12 @@
-package simcity.Anjalirestaurant.gui;
+package simcity.cherysrestaurant.gui; 
 
-import simcity.Anjalirestaurant.AnjaliCustomerRole;
-import simcity.Anjalirestaurant.AnjaliWaiterRole;
+import simcity.CityDirectory;
+import simcity.cherysrestaurant.CherysCustomerRole;
+import simcity.cherysrestaurant.CherysWaiterRole;
+import simcity.gui.BuildingGui;
+import simcity.gui.BuildingsGui;
+import simcity.gui.CityGui;
+import simcity.joshrestaurant.gui.JoshRestaurantInputPanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,17 +15,12 @@ import java.awt.event.*;
  * Main GUI class.
  * Contains the main frame and subsequent panels, along with the 'main' function
  */
-public class AnjaliRestaurantGui extends JFrame implements ActionListener
+public class CherysRestaurantGui extends BuildingGui
 {
 	JFrame animationFrame = new JFrame("Restaurant Animation");
-	AnjaliRestaurantAnimationPanel animationPanel = new AnjaliRestaurantAnimationPanel();
+	CherysRestaurantAnimationPanel animationPanel = new CherysRestaurantAnimationPanel();
 	
-    private AnjaliRestaurantPanel restPanel = new AnjaliRestaurantPanel(this);
-    
-//    /* infoPanel holds information about the clicked customer, if there is one*/
-//    private JPanel infoPanel;
-//    private JLabel infoLabel; //part of infoPanel
-//    private JCheckBox stateCB;//part of infoLabel
+    private CherysRestaurantInputPanel restPanel = new CherysRestaurantInputPanel(this);
     
     private JPanel idPanel;
     private JLabel idLabel; //part of idPanel
@@ -28,31 +28,25 @@ public class AnjaliRestaurantGui extends JFrame implements ActionListener
     private JLabel imageLabel; //part of idPanel
     private JButton pauseButton; //part of idPanel
 
-    private Object currentPerson;/* Holds the agent that the info is about.
-    								Seems like a hack */
-
     /**
      * Constructor for RestaurantGui class. Sets up all the gui components.
      */
-    public AnjaliRestaurantGui()
+    public CherysRestaurantGui(String n, BuildingsGui bG, CityDirectory cD)
     {
-        int WINDOWX = 750;
+    	super(n, bG, cD);
+    	restPanel = new CherysRestaurantInputPanel(this, cD.getCherysHost(), cD.getCherysCook(), cD.getCherysCashier());
+    	
+    	
+        int WINDOWX = 650;
         int WINDOWY = 500;
-        int bufferFromTopOfScreen = 50;
-        int bufferFromSideOfScreen = 50;
-
-    	setBounds(bufferFromSideOfScreen, bufferFromTopOfScreen, WINDOWX, WINDOWY);
-
-    	BorderLayout frameLayout = new BorderLayout();
-    	setLayout(frameLayout);
 
         //main restaurant panel
-    	double restaurantFractionOfWindow = .45;
-        Dimension restDim = new Dimension(WINDOWX, (int)(WINDOWY * restaurantFractionOfWindow));
+		double inputFractionOfWindow = 150.0 / 650.0;
+		Dimension restDim = new Dimension((int)(WINDOWX * inputFractionOfWindow), WINDOWY);
         restPanel.setPreferredSize(restDim);
         restPanel.setMinimumSize(restDim);
         restPanel.setMaximumSize(restDim);
-        add(restPanel, frameLayout.NORTH);
+        bG.add(restPanel, BorderLayout.NORTH);
         
         //animation panel
     	double animationFractionOfWindow = .4;
@@ -60,184 +54,83 @@ public class AnjaliRestaurantGui extends JFrame implements ActionListener
         animationPanel.setPreferredSize(animDim);
         animationPanel.setMinimumSize(animDim);
         animationPanel.setMaximumSize(animDim);
-        add(animationPanel, frameLayout.CENTER);
+        bG.add(animationPanel, BorderLayout.CENTER);
         
-        // Now, setup the info panel                                                      //DELETE
-//        Dimension infoDim = new Dimension(WINDOWX, (int) (WINDOWY * .125));
-//        infoPanel = new JPanel();
-//        infoPanel.setPreferredSize(infoDim);
-//        infoPanel.setMinimumSize(infoDim);
-//        infoPanel.setMaximumSize(infoDim);
-//        infoPanel.setBorder(BorderFactory.createTitledBorder("Information"));
+//        //My section
+//        double idPanelFractionOfWindow = .15;
+//        int bufferBetweenLabels = 10;
+//        int bufferAboveLabels = 0;
+//        Dimension idDim = new Dimension(WINDOWX, (int)(WINDOWY * idPanelFractionOfWindow));
+//        idPanel = new JPanel();
+//        idPanel.setPreferredSize(idDim);
+//        idPanel.setMinimumSize(idDim);
+//        idPanel.setMaximumSize(idDim);
+//        idPanel.setBorder(BorderFactory.createTitledBorder("Extras"));
 //
-//        stateCB = new JCheckBox();
-//        stateCB.setVisible(false);
-//        stateCB.addActionListener(this);
+//        idPanel.setLayout(new FlowLayout(FlowLayout.LEFT, bufferBetweenLabels, bufferAboveLabels));
 //
-//        infoPanel.setLayout(new GridLayout(1, 2, 30, 0));
+//        image = new ImageIcon("me.jpg");
+//        imageLabel = new JLabel(image);
+//        idPanel.add(imageLabel);
 //        
-//        infoLabel = new JLabel(); 
-//        infoLabel.setText("<html><pre><i>Click Add to make customers</i></pre></html>");
-//        infoPanel.add(infoLabel);
-//        infoPanel.add(stateCB);
-//        add(infoPanel, frameLayout.NORTH);
-        
-        //My section
-        double idPanelFractionOfWindow = .15;
-        int bufferBetweenLabels = 10;
-        int bufferAboveLabels = 0;
-        Dimension idDim = new Dimension(WINDOWX, (int)(WINDOWY * idPanelFractionOfWindow));
-        idPanel = new JPanel();
-        idPanel.setPreferredSize(idDim);
-        idPanel.setMinimumSize(idDim);
-        idPanel.setMaximumSize(idDim);
-        idPanel.setBorder(BorderFactory.createTitledBorder("Extras"));
-
-        idPanel.setLayout(new FlowLayout(FlowLayout.LEFT, bufferBetweenLabels, bufferAboveLabels));
-
-        image = new ImageIcon("me.jpg");
-        imageLabel = new JLabel(image);
-        idPanel.add(imageLabel);
-        
-        idLabel = new JLabel(); 
-        idLabel.setText("<html><pre><i>Layout edited by Anjali Fair\t\t\t\t\t\t\t\t\t\t\t\t\\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t</i></pre></html>");
-        idPanel.add(idLabel);
-        
-        pauseButton = new JButton("Pause");
-        pauseButton.addActionListener(this);
-        idPanel.add(pauseButton);
-        
-        add(idPanel, frameLayout.SOUTH);
+//        idLabel = new JLabel(); 
+//        idLabel.setText("<html><pre><i>Layout edited by Cherys Fair\t\t\t\t\t\t\t\t\t\t\t\t\\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t</i></pre></html>");
+//        idPanel.add(idLabel);
+//        
+//        add(idPanel, frameLayout.SOUTH);
         
     }
 //    /**
-//     * updateInfoPanel() takes the given customer (or, for v3, Host) object and
-//     * changes the information panel to hold that person's info.
-//     *
-//     * @param person customer (or waiter) object
+//     * Update's the customer's internal hunger variable
+//     * @param person reference to the person the information is about
+//     * @param tf the value of the customer's 'hungry' check box
 //     */
-//    public void updateInfoPanel(Object person)
+//    public void updatePerson(Object person, boolean tf) //* called in RestaurantPanel.addPerson/.updateInfo
 //    {
-//        stateCB.setVisible(true);
 //        currentPerson = person;
-//
-//        if (person instanceof CustomerAgent)
+//        if(person instanceof CherysCustomerRole) 
 //        {
-//            CustomerAgent customer = (CustomerAgent) person;
-//            stateCB.setText("Hungry?");
-//          //Should checkmark be there? 
-//            stateCB.setSelected(customer.getGui().isHungry());
-//          //Is customer hungry? Hack. Should ask customerGui
-//            stateCB.setEnabled(!customer.getGui().isHungry());
-//          // Hack. Should ask customerGui
-//            infoLabel.setText(
-//               "<html><pre>     Name: " + customer.getName() + " </pre></html>");
+//        	CherysCustomerRole customer = (CherysCustomerRole) person;
+//        	if(tf)
+//        	{
+//        		customer.getGui().setHungry();
+//        	}
 //        }
-//        infoPanel.validate();
+//        if(person instanceof CherysWaiterRole)
+//        {
+//        	CherysWaiterRole waiter = (CherysWaiterRole) person;
+//        	waiter.getGui().setTired(tf);
+//        }
 //    }
-    /**
-     * Update's the customer's internal hunger variable
-     * @param person reference to the person the information is about
-     * @param tf the value of the customer's 'hungry' check box
-     */
-    public void updatePerson(Object person, boolean tf) //* called in RestaurantPanel.addPerson/.updateInfo
-    {
-        currentPerson = person;
-        if(person instanceof AnjaliCustomerRole) 
-        {
-        	AnjaliCustomerRole customer = (AnjaliCustomerRole) person;
-        	if(tf)
-        	{
-        		customer.getGui().setHungry();
-        	}
-        }
-        if(person instanceof AnjaliWaiterRole)
-        {
-        	AnjaliWaiterRole waiter = (AnjaliWaiterRole) person;
-        	waiter.getGui().setTired(tf);
-        }
-    }
-    /**
-     * Action listener method that reacts to the pause button being
-     * clicked. For v3, it will propose a break for the waiter.
-     */
-    public void actionPerformed(ActionEvent e)
-    {
-//        if (e.getSource() == stateCB)
-//        {
-//            if (currentPerson instanceof CustomerAgent)
-//            {
-//                CustomerAgent c = (CustomerAgent) currentPerson;
-//                c.getGui().setHungry();
-//                stateCB.setEnabled(false);
-//            }
-//        }
-        if(e.getSource() == pauseButton)
-        {
-        	if(pauseButton.getText().equals("Pause"))
-        	{
-	        	restPanel.applyPause(true);
-	        	//System.out.print("pause applied");
-	        	pauseButton.setText("Restart");
-        	}
-        	else if(pauseButton.getText().equals("Restart"))
-        	{
-	        	restPanel.applyPause(false);
-	        	pauseButton.setText("Pause");
-        	}
-        }
-    }
-//    public void setHungry()
+//    /**
+//     * Message sent from the host agent when a customer leaves to enable
+//     * that customer's "I'm hungry" checkbox.
+//     * @param c reference to the customer
+//     */
+//    public void setCustomerEnabled(CherysCustomerRole c) //* called from CustomerGui.updatePosition
 //    {
-//    	if (currentPerson instanceof CustomerAgent)
-//    	{
-//    		CustomerAgent c = (CustomerAgent) currentPerson;
-//    		c.getGui().setHungry();
-//    	}
+//    	restPanel.enableCheck("Customer", c.getName());
 //    }
-    /**
-     * Message sent from the host agent when a customer leaves to enable
-     * that customer's "I'm hungry" checkbox.
-     * @param c reference to the customer
-     */
-    public void setCustomerEnabled(AnjaliCustomerRole c) //* called from CustomerGui.updatePosition
-    {
-    	restPanel.enableCheck("Customer", c.getName());
-//        if (currentPerson instanceof CustomerAgent)
-//        {
-//            CustomerAgent cust = (CustomerAgent) currentPerson;
-//            if (c.equals(cust))
-//            {
-//                //restPanel.enableCheck();
-//            }
-//        }
-    }
-    /**
-     * Changes the gui to let the user know that the waiter is serving
-     * their max number of customers
-     * @param w reference to the waiter agent
-     * @param tf the value the waiter's "busy" check box is being assigned
-     */
-    public void setWaiterEnabled(AnjaliWaiterRole w) //* called from ~HostAgent.assignCustomer
-    {
-    	restPanel.enableCheck("Waiter", w.getName());
-    }
-    public void setWaiterBusy(AnjaliWaiterRole w, boolean tf) //*called from WaiterGui
-    {
-    	restPanel.setCheck(w.getName(), tf);
-    	restPanel.enableCheck("Waiter", w.getName());
-    }
-    
-    
-    /**
-     * Main routine to get gui started
-     */
-    public static void main(String[] args)
-    {
-        AnjaliRestaurantGui gui = new AnjaliRestaurantGui();
-        gui.setTitle("Anjali' Restaurant");
-        gui.setVisible(true);
-        gui.setResizable(false);
-        gui.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    }
+//    /**
+//     * Changes the gui to let the user know that the waiter is serving
+//     * their max number of customers
+//     * @param w reference to the waiter agent
+//     * @param tf the value the waiter's "busy" check box is being assigned
+//     */
+//    public void setWaiterEnabled(CherysWaiterRole w) //* called from ~HostAgent.assignCustomer
+//    {
+//    	restPanel.enableCheck("Waiter", w.getName());
+//    }
+//    public void setWaiterBusy(CherysWaiterRole w, boolean tf) //*called from WaiterGui
+//    {
+//    	restPanel.setCheck(w.getName(), tf);
+//    	restPanel.enableCheck("Waiter", w.getName());
+//    }
+//    
+	@Override
+	public void changeView(boolean visible)
+	{
+		// TODO Auto-generated method stub
+		
+	}
 }

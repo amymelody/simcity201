@@ -1,7 +1,7 @@
-package simcity.Anjalirestaurant.gui;
+package simcity.cherysrestaurant.gui; 
 
-import simcity.Anjalirestaurant.AnjaliCustomerRole;
-import simcity.Anjalirestaurant.AnjaliHostRole;
+import simcity.cherysrestaurant.CherysCustomerRole;
+import simcity.cherysrestaurant.CherysHostRole;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,9 +13,9 @@ import java.util.ArrayList;
  * Subpanel of ListPanel.
  * Holds the name text field and checkbox for customers and waiters
  */
-public class AnjaliInputPanel extends JPanel implements ActionListener
+public class CherysInputPanel extends JPanel implements ActionListener
 {
-    private AnjaliListPanel listPanel;
+    private CherysListPanel listPanel;
     private String type;
     private int textLength;
     private String originalText;
@@ -27,7 +27,7 @@ public class AnjaliInputPanel extends JPanel implements ActionListener
      * @param lp reference to the list panel
      * @param t  indicates if this is for customers or waiters
      */
-    public AnjaliInputPanel(AnjaliListPanel lp, String t)
+    public CherysInputPanel(CherysListPanel lp, String t)
     {
         listPanel = lp;
         type = t;

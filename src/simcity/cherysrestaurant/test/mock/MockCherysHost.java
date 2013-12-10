@@ -1,37 +1,37 @@
-package simcity.Anjalirestaurant.test.mock;
+package simcity.cherysrestaurant.test.mock; 
 
-import simcity.Anjalirestaurant.AnjaliCashierCheck;
-import simcity.Anjalirestaurant.interfaces.*;
+import simcity.cherysrestaurant.CherysCashierCheck;
+import simcity.cherysrestaurant.interfaces.*;
 
-public class MockAnjaliHost extends Mock implements AnjaliHost
+public class MockCherysHost extends Mock implements CherysHost
 {
 	/**
 	 * Reference to the agent under test that can be set by the unit test.
 	 */
 	//public Cashier cashier;
 
-	public MockAnjaliHost(String name)
+	public MockCherysHost(String name)
 	{
 		super(name);
 	}
 
 	@Override
-	public void msgImHungry(AnjaliCustomer c)
+	public void msgImHungry(CherysCustomer c)
 	{
 		log.add(new LoggedEvent("Received msgImHungry from customer."));
 	}
 	@Override
-	public void msgTableFree(int t, AnjaliWaiter w, AnjaliCustomer c)
+	public void msgTableFree(int t, CherysWaiter w, CherysCustomer c)
 	{
 		log.add(new LoggedEvent("Received msgTableFree from waiter. Table = " + t));
 	}
 	@Override
-	public void msgMayIGoOnBreak(AnjaliWaiter w)
+	public void msgMayIGoOnBreak(CherysWaiter w)
 	{
 		log.add(new LoggedEvent("Received msgMayIGoOnBreak from waiter."));
 	}
 	@Override
-	public void msgBackFromBreak(AnjaliWaiter w)
+	public void msgBackFromBreak(CherysWaiter w)
 	{
 		log.add(new LoggedEvent("Received msgBackFromBreak from waiter."));
 	}

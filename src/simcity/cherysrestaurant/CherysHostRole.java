@@ -1,8 +1,9 @@
-package simcity.Anjalirestaurant;
+package simcity.cherysrestaurant; 
 
+import simcity.RestHostRole;
 import simcity.agent.Agent;
-import simcity.Anjalirestaurant.gui.AnjaliRestaurantGui;
-import simcity.Anjalirestaurant.interfaces.*;
+import simcity.cherysrestaurant.gui.CherysRestaurantGui;
+import simcity.cherysrestaurant.interfaces.*;
 
 import java.util.*;
 import java.util.concurrent.Semaphore;
@@ -10,16 +11,14 @@ import java.util.concurrent.Semaphore;
 /**
  * Restaurant Host Agent
  */
-public class AnjaliHostRole extends Agent implements AnjaliHost
+public class CherysHostRole extends RestHostRole implements CherysHost
 {
-
-	private String name;
 	public List<MyCustomer> customers = new ArrayList<MyCustomer>();
 	private class MyCustomer
 	{
-		AnjaliCustomer c;
+		CherysCustomer c;
 		boolean served;
-		MyCustomer(AnjaliCustomer c)
+		MyCustomer(CherysCustomer c)
 		{
 			this.c = c;
 			served = false;
@@ -39,59 +38,78 @@ public class AnjaliHostRole extends Agent implements AnjaliHost
 	private List<MyWaiter> waiters = new ArrayList<MyWaiter>();
 	private class MyWaiter
 	{
-		AnjaliWaiter w;
+		CherysWaiter w;
 		int customersAssigned;
 		boolean wantsBreak;
 		boolean onBreak;
-		MyWaiter(AnjaliWaiter w)
+		boolean onDuty;
+		MyWaiter(CherysWaiter w)
 		{
 			this.w = w;
 			customersAssigned = 0;
 			wantsBreak = false;
 		}
+		void setOnDuty(boolean tf)
+		{
+			onDuty = tf;
+		}
 	}
 	int numWaiters;
 	int numTables = 5;
 	
-	AnjaliRestaurantGui gui;
+	private boolean working;
+
+	private CherysCashier cashier;
+	private CherysCook cook;
+	CherysRestaurantGui gui;
 
 	/**
 	 * Constructor for HostAgent
 	 * @param name agent name
 	 * @param gui  reference to the main gui
 	 */
-	public AnjaliHostRole(String name, AnjaliRestaurantGui gui) //* called from RestaurantGui
+	public CherysHostRole() //* called from RestaurantGui
 	{
 		super();
 
-		this.name = name;
 		// make some tables
 		tables = new ArrayList<Table>(numTables);
 		for (int ix = 1; ix <= numTables; ix++)
 		{
 			tables.add(new Table(ix));//how you add to a collections
 		}
-		
-		this.gui = gui;
 	}
 
 	public String getName()
 	{
 		return name;
 	}
-	public List getCustomers()
+	public void setCashier(CherysCashier c)
 	{
-		return customers;
+		cashier = c;
+	}
+	public void setCook(CherysCook c)
+	{
+		cook = c;
+	}
+	public void setWaiter(CherysWaiter w) //* called from RestaurantPanel.addPerson
+	{
+		waiters.add(new MyWaiter(w));
+		stateChanged();
+	}
+	public void setGui(CherysRestaurantGui g)
+	{
+		gui = g;
 	}
 	
 	// Messages
-	public void msgImHungry(AnjaliCustomer c) //* called from Customer.alertHost
+	public void msgImHungry(CherysCustomer c) //* called from Customer.alertHost
 	{
 		Do("recieved msgImHungry");
 		customers.add(new MyCustomer(c));
 		stateChanged();
 	}
-	public void msgTableFree(int t, AnjaliWaiter w, AnjaliCustomer c) //* called from Waiter.tableAvailible
+	public void msgTableFree(int t, CherysWaiter w, CherysCustomer c) //* called from Waiter.tableAvailible
 	{
 		Do("recieved msgTableFree");
 		do
@@ -134,7 +152,7 @@ public class AnjaliHostRole extends Agent implements AnjaliHost
 		while(false);
 		stateChanged();	
 	}
-	public void msgMayIGoOnBreak(AnjaliWaiter w)
+	public void msgMayIGoOnBreak(CherysWaiter w)
 	{
 		Do("recieved msgMayIGoOnBreak");
 		do
@@ -158,7 +176,7 @@ public class AnjaliHostRole extends Agent implements AnjaliHost
 		while(false);
 		stateChanged();
 	}
-	public void msgBackFromBreak(AnjaliWaiter w)
+	public void msgBackFromBreak(CherysWaiter w)
 	{
 		Do("recieved msgBackFromBreak");
 		do
@@ -180,11 +198,48 @@ public class AnjaliHostRole extends Agent implements AnjaliHost
 		}
 		while(false);
 	}
+	public void msgOnDty(CherysWaiter w, boolean tf)
+	{
+		do
+		{
+			try
+			{
+				for(MyWaiter waiter : waiters)
+				{
+					if(waiter.w == w)
+					{
+						waiter.onDuty = tf;
+					}
+				}
+			}
+			catch(ConcurrentModificationException cme)
+			{
+				continue;
+			}
+		}
+		while(false);
+	}
+	
+	@Override
+	public void msgStartShift()
+	{
+		person.businessIsClosed(getJobLocation(), false);
+		working = true;
+		cashier.msgPaySalary(person.getSalary());
+		stateChanged();
+	}
 
+	@Override
+	public void msgEndShift()
+	{
+		person.businessIsClosed(getJobLocation(), true);
+		working = false;
+		stateChanged();
+	}
 	/**
 	 * Scheduler.  Determine what action is called for, and do it.
 	 */
-	protected boolean pickAndExecuteAnAction()
+	public boolean pickAndExecuteAnAction()
 	{
 		MyCustomer mc = null;
 		Table t = null;
@@ -281,7 +336,7 @@ public class AnjaliHostRole extends Agent implements AnjaliHost
 			{
 				for(MyWaiter waiter : waiters)
 				{
-					if(waiter.wantsBreak == true)
+					if(waiter.wantsBreak)
 					{
 						putWaiterOnBreak(waiter.w);
 						return true;
@@ -294,7 +349,33 @@ public class AnjaliHostRole extends Agent implements AnjaliHost
 			}
 		}
 		while(false);
-
+		if(!working)
+		{
+			boolean allGone = true;
+			do
+			{
+				try
+				{
+					for(MyWaiter waiter : waiters)
+					{
+						if(waiter.onDuty)
+						{
+							allGone = false;
+						}
+					}
+				}
+				catch(ConcurrentModificationException cme)
+				{
+					continue;
+				}
+			}
+			while(false);
+			if(allGone)
+			{
+				leaveRestaurant();
+				return true;
+			}
+		}
 		return false;
 	}
 
@@ -317,7 +398,7 @@ public class AnjaliHostRole extends Agent implements AnjaliHost
 		mw.w.msgPleaseSeatCustomer(mc.c, t.tableNumber);
 		stateChanged();
 	}
-	private void putWaiterOnBreak(AnjaliWaiter w)
+	private void putWaiterOnBreak(CherysWaiter w)
 	{
 		Do("IDK, lemme check");
 		int availibleWaiters = waiters.size() - 1;
@@ -373,17 +454,16 @@ public class AnjaliHostRole extends Agent implements AnjaliHost
 		while(false);
 		stateChanged();
 	}
+	
+	private void leaveRestaurant()
+	{
+		cashier.msgGoHome();
+		cook.msgGoHome();
+		person.msgLeftDestination(this);
+	}
 
 	//utilities
-	/**
-	 * Adds another waiter
-	 * @param w reference to new Waiter
-	 */
-	public void setWaiter(AnjaliWaiter w) //* called from RestaurantPanel.addPerson
-	{
-		waiters.add(new MyWaiter(w));
-		stateChanged();
-	}
+
 
 //	private class Table
 //	{

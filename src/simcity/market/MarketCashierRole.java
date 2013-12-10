@@ -328,6 +328,7 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 		}
 		if(start) {
 			startWork();
+			return true;
 		}
 		if(mS != MarketState.closed && working) {
 			synchronized(orders) {
@@ -381,6 +382,7 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 
 	/* Actions */
 	private void startWork() {
+		start = false;
 		gui.work();
 		person.businessIsClosed(getJobLocation(), false);
 	}

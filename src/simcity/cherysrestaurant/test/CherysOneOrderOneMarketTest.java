@@ -1,16 +1,16 @@
-package simcity.Anjalirestaurant.test;
+package simcity.cherysrestaurant.test; 
 
-import simcity.Anjalirestaurant.AnjaliCashierRole;
-import simcity.Anjalirestaurant.interfaces.AnjaliMarket;
-import simcity.Anjalirestaurant.test.mock.MockAnjaliMarket;
+import simcity.cherysrestaurant.CherysCashierRole;
+import simcity.cherysrestaurant.interfaces.CherysMarket;
+import simcity.cherysrestaurant.test.mock.MockCherysMarket;
 
 import junit.framework.*;
 
-public class AnjaliOneOrderOneMarketTest extends TestCase
+public class CherysOneOrderOneMarketTest extends TestCase
 {
 	//these are instantiated for each test separately via the setUp() method.
-	AnjaliCashierRole cashier;
-	AnjaliMarket market;
+	CherysCashierRole cashier;
+	CherysMarket market;
 
 	/**
 	 * This method is run before each test. You can use it to instantiate the class variables
@@ -19,8 +19,8 @@ public class AnjaliOneOrderOneMarketTest extends TestCase
 	public void setUp() throws Exception
 	{
 		super.setUp();
-		cashier = new AnjaliCashierRole("Cashier");		
-		market = new MockAnjaliMarket("MockMarket");
+		cashier = new CherysCashierRole("Cashier");		
+		market = new MockCherysMarket("MockMarket");
 	}	
 	/**
 	 * This tests the cashier under very simple terms: one customer is ready to pay the exact bill.
@@ -45,7 +45,7 @@ public class AnjaliOneOrderOneMarketTest extends TestCase
 		assertEquals("Cashier should have 1 bill in it. It doesn't.",
 				1, cashier.bills.size());
 		assertTrue("Bills should contain a bill with state == askedFor. It doesn't.",
-				cashier.bills.get(0).state == AnjaliCashierRole.CheckState.askedFor);
+				cashier.bills.get(0).state == CherysCashierRole.CheckState.askedFor);
 		assertTrue("Bills should contain a bill with total == $37.74. It contains something else instead: $"
 				+ cashier.bills.get(0).total, cashier.bills.get(0).total == 37.74);
 		assertTrue("Cashier's scheduler should have returned true (needs to react to market's msgPayForDelivery), but didn't.",

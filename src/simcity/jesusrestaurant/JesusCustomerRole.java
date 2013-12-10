@@ -16,8 +16,7 @@ import java.util.TimerTask;
 public class JesusCustomerRole extends Role implements JesusCustomer {
 	private String name;
 	private int hungerLevel = 5; // determines length of meal
-	private double money = 20.00;
-	private double amountDue = 0.00;
+	private int amountDue = 0;
 	Timer timer = new Timer();
 	private JesusCustomerGui jesusCustomerGui;
 
@@ -74,12 +73,6 @@ public class JesusCustomerRole extends Role implements JesusCustomer {
 		public String getCustomerName() {
 			return name;
 		}
-		public double getMoney() {
-			return money;
-		}
-		public void updateMoney(Double m) {
-			money = m;
-		}
 		// Messages
 		public void gotHungry() { //from animation
 			print("I'm hungry");
@@ -127,21 +120,21 @@ public class JesusCustomerRole extends Role implements JesusCustomer {
 			stateChanged();
 		}
 
-		public void msgHereIsCheck(double aDue) {
+		public void msgHereIsCheck(int aDue) {
 			amountDue = aDue;
+			person.msgExpense(aDue);
 			event = AgentEvent.receivedCheck;
 			stateChanged();
 		}
 
-		public void msgChange(double change) {
-			money = change;
+		public void msgChange(int change) {
+			person.msgIncome(change);
 			event = AgentEvent.doneEating;
 			state = AgentState.Paying;
 			stateChanged();
 		}
 
-		public void msgPayNextTime(double amount) {
-			money = 0;
+		public void msgPayNextTime(int amount) {
 			event = AgentEvent.doneEating;
 			stateChanged();
 		}
@@ -166,6 +159,7 @@ public class JesusCustomerRole extends Role implements JesusCustomer {
 			//from animation
 			event = AgentEvent.doneLeaving;
 			state = AgentState.DoingNothing;
+			person.msgLeftDestination(this);
 			stateChanged();
 		}
 
@@ -257,7 +251,7 @@ public class JesusCustomerRole extends Role implements JesusCustomer {
 		}
 
 		private void giveOrder() {
-			if(menu.tooExpensive(money)) {
+			if(menu.tooExpensive(person.getMoney())) {
 				print("Everything is too expensive.");
 				waiter.msgLeavingTable(name);
 				jesusCustomerGui.DoExitRestaurant();
@@ -278,7 +272,7 @@ public class JesusCustomerRole extends Role implements JesusCustomer {
 		}
 
 		private void regiveOrder() {
-			if(menu.tooExpensive(money)) {
+			if(menu.tooExpensive(person.getMoney())) {
 				print("Everything is too expensive.");
 				waiter.msgLeavingTable(name);
 				jesusCustomerGui.DoExitRestaurant();
@@ -325,7 +319,7 @@ public class JesusCustomerRole extends Role implements JesusCustomer {
 		}
 		private void payCashier() {
 			Do("Paying Cashier");
-			cashier.msgCustomerPayment(this, money, name);
+			cashier.msgCustomerPayment(this, amountDue, name);
 		}
 
 		private void leaveTable() {

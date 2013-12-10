@@ -1,8 +1,8 @@
-package simcity.Anjalirestaurant;
+package simcity.cherysrestaurant; 
 
-import simcity.agent.Agent;
-import simcity.Anjalirestaurant.gui.AnjaliWaiterGui;
-import simcity.Anjalirestaurant.interfaces.*;
+import simcity.RestWaiterRole;
+import simcity.cherysrestaurant.gui.CherysWaiterGui;
+import simcity.cherysrestaurant.interfaces.*;
 import simcity.mock.EventLog;
 
 import java.util.*;
@@ -11,22 +11,21 @@ import java.util.concurrent.Semaphore;
 /**
  * Restaurant Waiter Agent
  */
-public class AnjaliWaiterRole extends Agent implements AnjaliWaiter
+public class CherysWaiterRole extends RestWaiterRole implements CherysWaiter
 {
 	private Semaphore atLobby = new Semaphore(0, true);
 	private Semaphore atTable = new Semaphore(0, true);
 	private Semaphore atKitchen = new Semaphore(0, true);
 	private Semaphore onBreak = new Semaphore(0, true);
 	
-	private String name;
 	private List<MyCustomer> customers = new ArrayList<MyCustomer>();
 	private class MyCustomer
 	{
-		AnjaliCustomer c;
+		CherysCustomer c;
 		int table;
 		String choice;
 		CustomerState state;
-		MyCustomer(AnjaliCustomer c, int t)
+		MyCustomer(CherysCustomer c, int t)
 		{
 			this.c = c;
 			table = t;
@@ -61,11 +60,11 @@ public class AnjaliWaiterRole extends Agent implements AnjaliWaiter
 		}
 	}
 	Order currentOrder = null;
-	AnjaliHost host;
-	AnjaliCook cook;
-	AnjaliCashier cashier;
-	List<AnjaliCashierCheck> checks = new ArrayList<AnjaliCashierCheck>();
-	Map<Integer, AnjaliWaiterFood> menu;
+	CherysHost host;
+	CherysCook cook;
+	CherysCashier cashier;
+	List<CherysCashierCheck> checks = new ArrayList<CherysCashierCheck>();
+	Map<Integer, CherysWaiterFood> menu;
 	private List<String> foodsOutOf = new ArrayList<String>();
 	
 	private enum Command
@@ -82,10 +81,10 @@ public class AnjaliWaiterRole extends Agent implements AnjaliWaiter
 	}
 	private Command command = Command.noCommand;
 
-	private double priceSteak = 15.99;
-	private double priceChicken = 10.99;
-	private double priceSalad = 5.99;
-	private double pricePizza = 8.99;
+	private int priceSteak = 15;
+	private int priceChicken = 10;
+	private int priceSalad = 5;
+	private int pricePizza = 8;
 
 	enum AgentState
 	{
@@ -100,7 +99,9 @@ public class AnjaliWaiterRole extends Agent implements AnjaliWaiter
 	private boolean denied = false;
 	Timer timer = new Timer();
 	
-	public AnjaliWaiterGui waiterGui = null;
+	private boolean working;
+	
+	public CherysWaiterGui waiterGui = null;
 
 	public EventLog log = new EventLog();
 
@@ -110,18 +111,14 @@ public class AnjaliWaiterRole extends Agent implements AnjaliWaiter
 	 * @param h    reference to the host agent
 	 * @param c    reference to the cook agent
 	 */
-	public AnjaliWaiterRole(String name, AnjaliHost h, AnjaliCook c, AnjaliCashier cash)
+	public CherysWaiterRole()
 	{
 		super();
-		this.name = name;
-		host = h;
-		cook = c;
-		cashier = cash;
-		menu = new HashMap<Integer, AnjaliWaiterFood>();
-		menu.put(0, new AnjaliWaiterFood("Steak", "ST", priceSteak));
-		menu.put(1, new AnjaliWaiterFood("Chicken", "CK", priceChicken));
-		menu.put(2, new AnjaliWaiterFood("Salad", "SA", priceSalad));
-		menu.put(3, new AnjaliWaiterFood("Pizza", "PZ", pricePizza));
+		menu = new HashMap<Integer, CherysWaiterFood>();
+		menu.put(0, new CherysWaiterFood("Steak", "ST", priceSteak));
+		menu.put(1, new CherysWaiterFood("Chicken", "CK", priceChicken));
+		menu.put(2, new CherysWaiterFood("Salad", "SA", priceSalad));
+		menu.put(3, new CherysWaiterFood("Pizza", "PZ", pricePizza));
 	}
 
 	public String getName()
@@ -134,13 +131,13 @@ public class AnjaliWaiterRole extends Agent implements AnjaliWaiter
 	}
 	
 	// Messages
-	public void msgPleaseSeatCustomer(AnjaliCustomer c, int table) //* called from Host.assignCustomer
+	public void msgPleaseSeatCustomer(CherysCustomer c, int table) //* called from Host.assignCustomer
 	{
 		Do("recieved msgPleaseSeatCustomer");
 		customers.add(new MyCustomer(c, table));
 		stateChanged();
 	}
-	public void msgReadyToOrder(AnjaliCustomer c) //* called from Customer.flagWaiter
+	public void msgReadyToOrder(CherysCustomer c) //* called from Customer.flagWaiter
 	{
 		Do("recieved msgReadyToOrder");
 		do
@@ -164,7 +161,7 @@ public class AnjaliWaiterRole extends Agent implements AnjaliWaiter
 		}
 		while(false);
 	}
-	public void msgHereIsMyOrder(AnjaliCustomer c, String choice) //* called from Customer.placeOrder
+	public void msgHereIsMyOrder(CherysCustomer c, String choice) //* called from Customer.placeOrder
 	{
 		Do("recieved msgHereIsMyOrder");
 		do
@@ -242,7 +239,7 @@ public class AnjaliWaiterRole extends Agent implements AnjaliWaiter
 		foodsOutOf = foo;
 		stateChanged();
 	}
-	public void msgDoneEating(AnjaliCustomer c) //* called from Customer.done
+	public void msgDoneEating(CherysCustomer c) //* called from Customer.done
 	{
 		Do("recieved msgDoneEating");
 		do
@@ -266,13 +263,13 @@ public class AnjaliWaiterRole extends Agent implements AnjaliWaiter
 		while(false);
 		stateChanged();
 	}
-	public void msgHereIsCheck(AnjaliCashierCheck ch)
+	public void msgHereIsCheck(CherysCashierCheck ch)
 	{
 		Do("recieved msgHereIsCheck");
 		checks.add(ch);
 		stateChanged();
 	}
-	public void msgLeavingRestaurant(AnjaliCustomer c)
+	public void msgLeavingRestaurant(CherysCustomer c)
 	{
 		Do("recieved msgLeavingRestaurant");
 		do
@@ -312,6 +309,21 @@ public class AnjaliWaiterRole extends Agent implements AnjaliWaiter
 		stateChanged();
 	}
 
+	@Override
+	public void msgStartShift()
+	{
+		working = true;
+		cashier.msgPaySalary(person.getSalary());
+		stateChanged();
+	}
+
+	@Override
+	public void msgEndShift()
+	{
+		working = false;
+		stateChanged();
+	}
+ 	
 	public void msgGotTired() //* called from animation
 	{
 		Do("I'm tired");
@@ -339,7 +351,7 @@ public class AnjaliWaiterRole extends Agent implements AnjaliWaiter
 	/**
 	 * Scheduler.  Determine what action is called for, and do it.
 	 */
-	protected boolean pickAndExecuteAnAction()
+	public boolean pickAndExecuteAnAction()
 	{
 		if(tired)
 		{
@@ -459,7 +471,7 @@ public class AnjaliWaiterRole extends Agent implements AnjaliWaiter
 							{
 								try
 								{
-									for(AnjaliCashierCheck check : checks)
+									for(CherysCashierCheck check : checks)
 									{
 										if(check.table == customer.table)
 										{
@@ -756,6 +768,11 @@ public class AnjaliWaiterRole extends Agent implements AnjaliWaiter
 				return true;
 			}
 		}
+		if(customers.size() == 0 && !working)
+		{
+			leaveRestaurant();
+			return true;
+		}
 		return false;
 	}
 
@@ -803,7 +820,7 @@ public class AnjaliWaiterRole extends Agent implements AnjaliWaiter
 		cashier.msgGiveCheck(this, table);
 		doGoToTable(table);
 	}
-	private void giveCustomerCheck(MyCustomer mc, AnjaliCashierCheck ch)
+	private void giveCustomerCheck(MyCustomer mc, CherysCashierCheck ch)
 	{
 		Do("Here is your check. Have a good night!");
 		mc.state = null;
@@ -851,7 +868,7 @@ public class AnjaliWaiterRole extends Agent implements AnjaliWaiter
 	}
 	
 	//Animation
-	private void doGoToLobby(AnjaliCustomer c)
+	private void doGoToLobby(CherysCustomer c)
 	{
 		waiterGui.doGoToCustomer(c.getGui());
 		try
@@ -875,9 +892,9 @@ public class AnjaliWaiterRole extends Agent implements AnjaliWaiter
 			e.printStackTrace();
 		}
 	}
-	private void doSeatCustomer(AnjaliCustomer c, int t)
+	private void doSeatCustomer(CherysCustomer c, int t)
 	{
-		waiterGui.doSeatCustomer(((AnjaliCustomerRole)c).getGui(), t);
+		waiterGui.doSeatCustomer(((CherysCustomerRole)c).getGui(), t);
 		try
 		{
 			atTable.acquire();
@@ -917,7 +934,7 @@ public class AnjaliWaiterRole extends Agent implements AnjaliWaiter
 	private void doWorkThroughThePain()
 	{
 		denied = false;
-		waiterGui.doWorkThroughThePain();
+//		waiterGui.doWorkThroughThePain();
 		stateChanged();
 	}
 	private void doGoOnBreak()
@@ -933,16 +950,35 @@ public class AnjaliWaiterRole extends Agent implements AnjaliWaiter
 		}
 	}
 	
+	private void leaveRestaurant()
+	{
+		state = null;
+		command = Command.noCommand;
+		person.msgLeftDestination(this);
+	}
+	
 	//utilities
-	public void setGui(AnjaliWaiterGui gui)
+	public void setCashier(CherysCashier c)
+	{
+		cashier = c;
+	}
+	public void setCook(CherysCook c)
+	{
+		cook = c;
+	}
+	public void setHost(CherysHost h)
+	{
+		host = h;
+	}
+	public void setGui(CherysWaiterGui gui)
 	{
 		waiterGui = gui;
 	}
-	public AnjaliWaiterGui getGui()
+	public CherysWaiterGui getGui()
 	{
 		return waiterGui;
 	}
-	public AnjaliCashierCheck getCheck()
+	public CherysCashierCheck getCheck()
 	{
 		return checks.get(0);
 	}

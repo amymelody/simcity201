@@ -1,7 +1,11 @@
-package simcity.Anjalirestaurant;
+package simcity.cherysrestaurant; 
 
+import simcity.RestCashierRole;
 import simcity.agent.Agent;
-import simcity.Anjalirestaurant.interfaces.*;
+import simcity.cherysrestaurant.interfaces.*;
+import simcity.interfaces.MarketDeliverer;
+import simcity.joshrestaurant.interfaces.JoshCustomer;
+import simcity.joshrestaurant.interfaces.JoshWaiter;
 import simcity.mock.EventLog;
 import simcity.mock.LoggedEvent;
 
@@ -11,28 +15,27 @@ import java.util.concurrent.Semaphore;
 /**
  * Restaurant Cashier Agent
  */
-public class AnjaliCashierRole extends Agent implements AnjaliCashier
+public class CherysCashierRole extends RestCashierRole implements CherysCashier
 {
-	private String name;
 	List<Food> menu = new ArrayList<Food>();
 	public class Food
 	{
 		String name;
-		double price;
-		Food(String n, double p)
+		int price;
+		Food(String n, int p)
 		{
 			name = n;
 			price = p;
 		}
 	}
-	public List<AnjaliCashierCheck> checks = new ArrayList<AnjaliCashierCheck>();
+	public List<CherysCashierCheck> checks = new ArrayList<CherysCashierCheck>();
 	public class MarketBill
 	{
-		public AnjaliMarket market;
+		public CherysMarket market;
 		public String foodType;
-		public double total;
+		public int total;
 		public CheckState state;
-		MarketBill(AnjaliMarket m, String ft, double t)
+		MarketBill(CherysMarket m, String ft, int t)
 		{
 			market = m;
 			foodType = ft;
@@ -47,22 +50,26 @@ public class AnjaliCashierRole extends Agent implements AnjaliCashier
 		unpaid,
 		paid;
 	}
-	public double balance = 100;
+	public int balance = 250;
 	
-	private double priceSteak = 15.99;
-	private double priceChicken = 10.99;
-	private double priceSalad = 5.99;
-	private double pricePizza = 8.99;
+	private int priceSteak = 15;
+	private int priceChicken = 10;
+	private int priceSalad = 5;
+	private int pricePizza = 8;
+
+	private boolean working;
+	private boolean goingHome;
+
+	public EventLog log = new EventLog();
 	
 	/**
 	 * Constructor for CashierAgent
 	 * @param name name of the cashier
 	 */
-	public AnjaliCashierRole(String name) //* called from RestaurantPanel
+	public CherysCashierRole() //* called from RestaurantPanel
 	{
 		super();
 
-		this.name = name;
 		menu.add(new Food("Steak", priceSteak));
 		menu.add(new Food("Chicken", priceChicken));
 		menu.add(new Food("Salad", priceSalad));
@@ -76,11 +83,11 @@ public class AnjaliCashierRole extends Agent implements AnjaliCashier
 	}
 	
 	//Messages
-	public void msgProduceCheck(AnjaliWaiter w, String choice, int table)
+	public void msgProduceCheck(CherysWaiter w, String choice, int table)
 	{
 		log.add(new LoggedEvent("Received msgProduceCheck from waiter. Choice = " + choice + ". Table = " + table));
 		Do("received msgProduceCheck");
-		double price = 0;
+		int price = 0;
 		do
 		{
 			try
@@ -99,10 +106,10 @@ public class AnjaliCashierRole extends Agent implements AnjaliCashier
 			}
 		}
 		while(false);
-		checks.add(new AnjaliCashierCheck(w, table, choice, price));
+		checks.add(new CherysCashierCheck(w, table, choice, price));
 		stateChanged();
 	}
-	public void msgGiveCheck(AnjaliWaiter w, int table)
+	public void msgGiveCheck(CherysWaiter w, int table)
 	{
 		log.add(new LoggedEvent("Received msgGiveCheck from waiter. Table = " + table));
 		Do("received msgGiveCheck");
@@ -110,7 +117,7 @@ public class AnjaliCashierRole extends Agent implements AnjaliCashier
 		{
 			try
 			{
-				for(AnjaliCashierCheck ch : checks)
+				for(CherysCashierCheck ch : checks)
 				{
 					if(ch.waiter == w && ch.table == table)
 					{
@@ -126,7 +133,7 @@ public class AnjaliCashierRole extends Agent implements AnjaliCashier
 		while(false);
 		stateChanged();
 	}
-	public void msgPayment(AnjaliCustomer cust, AnjaliCashierCheck c, double cashGiven)
+	public void msgPayment(CherysCustomer cust, CherysCashierCheck c, int cashGiven)
 	{
 		log.add(new LoggedEvent("Received msgPayment from customer. Payment = " + cashGiven));
 		Do("received msgPayment. Payment = " + cashGiven);
@@ -134,7 +141,7 @@ public class AnjaliCashierRole extends Agent implements AnjaliCashier
 		{
 			try
 			{
-				for(AnjaliCashierCheck ch : checks)
+				for(CherysCashierCheck ch : checks)
 				{
 					if(ch.waiter == c.waiter && ch.table == c.table && ch.order == c.order && ch.total == c.total)
 					{
@@ -151,11 +158,11 @@ public class AnjaliCashierRole extends Agent implements AnjaliCashier
 		while(false);
 		stateChanged();
 	}
-	public void msgPayForDelivery(AnjaliMarket m, String foodType, int amountDelivered, double wholesalePercentage)
+	public void msgPayForDelivery(CherysMarket m, String foodType, int amountDelivered, double wholesalePercentage)
 	{
 		log.add(new LoggedEvent("Received msgPayForDelivery from market. Food = " + foodType + ". Amount = " + amountDelivered + ". Percentage = " + wholesalePercentage*100 + "%"));
 		Do("received msgPayForDelivery");
-		double total = 0;
+		int total = 0;
 		do
 		{
 			try
@@ -164,8 +171,7 @@ public class AnjaliCashierRole extends Agent implements AnjaliCashier
 				{
 					if(food.name.equals(foodType))
 					{
-						total = food.price*amountDelivered*wholesalePercentage;
-						total = Math.round(total * 100.0) / 100.0;
+						total = (int)(food.price*amountDelivered*wholesalePercentage);
 					}
 				}
 			}
@@ -178,6 +184,31 @@ public class AnjaliCashierRole extends Agent implements AnjaliCashier
 		bills.add(new MarketBill(m, foodType, total));
 		stateChanged();
 	}
+
+	public void msgPaySalary(int salary)
+	{
+		balance -= salary;
+	}
+	
+	@Override
+	public void msgStartShift()
+	{
+		working = true;
+		goingHome = false;
+		msgPaySalary(person.getSalary());
+		stateChanged();
+	}
+
+	@Override
+	public void msgEndShift()
+	{
+		working = false;
+		stateChanged();
+	}
+	public void msgGoHome()
+	{
+		goingHome = true;
+	}
 	
 	/**
 	 * Scheduler.  Determine what action is called for, and do it.
@@ -188,7 +219,7 @@ public class AnjaliCashierRole extends Agent implements AnjaliCashier
 		{
 			try
 			{
-				for(AnjaliCashierCheck ch : checks)
+				for(CherysCashierCheck ch : checks)
 				{
 					if(ch.amountPaid > 0 && ch.state != CheckState.paid)
 					{
@@ -207,7 +238,7 @@ public class AnjaliCashierRole extends Agent implements AnjaliCashier
 		{
 			try
 			{
-				for(AnjaliCashierCheck ch : checks)
+				for(CherysCashierCheck ch : checks)
 				{
 					if(ch.state == CheckState.askedFor)
 					{
@@ -242,23 +273,26 @@ public class AnjaliCashierRole extends Agent implements AnjaliCashier
 			}
 		}
 		while(false);
+		if(checks.size() == 0 && !working && goingHome)
+		{
+			leaveRestaurant();
+			return true;
+		}
 		return false;
 	}
 
 	// Actions
-	private void giveWaiterCheck(AnjaliCashierCheck ch)
+	private void giveWaiterCheck(CherysCashierCheck ch)
 	{
 		Do("Waiter, here's your check");
 		ch.waiter.msgHereIsCheck(ch);
 		stateChanged();
 	}
-	private void processPayment(AnjaliCashierCheck ch)
+	private void processPayment(CherysCashierCheck ch)
 	{
 		Do("Processing payment");
-		double change  = ch.amountPaid - ch.total;
-		change = Math.round(change * 100.0) / 100.0;
+		int change  = ch.amountPaid - ch.total;
 		balance += ch.total;
-		balance = Math.round(balance * 100.0) / 100.0;
 		do
 		{
 			try
@@ -284,13 +318,11 @@ public class AnjaliCashierRole extends Agent implements AnjaliCashier
 	}
 	private void tryToPay(MarketBill b)
 	{
-		b.total = Math.round(b.total * 100.0) / 100.0;
 		Do("Trying to pay " + b.foodType + " bill for $" + b.total + ". I have $" + balance);
 		if(b.total <= balance)
 		{
 			b.market.msgPaymentForDelivery(b.total);
 			balance -= b.total;
-			balance = Math.round(balance * 100.0) / 100.0;
 			bills.remove(b);
 		}
 		else
@@ -299,5 +331,38 @@ public class AnjaliCashierRole extends Agent implements AnjaliCashier
 			b.state = CheckState.unpaid;
 		}
 		stateChanged();
+	}
+	
+	private void leaveRestaurant()
+	{
+		person.msgLeftDestination(this);
+	}
+
+	@Override
+	public void msgProduceCheck(JoshWaiter w, JoshCustomer c, String choice)
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void msgPayment(JoshCustomer c, int cash)
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void msgDelivery(int bill, MarketDeliverer deliverer)
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void msgThankYou(int change)
+	{
+		// TODO Auto-generated method stub
+		
 	}
 }

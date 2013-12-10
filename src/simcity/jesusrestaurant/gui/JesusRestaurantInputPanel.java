@@ -15,9 +15,11 @@ import javax.swing.*;
 
 import java.util.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Vector;
 
-public class JesusRestaurantInputPanel extends JPanel 
+public class JesusRestaurantInputPanel extends JPanel implements ActionListener
 {	
     //Host, cook, waiters and customers
     private JesusHostRole host;
@@ -29,6 +31,8 @@ public class JesusRestaurantInputPanel extends JPanel
     private Vector<MarketCashierRole> markets = new Vector<MarketCashierRole>();
 
     private JPanel restLabel = new JPanel();
+    private JLabel restInfo = new JLabel();
+    //private JTabbedPane group = new JTabbedPane();
 
     private JesusRestaurantGui gui; //reference to main gui
     private JesusCashierGui cashierGui;
@@ -62,56 +66,70 @@ public class JesusRestaurantInputPanel extends JPanel
 		cookGui = new JesusCookGui(cook);
 		gui.animationPanel.addGui(cookGui);
 		cook.setGui(cookGui);
-
+		
         initRestLabel();
         add(restLabel);
     }
     
-    /**
-     * Returns the text from RestaurantGui's infoLabel
-     */
-   /* public String getInfoText() {
-    	return gui.getInfoLabelText();
-    }*/
+    public void actionPerformed(ActionEvent e) {
+    	initRestLabel();
+    }
+    
+    private void initRestLabel() {
+        restLabel.setLayout(new BorderLayout());
+        restInfo.setText(
+                "<html><br/><h3>Welcome to La Cocina!</h3><h3 align=center color=red>" + host.openPanel() + "</h3><h4><u>Tonight's Staff</u></h4><table><tr><td>Host:</td><td>" + host.getName() + "</td></tr><tr><td>Cashier:</td><td>" + cashier.getName() + "</td></tr><tr><td>Cook:</td><td>" + cook.getName() + "</td></tr></table><h4><u> Menu</u></h4><table><tr><td>Steak</td><td>$15.00</td></tr><tr><td>Salad</td><td>$5.00</td></tr><tr><td>Pizza</td><td>$8.00</td></tr></table><br></html>");
+
+        restLabel.setBorder(BorderFactory.createBevelBorder(0));
+        restLabel.add(restInfo, BorderLayout.CENTER);
+        restLabel.add(new JLabel("      "), BorderLayout.EAST);
+        restLabel.add(new JLabel("      "), BorderLayout.WEST);
+    }
     
     public void addMarketCashier(MarketCashierRole c) {
     	markets.add(c);
     }
     
     public void addCustomer(JesusCustomerRole c) {
+    	JesusCustomerGui g = new JesusCustomerGui(c, gui, 0, 0);
+    	gui.animationPanel.addGui(g);
+		c.setHost(host);
+		c.setCashier(cashier);
+		c.setGui(g);
     	customers.add(c);
     }
     
     public void addWaiter(JesusWaiterRole w) {
+    	JesusWaiterGui g = new JesusWaiterGui(w, gui, 0, 0);
+    	gui.animationPanel.addGui(g);
+ 		w.setHost(host);
+ 		w.setCashier(cashier);
+ 		w.setCook(cook);
+ 		w.setGui(g);
+ 		host.setWaiters(w, w.getPersonAgent().getSalary());
     	waiters.add(w);
     }
     
     public void setCashier(JesusCashierRole c) {
+    	JesusCashierGui g = new JesusCashierGui(c);
+    	c.setGui(g);
+    	c.setHost(host);
+    	c.setCook(cook);
     	cashier = c;
     }
     
     public void setCook(JesusCookRole c) {
+    	JesusCookGui g = new JesusCookGui(c);
+    	c.setCashier(cashier);
+    	c.setGui(g);
+    	c.setHost(host);
     	cook = c;
     }
     
     public void setHost(JesusHostRole h) {
+    	JesusHostGui g = new JesusHostGui(h);
+    	h.setGui(g);
+    	h.setCashier(cashier);
     	host = h;
-    }
-
-    /**
-     * Sets up the restaurant label that includes the menu,
-     * and host and cook information
-     */
-    private void initRestLabel() {
-        JLabel label = new JLabel();
-        restLabel.setLayout(new BoxLayout((Container)restLabel, BoxLayout.Y_AXIS));
-        restLabel.setLayout(new BorderLayout());
-        label.setText(
-                "<html><h3><u>Tonight's Staff</u></h3><table><tr><td>host:</td><td>" + host.getName() + "</td></tr></table><table><tr><td>cook:</td><td>" + cook.getName() + "</td></tr></table><table><tr><td>cashier:</td><td>" + cashier.getName() + "</td></tr></table><h3><u> Menu</u></h3><table><tr><td>Steak</td><td>$16.00</td></tr><tr><td>Chicken</td><td>$11.00</td></tr><tr><td>Salad</td><td>$6.00</td></tr><tr><td>Pizza</td><td>$9.00</td></tr></table><br></html>");
-
-        restLabel.setBorder(BorderFactory.createRaisedBevelBorder());
-        restLabel.add(label, BorderLayout.CENTER);
-        restLabel.add(new JLabel("               "), BorderLayout.EAST);
-        restLabel.add(new JLabel("               "), BorderLayout.WEST);
     }
 }
