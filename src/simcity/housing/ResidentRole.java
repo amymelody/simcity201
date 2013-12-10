@@ -94,13 +94,13 @@ public class ResidentRole extends Role implements Resident
 	//Messages
 	public void msgRentDue() //from Landlord
 	{
-		AlertLog.getInstance().logMessage(AlertTag.BANK, name, "received msgRentDue");
+		AlertLog.getInstance().logMessage(AlertTag.HOUSING, name, "received msgRentDue");
 		log.add(new LoggedEvent("Received msgRentDue from Landlord. Setting person.rentDue"));
 		person.setRentDue(true);
 	}
 	public void msgAtLandlord() //from Person
 	{
-		AlertLog.getInstance().logMessage(AlertTag.BANK, name, "received msgAtLandlord");
+		AlertLog.getInstance().logMessage(AlertTag.HOUSING, name, "received msgAtLandlord");
 		log.add(new LoggedEvent("Received msgAtLandlord from Person. State.atLandlord, Command.talkToLandlord"));
 		state = ResidentState.atLandlord;
 		gui.setGui(landlordHome);
@@ -109,7 +109,7 @@ public class ResidentRole extends Role implements Resident
 	}
 	public void msgAmountOwed(int r) //from Landlord
 	{
-		AlertLog.getInstance().logMessage(AlertTag.BANK, name, "received msgAmountOwed. Rent = $" + r);
+		AlertLog.getInstance().logMessage(AlertTag.HOUSING, name, "received msgAmountOwed. Rent = $" + r);
 		log.add(new LoggedEvent("Received msgAmountOwed from Landlord. Rent = $" + r + ", Command.payLandlord"));
 		commands.add(Command.payLandlord);
 		rent = r;
@@ -117,14 +117,14 @@ public class ResidentRole extends Role implements Resident
 	}
 	public void msgEat() //from Person
 	{
-		AlertLog.getInstance().logMessage(AlertTag.BANK, name, "received msgEat");
+		AlertLog.getInstance().logMessage(AlertTag.HOUSING, name, "received msgEat");
 		log.add(new LoggedEvent("Received msgEat from Person. Command.eat"));
 		commands.add(Command.eat);
 		stateChanged();
 	}
 	public void msgGroceries(List<ItemOrder> g) //from Person
 	{
-		AlertLog.getInstance().logMessage(AlertTag.BANK, name, "received msgGroceries. Number of grocery items = " + g.size());
+		AlertLog.getInstance().logMessage(AlertTag.HOUSING, name, "received msgGroceries. Number of grocery items = " + g.size());
 		log.add(new LoggedEvent("Received msgGroceries from Person. Number of grocery items = " + g.size() + ", Command.putAwayGroceries"));
 		commands.add(Command.putAwayGroceries);
 		groceries = g;
@@ -132,14 +132,14 @@ public class ResidentRole extends Role implements Resident
 	}
 	public void msgLeave() //from Person
 	{
-		AlertLog.getInstance().logMessage(AlertTag.BANK, name, "received msgLeave");
+		AlertLog.getInstance().logMessage(AlertTag.HOUSING, name, "received msgLeave");
 		log.add(new LoggedEvent("Received msgLeave from Person. Command.leave"));
 		commands.add(Command.leave);
 		stateChanged();
 	}
 	public void msgImHome() //from Person
 	{
-		AlertLog.getInstance().logMessage(AlertTag.BANK, name, "received msgImHome");
+		AlertLog.getInstance().logMessage(AlertTag.HOUSING, name, "received msgImHome");
 		log.add(new LoggedEvent("Received msgImHome from Person. State.atHome"));
 		state = ResidentState.atHome;
 		gui.setGui(home);
@@ -357,15 +357,15 @@ public class ResidentRole extends Role implements Resident
 	private void clean()
 	{
 		goToLocation(locations.get("Fridge"), "");
-		AlertLog.getInstance().logMessage(AlertTag.BANK, name, "CLEANING FRIDGE");
+		AlertLog.getInstance().logMessage(AlertTag.HOUSING, name, "CLEANING FRIDGE");
 		goToLocation(locations.get("Stove"), "");
-		AlertLog.getInstance().logMessage(AlertTag.BANK, name, "CLEANING STOVE");
+		AlertLog.getInstance().logMessage(AlertTag.HOUSING, name, "CLEANING STOVE");
 		goToLocation(locations.get("Table"), "");
-		AlertLog.getInstance().logMessage(AlertTag.BANK, name, "CLEANING TABLE");
+		AlertLog.getInstance().logMessage(AlertTag.HOUSING, name, "CLEANING TABLE");
 		goToLocation(locations.get("Sofa"), "");
-		AlertLog.getInstance().logMessage(AlertTag.BANK, name, "CLEANING SOFA");
+		AlertLog.getInstance().logMessage(AlertTag.HOUSING, name, "CLEANING SOFA");
 		goToLocation(locations.get("Doorway"), "");
-		AlertLog.getInstance().logMessage(AlertTag.BANK, name, "CLEANING DOOR");
+		AlertLog.getInstance().logMessage(AlertTag.HOUSING, name, "CLEANING DOOR");
 		maintenanceSchedule = 3;
 		stateChanged();
 	}

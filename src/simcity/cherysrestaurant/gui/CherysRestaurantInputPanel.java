@@ -79,7 +79,7 @@ public class CherysRestaurantInputPanel extends JPanel
    
     public void addCustomer(CherysCustomerRole c)
     {	
-		CherysCustomerGui g = new CherysCustomerGui(c, gui, customers.size());
+		CherysCustomerGui g = new CherysCustomerGui(c, gui);
 		gui.animationPanel.addGui(g);
 		c.setHost(host);
 		c.setGui(g);
@@ -88,7 +88,7 @@ public class CherysRestaurantInputPanel extends JPanel
     }
     public void addWaiter(CherysWaiterRole w)
     {
-		CherysWaiterGui g = new CherysWaiterGui(w, gui, waiters.size());
+		CherysWaiterGui g = new CherysWaiterGui(w, gui);
 		gui.animationPanel.addGui(g);
 		w.setGui(g);
 		waiters.add(w);

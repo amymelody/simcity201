@@ -39,13 +39,13 @@ public class CherysCustomerGui implements CherysGui
 	}
 	private Command command = Command.noCommand;
 
-	public CherysCustomerGui(CherysCustomerRole c, CherysRestaurantGui gui, int number)
+	public CherysCustomerGui(CherysCustomerRole c, CherysRestaurantGui gui)
 	{
 		agent = c;
-		xPos = 50 + 30*number;
-		yPos = 30;
-		xDestination = xPos;
-		yDestination = yPos;
+		xPos = -40;
+		yPos = -20;
+		xDestination = -40;
+		yDestination = 0;
 		dimensions = 20;
 		this.gui = gui;
 	}

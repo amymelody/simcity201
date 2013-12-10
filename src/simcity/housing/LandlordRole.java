@@ -141,7 +141,6 @@ public class LandlordRole extends JobRole implements Landlord
 			{
 				if(c == Command.collectRent)
 				{
-					AlertLog.getInstance().logMessage(AlertTag.BANK, name, "sendAmountOwed----------");
 					sendAmountOwed(c);
 					return true;
 				}
@@ -153,7 +152,6 @@ public class LandlordRole extends JobRole implements Landlord
 			{
 				if(c == Command.callRenters)
 				{
-					AlertLog.getInstance().logMessage(AlertTag.BANK, name, "sendRentDue----------");
 					sendRentDue(c);
 					return true;
 				}
@@ -169,7 +167,6 @@ public class LandlordRole extends JobRole implements Landlord
 		}
 		if(allRentCollected)
 		{
-			AlertLog.getInstance().logMessage(AlertTag.BANK, name, "sendEndShift----------");
 			sendEndShift();
 			return true;
 		}
@@ -180,7 +177,6 @@ public class LandlordRole extends JobRole implements Landlord
 	//Actions
 	private void sendRentDue(Command c)
 	{
-		AlertLog.getInstance().logMessage(AlertTag.BANK, name, "renters size: " + renters.size());
 		commands.remove(c);
 		for(Renter r : renters)
 		{
@@ -239,6 +235,5 @@ public class LandlordRole extends JobRole implements Landlord
 	{
 		renters.add(new Renter(r));
 		r.setLandlord((Landlord)this);
-		AlertLog.getInstance().logMessage(AlertTag.BANK, name, "renters size: " + renters.size());
 	}
 }

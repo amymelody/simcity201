@@ -78,7 +78,9 @@ public class AlertWindow extends JFrame {
 		
 		tracePanel.showAlertsWithTag(AlertTag.PERSON);
 		tracePanel.hideAlertsWithTag(AlertTag.BANK);
+		tracePanel.hideAlertsWithTag(AlertTag.HOUSING);
 		tracePanel.hideAlertsWithTag(AlertTag.GENERAL_CITY);
+		tracePanel.hideAlertsWithTag(AlertTag.CHERYS_RESTAURANT);
 		
 		tracePanel.hideAlertsWithTag(AlertTag.BUS_STOP);
 		//
@@ -106,8 +108,10 @@ public class AlertWindow extends JFrame {
 		JButton errorButton;	
 		JButton generalCityTagButton;
 		JButton bankTagButton;
+		JButton housingTagButton;
 		JButton personTagButton;
 		JButton joshRestaurantTagButton;
+		JButton cherysRestaurantTagButton;
 		
 		public ControlPanel(final TracePanel tracePanel) {
 			this.tp = tracePanel;
@@ -116,7 +120,9 @@ public class AlertWindow extends JFrame {
 			generalCityTagButton = new JButton("Show Tag: GENERAL_CITY");
 			personTagButton = new JButton("Hide Tag: PERSON");
 			bankTagButton = new JButton("Show Tag: BANK");
+			housingTagButton = new JButton("Show Tag: HOUSING");
 			joshRestaurantTagButton = new JButton("Show Tag: JOSH_RESTAURANT");
+			cherysRestaurantTagButton = new JButton("Show Tag: CHERYS_RESTAURANT");
 			
 			
 			messagesButton.addActionListener(new ActionListener() {
@@ -179,6 +185,18 @@ public class AlertWindow extends JFrame {
 					}
 				}
 			});
+			housingTagButton.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					if (housingTagButton.getText().equals("Show Tag: HOUSING")) {
+						tracePanel.showAlertsWithTag(AlertTag.HOUSING);
+						housingTagButton.setText("Hide Tag: HOUSING");
+					} else if (housingTagButton.getText().equals("Hide Tag: HOUSING")) {
+						tracePanel.hideAlertsWithTag(AlertTag.HOUSING);
+						housingTagButton.setText("Show Tag: HOUSING");
+					}
+				}
+			});
 			joshRestaurantTagButton.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
@@ -191,13 +209,27 @@ public class AlertWindow extends JFrame {
 					}
 				}
 			});
+			cherysRestaurantTagButton.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					if (cherysRestaurantTagButton.getText().equals("Show Tag: CHERYS_RESTAURANT")) {
+						tracePanel.showAlertsWithTag(AlertTag.CHERYS_RESTAURANT);
+						cherysRestaurantTagButton.setText("Hide Tag: CHERYS_RESTAURANT");
+					} else if (cherysRestaurantTagButton.getText().equals("Hide Tag: CHERYS_RESTAURANT")) {
+						tracePanel.hideAlertsWithTag(AlertTag.CHERYS_RESTAURANT);
+						cherysRestaurantTagButton.setText("Show Tag: CHERYS_RESTAURANT");
+					}
+				}
+			});
 			this.setLayout(new GridLayout(6,3));
 			this.add(messagesButton);
 			this.add(errorButton);
 			this.add(generalCityTagButton);
 			this.add(personTagButton);
 			this.add(bankTagButton);
+			this.add(housingTagButton);
 			this.add(joshRestaurantTagButton);
+			this.add(cherysRestaurantTagButton);
 			this.setMinimumSize(new Dimension(50, 600));
 		}
 	}

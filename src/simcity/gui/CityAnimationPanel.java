@@ -130,8 +130,8 @@ public class CityAnimationPanel extends JPanel implements ActionListener, MouseL
 					} else if (location.equals("cherysRestaurant")) {
 						CherysRestaurantGui g = (CherysRestaurantGui)bG;
 						if (c instanceof CherysCustomerRole) {
-							CherysCustomerRole jC = (CherysCustomerRole)(c);
-							g.addCustomer(jC);
+							CherysCustomerRole cC = (CherysCustomerRole)(c);
+							g.addCustomer(cC);
 						}
 //					} else if (location.equals("jesusRestaurant")) {
 //						JesusRestaurantGui g = (JesusRestaurantGui)bG;

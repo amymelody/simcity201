@@ -3,6 +3,8 @@ package simcity.cherysrestaurant;
 import simcity.agent.Agent;
 import simcity.cherysrestaurant.interfaces.*;
 import simcity.mock.EventLog;
+import simcity.trace.AlertLog;
+import simcity.trace.AlertTag;
 
 import java.util.*;
 import java.util.concurrent.Semaphore;
@@ -77,7 +79,7 @@ public class CherysMarketRole extends Agent implements CherysMarket
 	//Messages
 	public void msgPlaceOrder(String f, int orderNumber)
 	{
-		Do("recieved msgPlaceOrder");
+		AlertLog.getInstance().logMessage(AlertTag.HOUSING, name, "received msgPlaceOrder");
 		do
 		{
 			try
@@ -100,7 +102,7 @@ public class CherysMarketRole extends Agent implements CherysMarket
 	}
 	public void msgPaymentForDelivery(double payment)
 	{
-		Do("recieved msgPaymentForDelivery. Payment = " + payment);
+		AlertLog.getInstance().logMessage(AlertTag.HOUSING, name, "received msgPaymentForDelivery. Payment = " + payment);
 		moneyEarned += payment;
 		moneyEarned = Math.round(moneyEarned * 100.0) / 100.0;
 	}
@@ -135,7 +137,6 @@ public class CherysMarketRole extends Agent implements CherysMarket
 	// Actions
 	private void processIt(Order o)
 	{
-		Do("Processing order");
 		o.state = OrderState.processing;
 		do
 		{
@@ -178,7 +179,6 @@ public class CherysMarketRole extends Agent implements CherysMarket
 	
 	private void deliveredIt(Order o)
 	{
-		Do("Delivery!");
 		o.state = OrderState.done;
 		cook.msgDelivery(this, o.f.name, o.amount);
 		double wholesalePercentage = 0.70;

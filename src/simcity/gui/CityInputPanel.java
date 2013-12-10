@@ -20,7 +20,7 @@ import java.util.List;
 
 public class CityInputPanel extends JPanel implements ActionListener
 {
-	static final int TIMERINCR = 1500;
+	static final int TIMERINCR = 3500;
 	
 	private Vector<PersonAgent> people = new Vector<PersonAgent>();
 	private List<BusStop> busStops = new ArrayList<BusStop>();

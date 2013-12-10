@@ -7,6 +7,8 @@ import simcity.cherysrestaurant.CherysCashierRole.CheckState;
 import simcity.cherysrestaurant.interfaces.*;
 import simcity.interfaces.MarketCashier;
 import simcity.joshrestaurant.JoshWaiterRole;
+import simcity.trace.AlertLog;
+import simcity.trace.AlertTag;
 
 import java.util.*;
 import java.util.concurrent.Semaphore;
@@ -136,14 +138,14 @@ public class CherysCookRole extends RestCookRole implements CherysCook
 	//Messages
 	public void msgCookThis(CherysWaiter w, String choice, int table) //* called from Waiter.takeOrder
 	{
-		Do("recieved msgCookThis");
+		AlertLog.getInstance().logMessage(AlertTag.CHERYS_RESTAURANT, name, "received msgCookThis");
 		orders.add(new Order(w, choice, table));
 		
 		stateChanged();
 	}
 	public void msgDelivery(CherysMarket m, String f, int numberDelivered)
 	{
-		Do("recieved msgDelivery. Food = " + f + " Amount = " + numberDelivered);
+		AlertLog.getInstance().logMessage(AlertTag.CHERYS_RESTAURANT, name, "received msgDelivery");
 		do
 		{
 			try
@@ -168,7 +170,7 @@ public class CherysCookRole extends RestCookRole implements CherysCook
 	}
 	public void msgStockTooLow(CherysMarket m, String f, int numberAvailible)
 	{
-		Do("recieved msgStockTooLow");
+		AlertLog.getInstance().logMessage(AlertTag.CHERYS_RESTAURANT, name, "received msgStockTooLow");
 		do
 		{
 			try
@@ -196,6 +198,7 @@ public class CherysCookRole extends RestCookRole implements CherysCook
 	@Override
 	public void msgStartShift()
 	{
+		AlertLog.getInstance().logMessage(AlertTag.CHERYS_RESTAURANT, name, "received msgStartShift");
 		working = true;
 		goingHome = false;
 		cashier.msgPaySalary(person.getSalary());
@@ -205,11 +208,13 @@ public class CherysCookRole extends RestCookRole implements CherysCook
 	@Override
 	public void msgEndShift()
 	{
+		AlertLog.getInstance().logMessage(AlertTag.CHERYS_RESTAURANT, name, "received msgEndShift");
 		working = false;
 		stateChanged();
 	}
 	public void msgGoHome()
 	{
+		AlertLog.getInstance().logMessage(AlertTag.CHERYS_RESTAURANT, name, "received msgGoHome");
 		goingHome = true;
 	}
 	

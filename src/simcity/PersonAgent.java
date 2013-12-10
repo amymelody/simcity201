@@ -594,7 +594,7 @@ public class PersonAgent extends Agent implements Person
 		time.day = d;
 		time.hour = h;
 		time.minute = m;
-		if (time.getHour() == 8 && time.getMinute() == 0) {
+		if (time.getHour() == 3 && time.getMinute() == 0) {
 			if (name.equals("bankDepositor")) {
 				money += 600;
 				AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "I now have $" + money);

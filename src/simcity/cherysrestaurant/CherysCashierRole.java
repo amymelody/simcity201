@@ -8,6 +8,8 @@ import simcity.joshrestaurant.interfaces.JoshCustomer;
 import simcity.joshrestaurant.interfaces.JoshWaiter;
 import simcity.mock.EventLog;
 import simcity.mock.LoggedEvent;
+import simcity.trace.AlertLog;
+import simcity.trace.AlertTag;
 
 import java.util.*;
 import java.util.concurrent.Semaphore;
@@ -85,8 +87,8 @@ public class CherysCashierRole extends RestCashierRole implements CherysCashier
 	//Messages
 	public void msgProduceCheck(CherysWaiter w, String choice, int table)
 	{
+		AlertLog.getInstance().logMessage(AlertTag.CHERYS_RESTAURANT, name, "received msgProduceCheck");
 		log.add(new LoggedEvent("Received msgProduceCheck from waiter. Choice = " + choice + ". Table = " + table));
-		Do("received msgProduceCheck");
 		int price = 0;
 		do
 		{
@@ -111,8 +113,8 @@ public class CherysCashierRole extends RestCashierRole implements CherysCashier
 	}
 	public void msgGiveCheck(CherysWaiter w, int table)
 	{
+		AlertLog.getInstance().logMessage(AlertTag.CHERYS_RESTAURANT, name, "received msgGiveCheck");
 		log.add(new LoggedEvent("Received msgGiveCheck from waiter. Table = " + table));
-		Do("received msgGiveCheck");
 		do
 		{
 			try
@@ -135,8 +137,8 @@ public class CherysCashierRole extends RestCashierRole implements CherysCashier
 	}
 	public void msgPayment(CherysCustomer cust, CherysCashierCheck c, int cashGiven)
 	{
+		AlertLog.getInstance().logMessage(AlertTag.CHERYS_RESTAURANT, name, "received msgPayment. Payment = " + cashGiven);
 		log.add(new LoggedEvent("Received msgPayment from customer. Payment = " + cashGiven));
-		Do("received msgPayment. Payment = " + cashGiven);
 		do
 		{
 			try
@@ -160,8 +162,8 @@ public class CherysCashierRole extends RestCashierRole implements CherysCashier
 	}
 	public void msgPayForDelivery(CherysMarket m, String foodType, int amountDelivered, double wholesalePercentage)
 	{
+		AlertLog.getInstance().logMessage(AlertTag.CHERYS_RESTAURANT, name, "received msgPayForDelivery");
 		log.add(new LoggedEvent("Received msgPayForDelivery from market. Food = " + foodType + ". Amount = " + amountDelivered + ". Percentage = " + wholesalePercentage*100 + "%"));
-		Do("received msgPayForDelivery");
 		int total = 0;
 		do
 		{
@@ -193,6 +195,7 @@ public class CherysCashierRole extends RestCashierRole implements CherysCashier
 	@Override
 	public void msgStartShift()
 	{
+		AlertLog.getInstance().logMessage(AlertTag.CHERYS_RESTAURANT, name, "received msgStartShift");
 		working = true;
 		goingHome = false;
 		msgPaySalary(person.getSalary());
@@ -202,11 +205,13 @@ public class CherysCashierRole extends RestCashierRole implements CherysCashier
 	@Override
 	public void msgEndShift()
 	{
+		AlertLog.getInstance().logMessage(AlertTag.CHERYS_RESTAURANT, name, "received msgEndShift");
 		working = false;
 		stateChanged();
 	}
 	public void msgGoHome()
 	{
+		AlertLog.getInstance().logMessage(AlertTag.CHERYS_RESTAURANT, name, "received msgGoHome");
 		goingHome = true;
 	}
 	
