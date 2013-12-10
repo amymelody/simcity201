@@ -17,14 +17,9 @@ import java.util.*;
 
 public class MockPerson extends Mock implements Person
 {
-<<<<<<< HEAD
-	//for testing
+
 	public int currentMoney;
-	
-=======
-	public int currentMoney;
->>>>>>> anjali
-	
+
 	public void setCurrentMoney(int m){
 		this.currentMoney = m;
 	}
@@ -37,22 +32,16 @@ public class MockPerson extends Mock implements Person
 		super(name);
 	}
 
-	public void setMoney(int m){
-		currentMoney = m;
-	}
-	
-	public int getCurrentMoney(){
-		return currentMoney;
-	}
+
 	public void msgExpense(int r) //from Resident
 	{
 		currentMoney = currentMoney - r;
 		log.add(new LoggedEvent("Received msgExpense from bankCustomer"));
 	}
-	//
-	@Override
+
 	public void msgDoneEating() //from Resident
 	{
+		
 	}
 	@Override
 	public void msgFoodLow(List<ItemOrder> glist) //from Resident
@@ -67,6 +56,8 @@ public class MockPerson extends Mock implements Person
 	@Override
 	public void msgIncome(int money) //from Landlord
 	{
+		currentMoney = currentMoney + money;
+
 		log.add(new LoggedEvent("Received msgIncome from bankCustomer"));
 	}
 	@Override

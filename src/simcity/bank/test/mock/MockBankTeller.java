@@ -2,15 +2,13 @@ package simcity.bank.test.mock;
 
 import java.util.Map;
 
-<<<<<<< HEAD
 
 import simcity.interfaces.BankDepositor;
 import simcity.interfaces.BankTeller;
-=======
-import simcity.interfaces.BankDepositor;
-import simcity.interfaces.BankTeller;
+
+
 import simcity.interfaces.BankManager;
->>>>>>> anjali
+
 
 
 //Works for normative and nonnormative scenarios
@@ -29,7 +27,6 @@ public class MockBankTeller extends Mock implements BankTeller {
 	}
 	
 	// Messages
-	@Override
 	
 	public void msgStartShift(){
 		log.add(new LoggedEvent("Received message from person agent to start working as bank teller"));
@@ -54,36 +51,37 @@ public class MockBankTeller extends Mock implements BankTeller {
 
 		
 	}
+	
 
-	
-	
-	@Override
 	public void msgMakeRequest(BankDepositor c, int transactionAmount) {
 		log.add(new LoggedEvent("Received message from customer with his request"));
 		
 	}
 
-	@Override
+
 	public void msgTransactionDenied(BankDepositor c) {
-		// TODO Auto-generated method stub
+		log.add(new LoggedEvent("msg transaction denied"));
 		
 	}
 
-	@Override
+
 	public void msgMakeLoanRequest(BankDepositor c) {
-		// TODO Auto-generated method stub
+		log.add(new LoggedEvent("msg make loan request"));
+
 		
 	}
 
-	@Override
+
 	public void msgLoanApproved(BankDepositor c, int newBalance) {
-		// TODO Auto-generated method stub
+		log.add(new LoggedEvent("msg loan approved"));
+
 		
 	}
 
-	@Override
+	
 	public void msgLoanDenied(BankDepositor c) {
-		// TODO Auto-generated method stub
+		log.add(new LoggedEvent("msg loan denied"));
+
 		
 	}
 	

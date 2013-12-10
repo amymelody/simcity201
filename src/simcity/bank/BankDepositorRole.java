@@ -31,7 +31,7 @@ public class BankDepositorRole extends Role implements BankDepositor{
 	//
 	/* Constructors */
 	String name;
-	boolean unitTesting = false;
+	public boolean unitTesting = false;
 	public BankDepositorRole(){
 		super();
 	}
@@ -272,15 +272,18 @@ public class BankDepositorRole extends Role implements BankDepositor{
 	
 	/////Rob bank actions
 	public void RobBank(){
+		if(!unitTesting){
 		gui.RobBank();
 		try {
 			customerAnimation.acquire();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+		}
 		AlertLog.getInstance().logMessage(AlertTag.BANK, name, "I'm robbing the bank biotch");
 
 		manager.msgImRobbingYourBank(this, 300);
+		
 	}
 	
 	public void ReturnMoney(){
