@@ -1,12 +1,12 @@
-package simcity.Anjalirestaurant;
+package simcity.cherysrestaurant; 
 
-public class AnjaliWaiterFood
+public class CherysWaiterFood
 {
 	public String name;
 	public String type;
 	public double price;
 	
-	public AnjaliWaiterFood(String n, String t, double p)
+	public CherysWaiterFood(String n, String t, double p)
 	{
 		name = n;
 		type = t;

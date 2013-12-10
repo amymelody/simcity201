@@ -1,8 +1,12 @@
-package simcity.Anjalirestaurant;
+package simcity.cherysrestaurant; 
 
+import simcity.ItemOrder;
+import simcity.RestCookRole;
 import simcity.agent.Agent;
-import simcity.Anjalirestaurant.AnjaliCashierRole.CheckState;
-import simcity.Anjalirestaurant.interfaces.*;
+import simcity.cherysrestaurant.CherysCashierRole.CheckState;
+import simcity.cherysrestaurant.interfaces.*;
+import simcity.interfaces.MarketCashier;
+import simcity.joshrestaurant.JoshWaiterRole;
 
 import java.util.*;
 import java.util.concurrent.Semaphore;
@@ -10,17 +14,16 @@ import java.util.concurrent.Semaphore;
 /**
  * Restaurant Cook Agent
  */
-public class AnjaliCookRole extends Agent implements AnjaliCook
+public class CherysCookRole extends RestCookRole implements CherysCook
 {
-	private String name;
 	private List<Order> orders = new ArrayList<Order>();
 	private class Order
 	{
-		AnjaliWaiter w;
+		CherysWaiter w;
 		String choice;
 		int table;
 		OrderState state;
-		Order(AnjaliWaiter w, String c, int t)
+		Order(CherysWaiter w, String c, int t)
 		{
 			this.w = w;
 			choice = c;
@@ -58,9 +61,9 @@ public class AnjaliCookRole extends Agent implements AnjaliCook
 	}
 	private class UnderstockedMarket
 	{
-		AnjaliMarket m;
+		CherysMarket m;
 		int amountInStock;
-		UnderstockedMarket(AnjaliMarket m, int a)
+		UnderstockedMarket(CherysMarket m, int a)
 		{
 			this.m = m;
 			amountInStock = a;
@@ -71,9 +74,9 @@ public class AnjaliCookRole extends Agent implements AnjaliCook
 	private List<MyMarket> markets = new ArrayList<MyMarket>();
 	private class MyMarket
 	{
-		AnjaliMarket m;
+		CherysMarket m;
 		int amountOrderedFrom = 0;
-		MyMarket(AnjaliMarket m)
+		MyMarket(CherysMarket m)
 		{
 			this.m = m;
 		}
@@ -83,20 +86,23 @@ public class AnjaliCookRole extends Agent implements AnjaliCook
 	private int cookTimeChicken = 10000;
 	private int cookTimeSalad = 5000;
 	private int cookTimePizza = 8000;
+	
+	private boolean working;
+	private boolean goingHome;
+	
+	private CherysCashier cashier;
 
 	/**
 	 * Constructor for CookAgent
 	 * @param name name of the cook
 	 */
-	public AnjaliCookRole(String name) //* called from RestaurantPanel
+	public CherysCookRole() //* called from RestaurantPanel
 	{
 		super();
-
-		this.name = name;
-		menu.add(new Food("Steak", cookTimeSteak, 1));
-		menu.add(new Food("Chicken", cookTimeChicken, 10));
-		menu.add(new Food("Salad", cookTimeSalad, 1));
-		menu.add(new Food("Pizza", cookTimePizza, 1));
+		menu.add(new Food("Steak", cookTimeSteak, 10000));
+		menu.add(new Food("Chicken", cookTimeChicken, 10000));
+		menu.add(new Food("Salad", cookTimeSalad, 10000));
+		menu.add(new Food("Pizza", cookTimePizza, 10000));
 
 		do
 		{
@@ -122,16 +128,20 @@ public class AnjaliCookRole extends Agent implements AnjaliCook
 	{
 		return name;
 	}
+	public void setCashier(CherysCashier c)
+	{
+		cashier = c;
+	}
 	
 	//Messages
-	public void msgCookThis(AnjaliWaiter w, String choice, int table) //* called from Waiter.takeOrder
+	public void msgCookThis(CherysWaiter w, String choice, int table) //* called from Waiter.takeOrder
 	{
 		Do("recieved msgCookThis");
 		orders.add(new Order(w, choice, table));
 		
 		stateChanged();
 	}
-	public void msgDelivery(AnjaliMarket m, String f, int numberDelivered)
+	public void msgDelivery(CherysMarket m, String f, int numberDelivered)
 	{
 		Do("recieved msgDelivery. Food = " + f + " Amount = " + numberDelivered);
 		do
@@ -156,7 +166,7 @@ public class AnjaliCookRole extends Agent implements AnjaliCook
 		while(false);
 		stateChanged();
 	}
-	public void msgStockTooLow(AnjaliMarket m, String f, int numberAvailible)
+	public void msgStockTooLow(CherysMarket m, String f, int numberAvailible)
 	{
 		Do("recieved msgStockTooLow");
 		do
@@ -182,11 +192,31 @@ public class AnjaliCookRole extends Agent implements AnjaliCook
 		stateChanged();
 		
 	}
+
+	@Override
+	public void msgStartShift()
+	{
+		working = true;
+		goingHome = false;
+		cashier.msgPaySalary(person.getSalary());
+		stateChanged();
+	}
+
+	@Override
+	public void msgEndShift()
+	{
+		working = false;
+		stateChanged();
+	}
+	public void msgGoHome()
+	{
+		goingHome = true;
+	}
 	
 	/**
 	 * Scheduler.  Determine what action is called for, and do it.
 	 */
-	protected boolean pickAndExecuteAnAction()
+	public boolean pickAndExecuteAnAction()
 	{
 		do
 		{
@@ -278,10 +308,15 @@ public class AnjaliCookRole extends Agent implements AnjaliCook
 			}
 		}
 		while(false);
+		if(orders.size() == 0 && !working && goingHome)
+		{
+			leaveRestaurant();
+			return true;
+		}
 		return false;
 	}
 
-	// Actions
+// Actions
 	/**
 	 * "Cooks" the given order for the cook time of that food
 	 * @param o the order to be cooked
@@ -607,9 +642,43 @@ public class AnjaliCookRole extends Agent implements AnjaliCook
 		}
 	}
 	
+	private void leaveRestaurant()
+	{
+		person.msgLeftDestination(this);
+	}
+	
 	//Utilities
-	public void setMarket(AnjaliMarket m)
+	public void setMarket(CherysMarket m)
 	{
 		markets.add(new MyMarket(m));
+	}
+
+	@Override
+	public void addMarket(MarketCashier m, String n)
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void msgHereIsOrder(JoshWaiterRole waiter, String choice, int table)
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void msgDelivery(List<ItemOrder> order)
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void msgHereIsWhatICanFulfill(List<ItemOrder> items,
+			boolean canFulfill)
+	{
+		// TODO Auto-generated method stub
+		
 	}
 }
