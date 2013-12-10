@@ -64,6 +64,7 @@ public class AnjaliRestaurantInputPanel extends JPanel
 	    		}
 	    	}
 	       
+	        cook.setCashier(cashier);
 	        
 	        cook.setStand(stand);
 	        

@@ -22,7 +22,7 @@ public class CherysRestaurantAnimationPanel extends JPanel implements ActionList
 	private final int WINDOWLOCATIONY = 0;
     private final int WINDOWX = 750;
     private final int WINDOWY = 200;
-    private final int timerInterval = 20;
+    private final int timerInterval = 10;
 	private final int xTableInitial = 100;
 	private final int yTable = 75;
     private final int tableDimensions = 50;

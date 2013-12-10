@@ -16,9 +16,7 @@ public interface AnjaliCook {
 	public abstract void msgHereIsOrder(String name, String choice, int tableNumber, AnjaliWaiter waiter);
 		
 	
-	public abstract void msgHereIsMoreFood(String food);
-		
-	public abstract void msgOrderFromMe(AnjaliMarket m);
+	
 	
 	public abstract void msgPartOrderFulfilled(String food);
 	

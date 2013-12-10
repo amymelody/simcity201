@@ -4,6 +4,7 @@ import simcity.RestCashierRole;
 import simcity.agent.Agent;
 import simcity.cherysrestaurant.interfaces.*;
 import simcity.interfaces.MarketDeliverer;
+import simcity.interfaces.Person;
 import simcity.joshrestaurant.interfaces.JoshCustomer;
 import simcity.joshrestaurant.interfaces.JoshWaiter;
 import simcity.mock.EventLog;
@@ -82,6 +83,11 @@ public class CherysCashierRole extends RestCashierRole implements CherysCashier
 	public String getName()
 	{
 		return name;
+	}
+	
+	public void setPerson(Person p) {
+		super.setPerson(p);
+		name = p.getName();
 	}
 	
 	//Messages

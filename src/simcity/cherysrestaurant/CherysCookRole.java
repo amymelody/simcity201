@@ -359,7 +359,7 @@ public class CherysCookRole extends RestCookRole implements CherysCook
 				{
 					foodDone(o);
 				}
-			}, timerLength);
+			}, (int)(timerLength*0.25));
 		o.state = OrderState.cooking;
 //		DoCookIt(o);
 	}

@@ -81,6 +81,7 @@ public class AlertWindow extends JFrame {
 		tracePanel.hideAlertsWithTag(AlertTag.HOUSING);
 		tracePanel.hideAlertsWithTag(AlertTag.GENERAL_CITY);
 		tracePanel.hideAlertsWithTag(AlertTag.CHERYS_RESTAURANT);
+		tracePanel.hideAlertsWithTag(AlertTag.ANJALI_RESTAURANT);
 		
 		tracePanel.hideAlertsWithTag(AlertTag.BUS_STOP);
 		//
@@ -112,6 +113,7 @@ public class AlertWindow extends JFrame {
 		JButton personTagButton;
 		JButton joshRestaurantTagButton;
 		JButton cherysRestaurantTagButton;
+		JButton anjaliRestaurantTagButton;
 		
 		public ControlPanel(final TracePanel tracePanel) {
 			this.tp = tracePanel;
@@ -123,6 +125,7 @@ public class AlertWindow extends JFrame {
 			housingTagButton = new JButton("Show Tag: HOUSING");
 			joshRestaurantTagButton = new JButton("Show Tag: JOSH_RESTAURANT");
 			cherysRestaurantTagButton = new JButton("Show Tag: CHERYS_RESTAURANT");
+			anjaliRestaurantTagButton = new JButton("Show Tag: ANJALI_RESTAURANT");
 			
 			
 			messagesButton.addActionListener(new ActionListener() {
@@ -221,6 +224,18 @@ public class AlertWindow extends JFrame {
 					}
 				}
 			});
+			anjaliRestaurantTagButton.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					if (anjaliRestaurantTagButton.getText().equals("Show Tag: ANJALI_RESTAURANT")) {
+						tracePanel.showAlertsWithTag(AlertTag.ANJALI_RESTAURANT);
+						anjaliRestaurantTagButton.setText("Hide Tag: ANJALI_RESTAURANT");
+					} else if (anjaliRestaurantTagButton.getText().equals("Hide Tag: ANJALI_RESTAURANT")) {
+						tracePanel.hideAlertsWithTag(AlertTag.ANJALI_RESTAURANT);
+						anjaliRestaurantTagButton.setText("Show Tag: ANJALI_RESTAURANT");
+					}
+				}
+			});
 			this.setLayout(new GridLayout(6,3));
 			this.add(messagesButton);
 			this.add(errorButton);
@@ -230,6 +245,7 @@ public class AlertWindow extends JFrame {
 			this.add(housingTagButton);
 			this.add(joshRestaurantTagButton);
 			this.add(cherysRestaurantTagButton);
+			this.add(anjaliRestaurantTagButton);
 			this.setMinimumSize(new Dimension(50, 600));
 		}
 	}
