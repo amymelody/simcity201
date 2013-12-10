@@ -92,31 +92,41 @@ public class JesusRestaurantInputPanel extends JPanel implements ActionListener
     
     public void addCustomer(JesusCustomerRole c) {
     	JesusCustomerGui g = new JesusCustomerGui(c, gui, 0, 0);
-    	
+    	gui.animationPanel.addGui(g);
+		c.setHost(host);
+		c.setCashier(cashier);
+		c.setGui(g);
     	customers.add(c);
     }
     
     public void addWaiter(JesusWaiterRole w) {
     	JesusWaiterGui g = new JesusWaiterGui(w, gui, 0, 0);
-    	
+    	gui.animationPanel.addGui(g);
+ 		w.setHost(host);
+ 		w.setCashier(cashier);
+ 		w.setCook(cook);
+ 		w.setGui(g);
+ 		host.setWaiters(w);
     	waiters.add(w);
     }
     
     public void setCashier(JesusCashierRole c) {
     	JesusCashierGui g = new JesusCashierGui(c);
-    	
+    	c.setGui(g);
     	cashier = c;
     }
     
     public void setCook(JesusCookRole c) {
     	JesusCookGui g = new JesusCookGui(c);
-    	
+    	c.setCashier(cashier);
+    	c.setGui(g);
+    	c.setHost(host);
     	cook = c;
     }
     
     public void setHost(JesusHostRole h) {
     	JesusHostGui g = new JesusHostGui(h);
-    	
+    	h.setGui(g);
     	host = h;
     }
 }
