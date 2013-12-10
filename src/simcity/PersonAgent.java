@@ -701,7 +701,7 @@ public class PersonAgent extends Agent implements Person
 		JobRole j = city.JobFactory(role, location);
 		addRole(j, role);
 		job = new Job(j, j.getJobLocation(), role, payrate, startShifts, endShifts);
-		AlertLog.getInstance().logMessage(AlertTag.PERSON, name, role + j.getJobLocation());
+	//	AlertLog.getInstance().logMessage(AlertTag.PERSON, name, role + j.getJobLocation());
 		stateChanged();
 	}
 
