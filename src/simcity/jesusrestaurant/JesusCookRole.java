@@ -396,6 +396,7 @@ public class JesusCookRole extends RestCookRole implements RestCook {
 		}
 		currentMarket = m;
 		m.market.msgIWantDelivery(this, cashier, list, getJobLocation());
+		needToRestock.clear();
 		sState = stockState.ordered;
 	}
 
