@@ -616,16 +616,46 @@ public class PersonAgent extends Agent implements Person
 			}
 		}
 		if (name.equals("normA")) {
-			if (time.getHour() == 5 && time.getMinute() == 0) {
-				money = 200;
+			if (time.getHour() == 4 && time.getMinute() == 0) {
+				money = 225;
 				AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "I now have $" + money);
 				AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "Got hungry");
 				state.ns = NourishmentState.gotHungry;
 			}
-			if (time.getHour() == 10 && time.getMinute() == 0) {
+			if (time.getHour() == 9 && time.getMinute() == 0) {
 				AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "Got hungry");
 				state.ps = PhysicalState.lazy;
 				state.ns = NourishmentState.gotHungry;
+			}
+			if (time.getHour() == 16 && time.getMinute() == 0) {
+				if (money > minBalance) {
+					money = minBalance;
+					AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "I now have $" + money);
+				}
+			}
+		}
+		if (name.contains("normB")) {
+			if (time.getHour() == 4 && time.getMinute() == 0) {
+				money = 225;
+				AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "I now have $" + money);
+				AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "Got hungry");
+				state.ns = NourishmentState.gotHungry;
+			}
+			if (name.equals("normB2") || name.equals("normB3")) {
+				if (time.getHour() == 5 && time.getMinute() == 0) {
+					state.ps = PhysicalState.lazy;
+				}
+			}
+			if (time.getHour() == 9 && time.getMinute() == 0) {
+				AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "Got hungry");
+				state.ps = PhysicalState.lazy;
+				state.ns = NourishmentState.gotHungry;
+			}
+			if (time.getHour() == 16 && time.getMinute() == 0) {
+				if (money > minBalance) {
+					money = minBalance;
+					AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "I now have $" + money);
+				}
 			}
 		}
 		stateChanged();

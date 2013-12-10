@@ -112,6 +112,7 @@ public class MarketCustomerRole extends Role implements MarketCustomer {
 
 	public void msgThankYou(int chnge) {
 		change = chnge;
+		person.msgIncome(chnge);
 		cS = CustomerState.leaving;
 		stateChanged();
 	}
@@ -232,7 +233,6 @@ public class MarketCustomerRole extends Role implements MarketCustomer {
 	}
 
 	private void updateInfo() {
-		person.msgIncome(change);
 		person.msgReceivedItems(itemsReceived);
 	}
 

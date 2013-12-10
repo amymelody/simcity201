@@ -20,7 +20,7 @@ import java.util.List;
 
 public class CityInputPanel extends JPanel implements ActionListener
 {
-	static final int TIMERINCR = 1500;
+	static final int TIMERINCR = 1600;
 	
 	private Vector<PersonAgent> people = new Vector<PersonAgent>();
 	private List<BusStop> busStops = new ArrayList<BusStop>();
@@ -47,6 +47,7 @@ public class CityInputPanel extends JPanel implements ActionListener
 	private JRadioButtonMenuItem button5 = new JRadioButtonMenuItem("Housing Config");
 	private JRadioButtonMenuItem button6 = new JRadioButtonMenuItem("Full City Config");
 	private JRadioButtonMenuItem button7 = new JRadioButtonMenuItem("Normative A Config");
+	private JRadioButtonMenuItem button8 = new JRadioButtonMenuItem("Normative B Config");
 	private JButton goButton = new JButton("Run Scenario");
     
 //    @Override
@@ -121,6 +122,8 @@ public class CityInputPanel extends JPanel implements ActionListener
 		add(button6);
 		configGroup.add(button7);
 		add(button7);
+		configGroup.add(button8);
+		add(button8);
 		goButton.addActionListener(this);
 		add(goButton);
 //        add(creationPanel);
@@ -187,6 +190,10 @@ public class CityInputPanel extends JPanel implements ActionListener
 			else if(button7.isSelected())
 			{
 			creationPanel.readConfig("../normAConfig.properties");
+			}
+			else if(button8.isSelected())
+			{
+			creationPanel.readConfig("../normBConfig.properties");
 			}
 		}
 //    	for (JButton b : personList)
