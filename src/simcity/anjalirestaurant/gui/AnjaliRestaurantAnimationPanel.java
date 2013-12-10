@@ -24,8 +24,8 @@ public class AnjaliRestaurantAnimationPanel extends JPanel implements ActionList
 	static final int FILLRECTX = 200;
 	static final int FILLRECTY = 250;
 	static final int FILLRECT = 50;
-    private final int WINDOWX = 300;
-    private final int WINDOWY = 300;
+    private final int WINDOWX = 500;
+    private final int WINDOWY = 500;
     private Image bufferImage;
     private Dimension bufferSize;
 
@@ -76,13 +76,23 @@ public class AnjaliRestaurantAnimationPanel extends JPanel implements ActionList
         g3.fillRect(160, 50, FILLRECT, FILLRECT);
         g4.fillRect(240, 50, FILLRECT, FILLRECT);
       
-
-      
+        cookArea.setColor(Color.BLACK);
+        cookArea.fillRect(50,200,30, 30);
+        plateArea.setColor(Color.BLACK);
+        fridge.setColor(Color.GREEN);
+        plateArea.fillRect(110, 200, 50, 20);
+        cookArea.drawString("Plate Area", 105, 200);
+        
+        fridge.fillRect(70, 250, 10, 20);
+        fridge.drawString("Fridge", 70, 250);
+        cookArea.drawString("CookArea", 50, 200);
         for(Gui gui : guis) {
             if (gui.isPresent()) {
                 gui.draw(g2);
                 gui.draw(g3);
                 gui.draw(g4);
+                gui.draw(cookArea);
+             
             }
         }
     }

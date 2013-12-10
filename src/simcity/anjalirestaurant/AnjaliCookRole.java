@@ -94,10 +94,10 @@ public class AnjaliCookRole extends RestCookRole implements AnjaliCook{
 private List<Order> orders = Collections.synchronizedList(new ArrayList<Order>());
 public enum CookState{nothing, received, inventoryLow, checkingInventory, buyingFood, buying, partOrderFulfilled, outOfFood, waitingForOrder, unfulfilledOrder, cooking, cooked, delivered}; 
 
-private int SteakInventory = 1;
-private int SaladInventory = 1;
-private int ChickenInventory = 1;
-private int PizzaInventory = 1;
+private int SteakInventory = 3;
+private int SaladInventory = 3;
+private int ChickenInventory = 3;
+private int PizzaInventory = 3;
 
 private CookState state = CookState.nothing;
 	
@@ -118,10 +118,10 @@ public void setStand(RevolvingStandMonitor s) {
 	
 	private final Map<String, Integer> cookTime;{
 		cookTime = new HashMap<String, Integer>();
-		cookTime.put("Steak", 10000);
-		cookTime.put("Chicken", 10000);
-		cookTime.put("Salad" , 10000);
-		cookTime.put("Pizza", 10000);			
+		cookTime.put("Steak", 2000);
+		cookTime.put("Chicken", 2000);
+		cookTime.put("Salad" , 2000);
+		cookTime.put("Pizza", 2000);			
 	}
 	
 	public Map<String, Integer> getCookTime(){

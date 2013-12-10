@@ -17,7 +17,7 @@ public class AnjaliWaiterGui implements Gui {
   private boolean releaseIt = false;
   private String choice = " ";
   AnjaliRestaurantGui gui;
-    private int xPos = 20, yPos = 20;//default waiter position
+    private int xPos = -20, yPos = -20;//default waiter position
     private int xDestination = 20, yDestination = 20;//default start position
     
     private int yHomePosition = 0; 
