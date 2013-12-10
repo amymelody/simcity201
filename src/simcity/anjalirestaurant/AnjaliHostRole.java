@@ -284,7 +284,6 @@ public class AnjaliHostRole extends RestHostRole implements AnjaliHost{
 		//waiters.add(w);
 		myWaiters.add(new myWaiter(w, WaiterState.working));
 		workingWaiters++;
-		stateChanged();
 	}
 	
 	

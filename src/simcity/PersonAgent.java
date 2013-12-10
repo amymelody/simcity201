@@ -280,7 +280,6 @@ public class PersonAgent extends Agent implements Person
 
 	private boolean wantToGoToRestaurant() {
 		if (allRestaurantsClosed()) {
-			AlertLog.getInstance().logDebug(AlertTag.PERSON, name, "AAAAAAAAAAAAA");
 			return false;
 		}
 		if (state.ps == PhysicalState.fit) {
@@ -572,16 +571,6 @@ public class PersonAgent extends Agent implements Person
 		time.day = d;
 		time.hour = h;
 		time.minute = m;
-		if(time.getHour() == 6) {
-			for(Market market: markets) {
-				market.closed = false;
-			}
-		}
-		if(time.getHour() == 23) {
-			for(Market market: markets) {
-				market.closed = true;
-			}
-		}
 		if (time.getHour() == 8 && time.getMinute() == 0) {
 			if (name.equals("bankDepositor")) {
 				money += 600;
@@ -603,10 +592,17 @@ public class PersonAgent extends Agent implements Person
 				state.ns = NourishmentState.gotHungry;
 			}
 		}
-		//		if (!unitTesting && time.getHour() == 8 && time.getMinute() == 0) {
-		//			AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "Got hungry");
-		//			state.ns = NourishmentState.gotHungry;
-		//		}
+		if (name.equals("normA")) {
+			if (time.getHour() == 5 && time.getMinute() == 0) {
+				AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "Got hungry");
+				state.ns = NourishmentState.gotHungry;
+			}
+			if (time.getHour() == 10 && time.getMinute() == 0) {
+				AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "Got hungry");
+				state.ps = PhysicalState.lazy;
+				state.ns = NourishmentState.gotHungry;
+			}
+		}
 		stateChanged();
 	}
 
@@ -1311,7 +1307,7 @@ public class PersonAgent extends Agent implements Person
 		Bank(String l, String r) {
 			location = l;
 			depositorRole = r;
-			closed = false;
+			closed = true;
 		}
 		String depositorRole;
 		String location;

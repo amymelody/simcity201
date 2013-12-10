@@ -20,7 +20,7 @@ import java.util.List;
 
 public class CityInputPanel extends JPanel implements ActionListener
 {
-	static final int TIMERINCR = 1300;
+	static final int TIMERINCR = 1500;
 	
 	private Vector<PersonAgent> people = new Vector<PersonAgent>();
 	private List<BusStop> busStops = new ArrayList<BusStop>();
@@ -46,6 +46,7 @@ public class CityInputPanel extends JPanel implements ActionListener
 	private JRadioButtonMenuItem button4 = new JRadioButtonMenuItem("Bank Config");
 	private JRadioButtonMenuItem button5 = new JRadioButtonMenuItem("Housing Config");
 	private JRadioButtonMenuItem button6 = new JRadioButtonMenuItem("Full City Config");
+	private JRadioButtonMenuItem button7 = new JRadioButtonMenuItem("Normative A Config");
 	private JButton goButton = new JButton("Run Scenario");
     
 //    @Override
@@ -100,7 +101,7 @@ public class CityInputPanel extends JPanel implements ActionListener
 		
 //        setLayout(new BoxLayout(this, 0));
 		
-		int rows = 8;
+		int rows = 9;
 		int columns = 1;
 		int buffer = 10;
 		view.setLayout(new GridLayout(rows, columns, buffer, buffer)); //view. maybe ought to be deleted
@@ -118,6 +119,8 @@ public class CityInputPanel extends JPanel implements ActionListener
 		add(button5);
 		configGroup.add(button6);
 		add(button6);
+		configGroup.add(button7);
+		add(button7);
 		goButton.addActionListener(this);
 		add(goButton);
 //        add(creationPanel);
@@ -126,9 +129,8 @@ public class CityInputPanel extends JPanel implements ActionListener
 //        personPane.setViewportView(view);
 //        add(personPane);
         
-        time = new Time(Day.Mon, 3, 0);
+        time = new Time(Day.Mon, 0, 0);
         timer = new Timer(TIMERINCR, this );
-    	timer.start();
         
 //        final CityInputPanel me = this;
 //        (new Thread(new Runnable(){
@@ -146,8 +148,12 @@ public class CityInputPanel extends JPanel implements ActionListener
     {
     	if (!people.isEmpty()) {
 	    	time = time.plus(30);
-	    	AlertLog.getInstance().logInfo(AlertTag.GENERAL_CITY, "City", time.getDay().toString() + ", " + time.getHour() + ":" + time.getMinute());
-    	}
+	    	if (time.getMinute() == 0) {
+	    		AlertLog.getInstance().logInfo(AlertTag.GENERAL_CITY, "City", time.getDay().toString() + ", " + time.getHour() + ":" + time.getMinute() + "0");
+	    	} else {
+	    		AlertLog.getInstance().logInfo(AlertTag.GENERAL_CITY, "City", time.getDay().toString() + ", " + time.getHour() + ":" + time.getMinute());
+	    	}
+	    }
 	    for (PersonAgent p : people) {
     		p.msgUpdateWatch(time.getDay(), time.getHour(), time.getMinute());
     	}
@@ -178,6 +184,10 @@ public class CityInputPanel extends JPanel implements ActionListener
 			{
 			creationPanel.readConfig("../fullCityConfig.properties");
 			}
+			else if(button7.isSelected())
+			{
+			creationPanel.readConfig("../normAConfig.properties");
+			}
 		}
 //    	for (JButton b : personList)
 //    	{
@@ -195,7 +205,9 @@ public class CityInputPanel extends JPanel implements ActionListener
     	
     }
     
-    public void startBus(boolean bNN) {
+    public void startSimulation(Day d, boolean bNN) {
+    	time.setDay(d);
+    	timer.start();
     	for (BusAgent b : buses) {
     		b.setNonNorm(bNN);
     		b.startThread();
