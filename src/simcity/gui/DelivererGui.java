@@ -2,15 +2,18 @@ package simcity.gui;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import simcity.ItemOrder;
+import javax.swing.ImageIcon;
+
 import simcity.gui.Gui;
-import simcity.market.MarketDelivererRole;
 import simcity.market.gui.MarketDelivererGui;
 import simcity.market.gui.MarketGui;
 
@@ -35,6 +38,12 @@ public class DelivererGui implements Gui {
 	public enum GuiState {nothing, delivering, cashier}
 	public GuiState gS = GuiState.nothing;
 	
+	Image delivererImage;
+	List<ImageIcon> upAnimation = new ArrayList<ImageIcon>();
+	List<ImageIcon> rightAnimation = new ArrayList<ImageIcon>();
+	List<ImageIcon> downAnimation = new ArrayList<ImageIcon>();
+	List<ImageIcon> leftAnimation = new ArrayList<ImageIcon>();
+	
 	public DelivererGui(MarketDelivererGui g, String nameOfMarket) {
 		this.gui = g;
 	
@@ -45,18 +54,47 @@ public class DelivererGui implements Gui {
 		yDestination = yPos;
 		xHome = marketPnt.x;
 		yHome = marketPnt.y;
+		
+		ImageIcon normal_maleU1 = new ImageIcon(this.getClass().getResource("images/market_deliverer/market_deliverer_male_u1.png"));
+		ImageIcon normal_maleU2 = new ImageIcon(this.getClass().getResource("images/market_deliverer/market_deliverer_male_u2.png"));
+		ImageIcon normal_maleR1 = new ImageIcon(this.getClass().getResource("images/market_deliverer/market_deliverer_male_r1.png"));
+		ImageIcon normal_maleR2 = new ImageIcon(this.getClass().getResource("images/market_deliverer/market_deliverer_male_r2.png"));
+		ImageIcon normal_maleD1 = new ImageIcon(this.getClass().getResource("images/market_deliverer/market_deliverer_male_d1.png"));
+		ImageIcon normal_maleD2 = new ImageIcon(this.getClass().getResource("images/market_deliverer/market_deliverer_male_d2.png"));
+		ImageIcon normal_maleL1 = new ImageIcon(this.getClass().getResource("images/market_deliverer/market_deliverer_male_l1.png"));
+		ImageIcon normal_maleL2 = new ImageIcon(this.getClass().getResource("images/market_deliverer/market_deliverer_male_l2.png"));
+		upAnimation.add(normal_maleU1);
+		upAnimation.add(normal_maleU2);
+		rightAnimation.add(normal_maleR1);
+		rightAnimation.add(normal_maleR2);
+		downAnimation.add(normal_maleD1);
+		downAnimation.add(normal_maleD2);
+		leftAnimation.add(normal_maleL1);
+		leftAnimation.add(normal_maleL2);
 	}
 
 	public void updatePosition() {
-		if (xPos < xDestination)
+		if (xPos < xDestination) {
 			xPos+=10;
-		else if (xPos > xDestination)
+			delivererImage = rightAnimation.get(0).getImage();
+			Collections.rotate(rightAnimation, 1);
+		}
+		else if (xPos > xDestination) {
 			xPos-=10;
+			delivererImage = leftAnimation.get(0).getImage();
+			Collections.rotate(leftAnimation, 1);
+		}
 
-		if (yPos < yDestination)
+		else if (yPos < yDestination) {
 			yPos+=10;
-		else if (yPos > yDestination)
+			delivererImage = downAnimation.get(0).getImage();
+			Collections.rotate(downAnimation, 1);
+		}
+		else if (yPos > yDestination) {
 			yPos-=10;
+			delivererImage = upAnimation.get(0).getImage();
+			Collections.rotate(upAnimation, 1);
+		}
 		if(xPos == xDestination && yPos == yDestination) {
 			if(gS == GuiState.delivering) {
 				gui.Outside();
