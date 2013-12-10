@@ -1,4 +1,4 @@
-package simcity.cherysrestaurant.interfaces;
+package simcity.cherysrestaurant.interfaces; 
 
 import simcity.cherysrestaurant.CherysCashierCheck;
 import simcity.mock.EventLog;

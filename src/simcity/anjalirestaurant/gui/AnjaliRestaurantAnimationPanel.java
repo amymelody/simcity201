@@ -1,24 +1,35 @@
 package simcity.anjalirestaurant.gui;
 
-import javax.swing.*;
-
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import javax.swing.JPanel;
+import javax.swing.Timer;
+
+import simcity.gui.Gui;
+import simcity.anjalirestaurant.gui.AnjaliCookGui;
+import simcity.anjalirestaurant.gui.AnjaliCustomerGui;
+import simcity.anjalirestaurant.gui.AnjaliWaiterGui;
 
 public class AnjaliRestaurantAnimationPanel extends JPanel implements ActionListener {
 
 	static final int FILLRECTX = 200;
 	static final int FILLRECTY = 250;
 	static final int FILLRECT = 50;
-    private final int WINDOWX = 300;
-    private final int WINDOWY = 300;
+    private final int WINDOWX = 500;
+    private final int WINDOWY = 500;
     private Image bufferImage;
     private Dimension bufferSize;
 
-    private List<Gui> guis = new ArrayList<Gui>();
+	private List<Gui> guis = Collections.synchronizedList(new ArrayList<Gui>());
 
     public AnjaliRestaurantAnimationPanel() {
     	setSize(WINDOWX, WINDOWY);
@@ -26,12 +37,19 @@ public class AnjaliRestaurantAnimationPanel extends JPanel implements ActionList
         
         bufferSize = this.getSize();
  
-    	Timer timer = new Timer(20, this );
+    	Timer timer = new Timer(5, this );
     	timer.start();
     }
 
 	public void actionPerformed(ActionEvent e) {
 		repaint();  //Will have paintComponent called
+		synchronized(guis){
+			for(Gui gui: guis){
+				if(gui.isPresent()){
+					gui.updatePosition();
+				}
+			}
+		}
 	}
 
     public void paintComponent(Graphics g) {
@@ -42,19 +60,14 @@ public class AnjaliRestaurantAnimationPanel extends JPanel implements ActionList
         Graphics2D plateArea = (Graphics2D)g;
         Graphics2D fridge = (Graphics2D)g;
         //Clear the screen by painting a rectangle the size of the frame
-        g2.setColor(getBackground());
+        g2.setColor(Color.WHITE);
         g2.fillRect(0, 0, WINDOWX, WINDOWY );
-        g3.setColor(getBackground());
+        g3.setColor(Color.WHITE);
         g3.fillRect(0,0, WINDOWX, WINDOWY);
-        g4.setColor(getBackground());
+        g4.setColor(Color.WHITE);
         g4.fillRect(0,0,WINDOWX, WINDOWY);
         
-        cookArea.setColor(getBackground());
-        cookArea.fillRect(0,0,WINDOWX, WINDOWY);
-        plateArea.setColor(getBackground());
-        plateArea.fillRect(0,0,WINDOWX, WINDOWY);
-        fridge.setColor(getBackground());
-        fridge.fillRect(0,0,WINDOWX, WINDOWY);
+       
         //Here is the table
         g2.setColor(Color.ORANGE);
         g3.setColor(Color.YELLOW);
@@ -62,46 +75,39 @@ public class AnjaliRestaurantAnimationPanel extends JPanel implements ActionList
         g2.fillRect(80, 50, FILLRECT, FILLRECT);//200 and 250 need to be table params
         g3.fillRect(160, 50, FILLRECT, FILLRECT);
         g4.fillRect(240, 50, FILLRECT, FILLRECT);
-        cookArea.fillRect(10, 200, 50, 20);
-        cookArea.drawString("Cook Area", 5, 200);
-        
+      
+        cookArea.setColor(Color.BLACK);
+        cookArea.fillRect(50,200,30, 30);
+        plateArea.setColor(Color.BLACK);
+        fridge.setColor(Color.GREEN);
         plateArea.fillRect(110, 200, 50, 20);
         cookArea.drawString("Plate Area", 105, 200);
         
         fridge.fillRect(70, 250, 10, 20);
         fridge.drawString("Fridge", 70, 250);
-
-        for(Gui gui : guis) {
-            if (gui.isPresent()) {
-                gui.updatePosition();
-            }
-        }
-
+        cookArea.drawString("CookArea", 50, 200);
         for(Gui gui : guis) {
             if (gui.isPresent()) {
                 gui.draw(g2);
                 gui.draw(g3);
                 gui.draw(g4);
                 gui.draw(cookArea);
+             
             }
         }
     }
 
     
     
-    public void addGui(CustomerGui gui) {
-        guis.add(gui);
-    }
-    
-    public void addGui(WaiterGui gui){
-    	guis.add(gui);
-    	
-    }
+    public void addGui(AnjaliCustomerGui gui) {
+		guis.add(gui);
+	}
 
-    public void addGui(HostGui gui) {
-        guis.add(gui);
-    }
-    public void addGui(CookGui gui){
-    	guis.add(gui);
-    }
+	public void addGui(AnjaliWaiterGui gui) {
+		guis.add(gui);
+	}
+
+	public void addGui(AnjaliCookGui gui) {
+		guis.add(gui);
+	}
 }

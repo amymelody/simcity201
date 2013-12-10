@@ -1,4 +1,4 @@
-package simcity.cherysrestaurant.test;
+package simcity.cherysrestaurant.test; 
 
 import simcity.cherysrestaurant.CherysCashierRole;
 import simcity.cherysrestaurant.interfaces.CherysCustomer;

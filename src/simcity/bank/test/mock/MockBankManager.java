@@ -23,10 +23,17 @@ public class MockBankManager extends Mock implements BankManager {
 	}
 	
 	// Messages
-	@Override
 	
 	
+	int bankMoney;
 	
+	public void setBankMoney(int money){
+		bankMoney = money;
+	}
+	
+	public int getBankMoney(){
+		return bankMoney;
+	}
 	
 	public void msgStartShift(){
 		log.add(new LoggedEvent("Starting shift of tellers and manager"));
@@ -59,8 +66,25 @@ public class MockBankManager extends Mock implements BankManager {
 		
 	}
 
-	@Override
+	
 	public void msgProcessTransaction(BankTeller t, BankDepositor c, int cash) {
+		bankMoney += cash;
+	}
+
+	@Override
+	public void msgProcessLoanRequest(BankTeller t, BankDepositor c) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void msgImRobbingYourBank(BankDepositor c, int cash) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void msgHeresYourMoneyBack(BankDepositor c, int cash) {
 		// TODO Auto-generated method stub
 		
 	}

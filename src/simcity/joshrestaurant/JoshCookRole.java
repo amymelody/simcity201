@@ -65,6 +65,14 @@ public class JoshCookRole extends RestCookRole {
 		return name;
 	}
 	
+	public int getFoodAmt(String food) {
+		return foods.get(food).getAmount();
+	}
+	
+	public void addFoodAmt(String food, int amt) {
+		foods.get(food).amount += amt;
+	}
+	
 	public void setName(String n) {
 		name = n;
 	}
@@ -114,6 +122,10 @@ public class JoshCookRole extends RestCookRole {
 		log.add(new LoggedEvent("Received msgHereIsWhatICanFulfill"));
 		if (canFulfill == false) {
 			AlertLog.getInstance().logMessage(AlertTag.JOSH_RESTAURANT, name, "Oh you can't fulfill this order");
+		} else {
+			for (MyMarket m : markets) {
+				m.ordered = false;
+			}
 		}
 		for (Food f : foods.values()) {
 			if (f.state == FoodState.Ordered) {
@@ -190,6 +202,7 @@ public class JoshCookRole extends RestCookRole {
 	// Actions
 	
 	private void leaveRestaurant() {
+		cashier.msgPayMe(person.getSalary());
 		person.msgLeftDestination(this);
 	}
 	
@@ -217,13 +230,16 @@ public class JoshCookRole extends RestCookRole {
 				stateChanged();
 			}
 		},
-		foods.get(o.choice).getCookingTime() * 400);
+		foods.get(o.choice).getCookingTime() * 200);
 		
 		foods.get(o.choice).setAmount(foods.get(o.choice).getAmount()-1);
 		AlertLog.getInstance().logMessage(AlertTag.JOSH_RESTAURANT, name, foods.get(o.choice).type + " inventory: " + foods.get(o.choice).amount);
 //		if (unitTesting && foods.get(o.choice).amount <= foods.get(o.choice).low && foods.get(o.choice).state == FoodState.Enough) {
 		if (foods.get(o.choice).amount <= foods.get(o.choice).low && foods.get(o.choice).state == FoodState.Enough) {
 			foods.get(o.choice).setState(FoodState.MustBeOrdered);
+			for (MyMarket m : markets) {
+				m.ordered = false;
+			}
 		}
 	}
 	
@@ -242,6 +258,7 @@ public class JoshCookRole extends RestCookRole {
 					food.setState(FoodState.Ordered);
 				}
 			}
+			
 			int index = markets.size()-1;
 			if (markets.size() > 1) {
 				for (int i = markets.size()-2; i>=0; i--) {
@@ -251,13 +268,21 @@ public class JoshCookRole extends RestCookRole {
 				}
 			}
 			
-			if (unitTesting || person.businessOpen(markets.get(index).marketName)) {
+			boolean orderedFromEveryMarket = true;
+			for (MyMarket m : markets) {
+				if (m.ordered == false) {
+					orderedFromEveryMarket = false;
+				}
+			}
+			
+			if ((unitTesting || person.businessOpen(markets.get(index).marketName)) && !orderedFromEveryMarket) {
 				AlertLog.getInstance().logMessage(AlertTag.JOSH_RESTAURANT, name, "I am ordering from " + markets.get(index).market.getName());
 				for (ItemOrder io : itemOrders) {
 					AlertLog.getInstance().logMessage(AlertTag.JOSH_RESTAURANT, name, "I need " + io.getAmount() + " " + io.getFoodItem() + "s");
 				}
 				markets.get(index).market.msgIWantDelivery(this, cashier, itemOrders, location);
 				markets.get(index).incrementOrderedFrom();
+				markets.get(index).ordered = true;
 				itemOrders.clear();
 			}
 //		}
@@ -279,11 +304,13 @@ public class JoshCookRole extends RestCookRole {
 		MarketCashier market;
 		int orderedFrom;
 		String marketName;
+		boolean ordered;
 		
 		MyMarket(MarketCashier m, String n) {
 			market = m;
 			orderedFrom = 0;
 			marketName = n;
+			ordered = false;
 		}
 		
 		public void incrementOrderedFrom() {

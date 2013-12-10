@@ -1,4 +1,4 @@
-package simcity.cherysrestaurant;
+package simcity.cherysrestaurant; 
 
 import simcity.cherysrestaurant.CherysCashierRole.CheckState;
 import simcity.cherysrestaurant.interfaces.*;

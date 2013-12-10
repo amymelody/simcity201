@@ -217,6 +217,7 @@ public class MarketCustomerRole extends Role implements MarketCustomer {
 
 	private void GetItems() {
 		cashier.msgPayment(this, cost);
+		person.msgExpense(cost);
 		cS = CustomerState.paying;
 		cost = 0;
 	}
@@ -231,7 +232,6 @@ public class MarketCustomerRole extends Role implements MarketCustomer {
 	}
 
 	private void updateInfo() {
-		person.msgExpense(cost);
 		person.msgIncome(change);
 		person.msgReceivedItems(itemsReceived);
 	}

@@ -2,6 +2,7 @@ package simcity.gui;
 
 import javax.swing.*;
 
+import simcity.Day;
 import simcity.PersonAgent;
 import simcity.CityDirectory;
 
@@ -272,6 +273,7 @@ public class CityCreationPanel extends JPanel //implements ActionListener
 		boolean usingBus = false;
 		boolean goingHome = false;
 		boolean busNonNorm = false;
+		Day day = Day.Sun;
 		for(String key : cityConfig.stringPropertyNames()) {
 			if (key.equals("testingAnimation")) {
 				if (cityConfig.getProperty(key).equals("true")) {
@@ -285,6 +287,23 @@ public class CityCreationPanel extends JPanel //implements ActionListener
 					usingBus = true;
 				} else if (cityConfig.getProperty(key).equals("false")) {
 					usingBus = false;
+				}
+			}
+			if (key.equals("day")) {
+				if (cityConfig.getProperty(key).equals("Sun")) {
+					day = Day.Sun;
+				} else if (cityConfig.getProperty(key).equals("Mon")) {
+					day = Day.Mon;
+				} else if (cityConfig.getProperty(key).equals("Tue")) {
+					day = Day.Tue;
+				} else if (cityConfig.getProperty(key).equals("Wed")) {
+					day = Day.Wed;
+				} else if (cityConfig.getProperty(key).equals("Thu")) {
+					day = Day.Thu;
+				} else if (cityConfig.getProperty(key).equals("Fri")) {
+					day = Day.Fri;
+				} else if (cityConfig.getProperty(key).equals("Sat")) {
+					day = Day.Sat;
 				}
 			}
 			if (key.equals("goingHome")) {
@@ -372,13 +391,20 @@ public class CityCreationPanel extends JPanel //implements ActionListener
 					}
 				}
 			}
+			if (key.contains("preference")) {
+				for (PersonInfo pI : info) {
+					if (key.contains(Integer.toString(pI.id))){
+						pI.preference = cityConfig.getProperty(key);
+					}
+				}
+			}
 	    }
 		
 		for (PersonInfo pI : info) {
-			inputPanel.addPerson(pI.name, pI.job, pI.pay, pI.start, pI.end, pI.eco, pI.physical, pI.housing, cityDirectory, testingAnimation, usingBus, goingHome);
+			inputPanel.addPerson(pI.name, pI.job, pI.pay, pI.start, pI.end, pI.eco, pI.physical, pI.housing, pI.preference, cityDirectory, testingAnimation, usingBus, goingHome);
 		}
 		cityDirectory.assignLandlord();
-		inputPanel.startBus(busNonNorm);
+		inputPanel.startSimulation(day, busNonNorm);
 	}
 	
 	private class PersonInfo {
@@ -391,7 +417,7 @@ public class CityCreationPanel extends JPanel //implements ActionListener
 		public int start;
 		public int end;
 		public int pay;
-		public String car;
+		public String preference;
 		PersonInfo(String n, int i) {
 			name = n;
 			id = i;
@@ -402,7 +428,7 @@ public class CityCreationPanel extends JPanel //implements ActionListener
 			start = -1;
 			end = -1;
 			pay = -1;
-			car = null;
+			preference = "joshRestaurant";
 		}
 	}
 }

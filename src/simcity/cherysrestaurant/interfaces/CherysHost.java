@@ -1,5 +1,5 @@
 package simcity.cherysrestaurant.interfaces;
-
+ 
 import simcity.mock.EventLog;
 
 public interface CherysHost

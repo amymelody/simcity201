@@ -1,4 +1,4 @@
-package simcity.cherysrestaurant;
+package simcity.cherysrestaurant; 
 
 public class CherysWaiterFood
 {

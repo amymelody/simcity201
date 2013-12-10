@@ -74,6 +74,11 @@ public class JoshCashierRole extends RestCashierRole implements JoshCashier {
 		stateChanged();
 	}
 	
+	public void msgPayMe(int pay) {
+		cash -= pay;
+		stateChanged();
+	}
+	
 	public void msgProduceCheck(JoshWaiter w, JoshCustomer c, String choice) {
 		log.add(new LoggedEvent("Received msgProduceCheck"));
 		checks.add(new Check(c, w, choice, prices.get(choice)+c.getCharge(), CheckState.Created));

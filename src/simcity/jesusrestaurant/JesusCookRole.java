@@ -1,9 +1,11 @@
 package simcity.jesusrestaurant;
 
+import simcity.ItemOrder;
 import simcity.PersonAgent;
 import simcity.role.JobRole;
 import simcity.jesusrestaurant.JesusCookRole;
 import simcity.jesusrestaurant.gui.JesusCookGui;
+import simcity.market.MarketCashierRole;
 
 import java.util.*;
 import java.util.concurrent.Semaphore;
@@ -25,6 +27,7 @@ public class JesusCookRole extends JobRole {
 	private static final int restockAmount = 10;
 
 	public List<Order> orders = Collections.synchronizedList(new ArrayList<Order>());
+	public List<ItemOrder> needToRestock = Collections.synchronizedList(new ArrayList<ItemOrder>());
 	public List<Food> foods = Collections.synchronizedList(new ArrayList<Food>());
 	public List<myMarket> markets = Collections.synchronizedList(new ArrayList<myMarket>());
 	public JesusHostRole host;
@@ -70,8 +73,8 @@ public class JesusCookRole extends JobRole {
 		cashier = ch;
 	}
 	
-	public void addMarket(JesusMarketRole m) {
-		markets.add(new myMarket(m));
+	public void addMarket(MarketCashierRole c, String mName) {
+		markets.add(new myMarket(c, mName));
 	}
 
 	public boolean noInventory() {
@@ -356,12 +359,13 @@ public class JesusCookRole extends JobRole {
 	}
 
 	public void restock(Food f, myMarket m) {
-		if(f.amtLeft == 0)
+	/*	if(f.amtLeft == 0)
 			m.market.msgNeedRestock(this, f.name, restockAmount);
 		else
 			m.market.msgNeedRestock(this, f.name, f.amtLeft);
 		f.needsRestock = false;
 		sState = stockState.ordered;
+		*/
 	}
 
 	// The animation DoXYZ() routines
@@ -411,11 +415,13 @@ public class JesusCookRole extends JobRole {
 	}
 
 	private class myMarket {
-		JesusMarketRole market;
+		MarketCashierRole market;
+		String name;
 		Map<String, Boolean> outStock;
 
-		myMarket(JesusMarketRole m) {
+		myMarket(MarketCashierRole m, String mName) {
 			market = m;
+			name = mName;
 			outStock = new HashMap<String, Boolean>();
 			outStock.put("Steak", false);
 			outStock.put("Pizza", false);

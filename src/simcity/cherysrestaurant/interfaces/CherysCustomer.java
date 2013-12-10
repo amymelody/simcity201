@@ -1,5 +1,5 @@
 package simcity.cherysrestaurant.interfaces;
-
+ 
 import simcity.cherysrestaurant.CherysCashierCheck;
 import simcity.cherysrestaurant.CherysWaiterFood;
 import simcity.cherysrestaurant.gui.CherysCustomerGui;

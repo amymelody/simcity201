@@ -1,4 +1,4 @@
-package simcity.cherysrestaurant;
+package simcity.cherysrestaurant; 
 
 import simcity.agent.Agent;
 import simcity.cherysrestaurant.interfaces.*;

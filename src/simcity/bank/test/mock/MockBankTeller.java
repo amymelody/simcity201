@@ -7,6 +7,10 @@ import simcity.interfaces.BankDepositor;
 import simcity.interfaces.BankTeller;
 
 
+import simcity.interfaces.BankManager;
+
+
+
 //Works for normative and nonnormative scenarios
 
 
@@ -23,7 +27,6 @@ public class MockBankTeller extends Mock implements BankTeller {
 	}
 	
 	// Messages
-	@Override
 	
 	public void msgStartShift(){
 		log.add(new LoggedEvent("Received message from person agent to start working as bank teller"));
@@ -48,18 +51,37 @@ public class MockBankTeller extends Mock implements BankTeller {
 
 		
 	}
+	
 
-	
-	
-	@Override
 	public void msgMakeRequest(BankDepositor c, int transactionAmount) {
 		log.add(new LoggedEvent("Received message from customer with his request"));
 		
 	}
 
-	@Override
+
 	public void msgTransactionDenied(BankDepositor c) {
-		// TODO Auto-generated method stub
+		log.add(new LoggedEvent("msg transaction denied"));
+		
+	}
+
+
+	public void msgMakeLoanRequest(BankDepositor c) {
+		log.add(new LoggedEvent("msg make loan request"));
+
+		
+	}
+
+
+	public void msgLoanApproved(BankDepositor c, int newBalance) {
+		log.add(new LoggedEvent("msg loan approved"));
+
+		
+	}
+
+	
+	public void msgLoanDenied(BankDepositor c) {
+		log.add(new LoggedEvent("msg loan denied"));
+
 		
 	}
 	

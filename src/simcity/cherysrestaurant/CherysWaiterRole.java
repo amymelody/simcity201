@@ -1,4 +1,4 @@
-package simcity.cherysrestaurant;
+package simcity.cherysrestaurant; 
 
 import simcity.RestWaiterRole;
 import simcity.cherysrestaurant.gui.CherysWaiterGui;

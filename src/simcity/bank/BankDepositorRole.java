@@ -8,9 +8,18 @@ import java.util.concurrent.Semaphore;
 import simcity.bank.gui.BankDepositorGui;
 import simcity.bank.gui.BankGui;
 import simcity.interfaces.BankDepositor;
+
 import simcity.interfaces.BankManager;
 import simcity.interfaces.BankTeller;
 import simcity.interfaces.Person;
+
+
+import simcity.interfaces.Person;
+import simcity.bank.test.mock.MockBankManager;
+import simcity.interfaces.BankManager;
+import simcity.interfaces.BankTeller;
+import simcity.interfaces.MarketCashier;
+import simcity.interfaces.MarketDeliverer;
 
 import simcity.role.Role;
 import simcity.trace.AlertLog;
@@ -22,7 +31,7 @@ public class BankDepositorRole extends Role implements BankDepositor{
 	//
 	/* Constructors */
 	String name;
-	boolean unitTesting = false;
+	public boolean unitTesting = false;
 	public BankDepositorRole(){
 		super();
 	}
@@ -221,12 +230,14 @@ public class BankDepositorRole extends Role implements BankDepositor{
 
 	public void MakeTransaction(){
 		AlertLog.getInstance().logMessage(AlertTag.BANK, name, "I'm going to the managers desk");
+		if(!unitTesting){
 		DoGoToManager();
 		
 		try {
 			customerAnimation.acquire();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
+		}
 		}
 		manager.msgTransaction(this);
 		cS = CustomerState.beingHelped; 
@@ -241,12 +252,16 @@ public class BankDepositorRole extends Role implements BankDepositor{
 	}
 	public void Leaving(){
 		AlertLog.getInstance().logMessage(AlertTag.BANK, name, "I'm leaving the bank");
+		if(!unitTesting){
 		DoLeaveBank();
 		try {
 			customerAnimation.acquire();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+
+		}
+
 		if(this.robber){
 			this.robber = false;
 			person.msgGoodGuyAgain();
@@ -257,15 +272,18 @@ public class BankDepositorRole extends Role implements BankDepositor{
 	
 	/////Rob bank actions
 	public void RobBank(){
+		if(!unitTesting){
 		gui.RobBank();
 		try {
 			customerAnimation.acquire();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+		}
 		AlertLog.getInstance().logMessage(AlertTag.BANK, name, "I'm robbing the bank biotch");
 
 		manager.msgImRobbingYourBank(this, 300);
+		
 	}
 	
 	public void ReturnMoney(){
@@ -273,6 +291,7 @@ public class BankDepositorRole extends Role implements BankDepositor{
 		AlertLog.getInstance().logMessage(AlertTag.BANK, name, "Fine take your money back");
 
 	}
+
 
 	/* Actions */
 	

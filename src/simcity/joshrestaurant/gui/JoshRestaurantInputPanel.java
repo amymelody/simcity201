@@ -56,6 +56,8 @@ public class JoshRestaurantInputPanel extends JPanel
 		cook.setHost(host);
 		cook.setCashier(cashier);
 		cook.setStand(stand);
+		
+		host.setCashier(cashier);
         
 		cookGui = new JoshCookGui(cook);
 		gui.animationPanel.addGui(cookGui);
@@ -63,6 +65,7 @@ public class JoshRestaurantInputPanel extends JPanel
 	
         setLayout(new GridLayout(1, 2, 20, 20));
         group.setLayout(new GridLayout(1, 3, 10, 10));
+        setBounds(0, 0, 150, 500);
 
         group.add(waiterPanel);
 

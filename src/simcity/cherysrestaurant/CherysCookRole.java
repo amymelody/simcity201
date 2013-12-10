@@ -1,4 +1,4 @@
-package simcity.cherysrestaurant;
+package simcity.cherysrestaurant; 
 
 import simcity.ItemOrder;
 import simcity.RestCookRole;

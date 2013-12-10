@@ -118,7 +118,7 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 	private static Map<Integer, Point> chairLocations = new HashMap<Integer, Point>();
 	static {
 		chairLocations.put(1, new Point(80, 320));
-		chairLocations.put(2, new Point(40, 320));
+		chairLocations.put(2, new Point(20, 320));
 		chairLocations.put(3, new Point(80, 340));
 		chairLocations.put(4, new Point(20, 340));
 		chairLocations.put(5, new Point(80, 360));
@@ -238,7 +238,11 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 
 	// Normative Scenario #1
 	public void msgIWantItems(MarketCustomer c, List<ItemOrder> items) {
-		orders.add(new Order(c, items));
+		List<ItemOrder> temp = new ArrayList<ItemOrder>();
+		for(ItemOrder iO: items) {
+			temp.add(new ItemOrder(iO.getFoodItem(), iO.getAmount()));
+		}
+		orders.add(new Order(c, temp));
 		stateChanged();
 	}
 	
@@ -256,7 +260,7 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 	public void msgHereAreItems(Order order, MarketEmployee e) {
 		synchronized(orders) {
 			for(Order o: orders) {
-				if(o.equals(order)) {
+				if(o.customer.equals(order.customer)) {
 					o.oS = OrderState.ready;
 				}
 			}
@@ -285,7 +289,11 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 
 	// Normative Scenario #2
 	public void msgIWantDelivery(RestCook rCk, RestCashier rCh, List<ItemOrder> i, String location) {
-		orders.add(new Order(rCk, rCh, i, location));
+		List<ItemOrder> temp = new ArrayList<ItemOrder>();
+		for(ItemOrder iO: i) {
+			temp.add(new ItemOrder(iO.getFoodItem(), iO.getAmount()));
+		}
+		orders.add(new Order(rCk, rCh, temp, location));
 		stateChanged();
 	}
 	public void msgDelivered(Order order, MarketDeliverer d) {
@@ -374,6 +382,7 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 	/* Actions */
 	private void startWork() {
 		gui.work();
+		person.businessIsClosed(getJobLocation(), false);
 	}
 	private void leaveMarket() {
 		gui.leave();
@@ -392,6 +401,7 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 		marketMoney -= salary;
 		marketMoneySurplus = marketMoney - 100;
 		//bank.msgMarketDeposit(marketMoneySurplus);
+		person.businessIsClosed(getJobLocation(), true);
 		marketMoney = 100;
 	}
 
@@ -560,6 +570,6 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 	//stateChanged() in case MarketState == closing
 	private void removeOrder(Order o) {
 		orders.remove(o);
-		//stateChanged();
+		stateChanged();
 	}
 }
