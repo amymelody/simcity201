@@ -19,7 +19,7 @@ import simcity.trace.AlertTag;
 public class ResidentRole extends Role implements Resident
 {
 
-//Data	
+	//Data	
 	Landlord landlord = null;
 
 	public enum ResidentState
@@ -72,7 +72,7 @@ public class ResidentRole extends Role implements Resident
 		locations.put("Exit", new Point(480, 260));
 		gui = new ResidentGui(this);
 	}
-	
+
 	public void setLandlord(Landlord l)
 	{
 		landlord = l;
@@ -85,22 +85,22 @@ public class ResidentRole extends Role implements Resident
 	{
 		landlordHome = g;
 	}
-	
+
 	public ResidentGui getGui()
 	{
 		return gui;
 	}
-	
-//Messages
+
+	//Messages
 	public void msgRentDue() //from Landlord
 	{
-		AlertLog.getInstance().logMessage(AlertTag.BANK, name, "received msgRentDue");
+		AlertLog.getInstance().logMessage(AlertTag.HOUSING, name, "received msgRentDue");
 		log.add(new LoggedEvent("Received msgRentDue from Landlord. Setting person.rentDue"));
 		person.setRentDue(true);
 	}
 	public void msgAtLandlord() //from Person
 	{
-		AlertLog.getInstance().logMessage(AlertTag.BANK, name, "received msgAtLandlord");
+		AlertLog.getInstance().logMessage(AlertTag.HOUSING, name, "received msgAtLandlord");
 		log.add(new LoggedEvent("Received msgAtLandlord from Person. State.atLandlord, Command.talkToLandlord"));
 		state = ResidentState.atLandlord;
 		gui.setGui(landlordHome);
@@ -109,7 +109,7 @@ public class ResidentRole extends Role implements Resident
 	}
 	public void msgAmountOwed(int r) //from Landlord
 	{
-		AlertLog.getInstance().logMessage(AlertTag.BANK, name, "received msgAmountOwed. Rent = $" + r);
+		AlertLog.getInstance().logMessage(AlertTag.HOUSING, name, "received msgAmountOwed. Rent = $" + r);
 		log.add(new LoggedEvent("Received msgAmountOwed from Landlord. Rent = $" + r + ", Command.payLandlord"));
 		commands.add(Command.payLandlord);
 		rent = r;
@@ -117,14 +117,14 @@ public class ResidentRole extends Role implements Resident
 	}
 	public void msgEat() //from Person
 	{
-		AlertLog.getInstance().logMessage(AlertTag.BANK, name, "received msgEat");
+		AlertLog.getInstance().logMessage(AlertTag.HOUSING, name, "received msgEat");
 		log.add(new LoggedEvent("Received msgEat from Person. Command.eat"));
 		commands.add(Command.eat);
 		stateChanged();
 	}
 	public void msgGroceries(List<ItemOrder> g) //from Person
 	{
-		AlertLog.getInstance().logMessage(AlertTag.BANK, name, "received msgGroceries. Number of grocery items = " + g.size());
+		AlertLog.getInstance().logMessage(AlertTag.HOUSING, name, "received msgGroceries. Number of grocery items = " + g.size());
 		log.add(new LoggedEvent("Received msgGroceries from Person. Number of grocery items = " + g.size() + ", Command.putAwayGroceries"));
 		commands.add(Command.putAwayGroceries);
 		groceries = g;
@@ -132,14 +132,14 @@ public class ResidentRole extends Role implements Resident
 	}
 	public void msgLeave() //from Person
 	{
-		AlertLog.getInstance().logMessage(AlertTag.BANK, name, "received msgLeave");
+		AlertLog.getInstance().logMessage(AlertTag.HOUSING, name, "received msgLeave");
 		log.add(new LoggedEvent("Received msgLeave from Person. Command.leave"));
 		commands.add(Command.leave);
 		stateChanged();
 	}
 	public void msgImHome() //from Person
 	{
-		AlertLog.getInstance().logMessage(AlertTag.BANK, name, "received msgImHome");
+		AlertLog.getInstance().logMessage(AlertTag.HOUSING, name, "received msgImHome");
 		log.add(new LoggedEvent("Received msgImHome from Person. State.atHome"));
 		state = ResidentState.atHome;
 		gui.setGui(home);
@@ -151,83 +151,101 @@ public class ResidentRole extends Role implements Resident
 		atLocation.release();
 	}
 
-//Scheduler
-    public boolean pickAndExecuteAnAction()
-    {
-    	if(state == ResidentState.atHome)
-	    {
-    		for(Command c : commands)
-    		{
-    			if(c == Command.putAwayGroceries)
-    			{
-        			sitting = false;
-    				putGroceriesInFridge(c);
-        	    	return true;
-    			}
-    		}
-    		for(Command c : commands)
-    		{
-    			if(c == Command.eat)
-    			{
-        			sitting = false;
-    				prepareFood(c);
-        	    	return true;
-    			}
-    		}
-    		for(Command c : commands)
-    		{
-    			if(c == Command.leave)
-    			{
-        			sitting = false;
-    				leaveHousing(c);
-        	    	return true;
-    			}
-    		}
-    		if(maintenanceSchedule <= 0)
-    		{
-    			sitting = false;
-    			clean();
-    	    	return true;
-    		}
-    		if(commands.size() == 0 && !sitting)
-    		{
-    			sitting = true;
-    			goToLocation(locations.get("Sofa"), "");
-    		}
-        	return false;
+	//Scheduler
+	public boolean pickAndExecuteAnAction()
+	{
+		if(state == ResidentState.atHome)
+		{
+			synchronized(commands)
+			{
+				for(Command c : commands)
+				{
+					if(c == Command.putAwayGroceries)
+					{
+						sitting = false;
+						putGroceriesInFridge(c);
+						return true;
+					}
+				}
+			}
+			synchronized(commands)
+			{
+				for(Command c : commands)
+				{
+					if(c == Command.eat)
+					{
+						sitting = false;
+						prepareFood(c);
+						return true;
+					}
+				}
+			}
+			synchronized(commands)
+			{
+				for(Command c : commands)
+				{
+					if(c == Command.leave)
+					{
+						sitting = false;
+						leaveHousing(c);
+						return true;
+					}
+				}
+			}
+			if(maintenanceSchedule <= 0)
+			{
+				sitting = false;
+				clean();
+				return true;
+			}
+			if(commands.size() == 0 && !sitting)
+			{
+				sitting = true;
+				goToLocation(locations.get("Sofa"), "");
+			}
+			return false;
 		}
-    	if(state == ResidentState.atLandlord)
+		if(state == ResidentState.atLandlord)
 		{
 			sitting = false;
-    		for(Command c : commands)
-    		{
-    			if(c == Command.talkToLandlord)
-    			{
-    				sendDingDong(c);
-        	    	return true;
-    			}
-    		}
-    		for(Command c : commands)
-    		{
-    			if(c == Command.payLandlord)
-    			{
-    				sendPayRent(c);
-        	    	return true;
-    			}
-    		}
-    		for(Command c : commands)
-    		{
-    			if(c == Command.leave)
-    			{
-    				leaveHousing(c);
-        	    	return true;
-    			}
-    		}
+			synchronized(commands)
+			{
+				for(Command c : commands)
+				{
+					if(c == Command.talkToLandlord)
+					{
+						sendDingDong(c);
+						return true;
+					}
+				}
+			}
+			synchronized(commands)
+			{
+				for(Command c : commands)
+				{
+					if(c == Command.payLandlord)
+					{
+						sendPayRent(c);
+						return true;
+					}
+				}
+			}
+			synchronized(commands)
+			{
+				for(Command c : commands)
+				{
+					if(c == Command.leave)
+					{
+						leaveHousing(c);
+						return true;
+					}
+				}
+			}
 		}
-    	return false;
-    }
+		return false;
+	}
 
-//Actions
+	//Actions
 	private void sendDingDong(Command c)
 	{
 		commands.remove(c);
@@ -267,7 +285,7 @@ public class ResidentRole extends Role implements Resident
 		final Command com = Command.preparing;
 		commands.add(com);
 		goToLocation(locations.get("Fridge"), "Get food");
-		
+
 		ItemOrder food = foodInFridge.get(random.nextInt(foodInFridge.size()));
 		final List<ItemOrder> groceryList = new ArrayList<ItemOrder>();
 		for(ItemOrder i : foodInFridge)
@@ -296,12 +314,12 @@ public class ResidentRole extends Role implements Resident
 		else
 		{
 			timer.schedule(new TimerTask() 
+			{
+				public void run()
 				{
-					public void run()
-					{
-						eat(groceryList, com);
-					}
-				}, 5000);
+					eat(groceryList, com);
+				}
+			}, 5000);
 		}
 	}
 	public void eat(final List<ItemOrder> gList, Command c)
@@ -317,12 +335,12 @@ public class ResidentRole extends Role implements Resident
 		else
 		{
 			timer.schedule(new TimerTask() 
+			{
+				public void run()
 				{
-					public void run()
-					{
-						groceryCheck(gList, com);
-					}
-				}, 2000);
+					groceryCheck(gList, com);
+				}
+			}, 2000);
 		}
 	}
 	public void groceryCheck(List<ItemOrder> gList, Command c)
@@ -339,15 +357,15 @@ public class ResidentRole extends Role implements Resident
 	private void clean()
 	{
 		goToLocation(locations.get("Fridge"), "");
-		AlertLog.getInstance().logMessage(AlertTag.BANK, name, "CLEANING FRIDGE");
+		AlertLog.getInstance().logMessage(AlertTag.HOUSING, name, "CLEANING FRIDGE");
 		goToLocation(locations.get("Stove"), "");
-		AlertLog.getInstance().logMessage(AlertTag.BANK, name, "CLEANING STOVE");
+		AlertLog.getInstance().logMessage(AlertTag.HOUSING, name, "CLEANING STOVE");
 		goToLocation(locations.get("Table"), "");
-		AlertLog.getInstance().logMessage(AlertTag.BANK, name, "CLEANING TABLE");
+		AlertLog.getInstance().logMessage(AlertTag.HOUSING, name, "CLEANING TABLE");
 		goToLocation(locations.get("Sofa"), "");
-		AlertLog.getInstance().logMessage(AlertTag.BANK, name, "CLEANING SOFA");
+		AlertLog.getInstance().logMessage(AlertTag.HOUSING, name, "CLEANING SOFA");
 		goToLocation(locations.get("Doorway"), "");
-		AlertLog.getInstance().logMessage(AlertTag.BANK, name, "CLEANING DOOR");
+		AlertLog.getInstance().logMessage(AlertTag.HOUSING, name, "CLEANING DOOR");
 		maintenanceSchedule = 3;
 		stateChanged();
 	}

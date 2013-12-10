@@ -2,7 +2,7 @@ package simcity.cherysrestaurant.gui;
 
 import simcity.CityDirectory;
 import simcity.cherysrestaurant.CherysCustomerRole;
-import simcity.cherysrestaurant.CherysWaiterRole;
+import simcity.cherysrestaurant.CherysNormalWaiterRole;
 import simcity.gui.BuildingGui;
 import simcity.gui.BuildingsGui;
 import simcity.gui.CityGui;
@@ -20,7 +20,7 @@ public class CherysRestaurantGui extends BuildingGui
 	JFrame animationFrame = new JFrame("Restaurant Animation");
 	CherysRestaurantAnimationPanel animationPanel = new CherysRestaurantAnimationPanel();
 	
-    private CherysRestaurantInputPanel restPanel = new CherysRestaurantInputPanel(this);
+    private CherysRestaurantInputPanel restPanel;
     
     private JPanel idPanel;
     private JLabel idLabel; //part of idPanel
@@ -46,14 +46,16 @@ public class CherysRestaurantGui extends BuildingGui
         restPanel.setPreferredSize(restDim);
         restPanel.setMinimumSize(restDim);
         restPanel.setMaximumSize(restDim);
-        bG.add(restPanel, BorderLayout.NORTH);
+        restPanel.setVisible(false);
+        bG.add(restPanel, BorderLayout.WEST);
         
         //animation panel
-    	double animationFractionOfWindow = .4;
+    	double animationFractionOfWindow = 500.0 / 650.0;
         Dimension animDim = new Dimension(WINDOWX, (int)(WINDOWY * animationFractionOfWindow));
         animationPanel.setPreferredSize(animDim);
         animationPanel.setMinimumSize(animDim);
         animationPanel.setMaximumSize(animDim);
+        animationPanel.setVisible(false);
         bG.add(animationPanel, BorderLayout.CENTER);
         
 //        //My section
@@ -130,7 +132,15 @@ public class CherysRestaurantGui extends BuildingGui
 	@Override
 	public void changeView(boolean visible)
 	{
-		// TODO Auto-generated method stub
+    	animationPanel.setVisible(visible);
+	}
+	public void addCustomer(CherysCustomerRole c)
+	{
+    	restPanel.addCustomer(c);
 		
+	}
+	public void addWaiter(CherysNormalWaiterRole w)
+	{
+    	restPanel.addWaiter(w);
 	}
 }

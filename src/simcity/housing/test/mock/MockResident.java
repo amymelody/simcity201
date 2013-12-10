@@ -3,6 +3,7 @@ package simcity.housing.test.mock;
 import java.util.List;
 
 import simcity.ItemOrder;
+import simcity.interfaces.Landlord;
 import simcity.interfaces.Resident;
 import simcity.mock.Mock;
 import simcity.mock.LoggedEvent;
@@ -57,5 +58,11 @@ public class MockResident extends Mock implements Resident
 	public void msgAtLocation()
 	{
 		log.add(new LoggedEvent("Received msgAtLocation"));
+	}
+
+	@Override
+	public void setLandlord(Landlord l) {
+		// TODO Auto-generated method stub
+		
 	}
 }

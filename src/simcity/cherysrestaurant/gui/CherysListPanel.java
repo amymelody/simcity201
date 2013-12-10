@@ -101,23 +101,23 @@ public class CherysListPanel extends JPanel implements ActionListener
 //	    	  panel.setMaximumSize(panelSize);
 	    	  list.add(panel);
 	    	  view.add(panel);
-	          restPanel.addPerson(panel.getType(), panel.getName(), panel.getCheck());//puts customer or waiter on list
+//	          restPanel.addPerson(panel.getType(), panel.getName(), panel.getCheck());//puts customer or waiter on list
               panel.disableText();
               inPanel.resetPanel();
               validate();
           }
       }
-      /**
-       * 
-	   * Updates a customer on their new state when their associated
-	   * checkbox is clicked.
-       * @param name name of the agent
-       * @param tf new value of the agent's checkbox
-       */
-      public void updatePerson(String name, boolean tf) //* called from InputPanel.actionPerformed
-      {
-    	  restPanel.updateInfo(type, name, tf);
-      }
+//      /**
+//       * 
+//	   * Updates a customer on their new state when their associated
+//	   * checkbox is clicked.
+//       * @param name name of the agent
+//       * @param tf new value of the agent's checkbox
+//       */
+//      public void updatePerson(String name, boolean tf) //* called from InputPanel.actionPerformed
+//      {
+//    	  restPanel.updateInfo(type, name, tf);
+//      }
       /**
        * Finds the customer with the given name and enables their checkbox.
        * @param n name of an agent

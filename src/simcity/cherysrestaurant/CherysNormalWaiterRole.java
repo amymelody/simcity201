@@ -4,6 +4,8 @@ import simcity.RestWaiterRole;
 import simcity.cherysrestaurant.gui.CherysWaiterGui;
 import simcity.cherysrestaurant.interfaces.*;
 import simcity.mock.EventLog;
+import simcity.trace.AlertLog;
+import simcity.trace.AlertTag;
 
 import java.util.*;
 import java.util.concurrent.Semaphore;
@@ -11,12 +13,13 @@ import java.util.concurrent.Semaphore;
 /**
  * Restaurant Waiter Agent
  */
-public class CherysWaiterRole extends RestWaiterRole implements CherysWaiter
+public class CherysNormalWaiterRole extends RestWaiterRole implements CherysWaiter
 {
 	private Semaphore atLobby = new Semaphore(0, true);
 	private Semaphore atTable = new Semaphore(0, true);
 	private Semaphore atKitchen = new Semaphore(0, true);
 	private Semaphore onBreak = new Semaphore(0, true);
+	private Semaphore exiting = new Semaphore(0, true);
 	
 	private List<MyCustomer> customers = new ArrayList<MyCustomer>();
 	private class MyCustomer
@@ -111,7 +114,7 @@ public class CherysWaiterRole extends RestWaiterRole implements CherysWaiter
 	 * @param h    reference to the host agent
 	 * @param c    reference to the cook agent
 	 */
-	public CherysWaiterRole()
+	public CherysNormalWaiterRole()
 	{
 		super();
 		menu = new HashMap<Integer, CherysWaiterFood>();
@@ -133,13 +136,13 @@ public class CherysWaiterRole extends RestWaiterRole implements CherysWaiter
 	// Messages
 	public void msgPleaseSeatCustomer(CherysCustomer c, int table) //* called from Host.assignCustomer
 	{
-		Do("recieved msgPleaseSeatCustomer");
+		AlertLog.getInstance().logMessage(AlertTag.CHERYS_RESTAURANT, name, "received msgPleaseSeatCustomer");
 		customers.add(new MyCustomer(c, table));
 		stateChanged();
 	}
 	public void msgReadyToOrder(CherysCustomer c) //* called from Customer.flagWaiter
 	{
-		Do("recieved msgReadyToOrder");
+		AlertLog.getInstance().logMessage(AlertTag.CHERYS_RESTAURANT, name, "received msgReadyToOrder");
 		do
 		{
 			try
@@ -163,7 +166,7 @@ public class CherysWaiterRole extends RestWaiterRole implements CherysWaiter
 	}
 	public void msgHereIsMyOrder(CherysCustomer c, String choice) //* called from Customer.placeOrder
 	{
-		Do("recieved msgHereIsMyOrder");
+		AlertLog.getInstance().logMessage(AlertTag.CHERYS_RESTAURANT, name, "received msgHereIsMyOrder");
 		do
 		{
 			try
@@ -188,7 +191,7 @@ public class CherysWaiterRole extends RestWaiterRole implements CherysWaiter
 	}
 	public void msgOutOfFood(String choice, int table, List<String> foo)
 	{
-		Do("recieved msgOutOfFood");
+		AlertLog.getInstance().logMessage(AlertTag.CHERYS_RESTAURANT, name, "received msgOutOfFood");
 		Order temp = new Order(choice, table);
 		do
 		{
@@ -215,7 +218,7 @@ public class CherysWaiterRole extends RestWaiterRole implements CherysWaiter
 	}
 	public void msgOrderReady(String choice, int table, List<String> foo) //* called from Cook.alertWaiter
 	{
-		Do("recieved msgOrderReady");
+		AlertLog.getInstance().logMessage(AlertTag.CHERYS_RESTAURANT, name, "received msgOrderReady");
 		Order temp = new Order(choice, table);
 		do
 		{
@@ -241,7 +244,7 @@ public class CherysWaiterRole extends RestWaiterRole implements CherysWaiter
 	}
 	public void msgDoneEating(CherysCustomer c) //* called from Customer.done
 	{
-		Do("recieved msgDoneEating");
+		AlertLog.getInstance().logMessage(AlertTag.CHERYS_RESTAURANT, name, "received msgDoneEating");
 		do
 		{
 			try
@@ -265,13 +268,13 @@ public class CherysWaiterRole extends RestWaiterRole implements CherysWaiter
 	}
 	public void msgHereIsCheck(CherysCashierCheck ch)
 	{
-		Do("recieved msgHereIsCheck");
+		AlertLog.getInstance().logMessage(AlertTag.CHERYS_RESTAURANT, name, "received msgHereIsCheck");
 		checks.add(ch);
 		stateChanged();
 	}
 	public void msgLeavingRestaurant(CherysCustomer c)
 	{
-		Do("recieved msgLeavingRestaurant");
+		AlertLog.getInstance().logMessage(AlertTag.CHERYS_RESTAURANT, name, "received msgLeavingRestaurant");
 		do
 		{
 			try
@@ -295,15 +298,14 @@ public class CherysWaiterRole extends RestWaiterRole implements CherysWaiter
 	}
  	public void msgGoOnBreak(boolean tf)
 	{
+		AlertLog.getInstance().logMessage(AlertTag.CHERYS_RESTAURANT, name, "received msgGoOnBreak");
 		if(tf)
 		{
-			Do("Woo! I get a break!");
 			permissionToBreak = true;
 			stateChanged();
 		}
 		else
 		{
-			Do("Aww, no break");
 			denied = true;
 		}
 		stateChanged();
@@ -312,6 +314,8 @@ public class CherysWaiterRole extends RestWaiterRole implements CherysWaiter
 	@Override
 	public void msgStartShift()
 	{
+		AlertLog.getInstance().logMessage(AlertTag.CHERYS_RESTAURANT, name, "received msgStartShift");
+		host.msgOnDuty(this, true);
 		working = true;
 		cashier.msgPaySalary(person.getSalary());
 		stateChanged();
@@ -320,13 +324,13 @@ public class CherysWaiterRole extends RestWaiterRole implements CherysWaiter
 	@Override
 	public void msgEndShift()
 	{
+		AlertLog.getInstance().logMessage(AlertTag.CHERYS_RESTAURANT, name, "received msgEndShift");
 		working = false;
 		stateChanged();
 	}
  	
 	public void msgGotTired() //* called from animation
 	{
-		Do("I'm tired");
 		tired = true;
 		stateChanged();
 	}
@@ -346,6 +350,10 @@ public class CherysWaiterRole extends RestWaiterRole implements CherysWaiter
 	{
 		permissionToBreak = false;
 		onBreak.release();
+	}
+	public void msgExited()
+	{
+		exiting.release();
 	}
 
 	/**
@@ -603,7 +611,7 @@ public class CherysWaiterRole extends RestWaiterRole implements CherysWaiter
 						{
 							command = Command.getCustomer;
 							state = AgentState.toLobby;
-							doGoToLobby(customer.c);
+							doGoToLobby();
 							return true;
 						}
 					}
@@ -868,9 +876,9 @@ public class CherysWaiterRole extends RestWaiterRole implements CherysWaiter
 	}
 	
 	//Animation
-	private void doGoToLobby(CherysCustomer c)
+	private void doGoToLobby()
 	{
-		waiterGui.doGoToCustomer(c.getGui());
+		waiterGui.doGoToCustomer();
 		try
 		{
 			atLobby.acquire();
@@ -949,11 +957,25 @@ public class CherysWaiterRole extends RestWaiterRole implements CherysWaiter
 			e.printStackTrace();
 		}
 	}
+	private void doExit()
+	{
+		waiterGui.doExit();
+		try
+		{
+			exiting.acquire();
+		}
+		catch (InterruptedException e)
+		{
+			e.printStackTrace();
+		}
+	}
 	
 	private void leaveRestaurant()
 	{
 		state = null;
 		command = Command.noCommand;
+		host.msgOnDuty(this, false);
+		doExit();
 		person.msgLeftDestination(this);
 	}
 	

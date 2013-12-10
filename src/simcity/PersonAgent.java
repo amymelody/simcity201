@@ -100,7 +100,7 @@ public class PersonAgent extends Agent implements Person
 		houses.add(new Housing("ownerHouse", "residentRole"));
 
 		restaurants.add(new Restaurant("joshRestaurant", "italian", "joshCustomerRole"));
-		restaurants.add(new Restaurant("cherysRestaurant", "blah", "AnjaliCustomerRole"));
+		restaurants.add(new Restaurant("cherysRestaurant", "blah", "cherysCustomerRole"));
 		restaurants.add(new Restaurant("jesusRestaurant", "bleh", "jesusCustomerRole"));
 		restaurants.add(new Restaurant("anjaliRestaurant", "blih", "anjaliCustomerRole"));
 
@@ -600,7 +600,6 @@ public class PersonAgent extends Agent implements Person
 		time.day = d;
 		time.hour = h;
 		time.minute = m;
-		
 		//A lot of hacks to get the different scenarios to run
 		if (name.equals("marketCustomer")) {
 			if (time.getHour() == 3 && time.getMinute() == 0) {

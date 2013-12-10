@@ -1,6 +1,6 @@
 package simcity.jesusrestaurant;
 
-import simcity.PersonAgent;
+import simcity.interfaces.Person;
 import simcity.RestWaiterRole;
 import simcity.role.JobRole;
 import simcity.jesusrestaurant.gui.JesusWaiterGui;
@@ -56,7 +56,7 @@ public class JesusNormalWaiterRole extends RestWaiterRole implements JesusWaiter
 			super();
 		}
 		
-		public void setPerson(PersonAgent p) {
+		public void setPerson(Person p) {
 			super.setPerson(p);
 			name = p.getName();
 		}

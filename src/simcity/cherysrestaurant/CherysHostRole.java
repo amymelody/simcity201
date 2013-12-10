@@ -4,6 +4,8 @@ import simcity.RestHostRole;
 import simcity.agent.Agent;
 import simcity.cherysrestaurant.gui.CherysRestaurantGui;
 import simcity.cherysrestaurant.interfaces.*;
+import simcity.trace.AlertLog;
+import simcity.trace.AlertTag;
 
 import java.util.*;
 import java.util.concurrent.Semaphore;
@@ -105,13 +107,13 @@ public class CherysHostRole extends RestHostRole implements CherysHost
 	// Messages
 	public void msgImHungry(CherysCustomer c) //* called from Customer.alertHost
 	{
-		Do("recieved msgImHungry");
+		AlertLog.getInstance().logMessage(AlertTag.CHERYS_RESTAURANT, name, "received msgImHungry");
 		customers.add(new MyCustomer(c));
 		stateChanged();
 	}
 	public void msgTableFree(int t, CherysWaiter w, CherysCustomer c) //* called from Waiter.tableAvailible
 	{
-		Do("recieved msgTableFree");
+		AlertLog.getInstance().logMessage(AlertTag.CHERYS_RESTAURANT, name, "received msgTableFree");
 		do
 		{
 			try
@@ -154,7 +156,7 @@ public class CherysHostRole extends RestHostRole implements CherysHost
 	}
 	public void msgMayIGoOnBreak(CherysWaiter w)
 	{
-		Do("recieved msgMayIGoOnBreak");
+		AlertLog.getInstance().logMessage(AlertTag.CHERYS_RESTAURANT, name, "received msgMayIGoOnBreak");
 		do
 		{
 			try
@@ -178,7 +180,7 @@ public class CherysHostRole extends RestHostRole implements CherysHost
 	}
 	public void msgBackFromBreak(CherysWaiter w)
 	{
-		Do("recieved msgBackFromBreak");
+		AlertLog.getInstance().logMessage(AlertTag.CHERYS_RESTAURANT, name, "received msgBackFromBreak");
 		do
 		{
 			try
@@ -198,8 +200,9 @@ public class CherysHostRole extends RestHostRole implements CherysHost
 		}
 		while(false);
 	}
-	public void msgOnDty(CherysWaiter w, boolean tf)
+	public void msgOnDuty(CherysWaiter w, boolean tf)
 	{
+		AlertLog.getInstance().logMessage(AlertTag.CHERYS_RESTAURANT, name, "received msgOnDuty");
 		do
 		{
 			try
@@ -223,6 +226,7 @@ public class CherysHostRole extends RestHostRole implements CherysHost
 	@Override
 	public void msgStartShift()
 	{
+		AlertLog.getInstance().logMessage(AlertTag.CHERYS_RESTAURANT, name, "received msgStartShift");
 		person.businessIsClosed(getJobLocation(), false);
 		working = true;
 		cashier.msgPaySalary(person.getSalary());
@@ -232,6 +236,7 @@ public class CherysHostRole extends RestHostRole implements CherysHost
 	@Override
 	public void msgEndShift()
 	{
+		AlertLog.getInstance().logMessage(AlertTag.CHERYS_RESTAURANT, name, "received msgEndShift");
 		person.businessIsClosed(getJobLocation(), true);
 		working = false;
 		stateChanged();
