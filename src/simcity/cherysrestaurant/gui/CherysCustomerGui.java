@@ -94,7 +94,7 @@ public class CherysCustomerGui implements CherysGui
 			{
 				agent.msgLeftRestaurant();
 				isHungry = false;
-				gui.setCustomerEnabled(agent);
+//				gui.setCustomerEnabled(agent);
 			}
 			command = Command.noCommand;
 		}

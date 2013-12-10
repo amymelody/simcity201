@@ -109,10 +109,10 @@ public class CherysWaiterGui implements CherysGui
 	        	{
 	        		agent.msgAtKitchen();
 	        	}
-	        	if(xDestination == xHome && yDestination == yHome)
-	        	{
-	        		gui.setWaiterEnabled(agent);
-	        	}
+//	        	if(xDestination == xHome && yDestination == yHome)
+//	        	{
+//	        		//if the waiter has started their break
+//	        	}
 	        }
     	}
     }
@@ -150,10 +150,10 @@ public class CherysWaiterGui implements CherysGui
     	}
     	tired = tf;
     }
-    public void doWorkThroughThePain()
-    {
-    	gui.setWaiterBusy(agent, false);
-    }
+//    public void doWorkThroughThePain()
+//    {
+//    	gui.setWaiterBusy(agent, false);
+//    }
 
     public void doGoToCustomer(CherysCustomerGui cg)
     {

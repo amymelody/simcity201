@@ -20,7 +20,7 @@ public class CherysListPanel extends JPanel implements ActionListener
     private List<CherysInputPanel> list = new ArrayList<CherysInputPanel>();
     private JButton addPerson = new JButton("Add");
 
-    private CherysRestaurantPanel restPanel;
+    private CherysRestaurantInputPanel restPanel;
     private String type;
     private CherysInputPanel inPanel;
 
@@ -29,7 +29,7 @@ public class CherysListPanel extends JPanel implements ActionListener
      * @param rp   reference to the restaurant panel
      * @param type indicates if this is for customers or waiters
      */
-    public CherysListPanel(CherysRestaurantPanel rp, String type) //* called from the RestaurantPanel
+    public CherysListPanel(CherysRestaurantInputPanel rp, String type) //* called from the RestaurantPanel
     {
         restPanel = rp;
         this.type = type;

@@ -934,7 +934,7 @@ public class CherysWaiterRole extends RestWaiterRole implements CherysWaiter
 	private void doWorkThroughThePain()
 	{
 		denied = false;
-		waiterGui.doWorkThroughThePain();
+//		waiterGui.doWorkThroughThePain();
 		stateChanged();
 	}
 	private void doGoOnBreak()
