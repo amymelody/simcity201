@@ -14,6 +14,7 @@ import simcity.market.gui.MarketGui;
 import simcity.anjalirestaurant.gui.AnjaliRestaurantGui;
 import simcity.bank.gui.BankGui;
 import simcity.housing.gui.HousingGui;
+import simcity.jesusrestaurant.gui.JesusRestaurantGui;
 import simcity.joshrestaurant.gui.JoshRestaurantGui;
 import simcity.joshrestaurant.JoshCustomerRole;
 import simcity.joshrestaurant.JoshWaiterRole;
@@ -196,8 +197,8 @@ public class BuildingsGui extends JFrame
 //		cityGui.animationPanel.addBuilding(cherysRestaurant);
 		AnjaliRestaurantGui anjaliRestaurant = new AnjaliRestaurantGui("anjaliRestaurant", this, cd);
 		cityGui.animationPanel.addBuilding(anjaliRestaurant);
-//		JesusRestaurantGui jesusRestaurant = new JesusRestaurantGui("jesusRestaurant", this, cd);
-//		cityGui.animationPanel.addBuilding(jesusRestaurant);
+		JesusRestaurantGui jesusRestaurant = new JesusRestaurantGui("jesusRestaurant", this, cd);
+		cityGui.animationPanel.addBuilding(jesusRestaurant);
 
 	}
 

@@ -33,7 +33,7 @@ public class JesusHostRole extends JobRole {
 	
 	public JesusHostGui jesusHostGui = null;
 
-	public JesusHostRole(String name) {
+	public JesusHostRole() {
 		super();
 
 		this.name = name;

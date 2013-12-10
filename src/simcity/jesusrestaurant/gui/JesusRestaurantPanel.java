@@ -3,7 +3,6 @@ package simcity.jesusrestaurant.gui;
 import simcity.jesusrestaurant.JesusCashierRole;
 import simcity.jesusrestaurant.JesusCustomerRole;
 import simcity.jesusrestaurant.JesusHostRole;
-import simcity.jesusrestaurant.JesusMarketRole;
 import simcity.jesusrestaurant.JesusWaiterRole;
 import simcity.jesusrestaurant.JesusCookRole;
 
@@ -49,7 +48,6 @@ public class JesusRestaurantPanel extends JPanel implements ActionListener, Mous
     
     private Vector<JesusCustomerRole> customers = new Vector<JesusCustomerRole>();
     private Vector<JesusWaiterRole> waiters = new Vector<JesusWaiterRole>();
-    private Vector<JesusMarketRole> markets = new Vector<JesusMarketRole>();
     
     int custxloc = 2, custyloc = 0;
     int waiterxloc = 21, waiteryloc = 0;
@@ -61,11 +59,8 @@ public class JesusRestaurantPanel extends JPanel implements ActionListener, Mous
     private JPanel mainPanel = new JPanel();
     private JPanel restLabel = new JPanel();
     JLabel restInfo = new JLabel();
-    private JesusListPanel customerPanel = new JesusListPanel(this, "Customer");
-    private JesusListPanel waiterPanel = new JesusListPanel(this, "Waiter");
-    private JesusListPanel marketPanel = new JesusListPanel(this, "Market");
     private JTabbedPane group = new JTabbedPane();
-    JesusAnimationPanel jesusAnimationPanel = new JesusAnimationPanel();
+    JesusRestaurantAnimationPanel jesusAnimationPanel = new JesusRestaurantAnimationPanel();
     
     private JButton pauseB;
     
@@ -120,11 +115,6 @@ public class JesusRestaurantPanel extends JPanel implements ActionListener, Mous
         //group.setLayout(new GridLayout(GROWS, GCOLUMNS, LSPACE, LSPACE));
         mainPanel.setLayout(new BorderLayout(LSPACE, LSPACE));
         
-        group.addTab("Customers", null, customerPanel, "Customers");
-        group.addTab("Waiters", null, waiterPanel, "Waiters");
-        group.addTab("Markets", null, marketPanel, "Markets");
-        group.setSelectedIndex(0);
-        
         JPanel panel = new JPanel();
         panel.setLayout(new GridLayout(1, 2, 5, 5));
         mainPanel.add(restLabel);
@@ -142,7 +132,6 @@ public class JesusRestaurantPanel extends JPanel implements ActionListener, Mous
         addMouseMotionListener(this);
         
         add(mainPanel, BorderLayout.WEST);
-        add(group, BorderLayout.CENTER);
         cook.getGui().checkInventory();
     }
 
@@ -161,40 +150,6 @@ public class JesusRestaurantPanel extends JPanel implements ActionListener, Mous
         restLabel.add(new JLabel("      "), BorderLayout.WEST);
     }
 
-    /**
-     * When a customer or waiter is clicked, this function calls
-     * updatedInfoPanel() from the main gui so that person's information
-     * will be shown
-     *
-     * @param type indicates whether the person is a customer or waiter
-     * @param name name of person
-     */
-    public void showInfo(String type, String name) {
-
-        if (type.equals("Customer")) {
-
-            for (int i = 0; i < customers.size(); i++) {
-                JesusCustomerRole temp = customers.get(i);
-                if (temp.getName() == name)
-                    gui.updateInfoPanel(temp);
-            }
-        }
-        else if (type.equals("Waiter")) {
-        	for (int i = 0; i < waiters.size(); i++) {
-                JesusWaiterRole temp = waiters.get(i);
-                if (temp.getName() == name)
-                    gui.updateInfoPanel(temp);
-            }
-        }
-        else if (type.equals("Market")) {
-        	for (int i = 0; i < markets.size(); i++) {
-                JesusMarketRole temp = markets.get(i);
-                if (temp.getName() == name)
-                    gui.updateInfoPanel(temp);
-            }
-        }
-    }
-    
     /**
 	 * Method from the ActionListener interface.
 	 * Handles the event of the add button being pressed
@@ -283,17 +238,6 @@ public class JesusRestaurantPanel extends JPanel implements ActionListener, Mous
     		w.setGui(g);
     		host.setWaiters(w);
     		waiters.add(w);
-    	}
-    	if (type.equals("Market")) {
-    		JesusMarketRole m = new JesusMarketRole(name);
-    		JesusMarketGui g = new JesusMarketGui(m);
-    		cook.addMarket(m);
-    		
-    		jesusAnimationPanel.addGui(g);
-    		m.setGui(g);
-    		m.setCook(cook);
-    		m.setCashier(cashier);
-    		markets.add(m);
     	}
     }
 

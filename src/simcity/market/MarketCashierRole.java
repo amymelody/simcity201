@@ -382,6 +382,7 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 	/* Actions */
 	private void startWork() {
 		gui.work();
+		person.businessIsClosed(getJobLocation(), false);
 	}
 	private void leaveMarket() {
 		gui.leave();
@@ -400,6 +401,7 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 		marketMoney -= salary;
 		marketMoneySurplus = marketMoney - 100;
 		//bank.msgMarketDeposit(marketMoneySurplus);
+		person.businessIsClosed(getJobLocation(), true);
 		marketMoney = 100;
 	}
 
@@ -568,6 +570,6 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 	//stateChanged() in case MarketState == closing
 	private void removeOrder(Order o) {
 		orders.remove(o);
-		//stateChanged();
+		stateChanged();
 	}
 }
