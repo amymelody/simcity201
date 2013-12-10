@@ -1,17 +1,17 @@
-package simcity.Anjalirestaurant.gui;
+package simcity.cherysrestaurant.gui;
 
 
-import simcity.Anjalirestaurant.AnjaliCustomerRole;
-import simcity.Anjalirestaurant.AnjaliWaiterRole;
-import simcity.Anjalirestaurant.gui.AnjaliRestaurantAnimationPanel.Table;
+import simcity.cherysrestaurant.CherysCustomerRole;
+import simcity.cherysrestaurant.CherysWaiterRole;
+import simcity.cherysrestaurant.gui.CherysRestaurantAnimationPanel.Table;
 
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AnjaliWaiterGui implements AnjaliGui
+public class CherysWaiterGui implements CherysGui
 {
-    private AnjaliWaiterRole agent = null;
+    private CherysWaiterRole agent = null;
 
     private int xPos = 50, yPos = 145;//default waiter position
     private int xDestination = 50, yDestination = 145;//default start position
@@ -49,13 +49,13 @@ public class AnjaliWaiterGui implements AnjaliGui
     private List<Table> tables = new ArrayList<Table>();
     static final int numTables = 5;
     
-    AnjaliRestaurantGui gui;
+    CherysRestaurantGui gui;
     
     /**
      * Constructor for WaiterGui
      * @param agent reference to the waiter this gui represents
      */
-    public AnjaliWaiterGui(AnjaliWaiterRole agent, AnjaliRestaurantGui gui, int number)
+    public CherysWaiterGui(CherysWaiterRole agent, CherysRestaurantGui gui, int number)
     {
         this.agent = agent;
     	for(int i = 0; i < numTables; i++)
@@ -109,10 +109,10 @@ public class AnjaliWaiterGui implements AnjaliGui
 	        	{
 	        		agent.msgAtKitchen();
 	        	}
-	        	if(xDestination == xHome && yDestination == yHome)
-	        	{
-	        		gui.setWaiterEnabled(agent);
-	        	}
+//	        	if(xDestination == xHome && yDestination == yHome)
+//	        	{
+//	        		//if the waiter has started their break
+//	        	}
 	        }
     	}
     }
@@ -150,12 +150,12 @@ public class AnjaliWaiterGui implements AnjaliGui
     	}
     	tired = tf;
     }
-    public void doWorkThroughThePain()
-    {
-    	gui.setWaiterBusy(agent, false);
-    }
+//    public void doWorkThroughThePain()
+//    {
+//    	gui.setWaiterBusy(agent, false);
+//    }
 
-    public void doGoToCustomer(AnjaliCustomerGui cg)
+    public void doGoToCustomer(CherysCustomerGui cg)
     {
     	newDestination = true;
     	xCustomer = cg.xDestination + personDimensions;
@@ -176,7 +176,7 @@ public class AnjaliWaiterGui implements AnjaliGui
         xDestination = tables.get(tableDestination).x + personDimensions;
         yDestination = tables.get(tableDestination).y - personDimensions;
     }
-    public void doSeatCustomer(AnjaliCustomerGui cg, int t)
+    public void doSeatCustomer(CherysCustomerGui cg, int t)
     {
     	newDestination = true;
     	for(int i = 0; i < tables.size(); i++)
