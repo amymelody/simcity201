@@ -71,10 +71,9 @@ public class AnjaliHostRole extends RestHostRole implements AnjaliHost{
 	
 	private boolean working;
 	
-	public AnjaliHostRole(String name) {
+	public AnjaliHostRole() {
 		super();
 		working = false;
-		this.name = name;
 		// make some tables
 		tables = Collections.synchronizedList(new ArrayList<Table>(NTABLES));
 		for (int ix = 0; ix <= NTABLES; ix++) {

@@ -111,9 +111,8 @@ public class AnjaliNormalWaiterRole extends  AnjaliWaiterRole implements AnjaliW
 
 	private boolean working;
 	
-	public AnjaliNormalWaiterRole(String name) {
+	public AnjaliNormalWaiterRole() {
 		super();
-		this.name = name;
 		working = false;
 		
 	}
@@ -187,7 +186,7 @@ public class AnjaliNormalWaiterRole extends  AnjaliWaiterRole implements AnjaliW
 	//////////// MESSAGES MESSAGES MESSAGES MESSAGES ///////////
 	public void msgStartShift(){
 		working = true;
-		gui.addPerson(name);
+	//	gui.addPerson(name);
 		stateChanged();
 	}
 	public void msgEndShift(){
@@ -439,7 +438,7 @@ public class AnjaliNormalWaiterRole extends  AnjaliWaiterRole implements AnjaliW
 
 	// Actions
 	private void leaveRestaurant(){
-		gui.removePerson(name);
+	//	gui.removePerson(name);
 		person.msgLeftDestination(this);
 		
 	}

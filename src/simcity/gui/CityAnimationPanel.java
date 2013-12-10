@@ -5,6 +5,9 @@ import javax.swing.Timer;
 
 import simcity.PersonAgent;
 import simcity.RestCustomerRole;
+import simcity.anjalirestaurant.AnjaliCustomerRole;
+import simcity.anjalirestaurant.AnjaliNormalWaiterRole;
+import simcity.anjalirestaurant.gui.AnjaliRestaurantGui;
 import simcity.bank.BankDepositorRole;
 import simcity.bank.BankTellerRole;
 import simcity.bank.gui.BankDepositorGui;
@@ -115,6 +118,24 @@ public class CityAnimationPanel extends JPanel implements ActionListener, MouseL
 							JoshCustomerRole jC = (JoshCustomerRole)(c);
 							g.addCustomer(jC);
 						}
+					} else if (location.equals("anjaliRestaurant")) {
+						AnjaliRestaurantGui g = (AnjaliRestaurantGui)bG;
+						if (c instanceof AnjaliCustomerRole) {
+							AnjaliCustomerRole jC = (AnjaliCustomerRole)(c);
+							g.addCustomer(jC);
+						}
+//					} else if (location.equals("cherysRestaurant")) {
+//						CherysRestaurantGui g = (CherysRestaurantGui)bG;
+//						if (c instanceof CherysCustomerRole) {
+//							CherysCustomerRole jC = (CherysCustomerRole)(c);
+//							g.addCustomer(jC);
+//						}
+//					} else if (location.equals("jesusRestaurant")) {
+//						JesusRestaurantGui g = (JesusRestaurantGui)bG;
+//						if (c instanceof JesusCustomerRole) {
+//							JesusCustomerRole jC = (JesusCustomerRole)(c);
+//							g.addCustomer(jC);
+//						}
 					}
 				}
 			}
@@ -135,6 +156,36 @@ public class CityAnimationPanel extends JPanel implements ActionListener, MouseL
 							JoshSharedDataWaiterRole jW = (JoshSharedDataWaiterRole)(w);
 							g.addWaiter(jW);
 						}
+					} else if (w.getJobLocation().equals("anjaliRestaurant")) {
+						AnjaliRestaurantGui g = (AnjaliRestaurantGui)bG;
+						if (w instanceof AnjaliNormalWaiterRole) {
+							AnjaliNormalWaiterRole aW = (AnjaliNormalWaiterRole)(w);
+							g.addWaiter(aW);
+						}
+//						if (w instanceof AnjaliSharedDataWaiterRole) {
+//							AnjaliSharedDataWaiterRole aW = (AnjaliSharedDataWaiterRole)(w);
+//							g.addWaiter(aW);
+//						}
+//					} else if (w.getJobLocation().equals("cherysRestaurant")) {
+//						CherysRestaurantGui g = (CherysRestaurantGui)bG;
+//						if (w instanceof CherysNormalWaiterRole) {
+//							CherysNormalWaiterRole aW = (CherysNormalWaiterRole)(w);
+//							g.addWaiter(aW);
+//						}
+////						if (w instanceof CherysSharedDataWaiterRole) {
+////							CherysSharedDataWaiterRole aW = (CherysSharedDataWaiterRole)(w);
+////							g.addWaiter(aW);
+////						}
+//					} else if (w.getJobLocation().equals("jesusRestaurant")) {
+//						JesusRestaurantGui g = (JesusRestaurantGui)bG;
+//						if (w instanceof JesusNormalWaiterRole) {
+//							JesusNormalWaiterRole aW = (JesusNormalWaiterRole)(w);
+//							g.addWaiter(aW);
+//						}
+////						if (w instanceof JesusSharedDataWaiterRole) {
+////							JesusSharedDataWaiterRole aW = (JesusSharedDataWaiterRole)(w);
+////							g.addWaiter(aW);
+////						}
 					}
 				}
 			}
@@ -1079,10 +1130,10 @@ public class CityAnimationPanel extends JPanel implements ActionListener, MouseL
 				}
 			}
 			if(x > 390 && x < 419 && y > 290 && y < 340) {
-				// Anjali's Restaurant
+				// Cherys's Restaurant
 				synchronized(buildings) {
 					for(BuildingGui bG: buildings) {
-						if(bG.getName().equals("AnjaliRestaurant")) {
+						if(bG.getName().equals("cherysRestaurant")) {
 							if(currentBG != null)
 								currentBG.changeView(false);
 							bG.changeView(true);

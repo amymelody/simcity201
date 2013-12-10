@@ -23,16 +23,18 @@ import simcity.joshrestaurant.JoshCookRole;
 import simcity.joshrestaurant.JoshWaiterRole;
 import simcity.joshrestaurant.JoshNormalWaiterRole;
 import simcity.joshrestaurant.JoshSharedDataWaiterRole;
-/*import simcity.anjalirestaurant.AnjaliCashierRole;
+import simcity.anjalirestaurant.AnjaliCashierRole;
 import simcity.anjalirestaurant.AnjaliHostRole;
 import simcity.anjalirestaurant.AnjaliCustomerRole;
 import simcity.anjalirestaurant.AnjaliCookRole;
+import simcity.anjalirestaurant.AnjaliNormalWaiterRole;
 import simcity.anjalirestaurant.AnjaliWaiterRole;
-import simcity.Anjalirestaurant.AnjaliCashierRole;
-import simcity.Anjalirestaurant.AnjaliHostRole;
-import simcity.Anjalirestaurant.AnjaliCustomerRole;
-import simcity.Anjalirestaurant.AnjaliCookRole;
-import simcity.Anjalirestaurant.AnjaliWaiterRole;
+/*
+import simcity.cherysrestaurant.CherysCashierRole;
+import simcity.cherysrestaurant.CherysHostRole;
+import simcity.cherysrestaurant.CherysCustomerRole;
+import simcity.cherysrestaurant.CherysCookRole;
+import simcity.cherysrestaurant.CherysWaiterRole;
 import simcity.jesusrestaurant.JesusCashierRole;
 import simcity.jesusrestaurant.JesusHostRole;
 import simcity.jesusrestaurant.JesusCustomerRole;
@@ -46,6 +48,9 @@ public class CityDirectory
 	
 	//All job roles in the city
 	private Vector<JoshWaiterRole> joshWaiters = new Vector<JoshWaiterRole>();
+	private Vector<AnjaliWaiterRole> anjaliWaiters = new Vector<AnjaliWaiterRole>();
+//	private Vector<CherysWaiterRole> cherysWaiters = new Vector<CherysWaiterRole>();
+//	private Vector<JesusWaiterRole> jesusWaiters = new Vector<JesusWaiterRole>();
 	private Vector<MarketEmployeeRole> market1Employees = new Vector<MarketEmployeeRole>();
 	private Vector<MarketEmployeeRole> market2Employees = new Vector<MarketEmployeeRole>();
 	private Vector<MarketDelivererRole> market1Deliverers = new Vector<MarketDelivererRole>();
@@ -60,6 +65,15 @@ public class CityDirectory
 	private JoshCashierRole joshCashier = new JoshCashierRole();
 	private JoshCookRole joshCook = new JoshCookRole();
 	private JoshHostRole joshHost = new JoshHostRole();
+	private AnjaliCashierRole anjaliCashier = new AnjaliCashierRole();
+	private AnjaliCookRole anjaliCook = new AnjaliCookRole();
+	private AnjaliHostRole anjaliHost = new AnjaliHostRole();
+//	private CherysCashierRole cherysCashier = new CherysCashierRole();
+//	private CherysCookRole cherysCook = new CherysCookRole();
+//	private CherysHostRole cherysHost = new CherysHostRole();
+//	private JesusCashierRole jesusCashier = new JesusCashierRole();
+//	private JesusCookRole jesusCook = new JesusCookRole();
+//	private JesusHostRole jesusHost = new JesusHostRole();
 	
 	private List<PersonAgent> renters = new ArrayList<PersonAgent>();
 	
@@ -89,8 +103,8 @@ public class CityDirectory
 	private static final int apartment4Y = 280;
 	private static final int joshRestaurantX = 280;
 	private static final int joshRestaurantY = 300;
-	private static final int AnjaliRestaurantX = 420;
-	private static final int AnjaliRestaurantY = 300;
+	private static final int cherysRestaurantX = 420;
+	private static final int cherysRestaurantY = 300;
 	private static final int jesusRestaurantX = 280;
 	private static final int jesusRestaurantY = 400;
 	private static final int anjaliRestaurantX = 420;
@@ -198,7 +212,7 @@ public class CityDirectory
 			{
 				type = "market";
 			}
-			else if(n == "anjaliRestaurant" || n == "AnjaliRestaurant" || n == "jesusRestaurant" || n == "joshRestaurant")
+			else if(n == "anjaliRestaurant" || n == "cherysRestaurant" || n == "jesusRestaurant" || n == "joshRestaurant")
 			{
 				type = "restaurant";
 			}
@@ -249,6 +263,42 @@ public class CityDirectory
 		return joshHost;
 	}
 	
+	public AnjaliCashierRole getAnjaliCashier() {
+		return anjaliCashier;
+	}
+	
+	public AnjaliCookRole getAnjaliCook() {
+		return anjaliCook;
+	}
+	
+	public AnjaliHostRole getAnjaliHost() {
+		return anjaliHost;
+	}
+	
+//	public CherysCashierRole getCherysCashier() {
+//		return cherysCashier;
+//	}
+//	
+//	public CherysCookRole getCherysCook() {
+//		return cherysCook;
+//	}
+//	
+//	public CherysHostRole getCherysHost() {
+//		return cherysHost;
+//	}
+//	
+//	public JesusCashierRole getJesusCashier() {
+//		return jesusCashier;
+//	}
+//	
+//	public JesusCookRole getJesusCook() {
+//		return jesusCook;
+//	}
+//	
+//	public JesusHostRole getJesusHost() {
+//		return joshHost;
+//	}
+	
 	public CityDirectory()
 	{
 		apartment1ResIDs = new ArrayList<Integer>();
@@ -263,6 +313,15 @@ public class CityDirectory
 		joshCashier.setJobLocation("joshRestaurant");
 		joshCook.setJobLocation("joshRestaurant");
 		joshHost.setJobLocation("joshRestaurant");
+		anjaliCashier.setJobLocation("anjaliRestaurant");
+		anjaliCook.setJobLocation("anjaliRestaurant");
+		anjaliHost.setJobLocation("anjaliRestaurant");
+//		cherysCashier.setJobLocation("cherysRestaurant");
+//		cherysCook.setJobLocation("cherysRestaurant");
+//		cherysHost.setJobLocation("cherysRestaurant");
+//		jesusCashier.setJobLocation("jesusRestaurant");
+//		jesusCook.setJobLocation("jesusRestaurant");
+//		jesusHost.setJobLocation("jesusRestaurant");
 		
 		//add Buildings
 		addBuilding("house1", "vertical", new Point(house1X, house1Y));
@@ -334,7 +393,7 @@ public class CityDirectory
 		addBuilding("bank1", "horizontal", new Point(bank1X, bank1Y));
 		addBuilding("bank2", "horizontal", new Point(bank2X, bank2Y));
 		addBuilding("joshRestaurant", "vertical", new Point(joshRestaurantX, joshRestaurantY));
-		addBuilding("AnjaliRestaurant", "vertical", new Point(AnjaliRestaurantX, AnjaliRestaurantY));
+		addBuilding("cherysRestaurant", "vertical", new Point(cherysRestaurantX, cherysRestaurantY));
 		addBuilding("jesusRestaurant", "vertical", new Point(jesusRestaurantX, jesusRestaurantY));
 		addBuilding("anjaliRestaurant", "vertical", new Point(anjaliRestaurantX, anjaliRestaurantY));
 		addBuilding("busStop1", "vertical", new Point(busStop1X, busStop1Y));
@@ -357,10 +416,11 @@ public class CityDirectory
 		switch(role) {
 		case "joshCustomerRole":
 			return new JoshCustomerRole();
-		/*case "anjaliCustomerRole":
+		case "anjaliCustomerRole":
 			return new AnjaliCustomerRole();
-		case "AnjaliCustomerRole":
-			return new AnjaliCustomerRole();
+			/*
+		case "cherysCustomerRole":
+			return new CherysCustomerRole();
 		case "alfredCustomerRole":
 			return new AlfredCustomerRole();
 		case "jesusCustomerRole":
@@ -479,25 +539,21 @@ public class CityDirectory
 	}
 	
 	public RestWaiterRole addRestWaiter(String role) {
-		/*int num1 = getNumPeople("restWaiterRole","joshRestaurant");
-		int num2 = getNumPeople("restWaiterRole","AnjaliRestaurant");
+		int num1 = getNumPeople("restWaiterRole","joshRestaurant");
+	//	int num2 = getNumPeople("restWaiterRole","cherysRestaurant");
 		int num3 = getNumPeople("restWaiterRole","anjaliRestaurant");
-		int num4 = getNumPeople("restWaiterRole","alfredRestaurant");
-		int num5 = getNumPeople("restWaiterRole","jesusRestaurant");
+	//	int num4 = getNumPeople("restWaiterRole","jesusRestaurant");
 		int num = num1;
-		if (num > num2) {
-			num = num2;
-		}
+//		if (num > num2) {
+//			num = num2;
+//		}
 		if (num > num3) {
 			num = num3;
 		}
-		if (num > num4) {
-			num = num4;
-		}
-		if (num > num5) {
-			num = num5;
-		}*/
-		//if (num == num1) {
+//		if (num > num4) {
+//			num = num4;
+//		}
+		if (num == num1) {
 			if (role.equals("restWaiter1Role")) {
 				JoshNormalWaiterRole w = new JoshNormalWaiterRole();
 				w.setJobLocation("joshRestaurant");
@@ -509,23 +565,28 @@ public class CityDirectory
 				joshWaiters.add(w);
 				return w;
 			}
-		/*} else if (num == num2) {
-			AnjaliWaiterRole w = new AnjaliWaiterRole();
-			AnjaliWaiters.add(w);
-			return w;
+//		} else if (num == num2) {
+//			CherysWaiterRole w = new CherysWaiterRole();
+//			cherysWaiters.add(w);
+//			return w;
 		} else if (num == num3) {
-			AnjaliWaiterRole w = new AnjaliWaiterRole();
-			anjaliWaiters.add(w);
-			return w;
-		} else if (num == num4) {
-			AlfredWaiterRole w = new AlfredWaiterRole();
-			alfredWaiters.add(w);
-			return w;
-		} else {
-			JesusWaiterRole w = new JesusWaiterRole();
-			jesusWaiters.add(w);
-			return w;
-		}*/
+			if (role.equals("restWaiter1Role")) {
+				AnjaliNormalWaiterRole w = new AnjaliNormalWaiterRole();
+				w.setJobLocation("anjaliRestaurant");
+				anjaliWaiters.add(w);
+				return w;
+			} else {
+				JoshSharedDataWaiterRole w = new JoshSharedDataWaiterRole();
+				w.setJobLocation("joshRestaurant");
+				joshWaiters.add(w);
+				return w;
+			}
+		} /*else { */
+//			JesusWaiterRole w = new JesusWaiterRole();
+//			jesusWaiters.add(w);
+//			return w;
+//		}
+		return null;
 	}
 	
 	public MarketCashierRole pickMarketCashier() {
@@ -556,100 +617,85 @@ public class CityDirectory
 		} 
 	}
 	
-	public RestCashierRole pickRestCashier() {
-		/*int num1 = getNumPeople("restCashierRole","joshRestaurant");
-		int num2 = getNumPeople("restCashierRole","AnjaliRestaurant");
-		int num3 = getNumPeople("restCashierRole","anjaliRestaurant");
-		int num4 = getNumPeople("restCashierRole","alfredRestaurant");
-		int num5 = getNumPeople("restCashierRole","jesusRestaurant");
-		int num = num1;
-		if (num > num2) {
-			num = num2;
-		}
-		if (num > num3) {
-			num = num3;
-		}
-		if (num > num4) {
-			num = num4;
-		}
-		if (num > num5) {
-			num = num5;
-		}*/
-		//if (num == num1) {
-			return joshCashier;
-		/*} else if (num == num2) {
-			return AnjaliCashier;
-		} else if (num == num3) {
-			return anjaliCashier;
-		} else if (num == num4) {
-			return alfredCashier;
-		} else {
-			return jesusCashier;
-		}*/
-	}
-	
 	public RestCookRole pickRestCook() {
-		/*int num1 = getNumPeople("restCookRole","joshRestaurant");
-		int num2 = getNumPeople("restCookRole","AnjaliRestaurant");
+		int num1 = getNumPeople("restCookRole","joshRestaurant");
+	//	int num2 = getNumPeople("restCookRole","cherysRestaurant");
 		int num3 = getNumPeople("restCookRole","anjaliRestaurant");
-		int num4 = getNumPeople("restCookRole","alfredRestaurant");
-		int num5 = getNumPeople("restCookRole","jesusRestaurant");
+	//	int num4 = getNumPeople("restCookRole","jesusRestaurant");
 		int num = num1;
-		if (num > num2) {
-			num = num2;
-		}
+//		if (num > num2) {
+//			num = num2;
+//		}
 		if (num > num3) {
 			num = num3;
 		}
-		if (num > num4) {
-			num = num4;
-		}
-		if (num > num5) {
-			num = num5;
-		}*/
-		//if (num == num1) {
+//		if (num > num4) {
+//			num = num4;
+//		}
+		if (num == num1) {
 			return joshCook;
-		/*} else if (num == num2) {
-			return AnjaliCook;
+//		} else if (num == num2) {
+//			return cherysCook;
 		} else if (num == num3) {
 			return anjaliCook;
-		} else if (num == num4) {
-			return alfredCook;
-		} else {
+		} /*else {
 			return jesusCook;
 		}*/
+		return null;
+	}
+	
+	public RestCashierRole pickRestCashier() {
+		int num1 = getNumPeople("restCashierRole","joshRestaurant");
+	//	int num2 = getNumPeople("restCashierRole","cherysRestaurant");
+		int num3 = getNumPeople("restCashierRole","anjaliRestaurant");
+	//	int num4 = getNumPeople("restCashierRole","jesusRestaurant");
+		int num = num1;
+//		if (num > num2) {
+//			num = num2;
+//		}
+		if (num > num3) {
+			num = num3;
+		}
+//		if (num > num4) {
+//			num = num4;
+//		}
+		if (num == num1) {
+			return joshCashier;
+//		} else if (num == num2) {
+//			return cherysCashier;
+		} else if (num == num3) {
+			return anjaliCashier;
+		} /*else {
+			return jesusCashier;
+		}*/
+		return null;
 	}
 	
 	public RestHostRole pickRestHost() {
-		/*int num1 = getNumPeople("restHostRole","joshRestaurant");
-		int num2 = getNumPeople("restHostRole","AnjaliRestaurant");
+		int num1 = getNumPeople("restHostRole","joshRestaurant");
+	//	int num2 = getNumPeople("restHostRole","cherysRestaurant");
 		int num3 = getNumPeople("restHostRole","anjaliRestaurant");
-		int num4 = getNumPeople("restHostRole","alfredRestaurant");
-		int num5 = getNumPeople("restHostRole","jesusRestaurant");
+	//	int num4 = getNumPeople("restHostRole","jesusRestaurant");
 		int num = num1;
-		if (num > num2) {
-			num = num2;
-		}
+//		if (num > num2) {
+//			num = num2;
+//		}
 		if (num > num3) {
 			num = num3;
 		}
-		if (num > num4) {
-			num = num4;
-		}
-		if (num > num5) {
-			num = num5;
-		}*/
-		//if (num == num1) {
+//		if (num > num4) {
+//			num = num4;
+//		}
+		if (num == num1) {
 			return joshHost;
-		/*} else if (num == num2) {
-			return AnjaliHost;
+//		} else if (num == num2) {
+//			return cherysHost;
 		} else if (num == num3) {
 			return anjaliHost;
-		} else if (num == num4) {
-			return alfredHost;
-		} else {
+		} /*else {
 			return jesusHost;
 		}*/
+		return null;
 	}
 	
 	public void addBuilding(String name, String orientation, Point loc)
@@ -834,9 +880,9 @@ public class CityDirectory
 //			if (building.equals("cherysRestaurant")) {
 //				return cherysWaiters.size();
 //			}
-//			if (building.equals("anjaliRestaurant")) {
-//				return anjaliWaiters.size();
-//			}
+			if (building.equals("anjaliRestaurant")) {
+				return anjaliWaiters.size();
+			}
 //			if (building.equals("jesusRestaurant")) {
 //				return jesusWaiters.size();
 //			}

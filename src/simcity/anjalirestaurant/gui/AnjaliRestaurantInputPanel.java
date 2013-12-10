@@ -48,7 +48,7 @@ public class AnjaliRestaurantInputPanel extends JPanel
 	    private AnjaliRestaurantGui gui; //reference to main gui
 	   private AnjaliCookGui cg;
 	    
-	    public AnjaliRestaurantInputPanel(AnjaliRestaurantGui gui, AnjaliCookRole co, AnjaliCashierRole ca, AnjaliHostRole h, ArrayList<MarketCashierRole> cashiers) {
+	    public AnjaliRestaurantInputPanel(AnjaliRestaurantGui gui, AnjaliCashierRole ca, AnjaliCookRole co, AnjaliHostRole h, ArrayList<MarketCashierRole> cashiers) {
 	        this.gui = gui;
 	        host = h;
 	        cashier = ca;
@@ -160,6 +160,7 @@ public class AnjaliRestaurantInputPanel extends JPanel
 	    		w.setCook(cook);
 	    		w.setHost(host);
 	    		w.setCashier(cashier);
+	    		w.setRestGui(gui);
 	    		host.addWaiter(w);
 	    		
 	    	

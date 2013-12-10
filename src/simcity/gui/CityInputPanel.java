@@ -20,7 +20,7 @@ import java.util.List;
 
 public class CityInputPanel extends JPanel implements ActionListener
 {
-	static final int TIMERINCR = 700;
+	static final int TIMERINCR = 1300;
 	
 	private Vector<PersonAgent> people = new Vector<PersonAgent>();
 	private List<BusStop> busStops = new ArrayList<BusStop>();
@@ -202,7 +202,7 @@ public class CityInputPanel extends JPanel implements ActionListener
     	}
     }
     
-    public void addPerson(String name, String job, int pay, int startShift, int endShift, String eco, String physical, String housing, CityDirectory c, boolean tA, boolean uB, boolean gH) 
+    public void addPerson(String name, String job, int pay, int startShift, int endShift, String eco, String physical, String housing, String preference, CityDirectory c, boolean tA, boolean uB, boolean gH) 
     {
     	PersonAgent p = new PersonAgent(name);
 		PersonGui g = new PersonGui(p, gui, c);
@@ -233,6 +233,7 @@ public class CityInputPanel extends JPanel implements ActionListener
 		p.msgYoureHired(job, pay, startShifts, endShifts);
 		p.setEState(eco);
 		p.setPState(physical);
+		p.setPreference(preference);
 		p.setTestingAnimation(tA);
 		p.setUsingBus(uB);
 		p.setGoingHome(gH);

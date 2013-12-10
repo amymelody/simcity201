@@ -46,6 +46,7 @@ public class PersonTest extends TestCase
 		bus = new MockBus("bus");
 		car = new MockCar("car");
 		person.setEState("rich");
+		person.setPreference("joshRestaurant");
 		person.msgCreatedAccount();
 		person.unitTesting = true;
 		person.setUsingBus(true);
