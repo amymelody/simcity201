@@ -10,8 +10,13 @@ import java.util.concurrent.Semaphore;
 
 import simcity.anjalirestaurant.AnjaliCookRole.Order;
 import simcity.anjalirestaurant.AnjaliHostRole.Table;
+import simcity.anjalirestaurant.gui.AnjaliCookGui;
+import simcity.anjalirestaurant.gui.AnjaliRestaurantGui;
 import simcity.anjalirestaurant.gui.AnjaliWaiterGui;
+import simcity.anjalirestaurant.interfaces.AnjaliCashier;
+import simcity.anjalirestaurant.interfaces.AnjaliCook;
 import simcity.anjalirestaurant.interfaces.AnjaliCustomer;
+import simcity.anjalirestaurant.interfaces.AnjaliHost;
 import simcity.anjalirestaurant.interfaces.AnjaliWaiter;
 //import restaurant.Customer.CustomerEvent;
 //import restaurant.Customer.CustomerState;
@@ -641,6 +646,48 @@ public class AnjaliSharedDataWaiterRole extends AnjaliWaiterRole implements Anja
 	
 public void setYPos(int yPosition){
 	this.yPos = yPosition;
+}
+
+@Override
+public void setGui(AnjaliCookGui gui) {
+	// TODO Auto-generated method stub
+	
+}
+
+@Override
+public void setRestGui(AnjaliRestaurantGui gui) {
+	// TODO Auto-generated method stub
+	
+}
+
+@Override
+public void setHost(AnjaliHost host) {
+	// TODO Auto-generated method stub
+	
+}
+
+@Override
+public void setCook(AnjaliCook cook) {
+	// TODO Auto-generated method stub
+	
+}
+
+@Override
+public void setCashier(AnjaliCashier cashier) {
+	// TODO Auto-generated method stub
+	
+}
+
+@Override
+public void msgStartShift() {
+	// TODO Auto-generated method stub
+	
+}
+
+@Override
+public void msgEndShift() {
+	// TODO Auto-generated method stub
+	
 }
 
 
