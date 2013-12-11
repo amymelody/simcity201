@@ -127,14 +127,14 @@ public class JesusWaiterGui implements Gui {
 				yDestination = yHome;
 			}
 		}
-		if(xPos == xCook*20 && yPos == yCook*20) {
+		if(xPos == xCook && yPos == yCook) {
 			if(gS == state.sending) {
 				role.msgFinishedGoToCook();
 				xDestination = xHome;
 				yDestination = yHome;
 			}
 		}
-		if(xPos == xCook*20 && yPos == yCook*20) {
+		if(xPos == xCook && yPos == yCook) {
 			if(gS == state.pickUp) {
 				role.msgFinishedPickUp();
 			}
@@ -167,34 +167,6 @@ public class JesusWaiterGui implements Gui {
 	public void work() {
 		xDestination = xHome;
 		yDestination = yHome;
-	}
-	public void breakDecision(boolean p) {
-		breakDeciding = false;
-		onBreak = p;
-		if(p) {
-			xDestination = xBreak;
-			yDestination = yBreak;
-		}
-	}
-	public void goOnBreak() {
-		breakDeciding = true;
-		if(onBreak) {
-			role.msgReturnToWork();
-			xDestination = xHome;
-			yDestination = yHome;
-		}
-		else {
-			role.msgGoOnBreak();
-			
-		}
-	}
-	public String getOnBreak() {
-		if (onBreak) {
-			return "On Break";
-		}
-		else {
-			return "Working";
-		}
 	}
 	public void DoGoToVait() {
 		xDestination = 120;
