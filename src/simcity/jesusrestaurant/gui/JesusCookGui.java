@@ -46,10 +46,9 @@ public class JesusCookGui implements Gui {
 		ImageIcon saladIcon = new ImageIcon(this.getClass().getResource("images/salad.png"));
 		salad = saladIcon.getImage();
 		
-		foodImages.put("Enchilada", steak);
-		foodImages.put("Horchata", salad);
-		foodImages.put("Tacos", pizza);
-		foodImages.put("Pozole", steak);
+		foodImages.put("Steak", steak);
+		foodImages.put("Salad", salad);
+		foodImages.put("Pizza", pizza);
 	}
 
 	public void updatePosition() {
@@ -160,8 +159,8 @@ public class JesusCookGui implements Gui {
 		role.msgCheckInventory();
 	}
 
-	public void updateInventory(Integer eI, Integer hI, Integer pI, Integer tI) {
-		role.updateInventory(eI, hI, pI, tI);
+	public void updateInventory(Integer stI, Integer sI, Integer pI) {
+		role.updateInventory(stI, sI, pI);
 	}
 	
 	public class fImage {

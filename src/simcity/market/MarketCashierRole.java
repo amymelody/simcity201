@@ -223,17 +223,6 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 			}
 		}
 	}
-	public void msgDoneForTheDay() {
-		mS = MarketState.closing;
-		stateChanged();
-	}
-	// Inventory updated +10 every time market opens
-	public void msgWereOpen() {
-		mS = MarketState.open;
-		marketMoneySurplus = 0;
-		inventory.opening();
-		stateChanged();
-	}
 
 	// Normative Scenario #1
 	public void msgIWantItems(MarketCustomer c, List<ItemOrder> items) {
@@ -386,10 +375,6 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 					}
 				}
 			}
-			if(mS == MarketState.closing && orders.size() == 0) {
-				closeUp();
-				return true;
-			}
 		}
 		return false;
 	}
@@ -397,6 +382,9 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 
 	/* Actions */
 	private void startWork() {
+		mS = MarketState.open;
+		marketMoneySurplus = 0;
+		inventory.opening();
 		start = false;
 		gui.work();
 		person.businessIsClosed(getJobLocation(), false);
@@ -410,6 +398,7 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 	}
 	private void leaveMarket() {
 		gui.leave();
+		closeUp();
 	}
 	private void closeUp() {
 		synchronized(employees) {

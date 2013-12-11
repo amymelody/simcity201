@@ -21,10 +21,6 @@ public interface MarketCashier {
 	
 	public abstract void msgOfftheClock(MarketDeliverer d);
 	
-	public abstract void msgDoneForTheDay();
-	
-	public abstract void msgWereOpen();
-	
 	public abstract void msgIWantItems(MarketCustomer c, List<ItemOrder> i);
 	
 	public abstract void msgImHere(MarketCustomer c);
