@@ -304,21 +304,21 @@ public class JesusCookRole extends RestCookRole implements RestCook {
 	}
 	private void checkInventory() {
 		if(noInventory() && !markets.isEmpty()) {
-			host.msgClosed();
+			person.businessIsClosed(getJobLocation(), true);
 			for(Food f: foods) {
 				f.amtLeft = restockAmount;
 				needToRestock.add(new ItemOrder(f.name, f.amtLeft));
 			}
 			markets.get(0).market.msgIWantDelivery(this, cashier, needToRestock, getJobLocation());
-			host.msgOpen();
+			person.businessIsClosed(getJobLocation(), false);
 			open = true;
 		}
 		else if(noInventory()) {
-			host.msgClosed();
+			person.businessIsClosed(getJobLocation(), true);
 			open = false;
 		}
 		else {
-			host.msgOpen();
+			person.businessIsClosed(getJobLocation(), false);
 			open = true;
 		}
 	}
@@ -336,7 +336,7 @@ public class JesusCookRole extends RestCookRole implements RestCook {
 				}
 			}
 			orders.remove(o);
-			host.msgClosed();
+			person.businessIsClosed(getJobLocation(), true);
 			open = false;
 		}
 		else if(getInventory(o.name) <= 0) {
