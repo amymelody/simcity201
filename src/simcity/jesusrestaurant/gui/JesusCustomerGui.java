@@ -37,7 +37,7 @@ public class JesusCustomerGui implements Gui {
 	int by = -40;
 	int fx = -40;
 	int fy = -40;
-	int cashierxloc = 0, cashieryloc = 4;
+	int cashierxloc = 0, cashieryloc = 80;
 	
 	public static final Map<String, Image> orderBubbles = new HashMap<String, Image>();
 	public static final Map<String, Image> foodImages = new HashMap<String, Image>();
