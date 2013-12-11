@@ -85,8 +85,9 @@ import simcity.trace.AlertTag;
 		private BankDepositor depositor;
 		//Teller data
 		int salary;
-		boolean working;
+		public boolean working;
 		private myCustomer cust;
+		public boolean unitTesting;
 		
 		private Semaphore managerAnimation = new Semaphore(0,true);
 		BankManagerGui gui = new BankManagerGui(this);
@@ -112,6 +113,7 @@ import simcity.trace.AlertTag;
 		
 
 		public void msgStartShift() {
+			if(!unitTesting){
 			person.businessIsClosed(getJobLocation(), false);
 			working = true;
 			synchronized(tellers){
@@ -122,6 +124,7 @@ import simcity.trace.AlertTag;
 					stateChanged();
 				}
 			}
+		}
 		
 		
 		public void msgEndShift() {
@@ -165,6 +168,7 @@ import simcity.trace.AlertTag;
 				waitingCustomers.add(c);
 				findCustomer(c).cS = CustomerState.arrived;
 				stateChanged();
+
 			}	
 			else{
 				AlertLog.getInstance().logMessage(AlertTag.BANK, name, "Manager has accessed customer account");
@@ -172,6 +176,7 @@ import simcity.trace.AlertTag;
 
 				findCustomer(c).cS = CustomerState.arrived;
 				stateChanged();
+
 			}
 			}
 				
@@ -179,7 +184,7 @@ import simcity.trace.AlertTag;
 		
 
 		
-		public void msgMarketTransaction(BankDepositor c){
+		public void msgMarketTransaction(int cash, BankDepositor c){
 			AlertLog.getInstance().logMessage(AlertTag.BANK, name, "Manager is adding business to a list of waiting customers");
 
 			//BankManagerRole changes 
@@ -241,13 +246,16 @@ import simcity.trace.AlertTag;
 		
 		/////SCHEDULER//////
 		public boolean pickAndExecuteAnAction() {
+			if(!unitTesting){
 			if(!working){
 				leaveRestaurant();
 				return true;
 			}
+			}
+			
 			synchronized(customers){
 				for(myCustomer c : customers){
-					if(c.cS == CustomerState.arrived && !tellers.isEmpty()){
+					if(c.cS == CustomerState.arrived ){
 						c.cS = CustomerState.nothing;
 						helpCustomer(c.customer, findTeller());
 						return true;
@@ -386,6 +394,7 @@ import simcity.trace.AlertTag;
 			AlertLog.getInstance().logMessage(AlertTag.BANK, name, "Alright, everything is back to normal, robber is gone");
 
 			c.msgLeaveMyBank();
+			findCustomer(c).robber = false;
 			gui.GoToHome();
 			gui.drawGun("Manager");
 			try {

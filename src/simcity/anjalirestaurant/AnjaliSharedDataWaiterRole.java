@@ -81,6 +81,10 @@ public class AnjaliSharedDataWaiterRole extends AnjaliWaiterRole implements Anja
 	private CustomerState state = CustomerState.doingNothing;
 	private CustomerEvent event = CustomerEvent.none;
 	public AnjaliWaiterGui waiterGui;
+	public AnjaliRestaurantGui gui;
+	public AnjaliCookGui cookGui;
+	
+	private RevolvingStandMonitor stand;
 	public enum WaiterState{normal, wantsBreak, pendingBreak, breakAccepted, onBreak, breakDenied, offBreak};
 	private WaiterState waiterState = WaiterState.normal;
 	Timer timer = new Timer();
@@ -93,11 +97,11 @@ public class AnjaliSharedDataWaiterRole extends AnjaliWaiterRole implements Anja
 		return waiterGui;
 	}
 
-	private AnjaliHostRole host;
+	private AnjaliHost host;
 	
-	private AnjaliCookRole cook;
+	private AnjaliCook cook;
 	
-	private AnjaliCashierRole cashier;
+	private AnjaliCashier cashier;
 	
 	//private Semaphore x = new Semaphore(0);
 	
@@ -125,26 +129,39 @@ public class AnjaliSharedDataWaiterRole extends AnjaliWaiterRole implements Anja
 		return name;
 	}
 	
-	public void setHost(AnjaliHostRole host)
+	public void setHost(AnjaliHost host)
 	{
 		this.host = host;
 	}
 	
-	public void setCashier(AnjaliCashierRole cashier){
+	public void setCashier(AnjaliCashier cashier){
 		this.cashier = cashier;
 	}
-	public AnjaliHostRole getHost()
+	public AnjaliHost getHost()
 	{
 		return host;
 	}
-	public void setCook(AnjaliCookRole cook)
+	public void setCook(AnjaliCook cook)
 	{
 		this.cook = cook;
 	}
-	public AnjaliCookRole getCook()
+	public AnjaliCook getCook()
 	{
 		return cook;
 	}
+	
+	public void setStand(RevolvingStandMonitor s){
+		stand = s;
+	}
+	
+	public void setRestGui(AnjaliRestaurantGui gui){
+		this.gui = gui;
+	}
+	
+	public void setCookGui(AnjaliCookGui gui){
+		this.cookGui = gui;
+	}
+	
 	//public List getWaitingCustomers() {
 	//	return waitingCustomers;
 	//}
@@ -175,7 +192,18 @@ public class AnjaliSharedDataWaiterRole extends AnjaliWaiterRole implements Anja
 	
 	
 	//////////// MESSAGES MESSAGES MESSAGES MESSAGES ///////////
-		public void msgAtTable(){//from animation
+	public void msgStartShift(){
+		working = true;
+		gui.addPerson(name);
+		stateChanged();
+	}
+	
+	public void msgEndShift(){
+		working = false;
+		stateChanged();
+	}
+	
+	public void msgAtTable(){//from animation
 			atTable.release();
 			
 			//Do("released from table");	
@@ -302,6 +330,7 @@ public class AnjaliSharedDataWaiterRole extends AnjaliWaiterRole implements Anja
 	 */
 	public boolean pickAndExecuteAnAction() {
 	try{
+		
 		if(waiterState == WaiterState.wantsBreak){
 			//wantsBreak();
 			waiterState = WaiterState.pendingBreak;
@@ -315,7 +344,10 @@ public class AnjaliSharedDataWaiterRole extends AnjaliWaiterRole implements Anja
 		}
 		
 		//Deals with waiting to sit
-		
+		if(!working){
+			LeaveRestaurant();
+			return true;
+		}
 		
 		
 		for(myCustomer c : customers){
@@ -422,6 +454,9 @@ public class AnjaliSharedDataWaiterRole extends AnjaliWaiterRole implements Anja
 
 	// Actions
 
+	private void LeaveRestaurant(){
+		person.msgLeftDestination(this);
+	}
 	private void seatCustomer(AnjaliWaiter w, AnjaliCustomer c, Table t) {
 		
 		Do("Waiter seating customer" + c);
@@ -648,47 +683,9 @@ public void setYPos(int yPosition){
 	this.yPos = yPosition;
 }
 
-@Override
-public void setGui(AnjaliCookGui gui) {
-	// TODO Auto-generated method stub
-	
-}
 
-@Override
-public void setRestGui(AnjaliRestaurantGui gui) {
-	// TODO Auto-generated method stub
-	
-}
 
-@Override
-public void setHost(AnjaliHost host) {
-	// TODO Auto-generated method stub
-	
-}
 
-@Override
-public void setCook(AnjaliCook cook) {
-	// TODO Auto-generated method stub
-	
-}
-
-@Override
-public void setCashier(AnjaliCashier cashier) {
-	// TODO Auto-generated method stub
-	
-}
-
-@Override
-public void msgStartShift() {
-	// TODO Auto-generated method stub
-	
-}
-
-@Override
-public void msgEndShift() {
-	// TODO Auto-generated method stub
-	
-}
 
 
 

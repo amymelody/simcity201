@@ -20,8 +20,15 @@ public class MockBankDepositor extends Mock implements BankDepositor {
 	
 	//public Cashier cashier;
 	
+	int currentBankMoney = 0;
 	
+	public void setBankMoney(int money){
+		currentBankMoney = money;
+	}
 	
+	public int getBankMoney(){
+		return currentBankMoney;
+	}
 	public MockBankDepositor(String name){
 		super(name);
 	

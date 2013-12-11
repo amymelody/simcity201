@@ -18,6 +18,7 @@ import simcity.anjalirestaurant.RevolvingStandMonitor;
 import simcity.gui.BuildingGui;
 
 import simcity.market.MarketCashierRole;
+import simcity.bank.BankManagerRole;
 
 public class AnjaliRestaurantInputPanel extends JPanel 
 {
@@ -36,7 +37,7 @@ public class AnjaliRestaurantInputPanel extends JPanel
 	    private Vector<AnjaliCustomerRole> customers = new Vector<AnjaliCustomerRole>();
 	    private Vector<AnjaliWaiterRole> waiters = new Vector<AnjaliWaiterRole>();
 	    private Vector<MarketCashierRole> markets = new Vector<MarketCashierRole>();
-	    
+	    private BankManagerRole bankManager;
 	    private JPanel restLabel = new JPanel();
 	    private JPanel group = new JPanel();
 	   
@@ -45,11 +46,13 @@ public class AnjaliRestaurantInputPanel extends JPanel
 	    private AnjaliRestaurantGui gui; //reference to main gui
 	   private AnjaliCookGui cg;
 	    
-	    public AnjaliRestaurantInputPanel(AnjaliRestaurantGui gui, AnjaliCashierRole ca, AnjaliCookRole co, AnjaliHostRole h, ArrayList<MarketCashierRole> cashiers) {
+	    public AnjaliRestaurantInputPanel(AnjaliRestaurantGui gui, AnjaliCashierRole ca, AnjaliCookRole co, AnjaliHostRole h, ArrayList<MarketCashierRole> cashiers, BankManagerRole bM) {
 	        this.gui = gui;
 	        host = h;
 	        cashier = ca;
 	        cook = co;
+	        bankManager = bM;
+	       
 	        for(MarketCashierRole c : cashiers){
 	        	markets.add(c);
 	        }
@@ -60,7 +63,7 @@ public class AnjaliRestaurantInputPanel extends JPanel
 	    			cook.addMarket(c,"market2");
 	    		}
 	    	}
-	       
+	        cashier.setBankManager(bankManager);
 	        cook.setCashier(cashier);
 	        
 	        cook.setStand(stand);
