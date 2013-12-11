@@ -17,7 +17,6 @@ import java.util.TimerTask;
  */
 public class JesusCustomerRole extends RestCustomerRole implements JesusCustomer {
 	private String name;
-	private int hungerLevel = 5; // determines length of meal
 	private int amountDue = 0;
 	Timer timer = new Timer();
 	private JesusCustomerGui jesusCustomerGui;
@@ -78,7 +77,6 @@ public class JesusCustomerRole extends RestCustomerRole implements JesusCustomer
 		}
 		// Messages
 		public void gotHungry() { //from animation
-			System.out.println("Very Hungry");
 			event = AgentEvent.gotHungry;
 			stateChanged();
 		}
@@ -174,7 +172,6 @@ public class JesusCustomerRole extends RestCustomerRole implements JesusCustomer
 
 			if (state == AgentState.DoingNothing && event == AgentEvent.gotHungry ){
 				state = AgentState.WaitingInRestaurant;
-				System.out.println("Go to Restaurant");
 				goToRestaurant();
 				return true;
 			}
@@ -228,24 +225,13 @@ public class JesusCustomerRole extends RestCustomerRole implements JesusCustomer
 		// Actions
 
 		private void goToRestaurant() {
-			System.out.println("I want food");
 			host.msgIWantFood(this);//send our instance, so he can respond to us
 			jesusCustomerGui.vait();
 		}
 
 		private void decideToWait() {
-			if(hungerLevel > 5) {
-				host.msgLeaving(name);
-				print("No thanks. I'll come back later.");
-				state = AgentState.DoingNothing;
-				event = AgentEvent.none;
-				jesusCustomerGui.DoExitRestaurant();
-			}
-			else {
-				host.msgWaiting(name);
-				print("Sure. I'll wait.");
-				event = AgentEvent.none;
-			}
+			host.msgWaiting(name);
+			event = AgentEvent.none;
 		}
 
 		private void goToTable(int tableN) {
@@ -310,7 +296,7 @@ public class JesusCustomerRole extends RestCustomerRole implements JesusCustomer
 					stateChanged();
 				}
 			},
-			getHungerLevel() * 1000);//how long to wait before running task
+			5000);//how long to wait before running task
 		}
 
 		private void goToCashier() {
@@ -332,16 +318,6 @@ public class JesusCustomerRole extends RestCustomerRole implements JesusCustomer
 
 		public String getName() {
 			return name;
-		}
-
-		public int getHungerLevel() {
-			return hungerLevel;
-		}
-
-		public void setHungerLevel(int hungerLevel) {
-			this.hungerLevel = hungerLevel;
-			//could be a state change. Maybe you don't
-			//need to eat until hunger lever is > 5?
 		}
 
 		public String toString() {
