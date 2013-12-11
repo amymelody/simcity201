@@ -67,10 +67,9 @@ public class JesusWaiterGui implements Gui {
 		ImageIcon saladIcon = new ImageIcon(this.getClass().getResource("images/salad.png"));
 		salad = saladIcon.getImage();
 		
-		foodImages.put("Enchiladas", steak);
-		foodImages.put("Horchata", salad);
-		foodImages.put("Tacos", pizza);
-		foodImages.put("Pozole", pizza);
+		foodImages.put("Steak", steak);
+		foodImages.put("Salad", salad);
+		foodImages.put("Pizza", pizza);
 		
 		fx = -40;
 		fy = -40;

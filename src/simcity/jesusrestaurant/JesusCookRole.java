@@ -457,7 +457,6 @@ public class JesusCookRole extends RestCookRole implements RestCook {
 			outStock.put("Steak", false);
 			outStock.put("Salad", false);
 			outStock.put("Pizza", false);
-			outStock.put("Horchata", false);
 		}
 
 		public void outOfFood(String name) {
