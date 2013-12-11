@@ -8,12 +8,14 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.Semaphore;
 
+import simcity.anjalirestaurant.AnjaliCookRole.Order;
 import simcity.anjalirestaurant.AnjaliHostRole.Table;
 import simcity.anjalirestaurant.gui.AnjaliWaiterGui;
 import simcity.anjalirestaurant.interfaces.AnjaliCustomer;
 import simcity.anjalirestaurant.interfaces.AnjaliWaiter;
 //import restaurant.Customer.CustomerEvent;
 //import restaurant.Customer.CustomerState;
+import simcity.interfaces.Person;
 
 /**
  * Restaurant Host Agent
@@ -25,7 +27,7 @@ import simcity.anjalirestaurant.interfaces.AnjaliWaiter;
 
 //Works for normative and nonnormative scenarios
 
-public class AnjaliSharedDataWaiterRole extends Agent implements AnjaliWaiter{
+public class AnjaliSharedDataWaiterRole extends AnjaliWaiterRole implements AnjaliWaiter{
 	static final int NTABLES = 3;//a global for the number of tables.
 	
 	//Notice that we implement waitingCustomers using ArrayList, but type it
@@ -90,18 +92,24 @@ public class AnjaliSharedDataWaiterRole extends Agent implements AnjaliWaiter{
 	
 	private AnjaliCookRole cook;
 	
-	private CashierAgent cashier;
+	private AnjaliCashierRole cashier;
 	
 	//private Semaphore x = new Semaphore(0);
 	
 	List<myCustomer> customers = new ArrayList<myCustomer>();
 	
 	//public HostGui hostGui = null;
-
+	public boolean working;
+	
 	public AnjaliSharedDataWaiterRole(String name) {
-		
+		super();
+		working = false;
 		this.name = name;
 		
+	}
+	public void setPerson(Person p){
+		super.setPerson(p);
+		name = person.getName();
 	}
 
 	public String getMaitreDName() {
@@ -117,7 +125,7 @@ public class AnjaliSharedDataWaiterRole extends Agent implements AnjaliWaiter{
 		this.host = host;
 	}
 	
-	public void setCashier(CashierAgent cashier){
+	public void setCashier(AnjaliCashierRole cashier){
 		this.cashier = cashier;
 	}
 	public AnjaliHostRole getHost()
@@ -287,16 +295,16 @@ public class AnjaliSharedDataWaiterRole extends Agent implements AnjaliWaiter{
 	/**
 	 * Scheduler.  Determine what action is called for, and do it.
 	 */
-	protected boolean pickAndExecuteAnAction() {
+	public boolean pickAndExecuteAnAction() {
 	try{
 		if(waiterState == WaiterState.wantsBreak){
-			wantsBreak();
+			//wantsBreak();
 			waiterState = WaiterState.pendingBreak;
 			//return true;
 		}
 		
 		if(waiterState == WaiterState.breakAccepted){
-			goOnBreak();
+			//goOnBreak();
 			waiterState = WaiterState.onBreak;
 			//return true;
 		}
@@ -574,7 +582,7 @@ public class AnjaliSharedDataWaiterRole extends Agent implements AnjaliWaiter{
 		Do("Waiter is delivering check to customer");
 		c.c.msgPayCheck(c.checkAmount);
 	}
-	
+	/*
 	private void wantsBreak(){
 		//Waiter asks host if break can be taken
 		host.msgWantBreak(this);
@@ -603,8 +611,9 @@ public class AnjaliSharedDataWaiterRole extends Agent implements AnjaliWaiter{
 	}, 20000);
 		
 	}
+	*/
 	public void returnToWork(){
-		host.msgWaiterBreakDone(this);
+		//host.msgWaiterBreakDone(this);
 		waiterGui.DoGoHomePosition();
 		try {
 			atTable.acquire();
