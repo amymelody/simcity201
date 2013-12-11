@@ -25,9 +25,9 @@ import java.util.TimerTask;
 //the HostAgent. A Host is the manager of a restaurant who sees that all
 //is proceeded as he wishes.
 public class JesusCookRole extends RestCookRole implements RestCook {
-	private static final int enchiladaTime = 5000;
-	private static final int tacosTime = 2000;
-	private static final int pozoleTime = 4000;
+	private static final int steakTime = 5000;
+	private static final int pizzaTime = 4000;
+	private static final int saladTime = 2000;
 	private static final int horchataTime = 500;
 	private static final int init_inv = 20;
 	private static final int restockAmount = 10;
@@ -54,10 +54,9 @@ public class JesusCookRole extends RestCookRole implements RestCook {
 	public JesusCookRole() {
 		super();
 
-		foods.add(new Food("Pozole", init_inv, pozoleTime));
-		foods.add(new Food("Tacos", init_inv, tacosTime));
-		foods.add(new Food("Enchiladas", init_inv, enchiladaTime));
-		foods.add(new Food("Horchata", init_inv, horchataTime));
+		foods.add(new Food("Salad", init_inv, saladTime));
+		foods.add(new Food("Pizza", init_inv, pizzaTime));
+		foods.add(new Food("Steak", init_inv, steakTime));
 	}
 
 	public String getMaitreDName() {
@@ -305,21 +304,21 @@ public class JesusCookRole extends RestCookRole implements RestCook {
 	}
 	private void checkInventory() {
 		if(noInventory() && !markets.isEmpty()) {
-			host.msgClosed();
+			person.businessIsClosed(getJobLocation(), true);
 			for(Food f: foods) {
 				f.amtLeft = restockAmount;
 				needToRestock.add(new ItemOrder(f.name, f.amtLeft));
 			}
 			markets.get(0).market.msgIWantDelivery(this, cashier, needToRestock, getJobLocation());
-			host.msgOpen();
+			person.businessIsClosed(getJobLocation(), false);
 			open = true;
 		}
 		else if(noInventory()) {
-			host.msgClosed();
+			person.businessIsClosed(getJobLocation(), true);
 			open = false;
 		}
 		else {
-			host.msgOpen();
+			person.businessIsClosed(getJobLocation(), false);
 			open = true;
 		}
 	}
@@ -337,7 +336,7 @@ public class JesusCookRole extends RestCookRole implements RestCook {
 				}
 			}
 			orders.remove(o);
-			host.msgClosed();
+			person.businessIsClosed(getJobLocation(), true);
 			open = false;
 		}
 		else if(getInventory(o.name) <= 0) {
@@ -455,10 +454,9 @@ public class JesusCookRole extends RestCookRole implements RestCook {
 			market = m;
 			name = mName;
 			outStock = new HashMap<String, Boolean>();
-			outStock.put("Enchiladas", false);
-			outStock.put("Pozole", false);
-			outStock.put("Tacos", false);
-			outStock.put("Horchata", false);
+			outStock.put("Steak", false);
+			outStock.put("Salad", false);
+			outStock.put("Pizza", false);
 		}
 
 		public void outOfFood(String name) {
@@ -466,11 +464,10 @@ public class JesusCookRole extends RestCookRole implements RestCook {
 		}
 	}
 
-	public void updateInventory(Integer eI, Integer hI, Integer pI, Integer tI) {
-		updateInventory("Enchiladas", eI);
-		updateInventory("Pozole", pI);
-		updateInventory("Horchata", hI);
-		updateInventory("Tacos", tI);
+	public void updateInventory(Integer stI, Integer sI, Integer pI) {
+		updateInventory("Steak", stI);
+		updateInventory("Salad", sI);
+		updateInventory("Pizza", pI);
 	}
 
 	

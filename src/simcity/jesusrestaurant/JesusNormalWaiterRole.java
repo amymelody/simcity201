@@ -115,6 +115,7 @@ public class JesusNormalWaiterRole extends RestWaiterRole implements JesusWaiter
 			stateChanged();
 		}
 		public void msgSeatCustomer(JesusCustomerRole cust, int tableNum, String name) {
+			System.out.println("poop");
 			myCustomers.add(new myCustomer(cust, tableNum, name));
 			event = AgentEvent.assigned;
 			stateChanged();
@@ -239,23 +240,6 @@ public class JesusNormalWaiterRole extends RestWaiterRole implements JesusWaiter
 			if(start) {
 				startWork();
 				return true;
-			}
-			if(event == AgentEvent.noBreak) {
-				state = AgentState.DoingNothing;
-				event = AgentEvent.none;
-				noBreak();
-				return true;
-			}
-			if(event == AgentEvent.BreakAccepted) {
-				state = AgentState.Break;
-				event = AgentEvent.none;
-				yesBreak();
-				return true;
-			}
-			if(event == AgentEvent.returnToWork && state == AgentState.Break) {
-				state = AgentState.DoingNothing;
-				returnToWork();
-				return true;			
 			}
 			try{
 				for (myCustomer c : myCustomers) {
@@ -476,13 +460,6 @@ public class JesusNormalWaiterRole extends RestWaiterRole implements JesusWaiter
 				return true;
 			}
 
-			if(breakTime && myCustomers.isEmpty()) {
-				state = AgentState.Break;
-				breakTime = false;
-				goOnBreak();
-				return true;
-			}
-
 			return false;
 			//we have tried all our rules and found
 			//nothing to do. So return false to main loop of abstract agent
@@ -496,24 +473,6 @@ public class JesusNormalWaiterRole extends RestWaiterRole implements JesusWaiter
 		private void startWork() {
 			jesusWaiterGui.work();
 			start = false;
-		}
-		private void goOnBreak() {
-			//print(name + " going on break...");
-			host.msgGoingOnBreak(this);
-		}
-
-		private void noBreak() {
-			jesusWaiterGui.breakDecision(false);
-		}
-
-		private void yesBreak() {
-			jesusWaiterGui.breakDecision(true);
-		}
-
-		private void returnToWork() {
-			//print("Returning to work.");
-			host.msgReturningToWork(this);
-			jesusWaiterGui.breakDecision(false);
 		}
 		private void goToVait() {
 			jesusWaiterGui.DoGoToVait();

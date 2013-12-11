@@ -117,7 +117,7 @@ public class JesusCustomerGui implements Gui {
 	}
 
 	public boolean isPresent() {
-		return isPresent;
+		return true;
 	}
 	public void setHungry() {
 		isHungry = true;

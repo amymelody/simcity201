@@ -223,7 +223,6 @@ public class JesusCashierRole extends RestCashierRole implements JesusCashier {
 	}
 
 	public void payBill(Bill b) {
-		print("Paying bill...");
 		b.subtractAmount();
 		if(b.bS == BillState.paid) {
 			print("Bill paid fully. $" + money + "left");
