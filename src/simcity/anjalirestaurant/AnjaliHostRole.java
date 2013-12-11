@@ -356,23 +356,7 @@ public class AnjaliHostRole extends RestHostRole implements AnjaliHost{
 			return "table " + tableNumber;
 		}
 	}
-	@Override
-	public void msgWantBreak(AnjaliWaiter w) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void msgWaiterBreakDone(AnjaliWaiter w) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void msgTableIsFree(Table t, AnjaliWaiter w) {
-		// TODO Auto-generated method stub
-		
-	}
+	
 }
 	
 	

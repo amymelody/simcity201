@@ -280,6 +280,7 @@ public class PersonAgent extends Agent implements Person
 
 	private boolean wantToGoToRestaurant() {
 		if (allRestaurantsClosed()) {
+			AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "ALLL RESTAURANTS CLOSED");
 			return false;
 		}
 		if (state.ps == PhysicalState.fit) {
@@ -410,14 +411,46 @@ public class PersonAgent extends Agent implements Person
 				return restaurants.get(3);
 			}
 		}
-		if (foodPreference.equals("anjaliRestaurant") && !restaurants.get(3).closed) {
-			return restaurants.get(3);
-		} else if (foodPreference.equals("cherysRestaurant") && !restaurants.get(1).closed) {
-			return restaurants.get(1);
-		} else if (foodPreference.equals("jesusRestaurant") && !restaurants.get(2).closed) {
-			return restaurants.get(2);
+		if (foodPreference.equals("anjaliRestaurant")) {
+			if (!restaurants.get(3).closed) {
+				return restaurants.get(3);
+			} else if (!restaurants.get(0).closed) {
+				return restaurants.get(0);
+			} else if (!restaurants.get(1).closed) {
+				return restaurants.get(1);
+			} else {
+				return restaurants.get(2);
+			}
+		} else if (foodPreference.equals("cherysRestaurant")) {
+			if (!restaurants.get(1).closed) {
+				return restaurants.get(1);
+			} else if (!restaurants.get(2).closed) {
+				return restaurants.get(2);
+			} else if (!restaurants.get(3).closed) {
+				return restaurants.get(3);
+			} else {
+				return restaurants.get(0);
+			}
+		} else if (foodPreference.equals("jesusRestaurant")) {
+			if (!restaurants.get(2).closed) {
+				return restaurants.get(2);
+			} else if (!restaurants.get(3).closed) {
+				return restaurants.get(3);
+			} else if (!restaurants.get(0).closed) {
+				return restaurants.get(0);
+			} else {
+				return restaurants.get(1);
+			}
 		} else {
-			return restaurants.get(0);
+			if (!restaurants.get(0).closed) {
+				return restaurants.get(0);
+			} else if (!restaurants.get(1).closed) {
+				return restaurants.get(1);
+			} else if (!restaurants.get(2).closed) {
+				return restaurants.get(2);
+			} else {
+				return restaurants.get(3);
+			}
 		}
 	}
 
@@ -523,7 +556,7 @@ public class PersonAgent extends Agent implements Person
 				}
 			}
 		}
-		if (building.contains("restaurant")) {
+		if (building.contains("Restaurant")) {
 			for (Restaurant r : restaurants) {
 				if (r.location.equals(building)) {
 					if (!r.closed) {
@@ -694,6 +727,7 @@ public class PersonAgent extends Agent implements Person
 	public void msgYoureHired(String role, int payrate, Map<Day,Time> startShifts, Map<Day,Time> endShifts) {
 		JobRole j = city.JobFactory(role);
 		addRole(j, role);
+		System.out.println(role + ", " + j.getJobLocation());
 		job = new Job(j, j.getJobLocation(), role, payrate, startShifts, endShifts);
 		stateChanged();
 	}
@@ -849,7 +883,7 @@ public class PersonAgent extends Agent implements Person
 							leaveHouse();
 							return true;
 						} else if (state.ls == LocationState.outside || state.ls == LocationState.atDestination) {
-							goToMarket();
+							goToMarket(m);
 							return true;
 						} 
 					}
@@ -861,6 +895,7 @@ public class PersonAgent extends Agent implements Person
 							r = getRestaurant(destination);
 						} else {
 							r = chooseRestaurant();
+							AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "CHOOSING RESTAURANT");
 						}
 						if (!r.closed) {
 							destination = r.location;
@@ -868,7 +903,7 @@ public class PersonAgent extends Agent implements Person
 								leaveHouse();
 								return true;
 							} else if (state.ls == LocationState.outside || state.ls == LocationState.atDestination) {
-								goToRestaurant();
+								goToRestaurant(r);
 								return true;
 							} 
 						}
@@ -1070,8 +1105,7 @@ public class PersonAgent extends Agent implements Person
 		}
 	}
 
-	private void goToRestaurant() {
-		Restaurant r = chooseRestaurant();
+	private void goToRestaurant(Restaurant r) {
 		if (r.closed) {
 			return;
 		}
@@ -1102,8 +1136,7 @@ public class PersonAgent extends Agent implements Person
 		}
 	}
 
-	private void goToMarket() {
-		Market m = chooseMarket();
+	private void goToMarket(Market m) {
 		if (m.closed) {
 			return;
 		}

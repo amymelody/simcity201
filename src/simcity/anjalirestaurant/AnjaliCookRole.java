@@ -16,7 +16,6 @@ import simcity.anjalirestaurant.interfaces.AnjaliMarket;
 import simcity.anjalirestaurant.interfaces.AnjaliWaiter;
 import simcity.interfaces.MarketCashier;
 import simcity.interfaces.Person;
-import simcity.joshrestaurant.JoshWaiterRole;
 import simcity.mock.LoggedEvent;
 import simcity.trace.AlertLog;
 import simcity.trace.AlertTag;
@@ -98,7 +97,7 @@ public class AnjaliCookRole extends RestCookRole implements AnjaliCook{
 		}
 	}
 private List<Order> orders = Collections.synchronizedList(new ArrayList<Order>());
-public enum CookState{nothing, received, inventoryLow, checkingInventory, buyingFood, buying, partOrderFulfilled, outOfFood, waitingForOrder, unfulfilledOrder, cooking, cooked, delivered}; 
+public enum CookState{nothing, received, inventoryLow, checkingInventory, buyingFood, buying, partOrderFulfilled, orderFulfilled, outOfFood, waitingForOrder, unfulfilledOrder, cooking, cooked, delivered}; 
 
 private int SteakInventory = 1;
 private int SaladInventory = 1;
@@ -154,7 +153,9 @@ public void setStand(RevolvingStandMonitor s) {
 		//Do("released from table");	
 	}
 	public void msgHereIsOrder(String name, String choice, int tableNumber, AnjaliWaiter waiter){
-		Do("Cook has received order for table Number" + tableNumber + "from waiter " + waiter.getName() + "for food " + choice);	
+		AlertLog.getInstance().logMessage(AlertTag.ANJALI_RESTAURANT, name, "Cook has received order for table Number" + tableNumber + "from waiter " + waiter.getName() + "for food " + choice);
+
+	
 		//After every order the cook receives, he checks to see whether the inventory is low or not. 
 		//The cook may run out of food, scenario 2
 		if (name.equals("brokeCashier")){
@@ -218,17 +219,11 @@ public void setStand(RevolvingStandMonitor s) {
 	}
 	
 	if(choice == "Chicken"){
-		
-		
-		
 		if(ChickenInventory == 1){
 			state = CookState.inventoryLow;
-
 			itemOrders.add(new ItemOrder("Chicken", 3));
-
 			orderThis = choice; 
 			orders.add(new Order(name, choice, tableNumber, waiter, CookState.received));
-
 		}
 		
 		else if(ChickenInventory == 0){
@@ -236,57 +231,45 @@ public void setStand(RevolvingStandMonitor s) {
 		}
 		
 		else
-			orders.add(new Order(name, choice, tableNumber, waiter, CookState.received));
-
-		
+			orders.add(new Order(name, choice, tableNumber, waiter, CookState.received));		
 		if( ChickenInventory > 0){
 			ChickenInventory--;
+	}		
 	}
 		
-		
-	}
-	
-	
 	if(choice == "Pizza"){
 		if(name.equals("Pizza"))
 			PizzaInventory--;
 		
 		if(PizzaInventory == 1){
 			state = CookState.inventoryLow;
-			itemOrders.add(new ItemOrder("Chicken", 3));
+			itemOrders.add(new ItemOrder("Pizza", 3));
 
 			orderThis = choice; 
 			orders.add(new Order(name, choice, tableNumber, waiter, CookState.received));
-
 		}
 		
 		else if(PizzaInventory == 0){
-			orders.add(new Order(name, choice, tableNumber, waiter, CookState.outOfFood));
-		
+			orders.add(new Order(name, choice, tableNumber, waiter, CookState.outOfFood));		
 		}
 		else
-			orders.add(new Order(name, choice, tableNumber, waiter, CookState.received));
-
-		
+			orders.add(new Order(name, choice, tableNumber, waiter, CookState.received));		
 		if(PizzaInventory > 0){
 			PizzaInventory--;
-		}
-		
-		
-	}
-		
-		
-		
-		
+		}		
+	}	
 		stateChanged();
 		
 		
 		}
 	
 	public void msgHereIsWhatICanFulfill(List<ItemOrder> orders, boolean canFulfill) {
-		
+		AlertLog.getInstance().logMessage(AlertTag.ANJALI_RESTAURANT, name, "Market telling me what he can fulfill");
+		stateChanged();
 	}
 	public void msgDelivery(List<ItemOrder> orders){
+		AlertLog.getInstance().logMessage(AlertTag.ANJALI_RESTAURANT, name, "Market fulfilling order");
+
 		List<ItemOrder> temp = new ArrayList<ItemOrder>();
 		for (ItemOrder o : orders) {
 			temp.add(o);
@@ -295,17 +278,26 @@ public void setStand(RevolvingStandMonitor s) {
 		for(ItemOrder o : temp){
 			if(o.getFoodItem().equals("Steak")){
 				SteakInventory += o.getAmount();
+				AlertLog.getInstance().logMessage(AlertTag.ANJALI_RESTAURANT, name, "Steak Inventory is now " + SteakInventory);
+
 			}
 			if(o.getFoodItem().equals("Chicken")){
-				SteakInventory += o.getAmount();
+				ChickenInventory += o.getAmount();
+				AlertLog.getInstance().logMessage(AlertTag.ANJALI_RESTAURANT, name, "Chicken Inventory is now " + ChickenInventory);
+
 			}
 			if(o.getFoodItem().equals("Salad")){
-				SteakInventory += o.getAmount();
+				SaladInventory += o.getAmount();
+				AlertLog.getInstance().logMessage(AlertTag.ANJALI_RESTAURANT, name, "Salad Inventory is now " + SaladInventory);
+
 			}
 			if(o.getFoodItem().equals("Pizza")){
-				SteakInventory += o.getAmount();
+				PizzaInventory += o.getAmount();
+				AlertLog.getInstance().logMessage(AlertTag.ANJALI_RESTAURANT, name, "Pizza Inventory is now " + PizzaInventory);
+
 			}
 		}
+		state = CookState.orderFulfilled;
 		stateChanged();
 	}
 	
@@ -335,7 +327,7 @@ public void setStand(RevolvingStandMonitor s) {
 			if(o.getCookState() == CookState.received){
 				
 				cookOrder(o);
-				Do("cook order called");
+				AlertLog.getInstance().logMessage(AlertTag.ANJALI_RESTAURANT, name, "Cook Order called");
 				o.state = CookState.cooking;
 				return true;
 			}
@@ -349,8 +341,9 @@ public void setStand(RevolvingStandMonitor s) {
 		}
 	}
 	if(state == CookState.inventoryLow){
-		//If the inventory of a certain food is low, the cook orders food from the market.
-		Do("Inventory of " + orderThis + " is low. Cook is buying more food from market");
+		//If the inventory of a certain food is low, the cook orders food from the market
+		AlertLog.getInstance().logMessage(AlertTag.ANJALI_RESTAURANT, name, "Inventory of " + orderThis + " is low. Cook is buying more food from market");
+
 		state = CookState.checkingInventory;
 		checkInventory();
 		return true;
@@ -370,14 +363,9 @@ public void setStand(RevolvingStandMonitor s) {
 		return true;
 	}
 	
-	/*
-	if(state == CookState.unfulfilledOrder){
-		Do("Market was unable to fulfill order for "+ outOfFood + ".");
-		state = CookState.nothing;
-		removeItem(outOfFood);
-		return true;
-	}
-	*/	return false;
+	
+	
+		return false;
 		//we have tried all our rules and found
 		//nothing to do. So return false to main loop of abstract agent
 		//and wait.
@@ -420,7 +408,7 @@ public void setStand(RevolvingStandMonitor s) {
 						
 					}
 				}
-				Do("cooking food ");
+				AlertLog.getInstance().logMessage(AlertTag.ANJALI_RESTAURANT, name, "Cooking food");
 				cookGui.DoGoToCookArea();
 				cookGui.drawFoodChoice(o.choice);
 				try {
@@ -429,7 +417,8 @@ public void setStand(RevolvingStandMonitor s) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				Do("Leaving food on grill");
+				AlertLog.getInstance().logMessage(AlertTag.ANJALI_RESTAURANT, name, "Leaving food on grill");
+
 				cookGui.drawFoodChoice(" ");
 				cookGui.DoGoToHome();
 				try {
@@ -441,7 +430,8 @@ public void setStand(RevolvingStandMonitor s) {
 				
 				cookTimer.schedule(new TimerTask(){
 				public void run(){
-					Do("Cook moving food from grill to plate area");
+					AlertLog.getInstance().logMessage(AlertTag.ANJALI_RESTAURANT, name, "Cook moving food from grill to plate area");
+
 					cookGui.DoGoToCookArea();
 					cookGui.drawFoodChoice(orderThis);
 					try {
@@ -458,7 +448,14 @@ public void setStand(RevolvingStandMonitor s) {
 						e.printStackTrace();
 					}
 					cookGui.drawFoodChoice(" ");
-					Do("" + o.choice + " is done cooking for " + o.getTableNumber());
+					try {
+						atTable.acquire();
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					AlertLog.getInstance().logMessage(AlertTag.ANJALI_RESTAURANT, name, "" + o.choice + " is done cooking for " + o.getTableNumber());
+
 					o.waiter.msgOrderIsReady(o.getTableNumber());
 					orders.remove(o);
 					o.state = CookState.cooked;
@@ -476,6 +473,8 @@ public void setStand(RevolvingStandMonitor s) {
 		}
 		
 		private void checkInventory(){
+			AlertLog.getInstance().logMessage(AlertTag.ANJALI_RESTAURANT, name, "inventory low, ordering from market");
+
 			int index = markets.size()-1;
 			if (markets.size() > 1) {
 				for (int i = markets.size()-2; i>=0; i--) {
@@ -496,13 +495,7 @@ public void setStand(RevolvingStandMonitor s) {
 		}
 			
 		
-			public void buyFood(String food, AnjaliMarket m){
-				Do("Ordering " + food + "from " + market.getName());
-				
-				market.msgOrderSupply(food, this, hasFood, cantPayCashier);	
-				hasFood--;
-				
-			}
+			
 			
 //UTILITIES		
 		
@@ -545,12 +538,8 @@ public void setStand(RevolvingStandMonitor s) {
 			this.cashier = cashier;
 		}
 		@Override
-		public void msgPartOrderFulfilled(String food) {
-			// TODO Auto-generated method stub
-			
-		}
-		@Override
-		public void msgNoMarketSupply(String food) {
+		public void msgHereIsWhatICanFulfill(List<ItemOrder> items,
+				boolean canFulfill, MarketCashier mC) {
 			// TODO Auto-generated method stub
 			
 		}

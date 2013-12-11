@@ -87,6 +87,7 @@ public class AnjaliCookGui implements Gui {
     }
     public void drawFoodChoice(String food){
     	choice = food;
+    	releaseIt = true;
     }
     public void AtDestination(){	 	
 		role.msgAtTable();	 
