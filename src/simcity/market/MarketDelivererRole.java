@@ -1,6 +1,8 @@
 package simcity.market;
 
 import java.util.ArrayList;
+import simcity.trace.AlertLog;
+import simcity.trace.AlertTag;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Semaphore;
@@ -170,6 +172,7 @@ public class MarketDelivererRole extends JobRole implements MarketDeliverer {
 		gui.leave();
 	}
 	private void goToCustomer(Order o) {
+		AlertLog.getInstance().logMessage(AlertTag.JESUS_RESTAURANT, name, "Delivering items");
 		currentOrder = o;
 		if(!unitTest) {
 			DoDeliverOrder(o.location); //animation
@@ -182,6 +185,7 @@ public class MarketDelivererRole extends JobRole implements MarketDeliverer {
 	}
 
 	private void deliverOrder(Order o) {
+		AlertLog.getInstance().logMessage(AlertTag.JESUS_RESTAURANT, name, "Delivery for " + o.location);
 		if(person.businessOpen(o.location)) {
 			o.oS = OrderState.ready;
 			o.cook.msgDelivery(o.items);
@@ -195,6 +199,7 @@ public class MarketDelivererRole extends JobRole implements MarketDeliverer {
 	}
 
 	private void takePayment(Order o) {
+		AlertLog.getInstance().logMessage(AlertTag.JESUS_RESTAURANT, name, "Thank you.");
 		o.change = o.amountPaid - o.price;
 		o.oS = OrderState.paid;
 		o.cashier.msgThankYou(o.change);

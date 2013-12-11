@@ -1,6 +1,8 @@
 package simcity.market;
 
 import java.awt.Point;
+import simcity.trace.AlertLog;
+import simcity.trace.AlertTag;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -417,7 +419,6 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 		marketMoney -= salary;
 		marketMoneySurplus = marketMoney - 100;
 		//bank.msgMarketDeposit(marketMoneySurplus);
-		//person.businessIsClosed(getJobLocation(), true);
 		marketMoney = 100;
 	}
 
@@ -444,6 +445,7 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 		else {
 			removeOrder(o);
 		}
+		AlertLog.getInstance().logMessage(AlertTag.JESUS_RESTAURANT, name, "Handed order to employee");
 		stateChanged();
 	}
 
@@ -470,11 +472,13 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 		else {
 			removeOrder(o);
 		}
+		AlertLog.getInstance().logMessage(AlertTag.JESUS_RESTAURANT, name, "Handed order to deliverer");
 		stateChanged();
 	}
 
 	private void LetCustomerKnow(Order o) {
 		o.oS = OrderState.know;
+		AlertLog.getInstance().logMessage(AlertTag.JESUS_RESTAURANT, name, "Order ready!");
 		o.customer.msgOrderReady();
 	}
 
@@ -484,6 +488,7 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 	}
 
 	private void FinishOrder(Order o) {
+		AlertLog.getInstance().logMessage(AlertTag.JESUS_RESTAURANT, name, "Thank you, come again!");
 		o.customer.msgThankYou(o.change);
 		updateMarketMoney(o);
 		removeOrder(o);

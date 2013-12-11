@@ -1,6 +1,8 @@
 package simcity.market;
 
 import java.util.ArrayList;
+import simcity.trace.AlertLog;
+import simcity.trace.AlertTag;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -188,6 +190,7 @@ public class MarketEmployeeRole extends JobRole implements MarketEmployee {
 	}
 
 	private void HandItems() {
+		AlertLog.getInstance().logMessage(AlertTag.JESUS_RESTAURANT, name, "Here are items");
 		currentOrder.oS = OrderState.ready;
 		cashier.msgHereAreItems(currentOrder, this);
 		currentOrder = null;
