@@ -118,7 +118,7 @@ public class JoshCookRole extends RestCookRole {
 		stateChanged();
 	}
 	
-	public void msgHereIsWhatICanFulfill(List<ItemOrder> orders, boolean canFulfill) {
+	public void msgHereIsWhatICanFulfill(List<ItemOrder> orders, boolean canFulfill, MarketCashier mc) {
 		log.add(new LoggedEvent("Received msgHereIsWhatICanFulfill"));
 		if (canFulfill == false) {
 			AlertLog.getInstance().logMessage(AlertTag.JOSH_RESTAURANT, name, "Oh you can't fulfill this order");

@@ -153,7 +153,9 @@ public void setStand(RevolvingStandMonitor s) {
 		//Do("released from table");	
 	}
 	public void msgHereIsOrder(String name, String choice, int tableNumber, AnjaliWaiter waiter){
-		Do("Cook has received order for table Number" + tableNumber + "from waiter " + waiter.getName() + "for food " + choice);	
+		AlertLog.getInstance().logMessage(AlertTag.ANJALI_RESTAURANT, name, "Cook has received order for table Number" + tableNumber + "from waiter " + waiter.getName() + "for food " + choice);
+
+	
 		//After every order the cook receives, he checks to see whether the inventory is low or not. 
 		//The cook may run out of food, scenario 2
 		if (name.equals("brokeCashier")){
@@ -241,7 +243,7 @@ public void setStand(RevolvingStandMonitor s) {
 		
 		if(PizzaInventory == 1){
 			state = CookState.inventoryLow;
-			itemOrders.add(new ItemOrder("Chicken", 3));
+			itemOrders.add(new ItemOrder("Pizza", 3));
 
 			orderThis = choice; 
 			orders.add(new Order(name, choice, tableNumber, waiter, CookState.received));
@@ -276,15 +278,23 @@ public void setStand(RevolvingStandMonitor s) {
 		for(ItemOrder o : temp){
 			if(o.getFoodItem().equals("Steak")){
 				SteakInventory += o.getAmount();
+				AlertLog.getInstance().logMessage(AlertTag.ANJALI_RESTAURANT, name, "Steak Inventory is now " + SteakInventory);
+
 			}
 			if(o.getFoodItem().equals("Chicken")){
-				SteakInventory += o.getAmount();
+				ChickenInventory += o.getAmount();
+				AlertLog.getInstance().logMessage(AlertTag.ANJALI_RESTAURANT, name, "Chicken Inventory is now " + ChickenInventory);
+
 			}
 			if(o.getFoodItem().equals("Salad")){
-				SteakInventory += o.getAmount();
+				SaladInventory += o.getAmount();
+				AlertLog.getInstance().logMessage(AlertTag.ANJALI_RESTAURANT, name, "Salad Inventory is now " + SaladInventory);
+
 			}
 			if(o.getFoodItem().equals("Pizza")){
-				SteakInventory += o.getAmount();
+				PizzaInventory += o.getAmount();
+				AlertLog.getInstance().logMessage(AlertTag.ANJALI_RESTAURANT, name, "Pizza Inventory is now " + PizzaInventory);
+
 			}
 		}
 		state = CookState.orderFulfilled;
@@ -317,7 +327,7 @@ public void setStand(RevolvingStandMonitor s) {
 			if(o.getCookState() == CookState.received){
 				
 				cookOrder(o);
-				Do("cook order called");
+				AlertLog.getInstance().logMessage(AlertTag.ANJALI_RESTAURANT, name, "Cook Order called");
 				o.state = CookState.cooking;
 				return true;
 			}
@@ -331,8 +341,9 @@ public void setStand(RevolvingStandMonitor s) {
 		}
 	}
 	if(state == CookState.inventoryLow){
-		//If the inventory of a certain food is low, the cook orders food from the market.
-		Do("Inventory of " + orderThis + " is low. Cook is buying more food from market");
+		//If the inventory of a certain food is low, the cook orders food from the market
+		AlertLog.getInstance().logMessage(AlertTag.ANJALI_RESTAURANT, name, "Inventory of " + orderThis + " is low. Cook is buying more food from market");
+
 		state = CookState.checkingInventory;
 		checkInventory();
 		return true;
@@ -353,14 +364,8 @@ public void setStand(RevolvingStandMonitor s) {
 	}
 	
 	
-	/*
-	if(state == CookState.unfulfilledOrder){
-		Do("Market was unable to fulfill order for "+ outOfFood + ".");
-		state = CookState.nothing;
-		removeItem(outOfFood);
-		return true;
-	}
-	*/	return false;
+	
+		return false;
 		//we have tried all our rules and found
 		//nothing to do. So return false to main loop of abstract agent
 		//and wait.
@@ -403,7 +408,7 @@ public void setStand(RevolvingStandMonitor s) {
 						
 					}
 				}
-				Do("cooking food ");
+				AlertLog.getInstance().logMessage(AlertTag.ANJALI_RESTAURANT, name, "Cooking food");
 				cookGui.DoGoToCookArea();
 				cookGui.drawFoodChoice(o.choice);
 				try {
@@ -412,7 +417,8 @@ public void setStand(RevolvingStandMonitor s) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				Do("Leaving food on grill");
+				AlertLog.getInstance().logMessage(AlertTag.ANJALI_RESTAURANT, name, "Leaving food on grill");
+
 				cookGui.drawFoodChoice(" ");
 				cookGui.DoGoToHome();
 				try {
@@ -424,7 +430,8 @@ public void setStand(RevolvingStandMonitor s) {
 				
 				cookTimer.schedule(new TimerTask(){
 				public void run(){
-					Do("Cook moving food from grill to plate area");
+					AlertLog.getInstance().logMessage(AlertTag.ANJALI_RESTAURANT, name, "Cook moving food from grill to plate area");
+
 					cookGui.DoGoToCookArea();
 					cookGui.drawFoodChoice(orderThis);
 					try {
@@ -447,7 +454,8 @@ public void setStand(RevolvingStandMonitor s) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					Do("" + o.choice + " is done cooking for " + o.getTableNumber());
+					AlertLog.getInstance().logMessage(AlertTag.ANJALI_RESTAURANT, name, "" + o.choice + " is done cooking for " + o.getTableNumber());
+
 					o.waiter.msgOrderIsReady(o.getTableNumber());
 					orders.remove(o);
 					o.state = CookState.cooked;
