@@ -1,11 +1,10 @@
 package simcity.jesusrestaurant;
 
-import simcity.interfaces.Person;
-import simcity.RestWaiterRole;
-import simcity.role.JobRole;
-import simcity.jesusrestaurant.gui.JesusWaiterGui;
+import simcity.role.Role;
 import simcity.jesusrestaurant.interfaces.JesusCustomer;
 import simcity.jesusrestaurant.interfaces.JesusWaiter;
+import simcity.jesusrestaurant.gui.JesusWaiterGui;
+import simcity.RestWaiterRole;
 
 import java.util.*;
 import java.util.concurrent.Semaphore;
@@ -15,19 +14,20 @@ import java.util.concurrent.Semaphore;
  */
 //We only have 2 types of agents in this prototype. A customer and an agent that
 //does all the rest. Rather than calling the other agent a waiter, we called him
-//the HostAgent. A Host is the manager of a restaurant who sees that all
+//the JesusHostRole. A Host is the manager of a restaurant who sees that all
 //is proceeded as he wishes.
 public class JesusNormalWaiterRole extends RestWaiterRole implements JesusWaiter {
 	//Notice that we implement waitingCustomers using ArrayList, but type it
 	//with List semantics.
 	public List<myCustomer> myCustomers = Collections.synchronizedList(new ArrayList<myCustomer>());
 
-	public JesusMenu menu = new JesusMenu();
+	public JesusMenu JesusMenu = new JesusMenu();
 
 	private String name;
 	private Semaphore atTable = new Semaphore(0,true);
 
-	public JesusWaiterGui jesusWaiterGui = null;
+	public boolean working, start;
+	public JesusWaiterGui waiterGui = null;
 
 	// agent correspondents
 	private JesusHostRole host;
@@ -35,30 +35,25 @@ public class JesusNormalWaiterRole extends RestWaiterRole implements JesusWaiter
 	private JesusCashierRole cashier;
 
 	boolean breakTime = false;
-	boolean working, start;
 
 	public enum customerState {waitingSeat, seated, readyToOrder, 
 		ordering, waitingOrder, orderReady, eating, doneEating, leaving, takingPlate, orderGiven, check};
 
-	public enum AgentState {DoingNothing, Seating, WalkingOrder, 
-		TakingOrder, WalkingCook, RetakingOrder, HandingOrder, 
-		WalkingPlate, HandingPlate, GettingCheck, HandingCheck, 
-		WalkingClear, ClearingTable, Break, Closed, GettingPlate};
+		public enum AgentState {DoingNothing, Seating, WalkingOrder, 
+			TakingOrder, WalkingCook, RetakingOrder, HandingOrder, 
+			WalkingPlate, HandingPlate, GettingCheck, HandingCheck, 
+			WalkingClear, ClearingTable, Break, Closed, GettingPlate};
 
-	public enum AgentEvent {none, assigned, readyTakeOrder, gotOrder, atCook, 
-		noFoodChoice, noFood, orderReady, pickUp, handPlate, askForCheck, 
-		receivedCheck, clean, goOnBreak, noBreak, returnToWork, BreakAccepted, atVait};
+		public enum AgentEvent {none, assigned, readyTakeOrder, gotOrder, atCook, 
+				noFoodChoice, noFood, orderReady, pickUp, handPlate, askForCheck, 
+				receivedCheck, clean, goOnBreak, noBreak, returnToWork, BreakAccepted, atVait};
 
 		AgentState state = AgentState.DoingNothing;
 		AgentEvent event = AgentEvent.none;
 
 		public JesusNormalWaiterRole() {
 			super();
-		}
-		
-		public void setPerson(Person p) {
-			super.setPerson(p);
-			name = p.getName();
+
 		}
 
 		public String getMaitreDName() {
@@ -81,7 +76,7 @@ public class JesusNormalWaiterRole extends RestWaiterRole implements JesusWaiter
 			cashier = csh;
 		}
 
-		public List getMyCustomers() {
+		public List getmyCustomers() {
 			return myCustomers;
 		}
 
@@ -89,33 +84,12 @@ public class JesusNormalWaiterRole extends RestWaiterRole implements JesusWaiter
 		public void msgStartShift() {
 			working = true;
 			start = true;
-			stateChanged();
 		}
 
 		public void msgEndShift() {
 			working = false;
-			stateChanged();
-		}
-		public void msgGoOnBreak() {
-			breakTime = true;
-			event = AgentEvent.goOnBreak;
-			stateChanged();
-		}
-		public void msgAnswer(boolean b) {
-			if(b) {
-				event = AgentEvent.BreakAccepted;
-			}
-			else {
-				event = AgentEvent.noBreak;
-			}
-			stateChanged();
-		}
-		public void msgReturnToWork() {
-			event = AgentEvent.returnToWork;
-			stateChanged();
 		}
 		public void msgSeatCustomer(JesusCustomerRole cust, int tableNum, String name) {
-			System.out.println("poop");
 			myCustomers.add(new myCustomer(cust, tableNum, name));
 			event = AgentEvent.assigned;
 			stateChanged();
@@ -158,7 +132,7 @@ public class JesusNormalWaiterRole extends RestWaiterRole implements JesusWaiter
 
 		public void msgOutOfFood(String choice) {
 			event = AgentEvent.noFoodChoice;
-			menu.outOfStock(choice);
+			JesusMenu.outOfStock(choice);
 			stateChanged();
 		}
 
@@ -252,12 +226,12 @@ public class JesusNormalWaiterRole extends RestWaiterRole implements JesusWaiter
 			} catch(ConcurrentModificationException e) {
 				return true;
 			}
-			
+
 			try{
 				for (myCustomer c : myCustomers) {
 					if (c.state == customerState.waitingSeat && state == AgentState.Seating) {
 						state = AgentState.DoingNothing;
-						seatCustomer(c);//the action
+						seatJesusCustomer(c);//the action
 						return true;//return true to the abstract agent to reinvoke the scheduler.
 					}
 				}
@@ -395,7 +369,7 @@ public class JesusNormalWaiterRole extends RestWaiterRole implements JesusWaiter
 						handPlate(c);
 						return true;
 					}
-				}		
+				}                
 			} catch(ConcurrentModificationException e) {
 				return true;
 			}
@@ -468,14 +442,14 @@ public class JesusNormalWaiterRole extends RestWaiterRole implements JesusWaiter
 
 		// Actions
 		private void leaveRestaurant() {
-			jesusWaiterGui.leave();
+			waiterGui.leave();
 		}
 		private void startWork() {
-			jesusWaiterGui.work();
 			start = false;
+			waiterGui.work();
 		}
 		private void goToVait() {
-			jesusWaiterGui.DoGoToVait();
+			waiterGui.DoGoToVait();
 			try {
 				atTable.acquire();
 			} catch (InterruptedException e) {
@@ -483,10 +457,10 @@ public class JesusNormalWaiterRole extends RestWaiterRole implements JesusWaiter
 				e.printStackTrace();
 			}
 		}
-		private void seatCustomer(myCustomer cust) {
-			jesusWaiterGui.DoLeaveCustomer();
-			//Do("Seating customer " + cust.customer);
-			cust.customer.msgSitAtTable(this, cust.tableNumber, menu);
+		private void seatJesusCustomer(myCustomer cust) {
+			waiterGui.DoLeaveCustomer();
+			//Do("Seating JesusCustomer " + cust.JesusCustomer);
+			cust.customer.msgSitAtTable(this, cust.tableNumber, JesusMenu);
 			DoSeatCustomer(cust.customer, cust.tableNumber);
 			try {
 				atTable.acquire();
@@ -506,7 +480,7 @@ public class JesusNormalWaiterRole extends RestWaiterRole implements JesusWaiter
 		}
 
 		private void takeOrder(myCustomer mc) {
-			//Do("Taking order from " + mc.customer);
+			//Do("Taking order from " + mc.JesusCustomer);
 			mc.state = customerState.ordering;
 			mc.customer.msgTakeOrder();
 		}
@@ -528,7 +502,7 @@ public class JesusNormalWaiterRole extends RestWaiterRole implements JesusWaiter
 
 		private void retakeOrder(myCustomer mc) {
 			//print("Out of " + mc.foodChoice);
-			mc.customer.msgRetakeOrder(menu);
+			mc.customer.msgRetakeOrder(JesusMenu);
 		}
 
 		private void noFood(myCustomer mc) {
@@ -559,7 +533,7 @@ public class JesusNormalWaiterRole extends RestWaiterRole implements JesusWaiter
 
 		private void walkWithPlate(myCustomer mc) {
 			cook.msgGotPlate(mc.foodChoice);
-			//Do("Handing " + mc.foodChoice + " to " + mc.customer);
+			//Do("Handing " + mc.foodChoice + " to " + mc.JesusCustomer);
 			DoHandPlate(mc);//animation
 			try {
 				atTable.acquire();
@@ -604,53 +578,49 @@ public class JesusNormalWaiterRole extends RestWaiterRole implements JesusWaiter
 
 		// The animation DoXYZ() routines
 		private void DoSeatCustomer(JesusCustomer customer, int tableNumber) {
-			//Notice how we print "customer" directly. It's toString method will do it.
-			//Same with "table"
-			//print("Seating " + customer + " at Table " + tableNumber);
-			jesusWaiterGui.DoBringToTable(customer, tableNumber); 
-
+			waiterGui.DoBringToTable(customer, tableNumber); 
 		}
 
 		private void DoTakeOrder(JesusCustomer cust, int tableN) {
-			jesusWaiterGui.DoTakeOrder(cust, tableN);
+			waiterGui.DoTakeOrder(cust, tableN);
 		}
 
 		private void DoGoToCook(myCustomer mc) {
 			//print("Giving order to " + cook.getName() + " (" + mc.foodChoice + ")");
-			jesusWaiterGui.DoGoToCook();
+			waiterGui.DoGoToCook();
 		}
 
 		private void DoGetPlate(myCustomer mc) {
-			jesusWaiterGui.DoGetPlate(mc.foodChoice);
+			waiterGui.DoGetPlate(mc.foodChoice);
 		}
 
 		private void DoHandPlate(myCustomer cust) {
-			jesusWaiterGui.DoHandPlate(cust.tableNumber, cust.foodChoice);
-			//waiterGui.DoLeaveCustomer();
+			waiterGui.DoHandPlate(cust.tableNumber, cust.foodChoice);
+			//waiterGui.DoLeaveJesusCustomer();
 		}
 
 		private void DoWalkToClear(int tableNum) {
-			jesusWaiterGui.DoWalkToClear(tableNum);
+			waiterGui.DoWalkToClear(tableNum);
 		}
 		//utilities
 
 		public void setGui(JesusWaiterGui gui) {
-			jesusWaiterGui = gui;
+			waiterGui = gui;
 		}
 
 		public JesusWaiterGui getGui() {
-			return jesusWaiterGui;
+			return waiterGui;
 		}
 
 		private class myCustomer {
-			JesusCustomerRole customer;
+			JesusCustomer customer;
 			String name;
 			int tableNumber;
 			customerState state;
 			String foodChoice;
 			int amountDue;
 
-			myCustomer(JesusCustomerRole c, int tN, String n) {
+			myCustomer(JesusCustomer c, int tN, String n) {
 				customer = c;
 				name = n;
 				tableNumber = tN;
@@ -659,5 +629,4 @@ public class JesusNormalWaiterRole extends RestWaiterRole implements JesusWaiter
 				amountDue = 0;
 			}
 		}
-
 }
