@@ -172,7 +172,7 @@ public class MarketDelivererRole extends JobRole implements MarketDeliverer {
 		gui.leave();
 	}
 	private void goToCustomer(Order o) {
-		AlertLog.getInstance().logMessage(AlertTag.JESUS_RESTAURANT, name, "Delivering items");
+		AlertLog.getInstance().logMessage(AlertTag.MARKET, name, "Delivering items");
 		currentOrder = o;
 		if(!unitTest) {
 			DoDeliverOrder(o.location); //animation
@@ -185,7 +185,7 @@ public class MarketDelivererRole extends JobRole implements MarketDeliverer {
 	}
 
 	private void deliverOrder(Order o) {
-		AlertLog.getInstance().logMessage(AlertTag.JESUS_RESTAURANT, name, "Delivery for " + o.location);
+		AlertLog.getInstance().logMessage(AlertTag.MARKET, name, "Delivery for " + o.location);
 		if(person.businessOpen(o.location)) {
 			o.oS = OrderState.ready;
 			o.cook.msgDelivery(o.items);
@@ -199,7 +199,7 @@ public class MarketDelivererRole extends JobRole implements MarketDeliverer {
 	}
 
 	private void takePayment(Order o) {
-		AlertLog.getInstance().logMessage(AlertTag.JESUS_RESTAURANT, name, "Thank you.");
+		AlertLog.getInstance().logMessage(AlertTag.MARKET, name, "Thank you.");
 		o.change = o.amountPaid - o.price;
 		o.oS = OrderState.paid;
 		o.cashier.msgThankYou(o.change);

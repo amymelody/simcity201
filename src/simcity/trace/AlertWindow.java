@@ -82,6 +82,8 @@ public class AlertWindow extends JFrame {
 		tracePanel.hideAlertsWithTag(AlertTag.GENERAL_CITY);
 		tracePanel.hideAlertsWithTag(AlertTag.CHERYS_RESTAURANT);
 		tracePanel.hideAlertsWithTag(AlertTag.ANJALI_RESTAURANT);
+		tracePanel.hideAlertsWithTag(AlertTag.JESUS_RESTAURANT);
+		tracePanel.hideAlertsWithTag(AlertTag.MARKET);
 		
 		tracePanel.hideAlertsWithTag(AlertTag.BUS_STOP);
 		//
@@ -110,10 +112,12 @@ public class AlertWindow extends JFrame {
 		JButton generalCityTagButton;
 		JButton bankTagButton;
 		JButton housingTagButton;
+		JButton marketTagButton;
 		JButton personTagButton;
 		JButton joshRestaurantTagButton;
 		JButton cherysRestaurantTagButton;
 		JButton anjaliRestaurantTagButton;
+		JButton jesusRestaurantTagButton;
 		
 		public ControlPanel(final TracePanel tracePanel) {
 			this.tp = tracePanel;
@@ -123,9 +127,11 @@ public class AlertWindow extends JFrame {
 			personTagButton = new JButton("Hide Tag: PERSON");
 			bankTagButton = new JButton("Show Tag: BANK");
 			housingTagButton = new JButton("Show Tag: HOUSING");
+			marketTagButton = new JButton("Show Tag: MARKET");
 			joshRestaurantTagButton = new JButton("Show Tag: JOSH_RESTAURANT");
 			cherysRestaurantTagButton = new JButton("Show Tag: CHERYS_RESTAURANT");
 			anjaliRestaurantTagButton = new JButton("Show Tag: ANJALI_RESTAURANT");
+			jesusRestaurantTagButton = new JButton("Show Tag: JESUS_RESTAURANT");
 			
 			
 			messagesButton.addActionListener(new ActionListener() {
@@ -200,6 +206,18 @@ public class AlertWindow extends JFrame {
 					}
 				}
 			});
+			marketTagButton.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					if (marketTagButton.getText().equals("Show Tag: MARKET")) {
+						tracePanel.showAlertsWithTag(AlertTag.MARKET);
+						marketTagButton.setText("Hide Tag: MARKET");
+					} else if (marketTagButton.getText().equals("Hide Tag: MARKET")) {
+						tracePanel.hideAlertsWithTag(AlertTag.MARKET);
+						marketTagButton.setText("Show Tag: MARKET");
+					}
+				}
+			});
 			joshRestaurantTagButton.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
@@ -236,6 +254,18 @@ public class AlertWindow extends JFrame {
 					}
 				}
 			});
+			jesusRestaurantTagButton.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					if (jesusRestaurantTagButton.getText().equals("Show Tag: JESUS_RESTAURANT")) {
+						tracePanel.showAlertsWithTag(AlertTag.JESUS_RESTAURANT);
+						jesusRestaurantTagButton.setText("Hide Tag: JESUS_RESTAURANT");
+					} else if (anjaliRestaurantTagButton.getText().equals("Hide Tag: JESUS_RESTAURANT")) {
+						tracePanel.hideAlertsWithTag(AlertTag.JESUS_RESTAURANT);
+						jesusRestaurantTagButton.setText("Show Tag: JESUS_RESTAURANT");
+					}
+				}
+			});
 			this.setLayout(new GridLayout(6,3));
 			this.add(messagesButton);
 			this.add(errorButton);
@@ -243,9 +273,11 @@ public class AlertWindow extends JFrame {
 			this.add(personTagButton);
 			this.add(bankTagButton);
 			this.add(housingTagButton);
+			this.add(marketTagButton);
 			this.add(joshRestaurantTagButton);
 			this.add(cherysRestaurantTagButton);
 			this.add(anjaliRestaurantTagButton);
+			this.add(jesusRestaurantTagButton);
 			this.setMinimumSize(new Dimension(50, 600));
 		}
 	}

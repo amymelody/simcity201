@@ -190,7 +190,7 @@ public class MarketEmployeeRole extends JobRole implements MarketEmployee {
 	}
 
 	private void HandItems() {
-		AlertLog.getInstance().logMessage(AlertTag.JESUS_RESTAURANT, name, "Here are items");
+		AlertLog.getInstance().logMessage(AlertTag.MARKET, name, "Here are items");
 		currentOrder.oS = OrderState.ready;
 		cashier.msgHereAreItems(currentOrder, this);
 		currentOrder = null;

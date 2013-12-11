@@ -190,7 +190,7 @@ public class MarketCustomerRole extends Role implements MarketCustomer {
 		}
 	}
 	private void GiveOrder() {
-		AlertLog.getInstance().logMessage(AlertTag.JESUS_RESTAURANT, name, "I want to buy some items.");
+		AlertLog.getInstance().logMessage(AlertTag.MARKET, name, "I want to buy some items.");
 		cashier.msgIWantItems(this, items);
 		cS = CustomerState.confirming;
 	}
