@@ -60,7 +60,7 @@ public class MarketGui extends BuildingGui
 		Dimension inputDim = new Dimension((int)(WINDOWX * inputFractionOfWindow), WINDOWY);
 		inputPanel.setPreferredSize(inputDim);
 		inputPanel.setVisible(false);
-		bG.add(inputPanel, BorderLayout.WEST);		
+		bG.add(inputPanel, BorderLayout.WEST);
 	}
 
 	public void changeView(boolean visible) {

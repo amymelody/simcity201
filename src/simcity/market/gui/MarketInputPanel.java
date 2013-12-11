@@ -12,6 +12,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
+import javax.swing.Timer;
 
 import simcity.bank.gui.BankManagerGui;
 import simcity.gui.DelivererGui;
@@ -61,6 +62,10 @@ public class MarketInputPanel extends JPanel implements ActionListener
         group.setSelectedIndex(0);
         
         add(group, BorderLayout.CENTER);
+        
+        Timer timer = new Timer(5, this);
+        timer.start();
+        
 	}
 	
 	public void actionPerformed(ActionEvent e) {
