@@ -21,7 +21,6 @@ import simcity.interfaces.RestCashier;
 import simcity.interfaces.RestCook;
 import simcity.market.Order.OrderState;
 import simcity.market.gui.MarketCashierGui;
-import simcity.market.gui.MarketCustomerGui;
 
 public class MarketCashierRole extends JobRole implements MarketCashier {
 
@@ -175,7 +174,6 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 		stateChanged();
 	}
 	public void msgEndShift() {
-		person.businessIsClosed(getJobLocation(), true);
 		working = false;
 		stateChanged();
 	}
@@ -347,15 +345,6 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 			startWork();
 			return true;
 		}
-		synchronized(orders) {
-			for(Order o: orders) {
-				if(o.oS == OrderState.needToComplete && person.businessOpen(o.location)) {
-					o.oS = OrderState.newDelivery;
-					HandToDeliverer(o);
-					return true;
-				}
-			}
-		}
 		if(mS != MarketState.closed && working) {
 			synchronized(orders) {
 				for(Order o: orders) {
@@ -411,6 +400,12 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 		start = false;
 		gui.work();
 		person.businessIsClosed(getJobLocation(), false);
+		for(Order o: orders) {
+			if(o.oS == OrderState.needToComplete) {
+				o.oS = OrderState.newDelivery;
+				HandToDeliverer(o);
+			}
+		}
 		stateChanged();
 	}
 	private void leaveMarket() {
@@ -430,7 +425,7 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 		marketMoney -= salary;
 		marketMoneySurplus = marketMoney - 100;
 		//bank.msgMarketDeposit(marketMoneySurplus);
-		//person.businessIsClosed(getJobLocation(), true);
+		person.businessIsClosed(getJobLocation(), true);
 		marketMoney = 100;
 	}
 
