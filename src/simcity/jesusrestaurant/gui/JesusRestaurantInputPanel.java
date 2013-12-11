@@ -30,6 +30,8 @@ public class JesusRestaurantInputPanel extends JPanel implements ActionListener
     private Vector<JesusNormalWaiterRole> waiters = new Vector<JesusNormalWaiterRole>();
     private Vector<MarketCashierRole> markets = new Vector<MarketCashierRole>();
 
+    int custxloc = 2, custyloc = 0;
+    int waiterxloc = 21, waiteryloc = 0;
     private JPanel restLabel = new JPanel();
     private JLabel restInfo = new JLabel();
     //private JTabbedPane group = new JTabbedPane();
@@ -84,7 +86,11 @@ public class JesusRestaurantInputPanel extends JPanel implements ActionListener
     }
     
     public void addCustomer(JesusCustomerRole c) {
-    	JesusCustomerGui g = new JesusCustomerGui(c, gui, 50, 50);
+    	JesusCustomerGui g = new JesusCustomerGui(c, gui, custxloc*20, custyloc*20);
+        if(custxloc == 9)
+                custxloc = 2;
+        else
+                custxloc++;
     	gui.animationPanel.addGui(g);
 		c.setHost(host);
 		c.setCashier(cashier);
@@ -93,8 +99,13 @@ public class JesusRestaurantInputPanel extends JPanel implements ActionListener
     }
     
     public void addWaiter(JesusNormalWaiterRole w) {
-    	JesusWaiterGui g = new JesusWaiterGui(w, gui, 60, 60);
-    	gui.animationPanel.addGui(g);
+    	JesusWaiterGui g = new JesusWaiterGui(w, gui, waiterxloc*20, waiteryloc*20);
+        if(waiteryloc == 5) {
+                waiteryloc = 0;
+                waiterxloc++;
+        }
+        else
+                waiteryloc++;gui.animationPanel.addGui(g);
  		w.setHost(host);
  		w.setCashier(cashier);
  		w.setCook(cook);

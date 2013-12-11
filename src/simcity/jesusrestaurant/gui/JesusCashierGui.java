@@ -17,7 +17,7 @@ public class JesusCashierGui implements Gui {
 
 	private int xPos = -20, yPos = 20; // default cashier position
 	private int xDestination = -20, yDestination = 20; // default cashier destination
-	private int xHome = 0, yHome = 80;
+	private int xHome = 0, yHome = 60;
 	private boolean leave = false;
 	
 	public static final Map<Integer, Point> tableLocations = new HashMap<Integer, Point>();

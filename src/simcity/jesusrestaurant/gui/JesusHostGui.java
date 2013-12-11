@@ -15,7 +15,7 @@ public class JesusHostGui implements Gui {
 	private JesusHostRole role = null;
 
 	private int xPos = -20, yPos = 20;//default host position
-	private int xDestination = -20, yDestination = 20;//default host destination
+	private int xDestination = 520, yDestination = 20;//default host destination
 	private int xHome = 80, yHome = 80;
 	private boolean leaving = false;
 	
