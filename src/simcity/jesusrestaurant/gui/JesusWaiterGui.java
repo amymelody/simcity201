@@ -17,7 +17,7 @@ public class JesusWaiterGui implements Gui {
 	private int xPos = -20, yPos = 20;//default waiter position
 	private int xDestination, yDestination;//default waiter destination
 	private int xHome, yHome;//waiter home position
-	private int xCook = 400, yCook = 300;
+	private int xCook = 380, yCook = 280;
 	private int xBreak = 460, yBreak = 0;
 	
 	boolean onBreak = false;

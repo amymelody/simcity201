@@ -26,10 +26,10 @@ public class JesusCookGui implements Gui {
 	Image fImage = pizza;
 	public List<fImage> foods = Collections.synchronizedList(new ArrayList<fImage>());
 	public enum ImageState {none, goingToCook, cooking, goingToPlate, plating, done};
-	int cookxloc = 17, cookyloc = 21;
-	int cookwxloc = 18, cookwyloc = 20;
-	int platewxloc = 20, platewyloc = 16;
-	int platexloc = 20, plateyloc = 17;
+	int cookxloc = 16, cookyloc = 21;
+	int cookwxloc = 17, cookwyloc = 20;
+	int platewxloc = 19, platewyloc = 16;
+	int platexloc = 19, plateyloc = 16;
 	public static final Map<String, Image> foodImages = new HashMap<String, Image>();
 	boolean leave = false;
 	

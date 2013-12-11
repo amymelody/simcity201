@@ -51,7 +51,7 @@ public class MockRestCook extends Mock implements RestCook {
 
 	@Override
 	public void msgHereIsWhatICanFulfill(List<ItemOrder> orders,
-			boolean canFulfill) {
+			boolean canFulfill, MarketCashier ma) {
 		// TODO Auto-generated method stub
 		if(canFulfill)
 			log.add(new LoggedEvent("Confirmation of (at least partial) delivery"));

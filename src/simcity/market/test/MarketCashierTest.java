@@ -1034,9 +1034,6 @@ public class MarketCashierTest extends TestCase
 		
 		// Check postconditions for Step 1a
 		assertEquals("Cashier should have one order in List orders. It doesn't.", cashier.orders.size(), 1);
-		
-		// Step 2a - Closing up (Message)
-		cashier.msgDoneForTheDay();
 
 		// Check postconditions for Step 1a
 		assertTrue("MarketState should equal MarketState.closing. It isn't.", cashier.mS == MarketState.closing);
