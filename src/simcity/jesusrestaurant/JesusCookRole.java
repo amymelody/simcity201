@@ -275,19 +275,19 @@ public class JesusCookRole extends RestCookRole implements RestCook {
 		} catch(ConcurrentModificationException e) {
 			return true;
 		}
-		synchronized(foods){
-			for(myMarket m: markets) {
-				if(!marketOut(m)) {
-					for(Food f: foods) {
-						if(!m.outStock.get(f.name)) {
-							needToRestock.add(new ItemOrder(f.name, f.amtLeft));
-						}
-					}
-					restock(needToRestock, m);
-					return true;
-				}
-			}
-		}
+//		synchronized(foods){
+//			for(myMarket m: markets) {
+//				if(!marketOut(m)) {
+//					for(Food f: foods) {
+//						if(!m.outStock.get(f.name)) {
+//							needToRestock.add(new ItemOrder(f.name, f.amtLeft));
+//						}
+//					}
+//					restock(needToRestock, m);
+//					return true;
+//				}
+//			}
+//		}
 		return false;
 		//we have tried all our rules and found
 		//nothing to do. So return false to main loop of abstract agent

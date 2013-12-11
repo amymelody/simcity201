@@ -67,13 +67,11 @@ public class MockMarketCashier extends Mock implements MarketCashier {
 		
 	}
 
-	@Override
 	public void msgDoneForTheDay() {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
 	public void msgWereOpen() {
 		// TODO Auto-generated method stub
 		
