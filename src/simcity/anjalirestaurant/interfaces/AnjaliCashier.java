@@ -24,5 +24,8 @@ public interface AnjaliCashier {
 	public abstract void msgIHaveNoMoney(AnjaliCustomer c);
 		
 	public abstract void msgDelivery(int bill, MarketDeliverer deliverer);
+
+	public abstract void msgTakeMyMoney(AnjaliCustomer anjaliCustomerRole,
+			double d);
 	
 }

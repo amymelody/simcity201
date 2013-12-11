@@ -217,17 +217,11 @@ public void setStand(RevolvingStandMonitor s) {
 	}
 	
 	if(choice == "Chicken"){
-		
-		
-		
 		if(ChickenInventory == 1){
 			state = CookState.inventoryLow;
-
 			itemOrders.add(new ItemOrder("Chicken", 3));
-
 			orderThis = choice; 
 			orders.add(new Order(name, choice, tableNumber, waiter, CookState.received));
-
 		}
 		
 		else if(ChickenInventory == 0){
@@ -235,17 +229,12 @@ public void setStand(RevolvingStandMonitor s) {
 		}
 		
 		else
-			orders.add(new Order(name, choice, tableNumber, waiter, CookState.received));
-
-		
+			orders.add(new Order(name, choice, tableNumber, waiter, CookState.received));		
 		if( ChickenInventory > 0){
 			ChickenInventory--;
+	}		
 	}
 		
-		
-	}
-	
-	
 	if(choice == "Pizza"){
 		if(name.equals("Pizza"))
 			PizzaInventory--;
@@ -256,27 +245,17 @@ public void setStand(RevolvingStandMonitor s) {
 
 			orderThis = choice; 
 			orders.add(new Order(name, choice, tableNumber, waiter, CookState.received));
-
 		}
 		
 		else if(PizzaInventory == 0){
-			orders.add(new Order(name, choice, tableNumber, waiter, CookState.outOfFood));
-		
+			orders.add(new Order(name, choice, tableNumber, waiter, CookState.outOfFood));		
 		}
 		else
-			orders.add(new Order(name, choice, tableNumber, waiter, CookState.received));
-
-		
+			orders.add(new Order(name, choice, tableNumber, waiter, CookState.received));		
 		if(PizzaInventory > 0){
 			PizzaInventory--;
-		}
-		
-		
-	}
-		
-		
-		
-		
+		}		
+	}	
 		stateChanged();
 		
 		
@@ -549,6 +528,12 @@ public void setStand(RevolvingStandMonitor s) {
 	
 		public void setCashier(AnjaliCashierRole cashier) {
 			this.cashier = cashier;
+		}
+		@Override
+		public void msgHereIsWhatICanFulfill(List<ItemOrder> items,
+				boolean canFulfill, MarketCashier mC) {
+			// TODO Auto-generated method stub
+			
 		}
 		
  

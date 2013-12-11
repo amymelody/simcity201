@@ -16,9 +16,7 @@ import simcity.interfaces.Person;
 import simcity.mock.LoggedEvent;
 import simcity.trace.AlertLog;
 import simcity.trace.AlertTag;
-import simcity.interfaces.Person;
-import simcity.joshrestaurant.interfaces.JoshCustomer;
-import simcity.joshrestaurant.interfaces.JoshWaiter;
+
 
 
 /**
