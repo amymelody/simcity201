@@ -145,7 +145,7 @@ public class CherysCookRole extends RestCookRole implements CherysCook
 	@Override
 	public void msgDelivery(List<ItemOrder> order)
 	{
-		AlertLog.getInstance().logMessage(AlertTag.CHERYS_RESTAURANT, name, "received msgDelivery");
+		AlertLog.getInstance().logMessage(AlertTag.CHERYS_RESTAURANT, name, "received msgDelivery. " + order.get(0).getAmount() + " " + order.get(0).getFoodItem() + "s");
 		do
 		{
 			try

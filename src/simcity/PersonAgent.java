@@ -280,7 +280,6 @@ public class PersonAgent extends Agent implements Person
 
 	private boolean wantToGoToRestaurant() {
 		if (allRestaurantsClosed()) {
-			AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "ALLL RESTAURANTS CLOSED");
 			return false;
 		}
 		if (state.ps == PhysicalState.fit) {
@@ -547,10 +546,12 @@ public class PersonAgent extends Agent implements Person
 	}
 
 	public boolean businessOpen(String building) {
+		AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "AAAAAAAAAAAAAAA" + building);
 		if (building.contains("market")) {
 			for (Market m : markets) {
 				if (m.location.equals(building)) {
 					if (!m.closed) {
+						AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "FUUUUCKKKKKKKKKKKKKKKKKKKKKK");
 						return true;
 					}
 				}
@@ -895,7 +896,6 @@ public class PersonAgent extends Agent implements Person
 							r = getRestaurant(destination);
 						} else {
 							r = chooseRestaurant();
-							AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "CHOOSING RESTAURANT");
 						}
 						if (!r.closed) {
 							destination = r.location;
@@ -1416,7 +1416,7 @@ public class PersonAgent extends Agent implements Person
 		Market(String l, String r) {
 			location = l;
 			customerRole = r;
-			closed = false;
+			closed = true;
 		}
 		String customerRole;
 		String location;

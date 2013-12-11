@@ -9,6 +9,8 @@ import java.util.Map;
 import java.util.concurrent.Semaphore;
 
 import simcity.role.JobRole;
+import simcity.trace.AlertLog;
+import simcity.trace.AlertTag;
 import simcity.ItemOrder;
 import simcity.bank.BankManagerRole;
 import simcity.interfaces.BankDepositor;
@@ -316,7 +318,7 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 	public void msgNotDelivererd(Order order, MarketDeliverer d) {
 		synchronized(orders) {
 			for(Order o: orders) {
-				if(o.equals(order)) {
+				if(o.cook.equals(order.cook)) {
 					o.oS = OrderState.needToComplete;
 				}
 			}

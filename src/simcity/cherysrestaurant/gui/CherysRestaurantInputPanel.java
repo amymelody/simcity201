@@ -52,6 +52,10 @@ public class CherysRestaurantInputPanel extends JPanel
         cashier = ca;
         
         cook.setCashier(cashier);
+        for(MarketCashierRole m : cashiers)
+        {
+        	cook.addMarket(m, m.getName());
+        }
         host.setGui(this.gui);
         host.setCashier(cashier);
         host.setCook(cook);
