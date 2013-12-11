@@ -18,7 +18,6 @@ import simcity.trace.AlertTag;
 
 public class ResidentRole extends Role implements Resident
 {
-
 	//Data	
 	Landlord landlord = null;
 

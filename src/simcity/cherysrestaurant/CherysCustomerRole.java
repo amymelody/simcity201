@@ -237,7 +237,6 @@ public class CherysCustomerRole extends RestCustomerRole implements CherysCustom
 	 */
 	private void followWaiter()
 	{
-		Do("Being seated. Going to table");
 		doGoToTable();
 	}
 	/**
@@ -258,7 +257,6 @@ public class CherysCustomerRole extends RestCustomerRole implements CherysCustom
 	 */
 	private void flagWaiter()
 	{
-		Do("Oh waiter!");
 		waiter.msgReadyToOrder(this);
 	}
 	/**
@@ -313,14 +311,12 @@ public class CherysCustomerRole extends RestCustomerRole implements CherysCustom
 		if(choices.size() > 0)
 		{
 			choice = choices.get(random.nextInt(choices.size())).name;
-			Do("I have $" + money + " and would like to order a " + choice);
 			doWaitForFood(choice);
 			waiter.msgHereIsMyOrder(this, choice);
 			stateChanged();
 		}
 		else
 		{
-			Do("*angry muttering*");
 			waiter.msgLeavingRestaurant(this);
 			done();
 		}
@@ -330,7 +326,6 @@ public class CherysCustomerRole extends RestCustomerRole implements CherysCustom
 	 */
 	private void eatFood()
 	{
-		Do("Om nom nom");
 		timer.schedule(new TimerTask() 
 		{
 			public void run()
@@ -344,12 +339,10 @@ public class CherysCustomerRole extends RestCustomerRole implements CherysCustom
 	 */
 	private void finishedEating()
 	{
-		Do("I'm done eating");
 		waiter.msgDoneEating(this);
 	}
 	private void payCashier()
 	{
-		Do("Here is my bill");
 		money -= check.total;
 		person.msgExpense(check.total);
 		cashier.msgPayment(this, check, check.total);
@@ -357,7 +350,6 @@ public class CherysCustomerRole extends RestCustomerRole implements CherysCustom
 	}
 	private void done()
 	{
-		Do("I'm leaving");
 		hungerLevel = 0;
 		events.clear();
 		doExitRestaurant();
@@ -368,7 +360,6 @@ public class CherysCustomerRole extends RestCustomerRole implements CherysCustom
 	 */
 	private void alertHost()
 	{
-		Do("Table for one");
 		host.msgImHungry(this);
 		stateChanged();
 	}

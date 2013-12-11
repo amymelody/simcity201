@@ -367,7 +367,6 @@ public class CherysNormalWaiterRole extends RestWaiterRole implements CherysWait
 		}
 		if(denied)
 		{
-			Do("DENIED");
 			doWorkThroughThePain();
 			return true;
 		}
@@ -494,7 +493,6 @@ public class CherysNormalWaiterRole extends RestWaiterRole implements CherysWait
 								}
 							}
 							while(false);
-							Do("Oh no! What happened to the check?!");
 						}
 					}
 				}
@@ -747,7 +745,6 @@ public class CherysNormalWaiterRole extends RestWaiterRole implements CherysWait
 		}
 		if(permissionToBreak)
 		{
-			Do("Going on a break?");
 			boolean doneServing = true;
 			do
 			{
@@ -769,7 +766,6 @@ public class CherysNormalWaiterRole extends RestWaiterRole implements CherysWait
 			while(false);
 			if(doneServing)
 			{
-				Do("Going on a break!");
 				command = Command.goOnBreak;
 				state = AgentState.onBreak;
 				doGoOnBreak();
@@ -791,7 +787,6 @@ public class CherysNormalWaiterRole extends RestWaiterRole implements CherysWait
 	 */
 	private void seatCustomer(MyCustomer mc)
 	{
-		Do("Seating customer");
 		mc.state = CustomerState.seated;
 		mc.c.msgFollowMe(this, menu, foodsOutOf);
 		doSeatCustomer(mc.c, mc.table);
@@ -802,7 +797,6 @@ public class CherysNormalWaiterRole extends RestWaiterRole implements CherysWait
 	 */
 	private void giveOrderToCook(MyCustomer mc)
 	{
-		Do("Giving order to cook");
 		mc.state = CustomerState.ordered;
 		cook.msgCookThis(this, mc.choice, mc.table);
 		stateChanged();
@@ -814,7 +808,6 @@ public class CherysNormalWaiterRole extends RestWaiterRole implements CherysWait
 	 */
 	private void serveCustomer(MyCustomer mc)
 	{
-		Do("Serving order to customer (and requesting check be made)");
 		orders.remove(currentOrder);
 		mc.state = CustomerState.eating;
 		mc.c.msgOrderServed(currentOrder.choice);
@@ -824,13 +817,11 @@ public class CherysNormalWaiterRole extends RestWaiterRole implements CherysWait
 	}
 	private void askForCheck(int table)
 	{
-		Do("Asking for customer's check at table " + table);
 		cashier.msgGiveCheck(this, table);
 		doGoToTable(table);
 	}
 	private void giveCustomerCheck(MyCustomer mc, CherysCashierCheck ch)
 	{
-		Do("Here is your check. Have a good night!");
 		mc.state = null;
 		mc.c.msgHereIsCheck(ch);
 		checks.remove(ch);
@@ -843,7 +834,6 @@ public class CherysNormalWaiterRole extends RestWaiterRole implements CherysWait
 	 */
 	private void tableAvailible(MyCustomer mc, int table)
 	{
-		Do("Clearing empty table");
 		mc.state = CustomerState.gone;
 		customers.remove(mc);
 		host.msgTableFree(table, this, mc.c);
@@ -855,14 +845,11 @@ public class CherysNormalWaiterRole extends RestWaiterRole implements CherysWait
 	 */
 	private void askForOrder(MyCustomer mc)
 	{
-		Do("What would you like to eat?");
 		mc.state = CustomerState.preparingToOrder;
-		Do("We're out of " + foodsOutOf.size() + " foods");
 		mc.c.msgWhatIsYourOrder(foodsOutOf);
 	}
 	private void askForBreak()
 	{
-		Do("May I go on break?");
 		tired = false;
 		host.msgMayIGoOnBreak(this);
 		stateChanged();

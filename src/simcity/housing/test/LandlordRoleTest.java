@@ -31,8 +31,8 @@ public class LandlordRoleTest extends TestCase
 	public void testRentCollection()
 	{
 	//Preconditions
-		assertEquals("Landlord should start with no commands. It didn't",
-				0, landlord.commands.size());
+		assertEquals("Landlord should start with 1 command. It didn't",
+				1, landlord.commands.size());
 		assertEquals("Landlord's renter list should hold 2 renters. Instead, it has "
 				+ landlord.renters.size(), 2, landlord.renters.size());
 		assertTrue("Landlord's first renter's state should be state = RenterState.away. It isn't",
@@ -54,15 +54,39 @@ public class LandlordRoleTest extends TestCase
 
 		assertTrue("Landlord should have logged \"Received msgStartShift\" but didn't. ",
 				landlord.log.containsString("Received msgStartShift from Person. Command.callRenters"));
-		assertEquals("Landlord should have one command. Instead, it has "
+		assertEquals("Landlord should have 2 commands. Instead, it has "
+				+ landlord.commands.size(), 2, landlord.commands.size());
+		assertTrue("Landlord's command should be Command.sit. It isn't",
+				landlord.commands.get(0) == Command.sit);
+		assertTrue("LandlordResident's scheduler should have returned true, but didn't.",
+				landlord.pickAndExecuteAnAction());
+				//running sendRentDue()
+		assertEquals("Landlord should have 1 command. Instead, it has "
 				+ landlord.commands.size(), 1, landlord.commands.size());
+		//Checking logs
+		assertEquals("Landlord should have 1 event logged after the Landlord's scheduler is called for the first time. Instead, it has "
+				+ landlord.log.size(), 1, landlord.log.size());
+		assertEquals("MockPerson should have an empty event log after the Landlord's scheduler is called for the first time. Instead, the MockPerson's event log reads: "
+				+ person.log.toString(), 0, person.log.size());
+		assertEquals("MockResident1 should have an empty event log after the Landlord's scheduler is called for the first time. Instead, MockResident1's event log reads: "
+				+ resident1.log.toString(), 0, resident1.log.size());
+		assertEquals("MockResident2 should have an empty event log after the Landlord's scheduler is called for the first time. Instead, MockResident2's event log reads: "
+				+ resident2.log.toString(), 0, resident2.log.size());
+		
+	//Step 1
+		landlord.msgStartShift(); //called from Person
+
+		assertTrue("Landlord should have logged \"Received msgStartShift\" but didn't. ",
+				landlord.log.containsString("Received msgStartShift from Person. Command.callRenters"));
+		assertEquals("Landlord should have 2 commands. Instead, it has "
+				+ landlord.commands.size(), 2, landlord.commands.size());
 		assertTrue("Landlord's command should be Command.callRenters. It isn't",
 				landlord.commands.get(0) == Command.callRenters);
 		assertTrue("LandlordResident's scheduler should have returned true, but didn't.",
 				landlord.pickAndExecuteAnAction());
 				//running sendRentDue()
-		assertEquals("Landlord should have no commands. Instead, it has "
-				+ landlord.commands.size(), 0, landlord.commands.size());
+		assertEquals("Landlord should have 1 command. Instead, it has "
+				+ landlord.commands.size(), 1, landlord.commands.size());
 		assertTrue("MockResident1 should have logged \"Received msgRentDue\" but didn't",
 				resident1.log.containsString("Received msgRentDue from Landlord. Setting person.rentDue"));
 		assertTrue("Landlord's first renter's state should be state = RenterState.called. It isn't",
@@ -72,8 +96,8 @@ public class LandlordRoleTest extends TestCase
 		assertTrue("Landlord's second renter's state should be state = RenterState.called. It isn't",
 				landlord.renters.get(1).state == RenterState.called);
 		//Checking logs
-		assertEquals("Landlord should have 1 event logged after the Landlord's scheduler is called for the first time. Instead, it has "
-				+ landlord.log.size(), 1, landlord.log.size());
+		assertEquals("Landlord should have 2 events logged after the Landlord's scheduler is called for the first time. Instead, it has "
+				+ landlord.log.size(), 2, landlord.log.size());
 		assertEquals("MockPerson should have an empty event log after the Landlord's scheduler is called for the first time. Instead, the MockPerson's event log reads: "
 				+ person.log.toString(), 0, person.log.size());
 		assertEquals("MockResident1 should have 1 event logged after the Landlord's scheduler is called for the first time. Instead, it has "
@@ -86,10 +110,10 @@ public class LandlordRoleTest extends TestCase
 		
 		assertTrue("Landlord should have logged \"Received msgDingDong\" but didn't. His log reads instead: "
 				+ landlord.log.getLastLoggedEvent().toString(), landlord.log.containsString("Received msgDingDong from Resident. State.arrived, Command.collectRent"));
-		assertEquals("Landlord should have one command. Instead, it has "
-				+ landlord.commands.size(), 1, landlord.commands.size());
-		assertTrue("Landlord's command should be Command.collectRent. It isn't",
-				landlord.commands.get(0) == Command.collectRent);
+		assertEquals("Landlord should have 2 commands. Instead, it has "
+				+ landlord.commands.size(), 2, landlord.commands.size());
+		assertTrue("Landlord's command should be Command.collectRent. It isn't" + landlord.commands.get(0),
+				landlord.commands.get(1) == Command.collectRent);
 		assertTrue("Landlord's first renter's state should be state = RenterState.arrived. It isn't",
 				landlord.renters.get(0).state == RenterState.arrived);
 		assertTrue("Landlord's second renter's state should be state = RenterState.called. It isn't",
@@ -97,8 +121,8 @@ public class LandlordRoleTest extends TestCase
 		assertTrue("LandlordResident's scheduler should have returned true, but didn't.",
 				landlord.pickAndExecuteAnAction());
 				//running sendAmountOwed()
-		assertEquals("Landlord should have no commands. Instead, it has "
-				+ landlord.commands.size(), 0, landlord.commands.size());
+		assertEquals("Landlord should have 1 command. Instead, it has "
+				+ landlord.commands.size(), 1, landlord.commands.size());
 		assertTrue("MockResident1 should have logged \"Received msgAmountOwed\" but didn't",
 				resident1.log.containsString("Received msgAmountOwed from Landlord. Rent = $50, Command.payLandlord"));
 		assertTrue("Landlord's first renter's state should be state = RenterState.askedToPay. It isn't",
@@ -106,8 +130,8 @@ public class LandlordRoleTest extends TestCase
 		assertTrue("Landlord's second renter's state should be state = RenterState.called. It isn't",
 				landlord.renters.get(1).state == RenterState.called);
 		//Checking logs
-		assertEquals("Landlord should have 2 events logged after the Landlord's scheduler is called for the second time. Instead, it has "
-				+ landlord.log.size(), 2, landlord.log.size());
+		assertEquals("Landlord should have 3 events logged after the Landlord's scheduler is called for the second time. Instead, it has "
+				+ landlord.log.size(), 3, landlord.log.size());
 		assertEquals("MockPerson should have an empty event log after the Landlord's scheduler is called for the second time. Instead, the MockPerson's event log reads: "
 				+ person.log.toString(), 0, person.log.size());
 		assertEquals("MockResident1 should have 2 events logged after the Landlord's scheduler is called for the second time. Instead, it has "
@@ -120,10 +144,10 @@ public class LandlordRoleTest extends TestCase
 		
 		assertTrue("Landlord should have logged \"Received msgDingDong\" but didn't. His log reads instead: "
 				+ landlord.log.getLastLoggedEvent().toString(), landlord.log.containsString("Received msgDingDong from Resident. State.arrived, Command.collectRent"));
-		assertEquals("Landlord should have one command. Instead, it has "
-				+ landlord.commands.size(), 1, landlord.commands.size());
+		assertEquals("Landlord should have 2 commands. Instead, it has "
+				+ landlord.commands.size(), 2, landlord.commands.size());
 		assertTrue("Landlord's command should be Command.collectRent. It isn't",
-				landlord.commands.get(0) == Command.collectRent);
+				landlord.commands.get(1) == Command.collectRent);
 		assertTrue("Landlord's first renter's state should be state = RenterState.askedToPay. It isn't",
 				landlord.renters.get(0).state == RenterState.askedToPay);
 		assertTrue("Landlord's second renter's state should be state = RenterState.arrived. It isn't",
@@ -131,8 +155,8 @@ public class LandlordRoleTest extends TestCase
 		assertTrue("LandlordResident's scheduler should have returned true, but didn't.",
 				landlord.pickAndExecuteAnAction());
 				//running sendAmountOwed()
-		assertEquals("Landlord should have no commands. Instead, it has "
-				+ landlord.commands.size(), 0, landlord.commands.size());
+		assertEquals("Landlord should have 1 command. Instead, it has "
+				+ landlord.commands.size(), 1, landlord.commands.size());
 		assertTrue("MockResident2 should have logged \"Received msgAmountOwed\" but didn't",
 				resident2.log.containsString("Received msgAmountOwed from Landlord. Rent = $50, Command.payLandlord"));
 		assertTrue("Landlord's first renter's state should be state = RenterState.askedToPay. It isn't",
@@ -140,8 +164,8 @@ public class LandlordRoleTest extends TestCase
 		assertTrue("Landlord's second renter's state should be state = RenterState.askedToPay. It isn't",
 				landlord.renters.get(1).state == RenterState.askedToPay);
 		//Checking logs
-		assertEquals("Landlord should have 3 events logged after the Landlord's scheduler is called for the third time. Instead, it has "
-				+ landlord.log.size(), 3, landlord.log.size());
+		assertEquals("Landlord should have 4 events logged after the Landlord's scheduler is called for the third time. Instead, it has "
+				+ landlord.log.size(), 4, landlord.log.size());
 		assertEquals("MockPerson should have an empty event log after the Landlord's scheduler is called for the third time. Instead, the MockPerson's event log reads: "
 				+ person.log.toString(), 0, person.log.size());
 		assertEquals("MockResident1 should have 2 events logged after the Landlord's scheduler is called for the third time. Instead, it has "
@@ -156,17 +180,17 @@ public class LandlordRoleTest extends TestCase
 					+ landlord.log.getLastLoggedEvent().toString(), landlord.log.containsString("Received msgPayRent from Resident. State.paid. Payment = $50"));
 			assertTrue("Landlord's variable moneyEarned should equal $50. It doesn't.",
 					landlord.moneyEarned == 50);
-			assertEquals("Landlord should have no commands. Instead, it has "
-					+ landlord.commands.size(), 0, landlord.commands.size());
+			assertEquals("Landlord should have 1 command. Instead, it has "
+					+ landlord.commands.size(), 1, landlord.commands.size());
 			assertTrue("Landlord's first renter's state should be state = RenterState.askedToPay. It isn't",
 					landlord.renters.get(0).state == RenterState.askedToPay);
 			assertTrue("Landlord's second renter's state should be state = RenterState.paid. It isn't",
 					landlord.renters.get(1).state == RenterState.paid);
-			assertFalse("LandlordResident's scheduler should have returned false, but didn't.",
+			assertTrue("LandlordResident's scheduler should have returned true, but didn't.",
 					landlord.pickAndExecuteAnAction());
 			//Checking logs
-			assertEquals("Landlord should have 4 events logged after the Landlord's scheduler is called for the fourth time. Instead, it has "
-					+ landlord.log.size(), 4, landlord.log.size());
+			assertEquals("Landlord should have 5 events logged after the Landlord's scheduler is called for the fourth time. Instead, it has "
+					+ landlord.log.size(), 5, landlord.log.size());
 			assertEquals("MockPerson should have an empty event log after the Landlord's scheduler is called for the fourth time. Instead, the MockPerson's event log reads: "
 					+ person.log.toString(), 0, person.log.size());
 			assertEquals("MockResident1 should have 2 events logged after the Landlord's scheduler is called for the fourth time. Instead, it has "
@@ -203,8 +227,8 @@ public class LandlordRoleTest extends TestCase
 			assertTrue("MockPerson should have logged \"Received msgLeftDestination\" but didn't. His log reads instead: "
 					+ person.log.getLastLoggedEvent().toString(), person.log.containsString("Received msgLeftDestination"));
 			//Checking logs
-			assertEquals("Landlord should have 5 events logged after the Landlord's scheduler is called for the fifth time. Instead, it has "
-					+ landlord.log.size(), 5, landlord.log.size());
+			assertEquals("Landlord should have 6 events logged after the Landlord's scheduler is called for the fifth time. Instead, it has "
+					+ landlord.log.size(), 6, landlord.log.size());
 			assertEquals("MockPerson should have 3 events logged after the Landlord's scheduler is called for the fifth time. Instead, the MockPerson's event log reads: "
 					+ person.log.toString(), 3, person.log.size());
 			assertEquals("MockResident1 should have 2 events logged after the Landlord's scheduler is called for the fifth time. Instead, it has "
