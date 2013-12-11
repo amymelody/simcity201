@@ -1,6 +1,8 @@
 package simcity.jesusrestaurant;
 
 import simcity.role.Role;
+import simcity.trace.AlertLog;
+import simcity.trace.AlertTag;
 import simcity.jesusrestaurant.interfaces.JesusCustomer;
 import simcity.jesusrestaurant.interfaces.JesusWaiter;
 import simcity.jesusrestaurant.gui.JesusWaiterGui;
@@ -459,7 +461,7 @@ public class JesusNormalWaiterRole extends RestWaiterRole implements JesusWaiter
 		}
 		private void seatJesusCustomer(myCustomer cust) {
 			waiterGui.DoLeaveCustomer();
-			//Do("Seating JesusCustomer " + cust.JesusCustomer);
+			AlertLog.getInstance().logMessage(AlertTag.JESUS_RESTAURANT, name, "Seating " + cust.customer);
 			cust.customer.msgSitAtTable(this, cust.tableNumber, JesusMenu);
 			DoSeatCustomer(cust.customer, cust.tableNumber);
 			try {
@@ -480,13 +482,13 @@ public class JesusNormalWaiterRole extends RestWaiterRole implements JesusWaiter
 		}
 
 		private void takeOrder(myCustomer mc) {
-			//Do("Taking order from " + mc.JesusCustomer);
+			AlertLog.getInstance().logMessage(AlertTag.JESUS_RESTAURANT, name, "Taking order from " + mc.customer);
 			mc.state = customerState.ordering;
 			mc.customer.msgTakeOrder();
 		}
 
 		private void gotoCook(myCustomer mc) {
-			//Do("Going to cook " + cook);
+			AlertLog.getInstance().logMessage(AlertTag.JESUS_RESTAURANT, name, "Going to cook");
 			DoGoToCook(mc); //animation
 			try {
 				atTable.acquire();
@@ -501,7 +503,7 @@ public class JesusNormalWaiterRole extends RestWaiterRole implements JesusWaiter
 		}
 
 		private void retakeOrder(myCustomer mc) {
-			//print("Out of " + mc.foodChoice);
+			AlertLog.getInstance().logMessage(AlertTag.JESUS_RESTAURANT, name, "Out of " + mc.foodChoice);
 			mc.customer.msgRetakeOrder(JesusMenu);
 		}
 
@@ -515,13 +517,13 @@ public class JesusNormalWaiterRole extends RestWaiterRole implements JesusWaiter
 		}
 
 		private void wereClosed(myCustomer mc) {
-			//print("Sorry, but we are out of everything...");
+			AlertLog.getInstance().logMessage(AlertTag.JESUS_RESTAURANT, name, "Sorry, but we are out of everything...");
 			mc.customer.msgNoFood();
 			myCustomers.remove(mc);
 		}
 
 		private void getPlate(myCustomer mc) {
-			//Do("Picking up " + mc.foodChoice);
+			AlertLog.getInstance().logMessage(AlertTag.JESUS_RESTAURANT, name, "Picking up " + mc.foodChoice);
 			DoGetPlate(mc);//animation
 			try {
 				atTable.acquire();
@@ -533,7 +535,7 @@ public class JesusNormalWaiterRole extends RestWaiterRole implements JesusWaiter
 
 		private void walkWithPlate(myCustomer mc) {
 			cook.msgGotPlate(mc.foodChoice);
-			//Do("Handing " + mc.foodChoice + " to " + mc.JesusCustomer);
+			AlertLog.getInstance().logMessage(AlertTag.JESUS_RESTAURANT, name, "Handing " + mc.foodChoice + " to " + mc.customer);
 			DoHandPlate(mc);//animation
 			try {
 				atTable.acquire();
@@ -544,7 +546,7 @@ public class JesusNormalWaiterRole extends RestWaiterRole implements JesusWaiter
 		}
 
 		private void handPlate(myCustomer mc) {
-			//Do("Enjoy your meal, " + mc.name);
+			AlertLog.getInstance().logMessage(AlertTag.JESUS_RESTAURANT, name, "Enjoy your meal, " + mc.name);
 			mc.customer.msgEnjoyOrder(mc.foodChoice);
 			mc.state = customerState.eating;
 			event = AgentEvent.askForCheck;
@@ -557,7 +559,7 @@ public class JesusNormalWaiterRole extends RestWaiterRole implements JesusWaiter
 		}
 
 		private void handCheck(myCustomer mc) {
-			//Do("Here is your check of $" + mc.amountDue + ", " + mc.name);
+			AlertLog.getInstance().logMessage(AlertTag.JESUS_RESTAURANT, name, "Here is your check of $" + mc.amountDue + ", " + mc.name);
 			mc.customer.msgHereIsCheck(mc.amountDue);
 		}
 
@@ -571,7 +573,7 @@ public class JesusNormalWaiterRole extends RestWaiterRole implements JesusWaiter
 		}
 
 		private void clearTable(myCustomer cust) {
-			//Do("Clearing table " + cust.tableNumber);
+			AlertLog.getInstance().logMessage(AlertTag.JESUS_RESTAURANT, name, "Clearing table " + cust.tableNumber);
 			host.msgTableFree(cust.tableNumber, name);
 			myCustomers.remove(cust);
 		}
@@ -586,7 +588,7 @@ public class JesusNormalWaiterRole extends RestWaiterRole implements JesusWaiter
 		}
 
 		private void DoGoToCook(myCustomer mc) {
-			//print("Giving order to " + cook.getName() + " (" + mc.foodChoice + ")");
+			AlertLog.getInstance().logMessage(AlertTag.JESUS_RESTAURANT, name, "Giving order to " + cook.getName() + " (" + mc.foodChoice + ")");
 			waiterGui.DoGoToCook();
 		}
 
