@@ -1,6 +1,8 @@
 package simcity.market;
 
 import java.awt.Point;
+import simcity.trace.AlertLog;
+import simcity.trace.AlertTag;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -119,21 +121,21 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 	private static Map<Integer, Point> chairLocations = new HashMap<Integer, Point>();
 	static {
 		chairLocations.put(1, new Point(80, 320));
-		chairLocations.put(2, new Point(20, 320));
+		chairLocations.put(2, new Point(0, 320));
 		chairLocations.put(3, new Point(80, 340));
-		chairLocations.put(4, new Point(20, 340));
+		chairLocations.put(4, new Point(0, 340));
 		chairLocations.put(5, new Point(80, 360));
-		chairLocations.put(6, new Point(20, 360));
+		chairLocations.put(6, new Point(0, 360));
 		chairLocations.put(7, new Point(80, 380));
-		chairLocations.put(8, new Point(20, 380));
+		chairLocations.put(8, new Point(0, 380));
 		chairLocations.put(9, new Point(80, 400));
-		chairLocations.put(20, new Point(20, 400));
+		chairLocations.put(20, new Point(0, 400));
 		chairLocations.put(11, new Point(80, 420));
-		chairLocations.put(12, new Point(20, 420));
+		chairLocations.put(12, new Point(0, 420));
 		chairLocations.put(13, new Point(80, 440));
-		chairLocations.put(14, new Point(20, 440));
+		chairLocations.put(14, new Point(0, 440));
 		chairLocations.put(15, new Point(80, 460));
-		chairLocations.put(16, new Point(20, 460));
+		chairLocations.put(16, new Point(0, 460));
 		chairLocations.put(17, new Point(60, 480));
 		chairLocations.put(18, new Point(40, 480));
 		chairLocations.put(19, new Point(20, 480));
@@ -417,7 +419,6 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 		marketMoney -= salary;
 		marketMoneySurplus = marketMoney - 100;
 		//bank.msgMarketDeposit(marketMoneySurplus);
-		//person.businessIsClosed(getJobLocation(), true);
 		marketMoney = 100;
 	}
 
@@ -444,6 +445,7 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 		else {
 			removeOrder(o);
 		}
+		AlertLog.getInstance().logMessage(AlertTag.MARKET, name, "Handed order to employee");
 		stateChanged();
 	}
 
@@ -470,11 +472,13 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 		else {
 			removeOrder(o);
 		}
+		AlertLog.getInstance().logMessage(AlertTag.MARKET, name, "Handed order to deliverer");
 		stateChanged();
 	}
 
 	private void LetCustomerKnow(Order o) {
 		o.oS = OrderState.know;
+		AlertLog.getInstance().logMessage(AlertTag.MARKET, name, "Order ready!");
 		o.customer.msgOrderReady();
 	}
 
@@ -484,6 +488,7 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 	}
 
 	private void FinishOrder(Order o) {
+		AlertLog.getInstance().logMessage(AlertTag.MARKET, name, "Thank you, come again!");
 		o.customer.msgThankYou(o.change);
 		updateMarketMoney(o);
 		removeOrder(o);

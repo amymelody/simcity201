@@ -1,6 +1,8 @@
 package simcity.jesusrestaurant;
 
 import simcity.interfaces.Person;
+import simcity.trace.AlertLog;
+import simcity.trace.AlertTag;
 import simcity.RestCashierRole;
 import simcity.role.JobRole;
 import simcity.interfaces.MarketDeliverer;
@@ -194,29 +196,29 @@ public class JesusCashierRole extends RestCashierRole implements JesusCashier {
 		jesusCashierGui.leave();
 	}
 	public void computeCheck(Check ch) {
-		print("Computing check for " + ch.name);
+		AlertLog.getInstance().logMessage(AlertTag.JESUS_RESTAURANT, name, "Computing check for " + ch.name);
 		log.add(new LoggedEvent ("Check computed"));
 		ch.addAmount();
 		ch.waiter.msgCheckComputed(ch.customer, ch.amount, ch.name);
-		print("Check complete for " + ch.name + ". Total is " + ch.amount);
+		AlertLog.getInstance().logMessage(AlertTag.JESUS_RESTAURANT, name, "Check complete for " + ch.name + ". Total is " + ch.amount);
 		ch.cS = CheckState.ready;
 	}
 
 	public void payment(Check ch) {
 		ch.subtractAmount();
 		if(ch.amount <= 0) {
-			print("Paid $" + ch.amountPaid);
+			AlertLog.getInstance().logMessage(AlertTag.JESUS_RESTAURANT, name, "Paid $" + ch.amountPaid);
 			log.add(new LoggedEvent ("Check paid"));
-			print("Your change is $" + -ch.amount);
+			AlertLog.getInstance().logMessage(AlertTag.JESUS_RESTAURANT, name, "Your change is $" + -ch.amount);
 			money += ch.amount;
 			ch.customer.msgChange(-ch.amount);
 			ch.cS = CheckState.paid;
 			ch.clearCheck();
 		}
 		else {
-			print("Paid " + ch.amountPaid);
+			AlertLog.getInstance().logMessage(AlertTag.JESUS_RESTAURANT, name, "Paid " + ch.amountPaid);
 			log.add(new LoggedEvent ("Check not fully paid"));
-			print("Need to pay " + ch.amount + ", but don't worry. You can pay next time.");
+			AlertLog.getInstance().logMessage(AlertTag.JESUS_RESTAURANT, name, "Need to pay " + ch.amount + ", but don't worry. You can pay next time.");
 			ch.cS = CheckState.owe;
 			ch.customer.msgPayNextTime(ch.amount);
 		}
@@ -225,12 +227,12 @@ public class JesusCashierRole extends RestCashierRole implements JesusCashier {
 	public void payBill(Bill b) {
 		b.subtractAmount();
 		if(b.bS == BillState.paid) {
-			print("Bill paid fully. $" + money + "left");
+			AlertLog.getInstance().logMessage(AlertTag.JESUS_RESTAURANT, name, "Bill paid fully. $" + money + "left");
 			log.add(new LoggedEvent("Bill paid"));
 			b.market.msgPayment(this, b.amountDue);
 		}
 		else if(b.bS == BillState.owe) {
-			print("Bill not fully paid. Owe " + b.amountDue);
+			AlertLog.getInstance().logMessage(AlertTag.JESUS_RESTAURANT, name, "Bill not fully paid. Owe " + b.amountDue);
 			log.add(new LoggedEvent("Bill not paid completely"));
 			b.market.msgPayment(this, money);
 			money = 0;

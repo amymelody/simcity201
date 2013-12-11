@@ -1,6 +1,8 @@
 package simcity.jesusrestaurant;
 
 import simcity.RestCustomerRole;
+import simcity.trace.AlertLog;
+import simcity.trace.AlertTag;
 import simcity.interfaces.Person;
 import simcity.jesusrestaurant.gui.JesusCustomerGui;
 import simcity.jesusrestaurant.interfaces.JesusCashier;
@@ -93,7 +95,7 @@ public class JesusCustomerRole extends RestCustomerRole implements JesusCustomer
 
 		public void msgSitAtTable(JesusWaiter w, int tNum, JesusMenu m) {
 			waiter = w;
-			print("Received msgSitAtTable");
+			AlertLog.getInstance().logMessage(AlertTag.JESUS_RESTAURANT, name, "Received msgSitAtTable");
 			tableNum = tNum;
 			event = AgentEvent.followWaiter;
 			menu = m;
@@ -242,7 +244,7 @@ public class JesusCustomerRole extends RestCustomerRole implements JesusCustomer
 
 		private void giveOrder() {
 			if(menu.tooExpensive(person.getMoney())) {
-				print("Everything is too expensive.");
+				AlertLog.getInstance().logMessage(AlertTag.JESUS_RESTAURANT, name, "Everything is too expensive.");
 				waiter.msgLeavingTable(name);
 				jesusCustomerGui.DoExitRestaurant();
 			}
@@ -250,7 +252,7 @@ public class JesusCustomerRole extends RestCustomerRole implements JesusCustomer
 				Random rnd = new Random();
 				foodChoice = menu.getMenuItemName(rnd.nextInt(3));
 				jesusCustomerGui.DoOrder(tableNum, foodChoice);
-				print("Ordered " + foodChoice);
+				AlertLog.getInstance().logMessage(AlertTag.JESUS_RESTAURANT, name, "Ordered " + foodChoice);
 				waiter.msgMyOrder(name, foodChoice);
 			}
 			menu = null;
@@ -258,7 +260,7 @@ public class JesusCustomerRole extends RestCustomerRole implements JesusCustomer
 
 		private void regiveOrder() {
 			if(menu.tooExpensive(person.getMoney())) {
-				print("Everything is too expensive.");
+				AlertLog.getInstance().logMessage(AlertTag.JESUS_RESTAURANT, name, "Everything is too expensive.");
 				waiter.msgLeavingTable(name);
 				jesusCustomerGui.DoExitRestaurant();
 			}
@@ -269,7 +271,7 @@ public class JesusCustomerRole extends RestCustomerRole implements JesusCustomer
 					newOrder = menu.getMenuItemName(rnd.nextInt(3));
 				}
 				foodChoice = newOrder;
-				print("Ordered " + foodChoice);
+				AlertLog.getInstance().logMessage(AlertTag.JESUS_RESTAURANT, name, "Ordered " + foodChoice);
 				waiter.msgMyOrder(name, foodChoice);
 				menu = null;
 				jesusCustomerGui.DoOrder(tableNum, foodChoice);
@@ -290,7 +292,7 @@ public class JesusCustomerRole extends RestCustomerRole implements JesusCustomer
 			timer.schedule(new TimerTask() {
 				Object food = 1;
 				public void run() {
-					print("Done eating, " + foodChoice + "=" + food);
+					AlertLog.getInstance().logMessage(AlertTag.JESUS_RESTAURANT, name, "Done eating, " + foodChoice + "=" + food);
 					event = AgentEvent.doneEating;
 					//isHungry = false;
 					stateChanged();

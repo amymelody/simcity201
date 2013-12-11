@@ -1,6 +1,8 @@
 package simcity.jesusrestaurant;
 
 import simcity.ItemOrder;
+import simcity.trace.AlertLog;
+import simcity.trace.AlertTag;
 import simcity.RestCookRole;
 import simcity.interfaces.Person;
 import simcity.role.JobRole;
@@ -325,7 +327,7 @@ public class JesusCookRole extends RestCookRole implements RestCook {
 
 	private void prepareFood(final Order o) {
 		if(noInventory()) {
-			print("Out of everything!");
+			AlertLog.getInstance().logMessage(AlertTag.JESUS_RESTAURANT, name, "Out of everything!");
 			o.waiter.msgNoFood();
 			sState = stockState.outOfFood;
 			synchronized(foods){
@@ -340,7 +342,7 @@ public class JesusCookRole extends RestCookRole implements RestCook {
 			open = false;
 		}
 		else if(getInventory(o.name) <= 0) {
-			print("Out of " + o.name);
+			AlertLog.getInstance().logMessage(AlertTag.JESUS_RESTAURANT, name, "Out of " + o.name);
 			o.waiter.msgOutOfFood(o.name);
 			sState = stockState.outOfFood;
 			synchronized(foods){
@@ -365,10 +367,10 @@ public class JesusCookRole extends RestCookRole implements RestCook {
 			subtractInventory(o.name, 1);
 			Do("Preparing " + o.custName + "'s " + o.name);
 			jesusCookGui.DoCookFood(o.name);
-			print(getInventory(o.name) + " " + o.name + "(s) left");
+			AlertLog.getInstance().logMessage(AlertTag.JESUS_RESTAURANT, name, getInventory(o.name) + " " + o.name + "(s) left");
 			timer.schedule(new TimerTask() {
 				public void run() {
-					print("Order ready");
+					AlertLog.getInstance().logMessage(AlertTag.JESUS_RESTAURANT, name, "Order ready");
 					o.oState = orderState.ready;
 					stateChanged();
 					jesusCookGui.DoPlateFood(o.name);
@@ -380,7 +382,7 @@ public class JesusCookRole extends RestCookRole implements RestCook {
 
 	private void orderReady(Order o) {
 		o.oState = orderState.waiting;
-		print("Waiter: " + o.waiter.getName() + ", Food: " + o.name + ", Customer: " + o.custName);
+		AlertLog.getInstance().logMessage(AlertTag.JESUS_RESTAURANT, name, "Waiter: " + o.waiter.getName() + ", Food: " + o.name + ", Customer: " + o.custName);
 		o.waiter.msgOrderReady(o.name, o.custName);
 		orders.remove(o);
 	}

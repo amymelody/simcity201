@@ -1,6 +1,8 @@
 package simcity.market;
 
 import java.util.ArrayList;
+import simcity.trace.AlertLog;
+import simcity.trace.AlertTag;
 import java.util.List;
 import java.util.concurrent.Semaphore;
 
@@ -188,6 +190,7 @@ public class MarketCustomerRole extends Role implements MarketCustomer {
 		}
 	}
 	private void GiveOrder() {
+		AlertLog.getInstance().logMessage(AlertTag.MARKET, name, "I want to buy some items.");
 		cashier.msgIWantItems(this, items);
 		cS = CustomerState.confirming;
 	}

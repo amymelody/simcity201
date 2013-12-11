@@ -1,12 +1,12 @@
 package simcity.jesusrestaurant;
 
 import simcity.RestHostRole;
-import simcity.role.JobRole;
+import simcity.trace.AlertLog;
+import simcity.trace.AlertTag;
 import simcity.interfaces.Person;
 import simcity.jesusrestaurant.gui.JesusHostGui;
 
 import java.util.*;
-import java.util.concurrent.Semaphore;
 
 /**
  * Restaurant Host Agent
@@ -111,7 +111,7 @@ public class JesusHostRole extends RestHostRole {
 	public void msgTableFree(int tableNum, String waiterName) {
 		for (Table table : tables) {
 			if (table.tableNumber == tableNum) {
-				print("Table " + table.tableNumber + " cleared");
+				AlertLog.getInstance().logMessage(AlertTag.JESUS_RESTAURANT, name, "Table " + table.tableNumber + " cleared");
 				table.setUnoccupied();
 				stateChanged();
 			}
@@ -204,7 +204,7 @@ public class JesusHostRole extends RestHostRole {
 	private void noSeats(myCustomer c) {
 		c.customer.msgNoSeats();
 		c.asked = true;
-		print("Sorry " + c.customer.getName() + ", but tables are full. Would you like to wait?");
+		AlertLog.getInstance().logMessage(AlertTag.JESUS_RESTAURANT, name, "Sorry " + c.customer.getName() + ", but tables are full. Would you like to wait?");
 		state = AgentState.none;
 	}
 
