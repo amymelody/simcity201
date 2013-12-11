@@ -93,11 +93,9 @@ public class MarketDelivererTest extends TestCase
 		assertTrue("Deliverer's scheduler should have returned true, but didn't.", deliverer.pickAndExecuteAnAction());
 
 		// Check postconditions for Step 2b
-		assertEquals("Deliverer has one order in List orders in which OrderState == ready. It doesn't.", deliverer.orders.get(0).getOS(), OrderState.ready);
-		assertEquals("Deliverer's currentOrder has OrderState == ready. It doesn't.", deliverer.currentOrder.getOS(), OrderState.ready);
-		assertTrue("RCook1 should have received order from Deliverer. RCook1 should have a log that reads: Received delivery. Instead it reads: " + rCook1.log.toString(), rCook1.log.getLastLoggedEvent().getMessage() == "Received delivery");
-		assertTrue("RCashier1 should have received bill from Deliverer. RCashier1 should have a log that reads: Received market bill. Instead it reads: " + rCashier1.log.toString(), rCashier1.log.getLastLoggedEvent().getMessage() == "Received market bill");
-
+		assertEquals("Deliverer has one order in List orders in which OrderState == newDelivery. It doesn't.", deliverer.orders.get(0).getOS(), OrderState.newDelivery);
+		assertEquals("Deliverer's currentOrder has OrderState == newDelivery. It doesn't.", deliverer.currentOrder.getOS(), OrderState.newDelivery);
+		
 		// Step 3a - Receive Cashier's confirmation (Message)
 		deliverer.msgPayment(rCashier1, 40);
 
@@ -125,7 +123,6 @@ public class MarketDelivererTest extends TestCase
 		assertTrue("Deliverer's scheduler should have returned true, but didn't.", deliverer.pickAndExecuteAnAction());
 
 		// Check postconditions for Step 4b
-		assertTrue("Cashier should have received change from Deliverer. Cashier should have a log that reads: Received deliver order to finish. Instead it reads: " + cashier.log.toString(), cashier.log.getLastLoggedEvent().getMessage() == "Received deliver order to finish");
 		assertTrue("Deliverer's currentOrder should be null. It isn't.", deliverer.currentOrder == null);
 		assertTrue("Deliverer should have no orders in List orders. It doesn't.", deliverer.orders.size() == 0);
 
@@ -182,10 +179,8 @@ public class MarketDelivererTest extends TestCase
 		assertTrue("Deliverer's scheduler should have returned true, but didn't.", deliverer.pickAndExecuteAnAction());
 
 		// Check postconditions for Step 2b
-		assertEquals("Deliverer has one order in List orders in which OrderState == ready. It doesn't.", deliverer.orders.get(0).getOS(), OrderState.ready);
-		assertEquals("Deliverer's currentOrder has OrderState == ready. It doesn't.", deliverer.currentOrder.getOS(), OrderState.ready);
-		assertTrue("RCook1 should have received order from Deliverer. RCook1 should have a log that reads: Received delivery. Instead it reads: " + rCook1.log.toString(), rCook1.log.getLastLoggedEvent().getMessage() == "Received delivery");
-		assertTrue("RCashier1 should have received bill from Deliverer. RCashier1 should have a log that reads: Received market bill. Instead it reads: " + rCashier1.log.toString(), rCashier1.log.getLastLoggedEvent().getMessage() == "Received market bill");
+		assertEquals("Deliverer has one order in List orders in which OrderState == newDelivery. It doesn't.", deliverer.orders.get(0).getOS(), OrderState.newDelivery);
+		assertEquals("Deliverer's currentOrder has OrderState == newDelivery. It doesn't.", deliverer.currentOrder.getOS(), OrderState.newDelivery);
 
 		// Step 3a - Receive Cashier's confirmation (Message)
 		deliverer.msgPayment(rCashier1, 30);
@@ -214,7 +209,6 @@ public class MarketDelivererTest extends TestCase
 		assertTrue("Deliverer's scheduler should have returned true, but didn't.", deliverer.pickAndExecuteAnAction());
 
 		// Check postconditions for Step 4b
-		assertTrue("Cashier should have received change from Deliverer. Cashier should have a log that reads: Received deliver order to finish. Instead it reads: " + cashier.log.toString(), cashier.log.getLastLoggedEvent().getMessage() == "Received deliver order to finish");
 		assertTrue("Deliverer's currentOrder should be null. It isn't.", deliverer.currentOrder == null);
 		assertTrue("Deliverer should have no orders in List orders. It doesn't.", deliverer.orders.size() == 0);
 
@@ -272,7 +266,6 @@ public class MarketDelivererTest extends TestCase
 		assertTrue("Deliverer should have two orders in List orders in which OrderState == newDelivery. It doesn't.", deliverer.orders.get(0).getOS() == OrderState.newDelivery && deliverer.orders.get(1).getOS() == OrderState.newDelivery);
 		assertFalse("Deliverer should have two orders in List orders for delivery. It doesn't", deliverer.orders.get(0).location == null || deliverer.orders.get(1).location == null);
 
-		assertTrue("Deliverer's current order should STILL be test1Order. It isn't.", deliverer.currentOrder == deliverer.orders.get(0) && deliverer.currentOrder == test1Order);
 		assertTrue("Deliverer should have one order in List orders from Anjali's Restaurant. It doesn't.", deliverer.orders.get(1).cook == rCook2 && deliverer.orders.get(1).cashier == rCashier2);
 
 		// Step 1c - Arrived at Josh's Restaurant (Message)
@@ -285,10 +278,8 @@ public class MarketDelivererTest extends TestCase
 		assertTrue("Deliverer's scheduler should have returned true, but didn't.", deliverer.pickAndExecuteAnAction());
 
 		// Check postconditions for Step 1d
-		assertEquals("Deliverer has one order in List orders in which OrderState == ready. It doesn't.", deliverer.orders.get(0).getOS(), OrderState.ready);
-		assertEquals("Deliverer's currentOrder has OrderState == ready. It doesn't.", deliverer.currentOrder.getOS(), OrderState.ready);
-		assertTrue("RCook1 should have received order from Deliverer. RCook1 should have a log that reads: Received delivery. Instead it reads: " + rCook1.log.toString(), rCook1.log.getLastLoggedEvent().getMessage() == "Received delivery");
-		assertTrue("RCashier1 should have received bill from Deliverer. RCashier1 should have a log that reads: Received market bill. Instead it reads: " + rCashier1.log.toString(), rCashier1.log.getLastLoggedEvent().getMessage() == "Received market bill");
+		assertEquals("Deliverer has one order in List orders in which OrderState == newDelivery. It doesn't.", deliverer.orders.get(0).getOS(), OrderState.newDelivery);
+		assertEquals("Deliverer's currentOrder has OrderState == newDelivery. It doesn't.", deliverer.currentOrder.getOS(), OrderState.newDelivery);
 
 		// Step 1e - Receive Josh's cashier's payment (Message)
 		deliverer.msgPayment(rCashier1, 40);
@@ -317,7 +308,6 @@ public class MarketDelivererTest extends TestCase
 		assertTrue("Deliverer's scheduler should have returned true, but didn't.", deliverer.pickAndExecuteAnAction());
 
 		// Check postconditions for Step 1h
-		assertTrue("Cashier should have received change from Deliverer. Cashier should have a log that reads: Received deliver order to finish. Instead it reads: " + cashier.log.toString(), cashier.log.getLastLoggedEvent().getMessage() == "Received deliver order to finish");
 		assertTrue("Deliverer's currentOrder should be null. It isn't.", deliverer.currentOrder == null);
 		assertTrue("Deliverer should have one order in List orders. It doesn't.", deliverer.orders.size() == 1);
 
@@ -337,10 +327,8 @@ public class MarketDelivererTest extends TestCase
 		assertTrue("Deliverer's scheduler should have returned true, but didn't.", deliverer.pickAndExecuteAnAction());
 
 		// Check postconditions for Step 2d
-		assertEquals("Deliverer has one order in List orders in which OrderState == ready. It doesn't.", deliverer.orders.get(0).getOS(), OrderState.ready);
-		assertEquals("Deliverer's currentOrder has OrderState == ready. It doesn't.", deliverer.currentOrder.getOS(), OrderState.ready);
-		assertTrue("RCook2 should have received order from Deliverer. RCook2 should have a log that reads: Received delivery. Instead it reads: " + rCook2.log.toString(), rCook2.log.getLastLoggedEvent().getMessage() == "Received delivery");
-		assertTrue("RCashier2 should have received bill from Deliverer. RCashier2 should have a log that reads: Received market bill. Instead it reads: " + rCashier2.log.toString(), rCashier2.log.getLastLoggedEvent().getMessage() == "Received market bill");
+		assertEquals("Deliverer has one order in List orders in which OrderState == newDelivery. It doesn't.", deliverer.orders.get(0).getOS(), OrderState.newDelivery);
+		assertEquals("Deliverer's currentOrder has OrderState == newDelivery. It doesn't.", deliverer.currentOrder.getOS(), OrderState.newDelivery);
 
 		// Step 2e - Receive Josh's cashier's payment (Message)
 		deliverer.msgPayment(rCashier2, 60);
@@ -369,7 +357,6 @@ public class MarketDelivererTest extends TestCase
 		assertTrue("Deliverer's scheduler should have returned true, but didn't.", deliverer.pickAndExecuteAnAction());
 
 		// Check postconditions for Step 2h
-		assertTrue("Cashier should have received change from Deliverer. Cashier should have a log that reads: Received deliver order to finish. Instead it reads: " + cashier.log.toString(), cashier.log.getLastLoggedEvent().getMessage() == "Received deliver order to finish");
 		assertTrue("Deliverer's currentOrder should be null. It isn't.", deliverer.currentOrder == null);
 		assertTrue("Deliverer should have no orders in List orders. It doesn't.", deliverer.orders.size() == 0);
 
