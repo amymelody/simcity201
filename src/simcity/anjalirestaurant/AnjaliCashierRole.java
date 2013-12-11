@@ -11,6 +11,7 @@ import simcity.anjalirestaurant.interfaces.AnjaliCashier;
 import simcity.anjalirestaurant.interfaces.AnjaliCustomer;
 import simcity.anjalirestaurant.interfaces.AnjaliMarket;
 import simcity.anjalirestaurant.interfaces.AnjaliWaiter;
+import simcity.interfaces.BankManager;
 import simcity.interfaces.MarketDeliverer;
 import simcity.interfaces.Person;
 import simcity.mock.LoggedEvent;
@@ -37,15 +38,18 @@ public class AnjaliCashierRole extends RestCashierRole implements AnjaliCashier{
 	private AnjaliMarket market;
 	public boolean cantPay = false;
 	public String brokeCashier = "brokeCashier";
-	
+	private BankManager bankManager;
 	private boolean working;
 	private int cashierCash;
 	
 	public AnjaliCashierRole() {
 		super();
 		working = false;
+
 		
-		
+	}
+	public void setBankManager(BankManager bm){
+		this.bankManager = bm;
 	}
 
 	public void setPerson(Person p){
@@ -164,7 +168,8 @@ public class AnjaliCashierRole extends RestCashierRole implements AnjaliCashier{
 		public List<bill> bills = Collections.synchronizedList(new ArrayList<bill>());
 		public List<marketBill> marketBills = Collections.synchronizedList(new ArrayList<marketBill>());
 		public List<marketPayment> marketPayments = Collections.synchronizedList(new ArrayList<marketPayment>());
-		private double cash = 1000.00;
+		public double cash = 1000;
+		private int surplus = (int)cash/4;
 		
 		public double getCash(){
 			return cash;
@@ -302,6 +307,7 @@ public class AnjaliCashierRole extends RestCashierRole implements AnjaliCashier{
 	///////// ACTIONS/////////////
 		
 	private void leaveRestaurant(){
+		//person.msgMakeDeposit(surplus);
 		person.msgLeftDestination(this);
 	}
 	

@@ -280,6 +280,7 @@ public class PersonAgent extends Agent implements Person
 
 	private boolean wantToGoToRestaurant() {
 		if (allRestaurantsClosed()) {
+			AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "ALLL RESTAURANTS CLOSED");
 			return false;
 		}
 		if (state.ps == PhysicalState.fit) {
@@ -726,6 +727,7 @@ public class PersonAgent extends Agent implements Person
 	public void msgYoureHired(String role, int payrate, Map<Day,Time> startShifts, Map<Day,Time> endShifts) {
 		JobRole j = city.JobFactory(role);
 		addRole(j, role);
+		System.out.println(role + ", " + j.getJobLocation());
 		job = new Job(j, j.getJobLocation(), role, payrate, startShifts, endShifts);
 		stateChanged();
 	}
@@ -893,6 +895,7 @@ public class PersonAgent extends Agent implements Person
 							r = getRestaurant(destination);
 						} else {
 							r = chooseRestaurant();
+							AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "CHOOSING RESTAURANT");
 						}
 						if (!r.closed) {
 							destination = r.location;

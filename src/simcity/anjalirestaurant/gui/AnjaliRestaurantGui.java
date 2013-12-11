@@ -54,7 +54,7 @@ public class AnjaliRestaurantGui extends BuildingGui implements ActionListener {
      */
     public AnjaliRestaurantGui(String n, BuildingsGui bG, CityDirectory cD) {
        super(n, bG, cD);
-       inputPanel = new AnjaliRestaurantInputPanel(this, cD.getAnjaliCashier(), cD.getAnjaliCook(), cD.getAnjaliHost(), cD.getMarketCashiers());
+       inputPanel = new AnjaliRestaurantInputPanel(this, cD.getAnjaliCashier(), cD.getAnjaliCook(), cD.getAnjaliHost(), cD.getMarketCashiers(), cD.getBankManager());
        
     	int WINDOWX = 650;
         int WINDOWY = 500;

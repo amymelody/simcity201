@@ -48,7 +48,7 @@ public class BankTellerTest extends TestCase
                 // Check preconditions for Step 1a
 
                 assertEquals("Teller should have no customers in its list of customers" ,0, teller.customers.size());
-                teller.msgHelpCustomer(customer, 400);
+                //teller.msgHelpCustomer(customer, 400);
                 assertEquals("There should be one customer in the list of tellers customers", 1, teller.customers.size());
                 assertTrue("Tellers scheduler should have returned true to help the customer", teller.pickAndExecuteAnAction());
                 
@@ -56,7 +56,7 @@ public class BankTellerTest extends TestCase
                  + customer.log.getLastLoggedEvent().toString(), customer.log.containsString("Received message from teller to make a request"));
        
                 
-               teller.msgMakeDeposit(customer, 400);
+               //teller.msgMakeDeposit(customer, 400);
                assertTrue("Tellers scheduler should have returned true", teller.pickAndExecuteAnAction());
                
                 

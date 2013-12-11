@@ -255,6 +255,10 @@ public class CityDirectory
 		return joshCashier;
 	}
 	
+	public BankManagerRole getBankManager(){
+		return bank1Manager;
+	}
+	
 	public JoshCookRole getJoshCook() {
 		return joshCook;
 	}

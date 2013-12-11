@@ -32,7 +32,7 @@ import simcity.RestWaiterRole;
 public abstract class AnjaliWaiterRole extends RestWaiterRole{
 
 	public abstract void setGui(AnjaliWaiterGui gui);
-	public abstract void setGui(AnjaliCookGui gui);
+	//public abstract void setGui(AnjaliCookGui gui);
 	public abstract void setRestGui(AnjaliRestaurantGui gui);
 	public abstract AnjaliWaiterGui getGui();
 	public abstract void setHost(AnjaliHost host);
