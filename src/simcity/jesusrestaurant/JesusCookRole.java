@@ -1,7 +1,8 @@
 package simcity.jesusrestaurant;
 
 import simcity.ItemOrder;
-import simcity.PersonAgent;
+import simcity.RestCookRole;
+import simcity.interfaces.Person;
 import simcity.role.JobRole;
 import simcity.jesusrestaurant.JesusCookRole;
 import simcity.jesusrestaurant.gui.JesusCookGui;
@@ -23,11 +24,12 @@ import java.util.TimerTask;
 //does all the rest. Rather than calling the other agent a waiter, we called him
 //the HostAgent. A Host is the manager of a restaurant who sees that all
 //is proceeded as he wishes.
-public class JesusCookRole extends JobRole implements RestCook {
-	private static final int steakTime = 7000;
-	private static final int saladTime = 4000;
-	private static final int pizzaTime = 2000;
-	private static final int init_inv = 5;
+public class JesusCookRole extends RestCookRole implements RestCook {
+	private static final int enchiladaTime = 5000;
+	private static final int tacosTime = 2000;
+	private static final int pozoleTime = 4000;
+	private static final int horchataTime = 500;
+	private static final int init_inv = 20;
 	private static final int restockAmount = 10;
 
 	public List<Order> orders = Collections.synchronizedList(new ArrayList<Order>());
@@ -52,9 +54,10 @@ public class JesusCookRole extends JobRole implements RestCook {
 	public JesusCookRole() {
 		super();
 
-		foods.add(new Food("Pizza", init_inv, pizzaTime));
-		foods.add(new Food("Salad", init_inv, saladTime));
-		foods.add(new Food("Steak", init_inv, steakTime));
+		foods.add(new Food("Pozole", init_inv, pozoleTime));
+		foods.add(new Food("Tacos", init_inv, tacosTime));
+		foods.add(new Food("Enchiladas", init_inv, enchiladaTime));
+		foods.add(new Food("Horchata", init_inv, horchataTime));
 	}
 
 	public String getMaitreDName() {
@@ -65,7 +68,7 @@ public class JesusCookRole extends JobRole implements RestCook {
 		return name;
 	}
 	
-	public void setPerson(PersonAgent p) {
+	public void setPerson(Person p) {
 		super.setPerson(p);
 		name = p.getName();
 	}
@@ -188,12 +191,12 @@ public class JesusCookRole extends JobRole implements RestCook {
 		stateChanged();
 	}
 
-	public void msgCookOrder(JesusWaiterRole wait, String choice, String customerName) {
+	public void msgCookOrder(JesusNormalWaiterRole wait, String choice, String customerName) {
 		orders.add(new Order(choice, wait, customerName));
 		stateChanged();
 	}
 	
-	public void msgHereIsWhatICanFulfill(List<ItemOrder> orders, boolean canFulfill) {
+	public void msgHereIsWhatICanFulfill(List<ItemOrder> orders, boolean canFulfill, MarketCashier mC) {
 		if(canFulfill) {
 			
 		}
@@ -393,6 +396,7 @@ public class JesusCookRole extends JobRole implements RestCook {
 		}
 		currentMarket = m;
 		m.market.msgIWantDelivery(this, cashier, list, getJobLocation());
+		needToRestock.clear();
 		sState = stockState.ordered;
 	}
 
@@ -411,11 +415,11 @@ public class JesusCookRole extends JobRole implements RestCook {
 
 	private class Order {
 		String name;
-		JesusWaiterRole waiter;
+		JesusNormalWaiterRole waiter;
 		String custName;
 		orderState oState;
 
-		Order(String n, JesusWaiterRole w, String cN) {
+		Order(String n, JesusNormalWaiterRole w, String cN) {
 			name = n;
 			waiter = w;
 			custName = cN;
@@ -451,9 +455,10 @@ public class JesusCookRole extends JobRole implements RestCook {
 			market = m;
 			name = mName;
 			outStock = new HashMap<String, Boolean>();
-			outStock.put("Steak", false);
-			outStock.put("Pizza", false);
-			outStock.put("Salad", false);
+			outStock.put("Enchiladas", false);
+			outStock.put("Pozole", false);
+			outStock.put("Tacos", false);
+			outStock.put("Horchata", false);
 		}
 
 		public void outOfFood(String name) {
@@ -461,16 +466,12 @@ public class JesusCookRole extends JobRole implements RestCook {
 		}
 	}
 
-	public void updateInventory(Integer stI, Integer sI, Integer pI) {
-		updateInventory("Steak", stI);
-		updateInventory("Salad", sI);
-		updateInventory("Pizza", pI);
+	public void updateInventory(Integer eI, Integer hI, Integer pI, Integer tI) {
+		updateInventory("Enchiladas", eI);
+		updateInventory("Pozole", pI);
+		updateInventory("Horchata", hI);
+		updateInventory("Tacos", tI);
 	}
 
-	@Override
-	public void msgHereIsOrder(JoshWaiterRole waiter, String choice, int table) {
-		// TODO Auto-generated method stub
-		
-	}
 	
 }

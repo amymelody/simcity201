@@ -4,7 +4,7 @@ import simcity.RestCashierRole;
 import simcity.agent.Agent;
 import simcity.cherysrestaurant.interfaces.*;
 import simcity.interfaces.MarketDeliverer;
-import simcity.joshrestaurant.JoshCashierRole.Bill;
+import simcity.interfaces.Person;
 import simcity.joshrestaurant.interfaces.JoshCustomer;
 import simcity.joshrestaurant.interfaces.JoshWaiter;
 import simcity.mock.EventLog;
@@ -82,6 +82,11 @@ public class CherysCashierRole extends RestCashierRole implements CherysCashier
 	public String getName()
 	{
 		return name;
+	}
+	
+	public void setPerson(Person p) {
+		super.setPerson(p);
+		name = p.getName();
 	}
 	
 	//Messages
@@ -277,13 +282,11 @@ public class CherysCashierRole extends RestCashierRole implements CherysCashier
 	// Actions
 	private void giveWaiterCheck(CherysCashierCheck ch)
 	{
-		Do("Waiter, here's your check");
 		ch.waiter.msgHereIsCheck(ch);
 		stateChanged();
 	}
 	private void processPayment(CherysCashierCheck ch)
 	{
-		Do("Processing payment");
 		int change  = ch.amountPaid - ch.total;
 		balance += ch.total;
 		do
@@ -311,7 +314,6 @@ public class CherysCashierRole extends RestCashierRole implements CherysCashier
 	}
 	private void tryToPay(MarketBill b)
 	{
-		Do("Trying to pay " + b.foodType + " bill for $" + b.total + ". I have $" + balance);
 		if(b.total <= balance)
 		{
 			b.deliverer.msgPayment(this, b.total);
@@ -320,7 +322,6 @@ public class CherysCashierRole extends RestCashierRole implements CherysCashier
 		}
 		else
 		{
-			Do("Unable to pay. Need $" + (b.total - balance) + " more.");
 			b.state = CheckState.unpaid;
 		}
 		stateChanged();

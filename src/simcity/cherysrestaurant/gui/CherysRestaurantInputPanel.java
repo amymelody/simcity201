@@ -5,7 +5,8 @@ import simcity.cherysrestaurant.CherysCashierRole;
 import simcity.cherysrestaurant.CherysCookRole;
 import simcity.cherysrestaurant.CherysCustomerRole;
 import simcity.cherysrestaurant.CherysHostRole;
-import simcity.cherysrestaurant.CherysWaiterRole;
+import simcity.cherysrestaurant.CherysNormalWaiterRole;
+import simcity.market.MarketCashierRole;
 import simcity.role.Role;
 
 import javax.swing.*;
@@ -28,7 +29,7 @@ public class CherysRestaurantInputPanel extends JPanel
     private CherysCashierRole cashier;
 
     private Vector<CherysCustomerRole> customers = new Vector<CherysCustomerRole>();
-    private Vector<CherysWaiterRole> waiters = new Vector<CherysWaiterRole>();
+    private Vector<CherysNormalWaiterRole> waiters = new Vector<CherysNormalWaiterRole>();
 
     private JPanel restLabel = new JPanel();
     private CherysListPanel custPanel = new CherysListPanel(this, "Customer");
@@ -42,7 +43,7 @@ public class CherysRestaurantInputPanel extends JPanel
      * Constructor for RestaurantPanel. Sets up the gui.
      * @param gui reference to the main gui class
      */
-    public CherysRestaurantInputPanel(CherysRestaurantGui gui, CherysHostRole h, CherysCookRole co, CherysCashierRole ca) //* called from RestaurantGui
+    public CherysRestaurantInputPanel(CherysRestaurantGui gui, CherysHostRole h, CherysCookRole co, CherysCashierRole ca, ArrayList<MarketCashierRole> cashiers) //* called from RestaurantGui
     {
         this.gui = gui;
         
@@ -86,7 +87,7 @@ public class CherysRestaurantInputPanel extends JPanel
 		c.setCashier(cashier);
 		customers.add(c);
     }
-    public void addWaiter(CherysWaiterRole w)
+    public void addWaiter(CherysNormalWaiterRole w)
     {
 		CherysWaiterGui g = new CherysWaiterGui(w, gui);
 		gui.animationPanel.addGui(g);

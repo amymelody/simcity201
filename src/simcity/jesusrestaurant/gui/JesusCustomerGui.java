@@ -52,10 +52,10 @@ public class JesusCustomerGui implements Gui {
 	
 	public JesusCustomerGui(JesusCustomerRole c, JesusRestaurantGui gui, int xW, int yW){
 		agent = c;
-		xPos = -40;
-		yPos = -40;
-		xDestination = -40;
-		yDestination = -40;
+		xPos = -20;
+		yPos = 20;
+		xDestination = -20;
+		yDestination = 20;
 		xHome = xW;
 		yHome = yW;
 		//maitreD = m;
@@ -88,14 +88,14 @@ public class JesusCustomerGui implements Gui {
 
 	public void updatePosition() {
 		if (xPos < xDestination)
-			xPos++;
+			xPos+=20;
 		else if (xPos > xDestination)
-			xPos--;
+			xPos-=20;
 
-		if (yPos < yDestination)
-			yPos++;
+		else if (yPos < yDestination)
+			yPos+=20;
 		else if (yPos > yDestination)
-			yPos--;
+			yPos-=20;
 
 		if (xPos == xDestination && yPos == yDestination) {
 			if (command==Command.GoToSeat) agent.msgAnimationFinishedGoToSeat();

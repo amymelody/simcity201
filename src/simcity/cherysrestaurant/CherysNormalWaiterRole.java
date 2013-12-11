@@ -13,7 +13,7 @@ import java.util.concurrent.Semaphore;
 /**
  * Restaurant Waiter Agent
  */
-public class CherysWaiterRole extends RestWaiterRole implements CherysWaiter
+public class CherysNormalWaiterRole extends RestWaiterRole implements CherysWaiter
 {
 	private Semaphore atLobby = new Semaphore(0, true);
 	private Semaphore atTable = new Semaphore(0, true);
@@ -114,7 +114,7 @@ public class CherysWaiterRole extends RestWaiterRole implements CherysWaiter
 	 * @param h    reference to the host agent
 	 * @param c    reference to the cook agent
 	 */
-	public CherysWaiterRole()
+	public CherysNormalWaiterRole()
 	{
 		super();
 		menu = new HashMap<Integer, CherysWaiterFood>();
@@ -367,7 +367,6 @@ public class CherysWaiterRole extends RestWaiterRole implements CherysWaiter
 		}
 		if(denied)
 		{
-			Do("DENIED");
 			doWorkThroughThePain();
 			return true;
 		}
@@ -494,7 +493,6 @@ public class CherysWaiterRole extends RestWaiterRole implements CherysWaiter
 								}
 							}
 							while(false);
-							Do("Oh no! What happened to the check?!");
 						}
 					}
 				}
@@ -747,7 +745,6 @@ public class CherysWaiterRole extends RestWaiterRole implements CherysWaiter
 		}
 		if(permissionToBreak)
 		{
-			Do("Going on a break?");
 			boolean doneServing = true;
 			do
 			{
@@ -769,7 +766,6 @@ public class CherysWaiterRole extends RestWaiterRole implements CherysWaiter
 			while(false);
 			if(doneServing)
 			{
-				Do("Going on a break!");
 				command = Command.goOnBreak;
 				state = AgentState.onBreak;
 				doGoOnBreak();
@@ -791,7 +787,6 @@ public class CherysWaiterRole extends RestWaiterRole implements CherysWaiter
 	 */
 	private void seatCustomer(MyCustomer mc)
 	{
-		Do("Seating customer");
 		mc.state = CustomerState.seated;
 		mc.c.msgFollowMe(this, menu, foodsOutOf);
 		doSeatCustomer(mc.c, mc.table);
@@ -802,7 +797,6 @@ public class CherysWaiterRole extends RestWaiterRole implements CherysWaiter
 	 */
 	private void giveOrderToCook(MyCustomer mc)
 	{
-		Do("Giving order to cook");
 		mc.state = CustomerState.ordered;
 		cook.msgCookThis(this, mc.choice, mc.table);
 		stateChanged();
@@ -814,7 +808,6 @@ public class CherysWaiterRole extends RestWaiterRole implements CherysWaiter
 	 */
 	private void serveCustomer(MyCustomer mc)
 	{
-		Do("Serving order to customer (and requesting check be made)");
 		orders.remove(currentOrder);
 		mc.state = CustomerState.eating;
 		mc.c.msgOrderServed(currentOrder.choice);
@@ -824,13 +817,11 @@ public class CherysWaiterRole extends RestWaiterRole implements CherysWaiter
 	}
 	private void askForCheck(int table)
 	{
-		Do("Asking for customer's check at table " + table);
 		cashier.msgGiveCheck(this, table);
 		doGoToTable(table);
 	}
 	private void giveCustomerCheck(MyCustomer mc, CherysCashierCheck ch)
 	{
-		Do("Here is your check. Have a good night!");
 		mc.state = null;
 		mc.c.msgHereIsCheck(ch);
 		checks.remove(ch);
@@ -843,7 +834,6 @@ public class CherysWaiterRole extends RestWaiterRole implements CherysWaiter
 	 */
 	private void tableAvailible(MyCustomer mc, int table)
 	{
-		Do("Clearing empty table");
 		mc.state = CustomerState.gone;
 		customers.remove(mc);
 		host.msgTableFree(table, this, mc.c);
@@ -855,14 +845,11 @@ public class CherysWaiterRole extends RestWaiterRole implements CherysWaiter
 	 */
 	private void askForOrder(MyCustomer mc)
 	{
-		Do("What would you like to eat?");
 		mc.state = CustomerState.preparingToOrder;
-		Do("We're out of " + foodsOutOf.size() + " foods");
 		mc.c.msgWhatIsYourOrder(foodsOutOf);
 	}
 	private void askForBreak()
 	{
-		Do("May I go on break?");
 		tired = false;
 		host.msgMayIGoOnBreak(this);
 		stateChanged();

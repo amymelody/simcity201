@@ -52,6 +52,12 @@ public class MockMarketCashier extends Mock implements MarketCashier {
 	
 	public void msgPayment(MarketCustomer c, int money) {};
 	
-	public void msgDelivered(Order order, MarketDeliverer d) {};
+	public void msgDelivered(Order order, MarketDeliverer d) {}
+
+	@Override
+	public void msgNotDelivererd(Order o, MarketDeliverer d) {
+		// TODO Auto-generated method stub
+		
+	};
 	
 }

@@ -84,6 +84,23 @@ public class AnjaliCashierRole extends RestCashierRole implements AnjaliCashier{
 		public Map<String, Double> getPrices(){
 			return prices;
 		}
+		private class marketBill{
+			MarketDeliverer deliverer;
+			int charge;
+			
+			marketBill(MarketDeliverer d, int c){
+				deliverer = d;
+				charge = c;
+			}
+			
+			public MarketDeliverer getDeliverer(){
+				return deliverer;
+			}
+			
+			public int getCharge(){
+				return charge;
+			}
+		}
 		
 		public class bill{
 			private AnjaliCustomer c;
@@ -147,7 +164,7 @@ public class AnjaliCashierRole extends RestCashierRole implements AnjaliCashier{
 		
 		
 		public List<bill> bills = Collections.synchronizedList(new ArrayList<bill>());
-		
+		public List<marketBill> marketBills = Collections.synchronizedList(new ArrayList<marketBill>());
 		public List<marketPayment> marketPayments = Collections.synchronizedList(new ArrayList<marketPayment>());
 		private double cash = 1000.00;
 		
@@ -183,7 +200,8 @@ public class AnjaliCashierRole extends RestCashierRole implements AnjaliCashier{
 		
 		public void msgMakeCheck(AnjaliCustomer c, String choice, int tableNumber, AnjaliWaiter w){
 		//Receives order from waiter, creates check for that order	
-		Do("Cashier received message from waiter to make check for " + c.getName());
+			AlertLog.getInstance().logMessage(AlertTag.ANJALI_RESTAURANT, name, "received message from waiter to make check for " + c.getName());
+
 		
 		if(c.getName() == "brokeCashier"){
 			cantPay = true;
@@ -220,12 +238,18 @@ public class AnjaliCashierRole extends RestCashierRole implements AnjaliCashier{
 	}
 	
 	public void msgPayMarket(AnjaliMarket m, boolean broke, double price){
-		Do("Cashier received bill from " + m.getName());
+		AlertLog.getInstance().logMessage(AlertTag.ANJALI_RESTAURANT, name, "Cashier received bill from " + m.getName());
+
 		marketPayments.add(new marketPayment(m, price, paymentState.receivedCheck));
 		//this.market = m;
 		this.cantPay = broke;
 		//cash = cash - price;
 		//marketState = payMarketState.payMarket;
+		stateChanged();
+	}
+	
+	public void msgDelivery(int bill, MarketDeliverer deliverer){
+		marketBills.add(new marketBill(deliverer, bill));
 		stateChanged();
 	}
 	
@@ -244,14 +268,13 @@ public class AnjaliCashierRole extends RestCashierRole implements AnjaliCashier{
 			leaveRestaurant();
 			return true;
 		}
-		synchronized(marketPayments){
-			for(marketPayment p : marketPayments){
-				if(p.s == paymentState.receivedCheck){
-					payMarket(p.m, p.getPrice());
-					p.s = paymentState.payingCheck;
-					return true;
+		synchronized(marketBills){
+			for(marketBill p : marketBills){
+				payBill(p);
+				return true;
+				
 				}
-			}
+			
 			
 		}
 		
@@ -295,11 +318,14 @@ public class AnjaliCashierRole extends RestCashierRole implements AnjaliCashier{
 	}
 	
 	public void giveMeMoney(bill b){
-		Do("Cashier is making check.");
+		AlertLog.getInstance().logMessage(AlertTag.ANJALI_RESTAURANT, name, "Cashier is making check");
+
+		
 		for(Map.Entry<String, Double> entry : prices.entrySet()){
 			if(entry.getKey() == b.choice){
 				b.setPrice(entry.getValue());
-				Do("Cashier is giving check to waiter for amount " + b.getPrice());
+				AlertLog.getInstance().logMessage(AlertTag.ANJALI_RESTAURANT, name, "Cashier is giving check to waiter for amount " + b.getPrice());
+
 				//Gives waiter check upon request
 				b.w.msgHereIsCheck(b.tableNumber, b.getPrice());
 				break;
@@ -331,15 +357,22 @@ public class AnjaliCashierRole extends RestCashierRole implements AnjaliCashier{
 		
 		if(cantPay == false){
 		cash = cash - price;
-		Do("Cashier is paying market for order");
+		AlertLog.getInstance().logMessage(AlertTag.ANJALI_RESTAURANT, name, "Cashier is paying market for order");
 		m.msgHereIsMoney();
 		}
 		if(cantPay == true){
-			Do("Cashier does not have enough money to pay marekt. Will pay more for the item next time.");
+			AlertLog.getInstance().logMessage(AlertTag.ANJALI_RESTAURANT, name, "Cashier does not have enough money to pay marekt. Will pay more for the item next time.");
+
 		
 		}
 		
 		
+	}
+	
+	public void payBill(marketBill bill){
+		cash -= bill.charge;
+		bill.deliverer.msgPayment(this, bill.charge);
+		marketBills.remove(bill);
 	}
 
 	@Override
@@ -348,11 +381,7 @@ public class AnjaliCashierRole extends RestCashierRole implements AnjaliCashier{
 		
 	}
 
-	@Override
-	public void msgDelivery(int bill, MarketDeliverer deliverer) {
-		// TODO Auto-generated method stub
-		
-	}
+	
 
 	@Override
 	public void msgThankYou(int change) {

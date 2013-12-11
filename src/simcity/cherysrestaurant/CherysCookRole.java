@@ -48,7 +48,7 @@ public class CherysCookRole extends RestCookRole implements CherysCook
 	{
 		String name;
 		int amount;
-		int low = 1;
+		int low = 8;
 		int capacity;
 		boolean waitingOnDelivery = false;
 		boolean closed = false;
@@ -103,7 +103,7 @@ public class CherysCookRole extends RestCookRole implements CherysCook
 		menu.add(new Food("Steak", cookTimeSteak, 10000));
 		menu.add(new Food("Chicken", cookTimeChicken, 10000));
 		menu.add(new Food("Salad", cookTimeSalad, 10000));
-		menu.add(new Food("Pizza", cookTimePizza, 10000));
+		menu.add(new Food("Pizza", cookTimePizza, 8));
 
 		do
 		{
@@ -343,7 +343,6 @@ public class CherysCookRole extends RestCookRole implements CherysCook
 	 */
 	private void cookIt(final Order o)
 	{
-		Do("Cooking order");
 		int timerLength = 0;
 		do
 		{
@@ -374,7 +373,7 @@ public class CherysCookRole extends RestCookRole implements CherysCook
 				{
 					foodDone(o);
 				}
-			}, timerLength);
+			}, (int)(timerLength*0.25));
 		o.state = OrderState.cooking;
 //		DoCookIt(o);
 	}
@@ -384,7 +383,6 @@ public class CherysCookRole extends RestCookRole implements CherysCook
 	 */
 	private void foodDone(Order o)
 	{
-		Do("Done cooking");
 		o.state = OrderState.done;
 		stateChanged();
 	}
@@ -409,7 +407,6 @@ public class CherysCookRole extends RestCookRole implements CherysCook
 	 */
 	private void alertWaiter(Order o)
 	{
-		Do("Order up!");
 		o.w.msgOrderReady(o.choice, o.table, outOfStock);
 		stateChanged();
 	}
@@ -421,7 +418,6 @@ public class CherysCookRole extends RestCookRole implements CherysCook
 
 	private void placeOrder(Food f)
 	{
-		Do("I need " + f.name);
 		boolean[] fullyStocked = new boolean[markets.size()]; //each market is assumed fully stocked
 		do
 		{
@@ -508,7 +504,6 @@ public class CherysCookRole extends RestCookRole implements CherysCook
 		}
 		else
 		{
-			Do("Completely out of " + f.name);
 			f.closed = true;
 			stateChanged();
 		}
@@ -525,5 +520,6 @@ public class CherysCookRole extends RestCookRole implements CherysCook
 	{
 		markets.add(new MyMarket(m));
 	}
+
 
 }

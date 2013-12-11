@@ -89,8 +89,8 @@ public class AnjaliRestaurantAnimationPanel extends JPanel implements ActionList
         for(Gui gui : guis) {
             if (gui.isPresent()) {
                 gui.draw(g2);
-                gui.draw(g3);
-                gui.draw(g4);
+                //gui.draw(g3);
+                //gui.draw(g4);
                 gui.draw(cookArea);
              
             }

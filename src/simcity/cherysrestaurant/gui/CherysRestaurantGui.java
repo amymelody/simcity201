@@ -2,7 +2,7 @@ package simcity.cherysrestaurant.gui;
 
 import simcity.CityDirectory;
 import simcity.cherysrestaurant.CherysCustomerRole;
-import simcity.cherysrestaurant.CherysWaiterRole;
+import simcity.cherysrestaurant.CherysNormalWaiterRole;
 import simcity.gui.BuildingGui;
 import simcity.gui.BuildingsGui;
 import simcity.gui.CityGui;
@@ -34,7 +34,7 @@ public class CherysRestaurantGui extends BuildingGui
     public CherysRestaurantGui(String n, BuildingsGui bG, CityDirectory cD)
     {
     	super(n, bG, cD);
-    	restPanel = new CherysRestaurantInputPanel(this, cD.getCherysHost(), cD.getCherysCook(), cD.getCherysCashier());
+    	restPanel = new CherysRestaurantInputPanel(this, cD.getCherysHost(), cD.getCherysCook(), cD.getCherysCashier(), cD.getMarketCashiers());
     	
     	
         int WINDOWX = 650;
@@ -139,7 +139,7 @@ public class CherysRestaurantGui extends BuildingGui
     	restPanel.addCustomer(c);
 		
 	}
-	public void addWaiter(CherysWaiterRole w)
+	public void addWaiter(CherysNormalWaiterRole w)
 	{
     	restPanel.addWaiter(w);
 	}
