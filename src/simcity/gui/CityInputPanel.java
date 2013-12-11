@@ -48,10 +48,11 @@ public class CityInputPanel extends JPanel implements ActionListener
 	private JRadioButtonMenuItem button6 = new JRadioButtonMenuItem("Normative A Config");
 	private JRadioButtonMenuItem button7 = new JRadioButtonMenuItem("Normative B Config");
 	private JRadioButtonMenuItem button8 = new JRadioButtonMenuItem("Non-Norms Config");
-	private JRadioButtonMenuItem button9 = new JRadioButtonMenuItem("Cherys Restaurant Config");
-	private JRadioButtonMenuItem button10 = new JRadioButtonMenuItem("Josh Restaurant Config");
-	private JRadioButtonMenuItem button11 = new JRadioButtonMenuItem("Jesus Restaurant Config");
-	private JRadioButtonMenuItem button12 = new JRadioButtonMenuItem("Anjali Restaurant Config");
+	private JRadioButtonMenuItem button9 = new JRadioButtonMenuItem("Cherys Rest Config");
+	private JRadioButtonMenuItem button10 = new JRadioButtonMenuItem("Josh Rest Config");
+	private JRadioButtonMenuItem button11 = new JRadioButtonMenuItem("Jesus Rest Config");
+	private JRadioButtonMenuItem button12 = new JRadioButtonMenuItem("Anjali Rest Config");
+	private JRadioButtonMenuItem button13 = new JRadioButtonMenuItem("Non-Norm F Config");
 	private JButton goButton = new JButton("Run Scenario");
     
 //    @Override
@@ -136,6 +137,8 @@ public class CityInputPanel extends JPanel implements ActionListener
 		add(button11);
 		configGroup.add(button12);
 		add(button12);
+		configGroup.add(button13);
+		add(button13);
 		goButton.addActionListener(this);
 		add(goButton);
 //        add(creationPanel);
@@ -211,17 +214,21 @@ public class CityInputPanel extends JPanel implements ActionListener
 			{
 				creationPanel.readConfig("../cherysRestaurantConfig.properties");
 			}
-			else if(button9.isSelected())
+			else if(button10.isSelected())
 			{
 				creationPanel.readConfig("../joshRestaurantConfig.properties");
 			}
-			else if(button9.isSelected())
+			else if(button11.isSelected())
 			{
 				creationPanel.readConfig("../jesusRestaurantConfig.properties");
 			}
-			else if(button9.isSelected())
+			else if(button12.isSelected())
 			{
 				creationPanel.readConfig("../anjaliRestaurantConfig.properties");
+			}
+			else if(button13.isSelected())
+			{
+				creationPanel.readConfig("../nonNormFConfig.properties");
 			}
 		}
 //    	for (JButton b : personList)
