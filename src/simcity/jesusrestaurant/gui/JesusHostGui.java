@@ -16,7 +16,7 @@ public class JesusHostGui implements Gui {
 
 	private int xPos = -20, yPos = 20;//default host position
 	private int xDestination = -20, yDestination = 20;//default host destination
-	private int xHome = 80, yHome = 80;
+	private int xHome = 520, yHome = 20;
 	private boolean leaving = false;
 	
 	public static final Map<Integer, Point> tableLocations = new HashMap<Integer, Point>();
