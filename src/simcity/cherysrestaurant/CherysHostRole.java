@@ -301,7 +301,6 @@ public class CherysHostRole extends RestHostRole implements CherysHost
 						}
 						else
 						{
-							Do("Waiter UNAVAILIBLE");
 							waiterLoad[i] = unavailible;
 						}
 					}
@@ -395,7 +394,6 @@ public class CherysHostRole extends RestHostRole implements CherysHost
 	 */
 	private void assignCustomer(MyCustomer mc, MyWaiter mw, Table t)
 	{
-		Do("Waiter, seat this customer");
 		mc.served = true;
 		mw.customersAssigned++;
 		t.occupied = true;
@@ -404,7 +402,6 @@ public class CherysHostRole extends RestHostRole implements CherysHost
 	}
 	private void putWaiterOnBreak(CherysWaiter w)
 	{
-		Do("IDK, lemme check");
 		int availibleWaiters = waiters.size() - 1;
 		do
 		{
@@ -437,13 +434,11 @@ public class CherysHostRole extends RestHostRole implements CherysHost
 						if(availibleWaiters > 0)
 						{
 							waiter.onBreak = true;
-							Do("Yes, break");
 							w.msgGoOnBreak(true);
 							break;
 						}
 						else
 						{
-							Do("No");
 							w.msgGoOnBreak(false);
 							break;
 						}
