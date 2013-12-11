@@ -78,7 +78,7 @@ public class JesusCustomerRole extends RestCustomerRole implements JesusCustomer
 		}
 		// Messages
 		public void gotHungry() { //from animation
-			print("I'm hungry");
+			System.out.println("Very Hungry");
 			event = AgentEvent.gotHungry;
 			stateChanged();
 		}
@@ -174,6 +174,7 @@ public class JesusCustomerRole extends RestCustomerRole implements JesusCustomer
 
 			if (state == AgentState.DoingNothing && event == AgentEvent.gotHungry ){
 				state = AgentState.WaitingInRestaurant;
+				System.out.println("Go to Restaurant");
 				goToRestaurant();
 				return true;
 			}
@@ -227,7 +228,7 @@ public class JesusCustomerRole extends RestCustomerRole implements JesusCustomer
 		// Actions
 
 		private void goToRestaurant() {
-			Do("Going to restaurant");
+			System.out.println("I want food");
 			host.msgIWantFood(this);//send our instance, so he can respond to us
 			jesusCustomerGui.vait();
 		}

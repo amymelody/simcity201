@@ -1,7 +1,9 @@
 package simcity;
 
 import simcity.role.JobRole;
+import simcity.interfaces.MarketCashier;
 import simcity.interfaces.RestCook;
+
 import java.util.*;
 
 public abstract class RestCookRole extends JobRole implements RestCook {
@@ -12,5 +14,5 @@ public abstract class RestCookRole extends JobRole implements RestCook {
 
 	public abstract void msgDelivery(List<ItemOrder> order);
 	
-	public abstract void msgHereIsWhatICanFulfill(List<ItemOrder> items, boolean canFulfill);
+	public abstract void msgHereIsWhatICanFulfill(List<ItemOrder> items, boolean canFulfill, MarketCashier mC);
 }
