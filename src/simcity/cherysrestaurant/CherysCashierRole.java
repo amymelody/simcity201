@@ -4,6 +4,7 @@ import simcity.RestCashierRole;
 import simcity.agent.Agent;
 import simcity.cherysrestaurant.interfaces.*;
 import simcity.interfaces.MarketDeliverer;
+import simcity.joshrestaurant.JoshCashierRole.Bill;
 import simcity.joshrestaurant.interfaces.JoshCustomer;
 import simcity.joshrestaurant.interfaces.JoshWaiter;
 import simcity.mock.EventLog;
@@ -33,14 +34,13 @@ public class CherysCashierRole extends RestCashierRole implements CherysCashier
 	public List<CherysCashierCheck> checks = new ArrayList<CherysCashierCheck>();
 	public class MarketBill
 	{
-		public CherysMarket market;
+		public MarketDeliverer deliverer;
 		public String foodType;
 		public int total;
 		public CheckState state;
-		MarketBill(CherysMarket m, String ft, int t)
+		MarketBill(MarketDeliverer d, int t)
 		{
-			market = m;
-			foodType = ft;
+			deliverer = d;
 			total = t;
 			state = CheckState.askedFor;
 		}
@@ -160,31 +160,19 @@ public class CherysCashierRole extends RestCashierRole implements CherysCashier
 		while(false);
 		stateChanged();
 	}
-	public void msgPayForDelivery(CherysMarket m, String foodType, int amountDelivered, double wholesalePercentage)
+	@Override
+	public void msgDelivery(int bill, MarketDeliverer deliverer)
 	{
-		AlertLog.getInstance().logMessage(AlertTag.CHERYS_RESTAURANT, name, "received msgPayForDelivery");
-		log.add(new LoggedEvent("Received msgPayForDelivery from market. Food = " + foodType + ". Amount = " + amountDelivered + ". Percentage = " + wholesalePercentage*100 + "%"));
-		int total = 0;
-		do
-		{
-			try
-			{
-				for(Food food : menu)
-				{
-					if(food.name.equals(foodType))
-					{
-						total = (int)(food.price*amountDelivered*wholesalePercentage);
-					}
-				}
-			}
-			catch(ConcurrentModificationException c)
-			{
-				continue;
-			}
-		}
-		while(false);
-		bills.add(new MarketBill(m, foodType, total));
+		AlertLog.getInstance().logMessage(AlertTag.CHERYS_RESTAURANT, name, "received msgDelivery");
+		log.add(new LoggedEvent("received msgDelivery"));
+		bills.add(new MarketBill(deliverer, bill));
 		stateChanged();
+	}
+	@Override
+	public void msgThankYou(int change)
+	{
+		balance += change;
+		
 	}
 
 	public void msgPaySalary(int salary)
@@ -326,13 +314,13 @@ public class CherysCashierRole extends RestCashierRole implements CherysCashier
 		Do("Trying to pay " + b.foodType + " bill for $" + b.total + ". I have $" + balance);
 		if(b.total <= balance)
 		{
-			b.market.msgPaymentForDelivery(b.total);
+			b.deliverer.msgPayment(this, b.total);
 			balance -= b.total;
 			bills.remove(b);
 		}
 		else
 		{
-			Do("Unable to pay. Need $" + (Math.round((b.total - balance) * 100.0) / 100.0) + " more.");
+			Do("Unable to pay. Need $" + (b.total - balance) + " more.");
 			b.state = CheckState.unpaid;
 		}
 		stateChanged();
@@ -341,33 +329,5 @@ public class CherysCashierRole extends RestCashierRole implements CherysCashier
 	private void leaveRestaurant()
 	{
 		person.msgLeftDestination(this);
-	}
-
-	@Override
-	public void msgProduceCheck(JoshWaiter w, JoshCustomer c, String choice)
-	{
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void msgPayment(JoshCustomer c, int cash)
-	{
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void msgDelivery(int bill, MarketDeliverer deliverer)
-	{
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void msgThankYou(int change)
-	{
-		// TODO Auto-generated method stub
-		
 	}
 }

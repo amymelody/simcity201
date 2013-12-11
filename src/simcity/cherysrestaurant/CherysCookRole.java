@@ -6,7 +6,8 @@ import simcity.agent.Agent;
 import simcity.cherysrestaurant.CherysCashierRole.CheckState;
 import simcity.cherysrestaurant.interfaces.*;
 import simcity.interfaces.MarketCashier;
-import simcity.joshrestaurant.JoshWaiterRole;
+import simcity.interfaces.RestCashier;
+import simcity.interfaces.RestCook;
 import simcity.trace.AlertLog;
 import simcity.trace.AlertTag;
 
@@ -63,12 +64,10 @@ public class CherysCookRole extends RestCookRole implements CherysCook
 	}
 	private class UnderstockedMarket
 	{
-		CherysMarket m;
-		int amountInStock;
-		UnderstockedMarket(CherysMarket m, int a)
+		MarketCashier m;
+		UnderstockedMarket(MarketCashier m)
 		{
 			this.m = m;
-			amountInStock = a;
 		}
 	}
 	private int platingTime = 2000;
@@ -76,9 +75,9 @@ public class CherysCookRole extends RestCookRole implements CherysCook
 	private List<MyMarket> markets = new ArrayList<MyMarket>();
 	private class MyMarket
 	{
-		CherysMarket m;
+		MarketCashier m;
 		int amountOrderedFrom = 0;
-		MyMarket(CherysMarket m)
+		MyMarket(MarketCashier m)
 		{
 			this.m = m;
 		}
@@ -143,7 +142,8 @@ public class CherysCookRole extends RestCookRole implements CherysCook
 		
 		stateChanged();
 	}
-	public void msgDelivery(CherysMarket m, String f, int numberDelivered)
+	@Override
+	public void msgDelivery(List<ItemOrder> order)
 	{
 		AlertLog.getInstance().logMessage(AlertTag.CHERYS_RESTAURANT, name, "received msgDelivery");
 		do
@@ -152,11 +152,11 @@ public class CherysCookRole extends RestCookRole implements CherysCook
 			{
 				for(Food food : menu)
 				{
-					if(food.name == f)
+					if(food.name.equals(order.get(0).getFoodItem()))
 					{
 						food.waitingOnDelivery = false;
-						food.amount += numberDelivered;
-						outOfStock.remove(f);
+						food.amount += order.get(0).getAmount();
+						outOfStock.remove(food.name);
 					}
 				}
 			}
@@ -168,31 +168,46 @@ public class CherysCookRole extends RestCookRole implements CherysCook
 		while(false);
 		stateChanged();
 	}
-	public void msgStockTooLow(CherysMarket m, String f, int numberAvailible)
+
+	@Override
+	public void msgHereIsWhatICanFulfill(List<ItemOrder> items, boolean canFulfill, MarketCashier m)
 	{
-		AlertLog.getInstance().logMessage(AlertTag.CHERYS_RESTAURANT, name, "received msgStockTooLow");
-		do
+		AlertLog.getInstance().logMessage(AlertTag.CHERYS_RESTAURANT, name, "received msgHereIsWhatICanFulfill");
+		if(canFulfill)
 		{
-			try
+			do
 			{
-				for(Food food : menu)
+				try
 				{
-					if(food.name == f)
+					for(Food food : menu)
 					{
-						food.waitingOnDelivery = false;
-						food.understockedMarkets.add(new UnderstockedMarket(m, numberAvailible));
-						break;
+						if(food.name.equals(items.get(0).getFoodItem()))
+						{
+							if((food.amount + items.get(0).getAmount()) < food.capacity)
+							{
+								food.understockedMarkets.add(new UnderstockedMarket(m));
+							}
+						}
 					}
 				}
+				catch(ConcurrentModificationException cme)
+				{
+					continue;
+				}
 			}
-			catch(ConcurrentModificationException cme)
+			while(false);
+		}
+		else
+		{
+			for(Food food : menu)
 			{
-				continue;
+				if(food.name.equals(items.get(0).getFoodItem()))
+				{
+					food.waitingOnDelivery = false;
+				}
 			}
 		}
-		while(false);
 		stateChanged();
-		
 	}
 
 	@Override
@@ -485,165 +500,17 @@ public class CherysCookRole extends RestCookRole implements CherysCook
 		if(leastOrderedFrom > -1) //if a market is found, order
 		{
 			f.waitingOnDelivery = true;
-			markets.get(leastOrderedFrom).m.msgPlaceOrder(f.name, (f.capacity - f.amount));
+			List<ItemOrder> temp = new ArrayList<ItemOrder>();
+			temp.add(new ItemOrder(f.name, (f.capacity - f.amount)));
+			markets.get(leastOrderedFrom).m.msgIWantDelivery((RestCook)this, (RestCashier)cashier, temp, getJobLocation());
 			markets.get(leastOrderedFrom).amountOrderedFrom++;
 			stateChanged();
 		}
-		else //non-normative
+		else
 		{
-			int[] mostStockToLeast = new int[f.understockedMarkets.size()];
-			do
-			{
-				try
-				{
-					for(int j = 0; j < f.understockedMarkets.size(); j++) //Should arrange the markets in order from the one with the most stock to the least
-					{
-						mostStockToLeast[j] = -1;
-						do
-						{
-							try
-							{
-								for(int i = 0; i < f.understockedMarkets.size(); i++)
-								{
-									if(j == 0)
-									{
-										if(f.understockedMarkets.get(i).amountInStock > 0)
-										{
-											if(mostStockToLeast[j] == -1)
-											{
-												mostStockToLeast[j] = i;
-											}
-											else if(f.understockedMarkets.get(i).amountInStock > f.understockedMarkets.get(mostStockToLeast[j]).amountInStock)
-											{
-												mostStockToLeast[j] = i;
-											}
-										}
-									}
-									else if(j == 1)
-									{
-										if(f.understockedMarkets.get(i).amountInStock > 0 && mostStockToLeast[0] != i)
-										{
-											if(mostStockToLeast[j] == -1)
-											{
-												mostStockToLeast[j] = i;
-											}
-											else if(f.understockedMarkets.get(i).amountInStock > f.understockedMarkets.get(mostStockToLeast[j]).amountInStock)
-											{
-												mostStockToLeast[j] = i;
-											}
-										}
-									}
-									else if(j == 2)
-									{
-										if(f.understockedMarkets.get(i).amountInStock > 0 && mostStockToLeast[0] != i && mostStockToLeast[1] != i)
-										{
-											if(mostStockToLeast[j] == -1)
-											{
-												mostStockToLeast[j] = i;
-											}
-											else if(f.understockedMarkets.get(i).amountInStock > f.understockedMarkets.get(mostStockToLeast[j]).amountInStock)
-											{
-												mostStockToLeast[j] = i;
-											}
-										}
-									}
-								}
-							}
-							catch(ConcurrentModificationException cme)
-							{
-								continue;
-							}
-						}
-						while(false);
-					}
-				}
-				catch(ConcurrentModificationException cme)
-				{
-					continue;
-				}
-			}
-			while(false);
-			if(mostStockToLeast[0] > -1)
-			{
-				int amountNeeded = f.capacity - f.amount;
-				do
-				{
-					try
-					{
-						for(int i = 0; i < f.understockedMarkets.size(); i++)
-						{
-							if(amountNeeded > 0 && mostStockToLeast[i] > -1)
-							{
-								if(f.understockedMarkets.get(mostStockToLeast[i]).amountInStock <= amountNeeded && f.understockedMarkets.get(mostStockToLeast[i]).amountInStock > 0)
-								{
-									amountNeeded -= f.understockedMarkets.get(mostStockToLeast[i]).amountInStock;
-									f.understockedMarkets.get(mostStockToLeast[i]).m.msgPlaceOrder(f.name, f.understockedMarkets.get(mostStockToLeast[i]).amountInStock);
-									do
-									{
-										try
-										{
-											for(MyMarket market : markets)
-											{
-												if(f.understockedMarkets.get(mostStockToLeast[i]).m == market.m)
-												{
-													market.amountOrderedFrom++;
-												}
-											}
-										}
-										catch(ConcurrentModificationException cme)
-										{
-											continue;
-										}
-									}
-									while(false);
-								}
-								else if(f.understockedMarkets.get(mostStockToLeast[i]).amountInStock > amountNeeded)
-								{
-									f.understockedMarkets.get(mostStockToLeast[i]).amountInStock -= amountNeeded;
-									f.understockedMarkets.get(mostStockToLeast[i]).m.msgPlaceOrder(f.name, amountNeeded);
-									amountNeeded = 0;
-									do
-									{
-										try
-										{
-											for(MyMarket market : markets)
-											{
-												if(f.understockedMarkets.get(mostStockToLeast[i]).m == market.m)
-												{
-													market.amountOrderedFrom++;
-												}
-											}
-										}
-										catch(ConcurrentModificationException cme)
-										{
-											continue;
-										}
-									}
-									while(false);
-								}
-							}
-						}
-					}
-					catch(ConcurrentModificationException cme)
-					{
-						continue;
-					}
-				}
-				while(false);
-				if(amountNeeded > 0)
-				{
-					Do("Completely out of " + f.name + ". Ordered some, but still " + amountNeeded + " short.");
-					f.closed = true;
-				}
-				f.waitingOnDelivery = true;
-				stateChanged();
-			}
-			else
-			{
-				Do("Completely out of " + f.name);
-				f.closed = true;
-				stateChanged();
-			}
+			Do("Completely out of " + f.name);
+			f.closed = true;
+			stateChanged();
 		}
 	}
 	
@@ -653,37 +520,10 @@ public class CherysCookRole extends RestCookRole implements CherysCook
 	}
 	
 	//Utilities
-	public void setMarket(CherysMarket m)
+	@Override
+	public void addMarket(MarketCashier m, String n)
 	{
 		markets.add(new MyMarket(m));
 	}
 
-	@Override
-	public void addMarket(MarketCashier m, String n)
-	{
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void msgHereIsOrder(JoshWaiterRole waiter, String choice, int table)
-	{
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void msgDelivery(List<ItemOrder> order)
-	{
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void msgHereIsWhatICanFulfill(List<ItemOrder> items,
-			boolean canFulfill)
-	{
-		// TODO Auto-generated method stub
-		
-	}
 }
