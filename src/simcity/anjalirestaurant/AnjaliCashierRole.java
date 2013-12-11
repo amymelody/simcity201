@@ -16,9 +16,7 @@ import simcity.interfaces.Person;
 import simcity.mock.LoggedEvent;
 import simcity.trace.AlertLog;
 import simcity.trace.AlertTag;
-import simcity.interfaces.Person;
-import simcity.joshrestaurant.interfaces.JoshCustomer;
-import simcity.joshrestaurant.interfaces.JoshWaiter;
+
 
 
 /**
@@ -46,7 +44,7 @@ public class AnjaliCashierRole extends RestCashierRole implements AnjaliCashier{
 	public AnjaliCashierRole() {
 		super();
 		working = false;
-		cashierCash = 1000;
+		
 		
 	}
 
@@ -237,16 +235,6 @@ public class AnjaliCashierRole extends RestCashierRole implements AnjaliCashier{
 	}
 	}
 	
-	public void msgPayMarket(AnjaliMarket m, boolean broke, double price){
-		AlertLog.getInstance().logMessage(AlertTag.ANJALI_RESTAURANT, name, "Cashier received bill from " + m.getName());
-
-		marketPayments.add(new marketPayment(m, price, paymentState.receivedCheck));
-		//this.market = m;
-		this.cantPay = broke;
-		//cash = cash - price;
-		//marketState = payMarketState.payMarket;
-		stateChanged();
-	}
 	
 	public void msgDelivery(int bill, MarketDeliverer deliverer){
 		marketBills.add(new marketBill(deliverer, bill));
@@ -353,24 +341,12 @@ public class AnjaliCashierRole extends RestCashierRole implements AnjaliCashier{
 		bills.remove(b);
 	}
 
-	public void payMarket(AnjaliMarket m, double price){
-		
-		if(cantPay == false){
-		cash = cash - price;
-		AlertLog.getInstance().logMessage(AlertTag.ANJALI_RESTAURANT, name, "Cashier is paying market for order");
-		m.msgHereIsMoney();
-		}
-		if(cantPay == true){
-			AlertLog.getInstance().logMessage(AlertTag.ANJALI_RESTAURANT, name, "Cashier does not have enough money to pay marekt. Will pay more for the item next time.");
-
-		
-		}
-		
-		
-	}
 	
 	public void payBill(marketBill bill){
+
 		cash -= bill.charge;
+		AlertLog.getInstance().logMessage(AlertTag.ANJALI_RESTAURANT, name, "Cashier is paying market for order, now has $" + cash);
+
 		bill.deliverer.msgPayment(this, bill.charge);
 		marketBills.remove(bill);
 	}

@@ -1,6 +1,7 @@
 package simcity.anjalirestaurant.interfaces;
 
 import simcity.anjalirestaurant.AnjaliHostRole.Table;
+import simcity.anjalirestaurant.AnjaliWaiterRole;
 
 /**
  * Restaurant Host Agent
@@ -22,10 +23,10 @@ public interface AnjaliHost {
 	
 	public abstract void msgIWillWait(final AnjaliCustomer c);
 	
-	public abstract void msgWantBreak(AnjaliWaiter w);
+	public abstract void msgWantBreak(AnjaliWaiterRole w);
 	
 	
-	public abstract void msgWaiterBreakDone(AnjaliWaiter w);
+	public abstract void msgWaiterBreakDone(AnjaliWaiterRole w);
 	
-	public abstract void msgTableIsFree(Table t, AnjaliWaiter w);
+	public abstract void msgTableIsFree(Table t, AnjaliWaiterRole w);
 }

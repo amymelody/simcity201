@@ -1,5 +1,9 @@
 package simcity.anjalirestaurant.interfaces;
 
+import java.util.List;
+
+import simcity.ItemOrder;
+
 
 /**
  * Restaurant Cashier Agent, Scenario 1
@@ -15,10 +19,10 @@ public interface AnjaliCook {
 /////MESSAGES////////
 	public abstract void msgHereIsOrder(String name, String choice, int tableNumber, AnjaliWaiter waiter);
 		
+	public abstract void msgHereIsWhatICanFulfill(List<ItemOrder> orders, boolean canFulfill);
+ 
+	public abstract void msgDelivery(List<ItemOrder> orders);
+
 	
 	
-	
-	public abstract void msgPartOrderFulfilled(String food);
-	
-	public abstract void msgNoMarketSupply(String food);
 }

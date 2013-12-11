@@ -1,5 +1,7 @@
 package simcity.anjalirestaurant.interfaces;
 
+import simcity.interfaces.MarketDeliverer;
+
 
 /**
  * Restaurant Cashier Agent, Scenario 1
@@ -15,10 +17,15 @@ public interface AnjaliCashier {
 /////MESSAGES////////
 	public abstract void msgMakeCheck(AnjaliCustomer c, String choice, int tableNumber, AnjaliWaiter w);
 		
+	public abstract void msgStartShift();
+	
+	public abstract void msgEndShift();
 	
 	public abstract void msgIHaveNoMoney(AnjaliCustomer c);
 		
-	public abstract void msgTakeMyMoney(AnjaliCustomer c, double p);
+	public abstract void msgDelivery(int bill, MarketDeliverer deliverer);
+
+	public abstract void msgTakeMyMoney(AnjaliCustomer anjaliCustomerRole,
+			double d);
 	
-	public abstract void msgPayMarket(AnjaliMarket m, boolean broke, double price);
 }
