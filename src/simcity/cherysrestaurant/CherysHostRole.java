@@ -97,7 +97,6 @@ public class CherysHostRole extends RestHostRole implements CherysHost
 	public void setWaiter(CherysWaiter w) //* called from RestaurantPanel.addPerson
 	{
 		waiters.add(new MyWaiter(w));
-		stateChanged();
 	}
 	public void setGui(CherysRestaurantGui g)
 	{
