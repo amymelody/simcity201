@@ -546,12 +546,10 @@ public class PersonAgent extends Agent implements Person
 	}
 
 	public boolean businessOpen(String building) {
-		AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "AAAAAAAAAAAAAAA" + building);
 		if (building.contains("market")) {
 			for (Market m : markets) {
 				if (m.location.equals(building)) {
 					if (!m.closed) {
-						AlertLog.getInstance().logMessage(AlertTag.PERSON, name, "FUUUUCKKKKKKKKKKKKKKKKKKKKKK");
 						return true;
 					}
 				}
@@ -728,7 +726,6 @@ public class PersonAgent extends Agent implements Person
 	public void msgYoureHired(String role, int payrate, Map<Day,Time> startShifts, Map<Day,Time> endShifts) {
 		JobRole j = city.JobFactory(role);
 		addRole(j, role);
-		System.out.println(role + ", " + j.getJobLocation());
 		job = new Job(j, j.getJobLocation(), role, payrate, startShifts, endShifts);
 		stateChanged();
 	}
