@@ -37,7 +37,7 @@ public class JoshCookRole extends RestCookRole {
 	
 	Food steak = new Food("Steak", 15, 3, 1, 1);
 	Food chicken = new Food("Chicken", 20, 3, 1, 1);
-	Food salad = new Food("Salad", 5, 3, 2, 1);
+	Food salad = new Food("Salad", 5, 3, 3, 1);
 	Food pizza = new Food("Pizza", 10, 3, 3, 1);
 	
 	public Map<String, Food> foods = new HashMap<String, Food>();

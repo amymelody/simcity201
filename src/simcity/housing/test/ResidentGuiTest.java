@@ -254,10 +254,10 @@ public class ResidentGuiTest extends TestCase
 	//Step 11
 		gui.xPos = 360;
 		gui.updatePosition();
-		assertEquals("Gui variable boxX should equal 17. It doesn't",
-				17, gui.boxX);
-		assertEquals("Gui variable boxY should equal 14. It doesn't",
-				14, gui.boxY);
+		assertEquals("Gui variable boxX should equal 18. It doesn't",
+				18, gui.boxX);
+		assertEquals("Gui variable boxY should equal 13. It doesn't",
+				13, gui.boxY);
 		//Checking logs
 		assertEquals("Gui should have 24 events logged. Instead, it has "
 				+ gui.log.size(), 24, gui.log.size());
@@ -265,55 +265,16 @@ public class ResidentGuiTest extends TestCase
 				+ house.log.size(), 37, house.log.size());
 		
 	//Step 12
-		gui.xPos = 340;
+		gui.yPos = 260;
 		gui.updatePosition();
-		assertEquals("Gui variable boxX should equal 17. It doesn't",
-				17, gui.boxX);
-		assertEquals("Gui variable boxY should equal 13. It doesn't",
-				13, gui.boxY);
+		assertEquals("Gui variable boxX should equal 18. It doesn't",
+				18, gui.boxX);
+		assertEquals("Gui variable boxY should equal 12. It doesn't",
+				12, gui.boxY);
 		//Checking logs
 		assertEquals("Gui should have 26 events logged. Instead, it has "
 				+ gui.log.size(), 26, gui.log.size());
-		assertEquals("MockHousingGui should have 40 events logged. Instead, it has "
-				+ house.log.size(), 40, house.log.size());
-		
-	//Step 13
-		gui.yPos = 260;
-		gui.updatePosition();
-		assertEquals("Gui variable boxX should equal 17. It doesn't",
-				17, gui.boxX);
-		assertEquals("Gui variable boxY should equal 12. It doesn't",
-				12, gui.boxY);
-		//Checking logs
-		assertEquals("Gui should have 28 events logged. Instead, it has "
-				+ gui.log.size(), 28, gui.log.size());
-		assertEquals("MockHousingGui should have 43 events logged. Instead, it has "
-				+ house.log.size(), 43, house.log.size());
-		
-	//Step 14
-		gui.yPos = 240;
-		gui.updatePosition();
-		assertEquals("Gui variable boxX should equal 18. It doesn't",
-				18, gui.boxX);
-		assertEquals("Gui variable boxY should equal 12. It doesn't",
-				12, gui.boxY);
-		//Checking logs
-		assertEquals("Gui should have 30 events logged. Instead, it has "
-				+ gui.log.size(), 30, gui.log.size());
-		assertEquals("MockHousingGui should have 47 events logged. Instead, it has "
-				+ house.log.size(), 47, house.log.size());
-		
-	//Step 15
-		gui.xPos = 360;
-		gui.updatePosition();
-		assertEquals("Gui variable boxX should equal 18. It doesn't",
-				18, gui.boxX);
-		assertEquals("Gui variable boxY should equal 12. It doesn't",
-				12, gui.boxY);
-		//Checking logs
-		assertEquals("Gui should have 31 events logged. Instead, it has "
-				+ gui.log.size(), 31, gui.log.size());
-		assertEquals("MockHousingGui should have 47 events logged. Instead, it has "
-				+ house.log.size(), 47, house.log.size());
+		assertEquals("MockHousingGui should have 41 events logged. Instead, it has "
+				+ house.log.size(), 41, house.log.size());
 	}
 }

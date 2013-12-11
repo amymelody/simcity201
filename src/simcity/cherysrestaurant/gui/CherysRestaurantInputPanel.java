@@ -6,6 +6,7 @@ import simcity.cherysrestaurant.CherysCookRole;
 import simcity.cherysrestaurant.CherysCustomerRole;
 import simcity.cherysrestaurant.CherysHostRole;
 import simcity.cherysrestaurant.CherysNormalWaiterRole;
+import simcity.market.MarketCashierRole;
 import simcity.role.Role;
 
 import javax.swing.*;
@@ -42,7 +43,7 @@ public class CherysRestaurantInputPanel extends JPanel
      * Constructor for RestaurantPanel. Sets up the gui.
      * @param gui reference to the main gui class
      */
-    public CherysRestaurantInputPanel(CherysRestaurantGui gui, CherysHostRole h, CherysCookRole co, CherysCashierRole ca) //* called from RestaurantGui
+    public CherysRestaurantInputPanel(CherysRestaurantGui gui, CherysHostRole h, CherysCookRole co, CherysCashierRole ca, ArrayList<MarketCashierRole> cashiers) //* called from RestaurantGui
     {
         this.gui = gui;
         
@@ -51,6 +52,10 @@ public class CherysRestaurantInputPanel extends JPanel
         cashier = ca;
         
         cook.setCashier(cashier);
+        for(MarketCashierRole m : cashiers)
+        {
+        	cook.addMarket(m, m.getName());
+        }
         host.setGui(this.gui);
         host.setCashier(cashier);
         host.setCook(cook);

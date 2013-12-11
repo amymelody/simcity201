@@ -58,7 +58,7 @@ public class CookTest extends TestCase
 		
 		assertEquals("Cook should have 0 item orders in it. It doesn't.", 0, cook.itemOrders.size());		
 		
-		cook.msgHereIsWhatICanFulfill(orders, true);
+		cook.msgHereIsWhatICanFulfill(orders, true, cashier);
 		
 		assertTrue("Cook should have logged \"Received msgHereIsWhatICanFulfill\" but didn't. His last event logged reads instead: " 
 				+ cook.log.getLastLoggedEvent().toString(), cook.log.containsString("Received msgHereIsWhatICanFulfill"));

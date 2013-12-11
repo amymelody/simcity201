@@ -71,7 +71,7 @@ public class JesusRestaurantInputPanel extends JPanel implements ActionListener
     private void initRestLabel() {
         restLabel.setLayout(new BorderLayout());
         restInfo.setText(
-                "<html><br/><h3>Welcome to La Cocina!</h3><h3 align=center color=red>" + host.openPanel() + "</h3><h4><u>Tonight's Staff</u></h4><table><tr><td>Host:</td><td>" + host.getName() + "</td></tr><tr><td>Cashier:</td><td>" + cashier.getName() + "</td></tr><tr><td>Cook:</td><td>" + cook.getName() + "</td></tr></table><h4><u> Menu</u></h4><table><tr><td>Steak</td><td>$15.00</td></tr><tr><td>Salad</td><td>$5.00</td></tr><tr><td>Pizza</td><td>$8.00</td></tr></table><br></html>");
+                "<html><br/><h3>Welcome to La Cocina!</h3><h4><u> Menu</u></h4><table><tr><td>Steak</td><td>$15.00</td></tr><tr><td>Salad</td><td>$5.00</td></tr><tr><td>Pizza</td><td>$8.00</td></tr></table><br></html>");
 
         restLabel.setBorder(BorderFactory.createBevelBorder(0));
         restLabel.add(restInfo, BorderLayout.CENTER);

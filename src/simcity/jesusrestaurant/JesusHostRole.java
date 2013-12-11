@@ -22,11 +22,8 @@ public class JesusHostRole extends RestHostRole {
 	public List<myCustomer> waitingCustomers
 	= Collections.synchronizedList(new ArrayList<myCustomer>());
 	public List<myWaiter> waiters = Collections.synchronizedList(new ArrayList<myWaiter>());
-	public enum wState {working, askingBreak, waitingResponse, onBreak};
 	public enum AgentState {none, checking};
-	boolean open = false;
 	AgentState state = AgentState.none;
-	int waitersOnBreak = 0;
 	public Collection<Table> tables;
 	//note that tables is typed with Collection semantics.
 	//Later we will see how it is implemented
@@ -37,7 +34,7 @@ public class JesusHostRole extends RestHostRole {
 	private JesusCashierRole cashier = null;
 	public JesusHostRole() {
 		super();
-		
+
 		// make some tables
 		tables = new ArrayList<Table>(NTABLES);
 		for (int ix = 1; ix <= NTABLES; ix++) {
@@ -67,14 +64,14 @@ public class JesusHostRole extends RestHostRole {
 	public Collection getTables() {
 		return tables;
 	}
-	
+
 	public void setPerson(Person p) {
 		super.setPerson(p);
 		name = p.getName();
 	}
 	// Messages
 
-	
+
 	public void msgStartShift() {
 		working = true;
 		start = true;
@@ -85,53 +82,24 @@ public class JesusHostRole extends RestHostRole {
 		working = false;
 		stateChanged();
 	}
-	public void msgOpen() {
-		open = true;
-		stateChanged();
-	}
-	public void msgClosed() {
-		open = false;
-		stateChanged();
-	}
-	public void msgGoingOnBreak(JesusNormalWaiterRole wait) {
-		synchronized(waiters){
-		for(myWaiter w: waiters) {
-			if(w.waiter.getName().equals(wait.getName())) {
-				w.state = wState.askingBreak;
-				stateChanged();
-			}
-		}
-		}
-	}
-	public void msgReturningToWork(JesusNormalWaiterRole wait) {
-		synchronized(waiters){
-		for(myWaiter w: waiters) {
-			if(w.waiter.getName().equals(wait.getName())) {
-				w.state = wState.working;
-				stateChanged();
-			}
-		}
-		}
-		waitersOnBreak--;
-	}
-	
+
 	public void msgLeaving(String cName) {
 		myCustomer cRemove = null;
 		synchronized(waitingCustomers){
-		for(myCustomer c: waitingCustomers) {
-			if(c.customer.getName().equals(cName)) {
-				cRemove = c;
+			for(myCustomer c: waitingCustomers) {
+				if(c.customer.getName().equals(cName)) {
+					cRemove = c;
+				}
 			}
-		}
 		}
 		waitingCustomers.remove(cRemove);
 	}
 	public void msgWaiting(String cName) {
 		synchronized(waitingCustomers){
-		for(myCustomer c: waitingCustomers) {
-			if(c.customer.getName().equals(cName)) {
+			for(myCustomer c: waitingCustomers) {
+				if(c.customer.getName().equals(cName)) {
+				}
 			}
-		}
 		}
 	}
 	public void msgIWantFood(JesusCustomerRole cust) {
@@ -149,7 +117,7 @@ public class JesusHostRole extends RestHostRole {
 			}
 		}
 	}
-	
+
 	public void left() {
 		person.msgLeftDestination(this);
 	}
@@ -171,44 +139,27 @@ public class JesusHostRole extends RestHostRole {
 			startWork();
 			return true;
 		}
-		if(!waitingCustomers.isEmpty()) {
-			if(open == false) {
-				closed();
-				return true;
-			}
-		}
 		try{
-		for (myWaiter w: waiters) {
-			if(w.state == wState.askingBreak) {
-				w.state = wState.waitingResponse;
-				confirmBreak(w);
-				return true;
-			}
-		}
-		}catch(ConcurrentModificationException e){
-			return true;
-		}
-		try{
-		for (Table table : tables) {
-			if (!table.isOccupied()) {
-				if (!waitingCustomers.isEmpty()) {
-					assignWaiter(waitingCustomers.get(0), table);//the action
-					return true;//return true to the abstract agent to reinvoke the scheduler.
+			for (Table table : tables) {
+				if (!table.isOccupied()) {
+					if (!waitingCustomers.isEmpty()) {
+						assignWaiter(waitingCustomers.get(0), table);//the action
+						return true;
+					}
 				}
 			}
-		}
 		}catch(ConcurrentModificationException e){
 			return true;
 		}
 		if(tablesFull()){
 			if(!waitingCustomers.isEmpty() && state == AgentState.checking) {
 				try{
-				for(myCustomer c: waitingCustomers) {
-					if(!c.asked) {
-						noSeats(c);
-						return true;
+					for(myCustomer c: waitingCustomers) {
+						if(!c.asked) {
+							noSeats(c);
+							return true;
+						}
 					}
-				}
 				} catch(ConcurrentModificationException e) {
 					return true;
 				}
@@ -225,49 +176,29 @@ public class JesusHostRole extends RestHostRole {
 
 	private void startWork() {
 		jesusHostGui.work();
+		start = false;
 		person.businessIsClosed(getJobLocation(), false);
 	}
 	private void leaveRestaurant() {
 		jesusHostGui.leave();
 	}
-	private void closed() {
-		person.businessIsClosed(getJobLocation(), true);
-		print("Sorry, we're closed. Please come again later when we are open.");
-		while(!waitingCustomers.isEmpty()) {
-			waitingCustomers.get(0).customer.msgWereClosed();
-			waitingCustomers.remove(waitingCustomers.get(0));
-		}
-		cashier.msgPayEmployees(waiters);
-	}
-	private void confirmBreak(myWaiter w) {
-		if(waiters.size() - waitersOnBreak <= 1) {
-			print(w.waiter.getName() + "'s break DENIED!");
-			w.state = wState.working;
-			w.waiter.msgAnswer(false);
-		}
-		else {
-			waitersOnBreak++;
-			w.state = wState.onBreak;
-			w.waiter.msgAnswer(true);
-		}
-	}
 	private void assignWaiter(myCustomer c, Table table) {
 		myWaiter assignedWaiter = waiters.get(0);
 		int min = waiters.get(0).numOfCust;
 		synchronized(waiters){
-		for (myWaiter waiter : waiters) {
-			if(waiter.numOfCust < min && waiter.state != wState.onBreak) {
-				min = waiter.numOfCust;
-				assignedWaiter = waiter;
+			for (myWaiter waiter : waiters) {
+				if(waiter.numOfCust < min) {
+					min = waiter.numOfCust;
+					assignedWaiter = waiter;
+				}
 			}
-		}
 		}
 		Do("Assigning waiter " + assignedWaiter.waiter.getName());
 		assignedWaiter.numOfCust++;
 		c.asked = true;
 		table.setOccupant(c.customer);
-		waitingCustomers.remove(c);
 		assignedWaiter.waiter.msgSeatCustomer(c.customer, table.tableNumber, c.customer.getName());
+		waitingCustomers.remove(c);
 	}
 
 	private void noSeats(myCustomer c) {
@@ -276,7 +207,7 @@ public class JesusHostRole extends RestHostRole {
 		print("Sorry " + c.customer.getName() + ", but tables are full. Would you like to wait?");
 		state = AgentState.none;
 	}
-	
+
 	//utilities
 
 	public void setGui(JesusHostGui gui) {
@@ -292,17 +223,15 @@ public class JesusHostRole extends RestHostRole {
 		int numOfCust;
 		int salary;
 		String name;
-		wState state;
-		
+
 		public myWaiter(JesusNormalWaiterRole w, int s) {
 			this.waiter = w;
 			salary = s;
 			numOfCust = 0;
 			name = w.getName();
-			state = wState.working;
 		}
 	}
-	
+
 	private class Table {
 		JesusCustomerRole occupiedBy;
 		int tableNumber;
@@ -319,10 +248,6 @@ public class JesusHostRole extends RestHostRole {
 			occupiedBy = null;
 		}
 
-		JesusCustomerRole getOccupant() {
-			return occupiedBy;
-		}
-
 		boolean isOccupied() {
 			return occupiedBy != null;
 		}
@@ -331,11 +256,11 @@ public class JesusHostRole extends RestHostRole {
 			return "table " + tableNumber;
 		}
 	}
-	
+
 	public static int getNTables() {
 		return NTABLES;
 	}
-	
+
 	public boolean tablesFull() {
 		for(Table t: tables) {
 			if(!t.isOccupied()) {
@@ -344,22 +269,14 @@ public class JesusHostRole extends RestHostRole {
 		}
 		return true;
 	}
-	
+
 	public class myCustomer {
 		JesusCustomerRole customer;
 		boolean asked;
-		
+
 		myCustomer(JesusCustomerRole c) {
 			customer = c;
 			asked = false;
 		}
-	}
-	
-	public String openPanel() {
-		if(open) {
-			return "We're Open!";
-		}
-		else
-			return "Sorry, We're Closed.";
 	}
 }

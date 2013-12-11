@@ -101,7 +101,9 @@ public class AnjaliSharedDataWaiterRole extends AnjaliWaiterRole implements Anja
 	
 	private AnjaliCook cook;
 	
+
 	private AnjaliCashier cashier;
+
 	
 	//private Semaphore x = new Semaphore(0);
 	
@@ -134,7 +136,9 @@ public class AnjaliSharedDataWaiterRole extends AnjaliWaiterRole implements Anja
 		this.host = host;
 	}
 	
+
 	public void setCashier(AnjaliCashier cashier){
+
 		this.cashier = cashier;
 	}
 	public AnjaliHost getHost()

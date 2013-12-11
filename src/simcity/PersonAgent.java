@@ -1416,7 +1416,7 @@ public class PersonAgent extends Agent implements Person
 		Market(String l, String r) {
 			location = l;
 			customerRole = r;
-			closed = false;
+			closed = true;
 		}
 		String customerRole;
 		String location;

@@ -45,7 +45,7 @@ public class AnjaliCashierRole extends RestCashierRole implements AnjaliCashier{
 	public AnjaliCashierRole() {
 		super();
 		working = false;
-		
+
 		
 	}
 	public void setBankManager(BankManager bm){

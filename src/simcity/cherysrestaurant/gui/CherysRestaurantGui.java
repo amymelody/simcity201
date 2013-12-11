@@ -34,7 +34,7 @@ public class CherysRestaurantGui extends BuildingGui
     public CherysRestaurantGui(String n, BuildingsGui bG, CityDirectory cD)
     {
     	super(n, bG, cD);
-    	restPanel = new CherysRestaurantInputPanel(this, cD.getCherysHost(), cD.getCherysCook(), cD.getCherysCashier());
+    	restPanel = new CherysRestaurantInputPanel(this, cD.getCherysHost(), cD.getCherysCook(), cD.getCherysCashier(), cD.getMarketCashiers());
     	
     	
         int WINDOWX = 650;
