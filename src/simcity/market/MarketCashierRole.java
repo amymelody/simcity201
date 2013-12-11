@@ -174,6 +174,7 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 		stateChanged();
 	}
 	public void msgEndShift() {
+		person.businessIsClosed(getJobLocation(), true);
 		working = false;
 		stateChanged();
 	}
@@ -425,7 +426,7 @@ public class MarketCashierRole extends JobRole implements MarketCashier {
 		marketMoney -= salary;
 		marketMoneySurplus = marketMoney - 100;
 		//bank.msgMarketDeposit(marketMoneySurplus);
-		person.businessIsClosed(getJobLocation(), true);
+		//person.businessIsClosed(getJobLocation(), true);
 		marketMoney = 100;
 	}
 
