@@ -40,14 +40,25 @@ Please see the Wiki for instructions on running SimCity201.
   + No businesses incorporate banking (banking is fully capable, just no *individual* had time to incorporate that into their restaurant)
   + Cherys' restaurant lacks producer-consumer waiters
   + Jesus' restaurant lacks producer-onsumer waiters
+  + Jesus' restaurant can interact with the market, but the deliverer never comes back from his restaurant, so we made it so his restaurant never orders from the market
+  + Anjali's restaurant lacks producer-onsumer waiters
   + Sometimes the program freezes when there are too many people
 
 
 ###How to run our simcity
+  + Run SimCity.java
   + Select a config file using the panel on the left, click the radio button, then cick the run scenario button. Close the program after running each scenario. Run it again choosing a different scenario.
 
+####Different Scenarios
+  + Normative A Config runs Normative Scenario A (also scenario C for restaurants that are able to interact with the market)
+  + Normative B Config runs Normative Scenarios B and E
+  + Non-Norm F Config runs Non-Norm Scenarios F, G, Q, and R
+  + Non-Norms Config runs Non-Norm Scenarios Q and S
+  + Bank Config runs Non-Norm Scenario O
+  + Full City Config runs Normative Scenario J (since there are so many people, the animation often froze on our machines)
+
 ###Notes
-  + For some reason, even though Anjali was unable to compile and run the program on her Mac, so she made changes on her teammates computers that were related to bank
+  + For some reason, Anjali was unable to compile and run the program on her Mac, so she made changes on her teammates computers that were related to bank
   + Everyone worked super hard, everyone pulled their weight, Josh was an amazing team leader!
   + Since the person originally meant to do our transportation dropped (?) we were told that we only needed busses and the bus hitting pedestrian non-norm
   
