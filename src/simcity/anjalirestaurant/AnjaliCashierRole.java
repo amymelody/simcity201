@@ -237,16 +237,6 @@ public class AnjaliCashierRole extends RestCashierRole implements AnjaliCashier{
 	}
 	}
 	
-	public void msgPayMarket(AnjaliMarket m, boolean broke, double price){
-		AlertLog.getInstance().logMessage(AlertTag.ANJALI_RESTAURANT, name, "Cashier received bill from " + m.getName());
-
-		marketPayments.add(new marketPayment(m, price, paymentState.receivedCheck));
-		//this.market = m;
-		this.cantPay = broke;
-		//cash = cash - price;
-		//marketState = payMarketState.payMarket;
-		stateChanged();
-	}
 	
 	public void msgDelivery(int bill, MarketDeliverer deliverer){
 		marketBills.add(new marketBill(deliverer, bill));

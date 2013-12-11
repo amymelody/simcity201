@@ -16,7 +16,6 @@ import simcity.anjalirestaurant.interfaces.AnjaliMarket;
 import simcity.anjalirestaurant.interfaces.AnjaliWaiter;
 import simcity.interfaces.MarketCashier;
 import simcity.interfaces.Person;
-import simcity.joshrestaurant.JoshWaiterRole;
 import simcity.mock.LoggedEvent;
 import simcity.trace.AlertLog;
 import simcity.trace.AlertTag;
@@ -285,7 +284,7 @@ public void setStand(RevolvingStandMonitor s) {
 	
 	public void msgHereIsWhatICanFulfill(List<ItemOrder> orders, boolean canFulfill) {
 		AlertLog.getInstance().logMessage(AlertTag.ANJALI_RESTAURANT, name, "Market telling me what he can fulfill");
-
+		stateChanged();
 	}
 	public void msgDelivery(List<ItemOrder> orders){
 		AlertLog.getInstance().logMessage(AlertTag.ANJALI_RESTAURANT, name, "Market fulfilling order");
@@ -463,6 +462,12 @@ public void setStand(RevolvingStandMonitor s) {
 						e.printStackTrace();
 					}
 					cookGui.drawFoodChoice(" ");
+					try {
+						atTable.acquire();
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 					Do("" + o.choice + " is done cooking for " + o.getTableNumber());
 					o.waiter.msgOrderIsReady(o.getTableNumber());
 					orders.remove(o);
@@ -503,13 +508,7 @@ public void setStand(RevolvingStandMonitor s) {
 		}
 			
 		
-			public void buyFood(String food, AnjaliMarket m){
-				Do("Ordering " + food + "from " + market.getName());
-				
-				market.msgOrderSupply(food, this, hasFood, cantPayCashier);	
-				hasFood--;
-				
-			}
+			
 			
 //UTILITIES		
 		
@@ -550,16 +549,6 @@ public void setStand(RevolvingStandMonitor s) {
 	
 		public void setCashier(AnjaliCashierRole cashier) {
 			this.cashier = cashier;
-		}
-		@Override
-		public void msgPartOrderFulfilled(String food) {
-			// TODO Auto-generated method stub
-			
-		}
-		@Override
-		public void msgNoMarketSupply(String food) {
-			// TODO Auto-generated method stub
-			
 		}
 		
  

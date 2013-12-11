@@ -16,10 +16,7 @@ import simcity.anjalirestaurant.AnjaliHostRole;
 import simcity.anjalirestaurant.AnjaliWaiterRole;
 import simcity.anjalirestaurant.RevolvingStandMonitor;
 import simcity.gui.BuildingGui;
-import simcity.joshrestaurant.JoshCashierRole;
-import simcity.joshrestaurant.JoshCookRole;
-import simcity.joshrestaurant.JoshHostRole;
-import simcity.joshrestaurant.JoshSharedDataWaiterRole;
+
 import simcity.market.MarketCashierRole;
 
 public class AnjaliRestaurantInputPanel extends JPanel 
